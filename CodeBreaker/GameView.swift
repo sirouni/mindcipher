@@ -892,11 +892,17 @@ struct GuessRowView: View {
                         )
                 )
         )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("第\(index)步 \(guess.map { $0.displayName }.joined(separator: " ")) 反馈\(feedbackLabel)")
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 revealed = true
             }
         }
+    }
+
+    private var feedbackLabel: String {
+        "\(feedback.exact)精确\(feedback.partial)部分\(codeLength - feedback.exact - feedback.partial)空"
     }
 
     private var feedbackDots: some View {
