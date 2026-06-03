@@ -77,7 +77,7 @@ class GameViewModel: ObservableObject {
             case .medium: extraAttempts = 3
             case .hard: extraAttempts = 4
             case .expert: extraAttempts = 5
-            case .master: extraAttempts = 6
+            case .master: extraAttempts = 5
             }
         }
         engine = GameEngine(
