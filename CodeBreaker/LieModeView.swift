@@ -117,9 +117,9 @@ struct LieModeSetupView: View {
     private var totalAttempts: Int {
         let extra: Int
         switch selectedDifficulty {
-        case .beginner: extra = 8
-        case .easy: extra = 6
-        case .medium: extra = 6
+        case .beginner: extra = 5
+        case .easy: extra = 7
+        case .medium: extra = 8
         case .hard: extra = 7
         case .expert: extra = 7
         case .master: extra = 5
