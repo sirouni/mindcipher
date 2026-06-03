@@ -154,7 +154,7 @@ struct GameView: View {
 
             Spacer()
 
-            HStack(spacing: 12) {
+            HStack(spacing: 8) {
                 if viewModel.timeRemaining > 0 {
                     timerBadge
                 }
@@ -439,6 +439,14 @@ struct GameView: View {
                 )
             }
             .disabled(!viewModel.canSubmit)
+
+            Button { shareImage() } label: {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(AppTheme.textSecondary)
+                    .frame(width: 46, height: 50)
+                    .glassCard(cornerRadius: 12)
+            }
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
@@ -620,11 +628,7 @@ struct GameView: View {
         VStack(spacing: 10) {
             HStack(spacing: 10) {
                 Button {
-                    let text = viewModel.generateShareText()
-                    showShareSheet = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        shareText(text)
-                    }
+                    shareImage()
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "square.and.arrow.up")
@@ -699,10 +703,59 @@ struct GameView: View {
         }
     }
 
-    private func shareText(_ text: String) {
+    private func shareImage() {
+        let isLie = viewModel.engine?.lieMode ?? false
+        let lieAt = viewModel.engine?.lieAtGuess
+
+        let rows: [ShareRowData] = viewModel.guessHistory.enumerated().map { idx, record in
+            ShareRowData(
+                id: idx + 1,
+                guess: record.guess,
+                feedback: record.feedback,
+                isLie: isLie && lieAt == idx + 1
+            )
+        }
+
+        let won: Bool
+        let attempts: Int
+        let isPlaying: Bool
+        switch viewModel.phase {
+        case .won(let a): won = true; attempts = a; isPlaying = false
+        case .lost: won = false; attempts = viewModel.guessHistory.count; isPlaying = false
+        case .playing: won = false; attempts = viewModel.guessHistory.count; isPlaying = true
+        }
+
+        var lieFake: Feedback?
+        var lieReal: Feedback?
+        if isLie, let step = lieAt, step <= viewModel.guessHistory.count {
+            lieFake = viewModel.guessHistory[step - 1].feedback
+            lieReal = viewModel.engine?.computeRealFeedback(guess: viewModel.guessHistory[step - 1].guess)
+        }
+
+        let card = ShareCardView(
+            rows: rows,
+            codeLength: viewModel.codeLength,
+            maxAttempts: viewModel.maxAttempts,
+            colorCount: viewModel.availableColors.count,
+            won: won,
+            attempts: attempts,
+            levelId: viewModel.level?.id,
+            difficultyName: viewModel.lastDifficulty.rawValue,
+            isLieMode: isLie,
+            lieStep: lieAt,
+            lieFakeFeedback: lieFake,
+            lieRealFeedback: lieReal,
+            isPlaying: isPlaying
+        )
+
+        let renderer = ImageRenderer(content: card.frame(width: 390))
+        renderer.scale = UIScreen.main.scale
+        guard let image = renderer.uiImage else { return }
+
+        let text = viewModel.generateShareText()
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let root = scene.windows.first?.rootViewController else { return }
-        let vc = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+        let vc = UIActivityViewController(activityItems: [image, text], applicationActivities: nil)
         vc.popoverPresentationController?.sourceView = root.view
         root.present(vc, animated: true)
     }
@@ -918,5 +971,244 @@ struct ShakeModifier: ViewModifier {
                     }
                 }
             }
+    }
+}
+
+// MARK: - Share Card
+
+struct ShareRowData: Identifiable {
+    let id: Int
+    let guess: [PegColor]
+    let feedback: Feedback
+    let isLie: Bool
+}
+
+struct ShareCardView: View {
+    let rows: [ShareRowData]
+    let codeLength: Int
+    let maxAttempts: Int
+    let colorCount: Int
+    let won: Bool
+    let attempts: Int
+    let levelId: Int?
+    let difficultyName: String
+    let isLieMode: Bool
+    let lieStep: Int?
+    let lieFakeFeedback: Feedback?
+    let lieRealFeedback: Feedback?
+    let isPlaying: Bool
+
+    private var stars: Int {
+        guard won else { return 0 }
+        let ratio = Double(attempts) / Double(maxAttempts)
+        return ratio <= 0.3 ? 3 : ratio <= 0.6 ? 2 : 1
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            cardHeader
+            cardLegend
+
+            VStack(spacing: 0) {
+                ForEach(rows) { row in
+                    cardRow(row)
+                    Rectangle()
+                        .fill(Color(white: 0.90))
+                        .frame(height: 1)
+                        .padding(.leading, 36)
+                }
+            }
+            .padding(.vertical, 4)
+
+            cardFooter
+        }
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(white: 0.88), lineWidth: 1)
+        )
+        .padding(12)
+        .background(Color(white: 0.95))
+    }
+
+    private var cardHeader: some View {
+        VStack(spacing: 4) {
+            HStack(spacing: 6) {
+                Image(systemName: "lock.shield.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(Color(red: 0.05, green: 0.60, blue: 0.55))
+                Text("Code Breaker")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .foregroundStyle(Color(white: 0.15))
+            }
+
+            if let lid = levelId {
+                Text("Level \(lid) · \(difficultyName)")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color(white: 0.45))
+            } else {
+                Text("Free Play · \(difficultyName)")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color(white: 0.45))
+            }
+
+            Text("\(codeLength) pegs · \(colorCount) colors · \(maxAttempts) attempts")
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .foregroundStyle(Color(white: 0.55))
+
+            if isLieMode {
+                HStack(spacing: 4) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 10))
+                    Text("Lie Mode — contains 1 fake feedback")
+                        .font(.system(size: 11, weight: .bold))
+                }
+                .foregroundStyle(Color(red: 0.85, green: 0.20, blue: 0.20))
+                .padding(.top, 2)
+            }
+        }
+        .padding(.vertical, 14)
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity)
+        .background(Color(white: 0.97))
+    }
+
+    private var cardLegend: some View {
+        HStack(spacing: 16) {
+            cardLegendDot(color: Color(red: 0.05, green: 0.60, blue: 0.55), label: "Exact", hollow: false)
+            cardLegendDot(color: Color(red: 0.90, green: 0.52, blue: 0.05), label: "Partial", hollow: false)
+            cardLegendDot(color: Color(white: 0.65), label: "Miss", hollow: true)
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity)
+        .background(Color(white: 0.95))
+    }
+
+    private func cardLegendDot(color: Color, label: String, hollow: Bool) -> some View {
+        HStack(spacing: 4) {
+            if hollow {
+                Circle().stroke(color, lineWidth: 1.5).frame(width: 10, height: 10)
+            } else {
+                Circle().fill(color).frame(width: 10, height: 10)
+            }
+            Text(label)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(Color(white: 0.4))
+        }
+    }
+
+    private func cardRow(_ row: ShareRowData) -> some View {
+        HStack(spacing: 8) {
+            Text("\(row.id)")
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .foregroundStyle(Color(white: 0.45))
+                .frame(width: 20)
+
+            HStack(spacing: 5) {
+                ForEach(Array(row.guess.enumerated()), id: \.offset) { _, peg in
+                    Circle()
+                        .fill(cardPegGradient(for: peg))
+                        .frame(width: 28, height: 28)
+                }
+            }
+
+            Spacer()
+
+            cardFeedbackDots(row.feedback)
+
+            if row.isLie {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 11))
+                    .foregroundStyle(Color(red: 0.85, green: 0.20, blue: 0.20))
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(row.isLie ? Color(red: 0.85, green: 0.20, blue: 0.20).opacity(0.06) : Color.clear)
+    }
+
+    private func cardFeedbackDots(_ fb: Feedback) -> some View {
+        let exact = fb.exact
+        let partial = fb.partial
+        let miss = max(0, codeLength - exact - partial)
+        let dots: [(Color, Bool)] =
+            Array(repeating: (Color(red: 0.05, green: 0.60, blue: 0.55), false), count: exact) +
+            Array(repeating: (Color(red: 0.90, green: 0.52, blue: 0.05), false), count: partial) +
+            Array(repeating: (Color(white: 0.65), true), count: miss)
+
+        return HStack(spacing: 3) {
+            ForEach(Array(dots.enumerated()), id: \.offset) { _, dot in
+                if dot.1 {
+                    Circle().stroke(dot.0, lineWidth: 1).frame(width: 10, height: 10)
+                } else {
+                    Circle().fill(dot.0).frame(width: 10, height: 10)
+                }
+            }
+        }
+    }
+
+    private var cardFooter: some View {
+        VStack(spacing: 6) {
+            if isPlaying {
+                Text("In Progress — \(rows.count)/\(maxAttempts) attempts")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(white: 0.45))
+            } else if won {
+                HStack(spacing: 6) {
+                    ForEach(0..<3, id: \.self) { i in
+                        Image(systemName: i < stars ? "star.fill" : "star")
+                            .font(.system(size: 20))
+                            .foregroundStyle(i < stars ? Color(red: 0.90, green: 0.52, blue: 0.05) : Color(white: 0.75))
+                    }
+                }
+                Text("Solved in \(attempts)/\(maxAttempts) steps")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(red: 0.05, green: 0.60, blue: 0.55))
+            } else {
+                Text("Failed — \(rows.count)/\(maxAttempts) attempts")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(red: 0.85, green: 0.20, blue: 0.20))
+            }
+
+            if isLieMode, let step = lieStep, let fakeFb = lieFakeFeedback, let realFb = lieRealFeedback {
+                VStack(spacing: 2) {
+                    Text("Step \(step) was a lie!")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Color(red: 0.85, green: 0.20, blue: 0.20))
+                    Text("Fake: \(fakeFb.exact)E \(fakeFb.partial)P → Real: \(realFb.exact)E \(realFb.partial)P")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundStyle(Color(white: 0.45))
+                }
+                .padding(.top, 2)
+            }
+        }
+        .padding(.vertical, 14)
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity)
+        .background(Color(white: 0.97))
+    }
+
+    private func cardPegColor(for peg: PegColor) -> Color {
+        switch peg {
+        case .red: return Color(red: 0.95, green: 0.25, blue: 0.25)
+        case .green: return Color(red: 0.2, green: 0.85, blue: 0.35)
+        case .blue: return Color(red: 0.25, green: 0.45, blue: 0.95)
+        case .yellow: return Color(red: 0.95, green: 0.85, blue: 0.15)
+        case .purple: return Color(red: 0.65, green: 0.3, blue: 0.9)
+        case .orange: return Color(red: 1.0, green: 0.55, blue: 0.1)
+        case .cyan: return Color(red: 0.1, green: 0.85, blue: 0.9)
+        case .pink: return Color(red: 0.95, green: 0.4, blue: 0.65)
+        }
+    }
+
+    private func cardPegGradient(for peg: PegColor) -> LinearGradient {
+        let base = cardPegColor(for: peg)
+        return LinearGradient(
+            colors: [base.opacity(0.85), base, base.opacity(0.7)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     }
 }
