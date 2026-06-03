@@ -55,20 +55,41 @@ struct LevelSelectView: View {
 
     private var allLevelsGrid: some View {
         ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(levelManager.levels) { level in
-                    VStack(spacing: 0) {
-                        if level.id > 1 {
-                            Rectangle()
-                                .fill(progress.completedLevels.contains(level.id - 1) ? AppTheme.accent.opacity(0.4) : AppTheme.textMuted.opacity(0.15))
-                                .frame(width: 2, height: 20)
+            levelPath
+                .padding(16)
+        }
+    }
+
+    private var levelPath: some View {
+        let cols = 5
+        let rows = (levelManager.levels.count + cols - 1) / cols
+        return VStack(spacing: 4) {
+            ForEach(0..<rows, id: \.self) { row in
+                let isReversed = row % 2 == 1
+                HStack(spacing: 4) {
+                    ForEach(0..<cols, id: \.self) { col in
+                        let idx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
+                        if idx < levelManager.levels.count {
+                            let level = levelManager.levels[idx]
+                            levelCell(level)
+                        } else {
+                            Color.clear.frame(width: 60, height: 60)
                         }
-                        levelCell(level)
                     }
                 }
+                if row < rows - 1 {
+                    let connIdx = isReversed ? row * cols : (row + 1) * cols - 1
+                    let connected = connIdx < levelManager.levels.count && progress.completedLevels.contains(levelManager.levels[connIdx].id)
+                    HStack {
+                        if !isReversed { Spacer() }
+                        Rectangle()
+                            .fill(connected ? AppTheme.accent.opacity(0.4) : AppTheme.textMuted.opacity(0.15))
+                            .frame(width: 2, height: 16)
+                        if isReversed { Spacer() }
+                    }
+                    .padding(.horizontal, 30)
+                }
             }
-            .padding(.horizontal, 40)
-            .padding(.vertical, 12)
         }
     }
 
@@ -153,61 +174,43 @@ struct LevelSelectView: View {
             guard isUnlocked else { return }
             withAnimation(.spring(response: 0.3)) { previewLevel = level }
         } label: {
-            HStack(spacing: 14) {
+            VStack(spacing: 4) {
                 ZStack {
                     Circle()
                         .fill(
                             isCompleted ? AppTheme.accent :
                             isUnlocked ? AppTheme.bgCardLight :
-                            AppTheme.bgCard.opacity(0.5)
+                            AppTheme.bgCard.opacity(0.4)
                         )
-                        .frame(width: 44, height: 44)
+                        .frame(width: 46, height: 46)
+                        .overlay(
+                            Circle().stroke(
+                                isCompleted ? AppTheme.accent.opacity(0.5) : Color.clear,
+                                lineWidth: 2
+                            )
+                        )
 
                     if !isUnlocked {
                         Image(systemName: "lock.fill")
-                            .font(.system(size: 15))
+                            .font(.system(size: 14))
                             .foregroundStyle(AppTheme.textMuted)
                     } else {
                         Text("\(level.id)")
-                            .font(.system(size: 17, weight: .black, design: .rounded))
+                            .font(.system(size: 16, weight: .black, design: .rounded))
                             .foregroundStyle(isCompleted ? AppTheme.bgDark : AppTheme.textPrimary)
                     }
                 }
 
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(level.difficulty.rawValue)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(isUnlocked ? AppTheme.textPrimary : AppTheme.textMuted)
-                    Text("\(level.codeLength)\(L("param.yes").prefix(0))位·\(level.colorCount)色·\(level.maxAttempts)步")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundStyle(AppTheme.textSecondary)
-                }
-
-                Spacer()
-
-                HStack(spacing: 2) {
+                HStack(spacing: 1) {
                     ForEach(0..<3, id: \.self) { i in
                         Image(systemName: i < stars ? "star.fill" : "star")
-                            .font(.system(size: 10))
-                            .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted)
+                            .font(.system(size: 7))
+                            .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted.opacity(0.5))
                     }
                 }
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(AppTheme.bgCard.opacity(0.7))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(
-                                isCompleted ? AppTheme.accent.opacity(0.3) :
-                                isUnlocked ? Color.white.opacity(0.05) : Color.clear,
-                                lineWidth: 1
-                            )
-                    )
-            )
-            .opacity(isUnlocked ? 1.0 : 0.4)
+            .frame(maxWidth: .infinity)
+            .opacity(isUnlocked ? 1.0 : 0.35)
         }
         .buttonStyle(.plain)
         .disabled(!isUnlocked)
