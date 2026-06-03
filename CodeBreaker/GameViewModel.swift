@@ -68,11 +68,12 @@ class GameViewModel: ObservableObject {
         self.level = nil
         self.mode = .freePlay
         self.lastDifficulty = difficulty
+        let extraAttempts = lieMode ? 3 : 0
         engine = GameEngine(
             codeLength: difficulty.codeLength,
             colorCount: difficulty.colorCount,
             allowDuplicates: difficulty.allowDuplicates,
-            maxAttempts: difficulty.maxAttempts,
+            maxAttempts: difficulty.maxAttempts + extraAttempts,
             lieMode: lieMode
         )
         resetState()
