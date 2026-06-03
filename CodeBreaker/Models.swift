@@ -376,6 +376,108 @@ class ProgressManager: ObservableObject {
     }
 }
 
+// MARK: - Achievements
+
+struct Achievement: Identifiable {
+    let id: String
+    let icon: String
+    let title: String
+    let desc: String
+    let category: AchievementCategory
+    let check: (StatsManager, ProgressManager, ProgressManager) -> Bool
+}
+
+enum AchievementCategory: String, CaseIterable {
+    case beginner = "Getting Started"
+    case streak = "Streaks"
+    case levels = "Levels"
+    case stars = "Stars"
+    case mastery = "Mastery"
+    case speed = "Speed"
+}
+
+class AchievementManager: ObservableObject {
+    static let shared = AchievementManager()
+
+    @Published var unlockedIds: Set<String> {
+        didSet { UserDefaults.standard.set(Array(unlockedIds), forKey: "achievements_unlocked") }
+    }
+    @Published var newlyUnlocked: Achievement?
+
+    static let all: [Achievement] = [
+        // Getting Started
+        Achievement(id: "first_win", icon: "lock.open.fill", title: "First Crack", desc: "Win your first game", category: .beginner) { s,_,_ in s.gamesWon >= 1 },
+        Achievement(id: "play_5", icon: "gamecontroller.fill", title: "Warming Up", desc: "Play 5 games", category: .beginner) { s,_,_ in s.gamesPlayed >= 5 },
+        Achievement(id: "play_10", icon: "gamecontroller.fill", title: "Getting Hooked", desc: "Play 10 games", category: .beginner) { s,_,_ in s.gamesPlayed >= 10 },
+        Achievement(id: "play_50", icon: "gamecontroller.fill", title: "Dedicated", desc: "Play 50 games", category: .beginner) { s,_,_ in s.gamesPlayed >= 50 },
+        Achievement(id: "play_100", icon: "gamecontroller.fill", title: "Veteran", desc: "Play 100 games", category: .beginner) { s,_,_ in s.gamesPlayed >= 100 },
+        Achievement(id: "win_10", icon: "trophy.fill", title: "Double Digits", desc: "Win 10 games", category: .beginner) { s,_,_ in s.gamesWon >= 10 },
+        Achievement(id: "win_50", icon: "trophy.fill", title: "Half Century", desc: "Win 50 games", category: .beginner) { s,_,_ in s.gamesWon >= 50 },
+
+        // Streaks
+        Achievement(id: "streak_3", icon: "flame.fill", title: "On Fire", desc: "Win 3 in a row", category: .streak) { s,_,_ in s.bestStreak >= 3 },
+        Achievement(id: "streak_5", icon: "flame.fill", title: "Streak Master", desc: "Win 5 in a row", category: .streak) { s,_,_ in s.bestStreak >= 5 },
+        Achievement(id: "streak_10", icon: "scope", title: "Sharpshooter", desc: "Win 10 in a row", category: .streak) { s,_,_ in s.bestStreak >= 10 },
+        Achievement(id: "streak_20", icon: "bolt.fill", title: "Unstoppable", desc: "Win 20 in a row", category: .streak) { s,_,_ in s.bestStreak >= 20 },
+        Achievement(id: "winrate_80", icon: "percent", title: "Consistent", desc: "Maintain 80%+ win rate (10+ games)", category: .streak) { s,_,_ in s.gamesPlayed >= 10 && s.winRate >= 80 },
+
+        // Levels
+        Achievement(id: "tier1", icon: "shield.fill", title: "Junior Graduate", desc: "Complete all Junior Agent levels", category: .levels) { _,p,_ in (1...20).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier2", icon: "shield.lefthalf.filled", title: "Agent Promoted", desc: "Complete all Agent levels", category: .levels) { _,p,_ in (21...40).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier3", icon: "shield.checkered", title: "Senior Agent", desc: "Complete all Senior Agent levels", category: .levels) { _,p,_ in (41...60).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier4", icon: "star.circle.fill", title: "Elite Agent", desc: "Complete all Elite Agent levels", category: .levels) { _,p,_ in (61...80).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier5", icon: "crown.fill", title: "Chief Agent", desc: "Complete all Chief Agent levels", category: .levels) { _,p,_ in (81...100).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier6", icon: "laurel.leading", title: "Legend", desc: "Complete all Legend Agent levels", category: .levels) { _,p,_ in (101...120).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "all_levels", icon: "brain.head.profile", title: "Grandmaster", desc: "Complete all 120 levels", category: .levels) { _,p,_ in p.completedLevels.count >= 120 },
+        Achievement(id: "lie_10", icon: "theatermask.and.paintbrush.fill", title: "Lie Detector", desc: "Complete 10 lie mode levels", category: .levels) { _,_,lp in lp.completedLevels.count >= 10 },
+        Achievement(id: "lie_30", icon: "theatermask.and.paintbrush.fill", title: "Truth Seeker", desc: "Complete 30 lie mode levels", category: .levels) { _,_,lp in lp.completedLevels.count >= 30 },
+
+        // Stars
+        Achievement(id: "star_first3", icon: "star.fill", title: "3-Star Agent", desc: "Get 3 stars on any level", category: .stars) { _,p,_ in p.starsByLevel.values.contains(3) },
+        Achievement(id: "star_10", icon: "star.fill", title: "Star Collector", desc: "Earn 10 stars", category: .stars) { _,p,_ in p.totalStars >= 10 },
+        Achievement(id: "star_50", icon: "star.fill", title: "Star Hunter", desc: "Earn 50 stars", category: .stars) { _,p,_ in p.totalStars >= 50 },
+        Achievement(id: "star_100", icon: "diamond.fill", title: "Star Master", desc: "Earn 100 stars", category: .stars) { _,p,_ in p.totalStars >= 100 },
+        Achievement(id: "star_200", icon: "diamond.fill", title: "Star Legend", desc: "Earn 200 stars", category: .stars) { _,p,_ in p.totalStars >= 200 },
+        Achievement(id: "star_360", icon: "sparkles", title: "Perfect Stars", desc: "Earn all 360 stars", category: .stars) { _,p,_ in p.totalStars >= 360 },
+
+        // Mastery
+        Achievement(id: "all_3star_t1", icon: "rosette", title: "Perfection I", desc: "3-star all Junior Agent levels", category: .mastery) { _,p,_ in (1...20).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
+        Achievement(id: "all_3star_t2", icon: "rosette", title: "Perfection II", desc: "3-star all Agent levels", category: .mastery) { _,p,_ in (21...40).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
+        Achievement(id: "all_3star_t3", icon: "rosette", title: "Perfection III", desc: "3-star all Senior Agent levels", category: .mastery) { _,p,_ in (41...60).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
+
+        // Speed
+        Achievement(id: "speed_1", icon: "hare.fill", title: "Lucky Guess", desc: "Crack a code in 1 attempt", category: .speed) { s,_,_ in s.gamesWon > 0 && s.totalAttempts > 0 && (Double(s.totalAttempts) / Double(s.gamesWon)) <= 1.0 || UserDefaults.standard.bool(forKey: "ach_speed_1") },
+        Achievement(id: "speed_2", icon: "bolt.circle.fill", title: "Speed Cracker", desc: "Crack a code in 2 attempts", category: .speed) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_speed_2") },
+        Achievement(id: "speed_3", icon: "timer", title: "Quick Thinker", desc: "Crack a code in 3 attempts", category: .speed) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_speed_3") },
+    ]
+
+    private init() {
+        let saved = UserDefaults.standard.array(forKey: "achievements_unlocked") as? [String] ?? []
+        self.unlockedIds = Set(saved)
+    }
+
+    var unlockedCount: Int { unlockedIds.count }
+    var totalCount: Int { Self.all.count }
+
+    func checkAll() {
+        let stats = StatsManager.shared
+        let progress = ProgressManager.shared
+        let lieProgress = ProgressManager.lieShared
+        for a in Self.all {
+            if !unlockedIds.contains(a.id) && a.check(stats, progress, lieProgress) {
+                unlockedIds.insert(a.id)
+                newlyUnlocked = a
+            }
+        }
+    }
+
+    func markSpeedAchievement(attempts: Int) {
+        if attempts <= 1 { UserDefaults.standard.set(true, forKey: "ach_speed_1") }
+        if attempts <= 2 { UserDefaults.standard.set(true, forKey: "ach_speed_2") }
+        if attempts <= 3 { UserDefaults.standard.set(true, forKey: "ach_speed_3") }
+    }
+}
+
 class StatsManager: ObservableObject {
     static let shared = StatsManager()
 

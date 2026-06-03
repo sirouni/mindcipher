@@ -65,6 +65,7 @@ struct HomeView: View {
             }
             .onAppear {
                 animateEntrance()
+                AchievementManager.shared.checkAll()
                 if !hasSeenTutorial {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         showTutorial = true
@@ -77,17 +78,8 @@ struct HomeView: View {
 
     
 
-    private var unlockedCount: Int {
-        var count = 0
-        if stats.gamesWon >= 1 { count += 1 }
-        if stats.bestStreak >= 5 { count += 1 }
-        if progress.starsByLevel.values.contains(3) { count += 1 }
-        if stats.bestStreak >= 10 { count += 1 }
-        if (1...20).allSatisfy({ progress.completedLevels.contains($0) }) { count += 1 }
-        if progress.totalStars >= 100 { count += 1 }
-        if progress.completedLevels.count >= 120 { count += 1 }
-        return count
-    }
+    private var unlockedCount: Int { AchievementManager.shared.unlockedCount }
+    private var totalAchievements: Int { AchievementManager.shared.totalCount }
 
     private var dailyCompleted: Bool {
         let key = "daily_\(dailyDateString)"
@@ -210,7 +202,7 @@ struct HomeView: View {
 
             menuButton(
                 title: "Achievements",
-                subtitle: "\(unlockedCount)/7 unlocked",
+                subtitle: "\(unlockedCount)/\(totalAchievements) unlocked",
                 icon: "trophy.fill",
                 color: AppTheme.warning
             ) { showAchievements = true }

@@ -90,28 +90,6 @@ struct SettingsView: View {
         }
     }
 
-    private var achievementsSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("Achievements")
-            VStack(spacing: 0) {
-                iconAchievementRow("lock.open.fill", "First Crack", "Complete your first game", unlocked: stats.gamesWon >= 1)
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("flame.fill", "Streak Master", "Win 5 in a row", unlocked: stats.bestStreak >= 5)
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("star.fill", "3-Star Agent", "Get 3 stars on any level", unlocked: progress.starsByLevel.values.contains(3))
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("scope", "Sharpshooter", "Win 10 in a row", unlocked: stats.bestStreak >= 10)
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("trophy.fill", "Junior Graduate", "Complete all Junior Agent levels", unlocked: (1...20).allSatisfy { progress.completedLevels.contains($0) })
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("diamond.fill", "Star Master", "Earn 100 stars", unlocked: progress.totalStars >= 100)
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("brain.head.profile", "Grandmaster", "Complete all 120 levels", unlocked: progress.completedLevels.count >= 120)
-            }
-            .glassCard(cornerRadius: 14)
-        }
-    }
-
     private var dangerSection: some View {
         VStack(alignment: .leading, spacing: 4) {
             sectionHeader("Manage")
@@ -228,19 +206,99 @@ struct SettingsView: View {
         .padding(14)
     }
 
-    private func iconAchievementRow(_ systemName: String, _ title: String, _ desc: String, unlocked: Bool) -> some View {
+}
+
+struct AchievementsView: View {
+    @ObservedObject var manager = AchievementManager.shared
+
+    var body: some View {
+        ZStack {
+            AppTheme.bgGradient.ignoresSafeArea()
+
+            ScrollView {
+                VStack(spacing: 6) {
+                    progressHeader
+
+                    ForEach(AchievementCategory.allCases, id: \.rawValue) { cat in
+                        let items = AchievementManager.all.filter { $0.category == cat }
+                        if !items.isEmpty {
+                            categorySection(cat, items: items)
+                        }
+                    }
+                }
+                .padding(16)
+            }
+        }
+        .navigationTitle("Achievements")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(.light, for: .navigationBar)
+        .onAppear { manager.checkAll() }
+    }
+
+    private var progressHeader: some View {
+        VStack(spacing: 8) {
+            Text("\(manager.unlockedCount)/\(manager.totalCount)")
+                .font(.system(size: 32, weight: .black, design: .rounded))
+                .foregroundStyle(AppTheme.accent)
+            
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color.black.opacity(0.06))
+                        .frame(height: 8)
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(AppTheme.accent)
+                        .frame(width: geo.size.width * CGFloat(manager.unlockedCount) / CGFloat(max(1, manager.totalCount)), height: 8)
+                }
+            }
+            .frame(height: 8)
+            .padding(.horizontal, 40)
+
+            Text("Unlocked")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(AppTheme.textSecondary)
+        }
+        .padding(.vertical, 12)
+    }
+
+    private func categorySection(_ cat: AchievementCategory, items: [Achievement]) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(cat.rawValue.uppercased())
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(AppTheme.textSecondary)
+                .padding(.leading, 4)
+                .padding(.top, 10)
+
+            VStack(spacing: 0) {
+                ForEach(Array(items.enumerated()), id: \.element.id) { idx, a in
+                    let unlocked = manager.unlockedIds.contains(a.id)
+                    achievementRow(a, unlocked: unlocked)
+                    if idx < items.count - 1 {
+                        Divider().padding(.leading, 60)
+                    }
+                }
+            }
+            .glassCard(cornerRadius: 14)
+        }
+    }
+
+    private func achievementRow(_ a: Achievement, unlocked: Bool) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: systemName)
-                .font(.system(size: 22))
-                .foregroundStyle(unlocked ? AppTheme.warning : AppTheme.textMuted)
-                .opacity(unlocked ? 1 : 0.3)
-                .frame(width: 32)
+            ZStack {
+                Circle()
+                    .fill(unlocked ? AppTheme.warning.opacity(0.15) : Color.black.opacity(0.04))
+                    .frame(width: 42, height: 42)
+                Image(systemName: a.icon)
+                    .font(.system(size: 18))
+                    .foregroundStyle(unlocked ? AppTheme.warning : AppTheme.textMuted)
+                    .opacity(unlocked ? 1 : 0.3)
+            }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
+                Text(a.title)
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(unlocked ? AppTheme.textPrimary : AppTheme.textMuted)
-                Text(desc)
+                Text(a.desc)
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -253,74 +311,11 @@ struct SettingsView: View {
                     .font(.system(size: 18))
             } else {
                 Image(systemName: "lock.fill")
-                    .foregroundStyle(AppTheme.textMuted)
-                    .font(.system(size: 14))
+                    .foregroundStyle(AppTheme.textMuted.opacity(0.5))
+                    .font(.system(size: 13))
             }
         }
-        .padding(14)
-    }
-}
-
-struct AchievementsView: View {
-    @ObservedObject var stats = StatsManager.shared
-    @ObservedObject var progress = ProgressManager.shared
-
-    var body: some View {
-        ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
-
-            ScrollView {
-                VStack(spacing: 12) {
-                    achievementCard("lock.open.fill", "First Crack", "Complete your first game", unlocked: stats.gamesWon >= 1)
-                    achievementCard("flame.fill", "Streak Master", "Win 5 in a row", unlocked: stats.bestStreak >= 5)
-                    achievementCard("star.fill", "3-Star Agent", "Get 3 stars on any level", unlocked: progress.starsByLevel.values.contains(3))
-                    achievementCard("scope", "Sharpshooter", "Win 10 in a row", unlocked: stats.bestStreak >= 10)
-                    achievementCard("trophy.fill", "Junior Graduate", "Complete all Junior Agent levels", unlocked: (1...20).allSatisfy { progress.completedLevels.contains($0) })
-                    achievementCard("diamond.fill", "Star Master", "Earn 100 stars", unlocked: progress.totalStars >= 100)
-                    achievementCard("brain.head.profile", "Grandmaster", "Complete all 120 levels", unlocked: progress.completedLevels.count >= 120)
-                }
-                .padding(20)
-            }
-        }
-        .navigationTitle("Achievements")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
-    }
-
-    private func achievementCard(_ icon: String, _ title: String, _ desc: String, unlocked: Bool) -> some View {
-        HStack(spacing: 14) {
-            ZStack {
-                Circle()
-                    .fill(unlocked ? AppTheme.warning.opacity(0.15) : Color.black.opacity(0.04))
-                    .frame(width: 48, height: 48)
-                Image(systemName: icon)
-                    .font(.system(size: 22))
-                    .foregroundStyle(unlocked ? AppTheme.warning : AppTheme.textMuted)
-                    .opacity(unlocked ? 1 : 0.3)
-            }
-
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(unlocked ? AppTheme.textPrimary : AppTheme.textMuted)
-                Text(desc)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(AppTheme.textSecondary)
-            }
-
-            Spacer()
-
-            if unlocked {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(AppTheme.accent)
-                    .font(.system(size: 22))
-            } else {
-                Image(systemName: "lock.fill")
-                    .foregroundStyle(AppTheme.textMuted)
-                    .font(.system(size: 16))
-            }
-        }
-        .padding(16)
-        .glassCard(cornerRadius: 14)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
     }
 }

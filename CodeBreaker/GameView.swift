@@ -10,6 +10,8 @@ struct GameView: View {
     @State private var showShareSheet = false
     @State private var revealedSecretCount = 0
     @State private var secretGlow = false
+    @ObservedObject private var achievementManager = AchievementManager.shared
+    @State private var achievementToast: Achievement?
 
     init(viewModel: GameViewModel) {
         self.viewModel = viewModel
@@ -46,24 +48,70 @@ struct GameView: View {
                 ConfettiPiece(particle: p)
             }
 
-            
+            if let toast = achievementToast {
+                achievementBanner(toast)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .zIndex(100)
+            }
         }
         .navigationBarHidden(true)
         .onChange(of: viewModel.phase) { _, phase in
             if phase != .playing {
                 revealSecretSequentially()
-                if case .won = phase {
+                if case .won(let attempts) = phase {
                     SoundManager.shared.playWin()
                     spawnConfetti()
+                    achievementManager.markSpeedAchievement(attempts: attempts)
                 } else {
                     SoundManager.shared.playLose()
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    achievementManager.checkAll()
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + Double(viewModel.codeLength) * 0.2 + 0.6) {
                     withAnimation(.spring(response: 0.5)) { showResult = true }
                 }
             }
         }
+        .onChange(of: achievementManager.newlyUnlocked?.id) { _, newId in
+            guard newId != nil, let a = achievementManager.newlyUnlocked else { return }
+            withAnimation(.spring(response: 0.4)) { achievementToast = a }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                withAnimation(.easeOut(duration: 0.3)) { achievementToast = nil }
+            }
+        }
         
+    }
+
+    private func achievementBanner(_ a: Achievement) -> some View {
+        VStack {
+            HStack(spacing: 12) {
+                Image(systemName: a.icon)
+                    .font(.system(size: 24))
+                    .foregroundStyle(AppTheme.warning)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Achievement Unlocked!")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(AppTheme.warning)
+                    Text(a.title)
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.textPrimary)
+                }
+
+                Spacer()
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color.white)
+                    .shadow(color: AppTheme.warning.opacity(0.3), radius: 12, y: 4)
+            )
+            .padding(.horizontal, 20)
+            .padding(.top, 50)
+
+            Spacer()
+        }
     }
 
     // MARK: - Top Bar
