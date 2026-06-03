@@ -9,13 +9,18 @@ struct LevelSelectView: View {
     @State private var previewLevel: Level?
     @StateObject private var viewModel = GameViewModel()
 
+    private var tiers: [[Level]] { levelManager.tiers }
+    private var currentTier: [Level] { tiers[selectedTier] }
+    private var tierDiff: String { currentTier.first?.difficulty.rawValue ?? "" }
+    private var tierDone: Int { currentTier.filter { progress.completedLevels.contains($0.id) }.count }
+
     var body: some View {
         ZStack {
             AppTheme.bgGradient.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                progressBar
-                allLevelsGrid
+                tierSwitcher(color: AppTheme.accent)
+                tierGridView(levels: currentTier, color: AppTheme.accent)
             }
 
             if let level = previewLevel {
@@ -30,112 +35,92 @@ struct LevelSelectView: View {
         }
     }
 
-    private var progressBar: some View {
+    private func tierSwitcher(color: Color) -> some View {
         HStack {
-            Text("\(progress.completedLevels.count)/120")
-                .font(.system(size: 13, weight: .bold, design: .monospaced))
-                .foregroundStyle(AppTheme.accent)
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 3)
-                        .fill(AppTheme.bgCardLight)
-                    RoundedRectangle(cornerRadius: 3)
-                        .fill(AppTheme.accent)
-                        .frame(width: geo.size.width * CGFloat(progress.completedLevels.count) / 120.0)
+            Button {
+                withAnimation(.spring(response: 0.3)) {
+                    selectedTier = max(0, selectedTier - 1)
                 }
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(selectedTier > 0 ? color : AppTheme.textMuted.opacity(0.3))
+                    .frame(width: 44, height: 44)
             }
-            .frame(height: 6)
-            Text("⭐\(progress.totalStars)")
-                .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(AppTheme.warning)
+            .disabled(selectedTier == 0)
+
+            Spacer()
+
+            VStack(spacing: 4) {
+                Text(tierDiff)
+                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .foregroundStyle(color)
+                Text("\(tierDone)/\(currentTier.count)")
+                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+
+            Spacer()
+
+            Button {
+                withAnimation(.spring(response: 0.3)) {
+                    selectedTier = min(tiers.count - 1, selectedTier + 1)
+                }
+            } label: {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(selectedTier < tiers.count - 1 ? color : AppTheme.textMuted.opacity(0.3))
+                    .frame(width: 44, height: 44)
+            }
+            .disabled(selectedTier >= tiers.count - 1)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
     }
 
-    private var allLevelsGrid: some View {
-        ScrollView {
+    private func tierGridView(levels: [Level], color: Color) -> some View {
+        let cols = 5
+        let rows = (levels.count + cols - 1) / cols
+
+        return ScrollView {
             VStack(spacing: 0) {
-                ForEach(levelManager.tiers.indices, id: \.self) { tierIdx in
-                    let tier = levelManager.tiers[tierIdx]
-                    let tierName = tier.first?.tierName ?? ""
-                    let diffName = tier.first?.difficulty.rawValue ?? ""
-                    let completedCount = tier.filter { progress.completedLevels.contains($0.id) }.count
-
-                    tierHeader(title: diffName, subtitle: tierName, done: completedCount, total: tier.count, color: AppTheme.accent)
-                    tierGrid(levels: tier, color: AppTheme.accent)
-
-                    if tierIdx < levelManager.tiers.count - 1 {
-                        Rectangle()
-                            .fill(completedCount == tier.count ? AppTheme.accent.opacity(0.4) : AppTheme.textMuted.opacity(0.1))
-                            .frame(width: 3, height: 24)
+                ForEach(0..<rows, id: \.self) { row in
+                    let isReversed = row % 2 == 1
+                    HStack(spacing: 0) {
+                        ForEach(0..<cols, id: \.self) { col in
+                            let idx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
+                            if idx < levels.count {
+                                levelCell(levels[idx])
+                            } else {
+                                Color.clear.frame(width: 56, height: 56)
+                            }
+                            if col < cols - 1 {
+                                let curIdx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
+                                let nextIdx = isReversed ? row * cols + (cols - 2 - col) : row * cols + col + 1
+                                let linked = curIdx < levels.count && nextIdx < levels.count &&
+                                    progress.completedLevels.contains(levels[min(curIdx, nextIdx)].id)
+                                Rectangle()
+                                    .fill(linked ? color.opacity(0.5) : AppTheme.textMuted.opacity(0.12))
+                                    .frame(height: 3)
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+                    }
+                    if row < rows - 1 {
+                        let turnIdx = isReversed ? row * cols : (row + 1) * cols - 1
+                        let linked = turnIdx < levels.count && progress.completedLevels.contains(levels[turnIdx].id)
+                        HStack {
+                            if !isReversed { Spacer() }
+                            Rectangle()
+                                .fill(linked ? color.opacity(0.5) : AppTheme.textMuted.opacity(0.12))
+                                .frame(width: 3, height: 22)
+                            if isReversed { Spacer() }
+                        }
+                        .padding(.horizontal, 26)
                     }
                 }
             }
             .padding(12)
-        }
-    }
-
-    private func tierHeader(title: String, subtitle: String, done: Int, total: Int, color: Color) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.system(size: 16, weight: .black, design: .rounded))
-                    .foregroundStyle(color)
-                Text(subtitle)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(AppTheme.textSecondary)
-            }
-            Spacer()
-            Text("\(done)/\(total)")
-                .font(.system(size: 13, weight: .bold, design: .monospaced))
-                .foregroundStyle(done == total ? color : AppTheme.textMuted)
-        }
-        .padding(.horizontal, 4)
-        .padding(.top, 16)
-        .padding(.bottom, 8)
-    }
-
-    private func tierGrid(levels: [Level], color: Color) -> some View {
-        let cols = 5
-        let rows = (levels.count + cols - 1) / cols
-
-        return VStack(spacing: 0) {
-            ForEach(0..<rows, id: \.self) { row in
-                let isReversed = row % 2 == 1
-                HStack(spacing: 0) {
-                    ForEach(0..<cols, id: \.self) { col in
-                        let idx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
-                        if idx < levels.count {
-                            levelCell(levels[idx])
-                        } else {
-                            Color.clear.frame(width: 56, height: 56)
-                        }
-                        if col < cols - 1 {
-                            let curIdx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
-                            let nextIdx = isReversed ? row * cols + (cols - 2 - col) : row * cols + col + 1
-                            let linked = curIdx < levels.count && nextIdx < levels.count &&
-                                progress.completedLevels.contains(levels[min(curIdx, nextIdx)].id)
-                            Rectangle()
-                                .fill(linked ? color.opacity(0.5) : AppTheme.textMuted.opacity(0.12))
-                                .frame(height: 3)
-                                .frame(maxWidth: .infinity)
-                        }
-                    }
-                }
-                if row < rows - 1 {
-                    let turnIdx = isReversed ? row * cols : (row + 1) * cols - 1
-                    let linked = turnIdx < levels.count && progress.completedLevels.contains(levels[turnIdx].id)
-                    HStack {
-                        if !isReversed { Spacer() }
-                        Rectangle()
-                            .fill(linked ? color.opacity(0.5) : AppTheme.textMuted.opacity(0.12))
-                            .frame(width: 3, height: 22)
-                        if isReversed { Spacer() }
-                    }
-                    .padding(.horizontal, 26)
-                }
-            }
         }
     }
 
