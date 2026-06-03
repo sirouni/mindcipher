@@ -161,7 +161,8 @@ class GameViewModel: ObservableObject {
             }
             StatsManager.shared.recordWin(attempts: attempts)
             if case .campaign(let levelId) = mode {
-                ProgressManager.shared.complete(
+                let pm = (engine?.lieMode == true) ? ProgressManager.lieShared : ProgressManager.shared
+                pm.complete(
                     level: levelId,
                     attempts: attempts,
                     maxAttempts: maxAttempts

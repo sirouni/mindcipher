@@ -53,7 +53,7 @@ struct HomeView: View {
                 LevelEditorView()
             }
             .navigationDestination(isPresented: $showLieMode) {
-                LieModeSetupView()
+                LieLevelSelectView()
             }
             .onAppear { animateEntrance() }
         }
@@ -190,7 +190,7 @@ struct HomeView: View {
     private var menuSection: some View {
         VStack(spacing: 14) {
             menuButton(
-                title: "任务模式",
+                title: "经典任务",
                 subtitle: "120个关卡 · 逐步解锁",
                 icon: "target",
                 color: AppTheme.accent
@@ -204,8 +204,8 @@ struct HomeView: View {
             ) { showFreePlay = true }
 
             menuButton(
-                title: "谎言模式",
-                subtitle: "系统会骗你一次，识破它！",
+                title: "谎言任务",
+                subtitle: "120关 · 含1次虚假反馈",
                 icon: "theatermask.and.paintbrush.fill",
                 color: AppTheme.danger
             ) { showLieMode = true }

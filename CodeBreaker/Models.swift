@@ -312,6 +312,7 @@ class LevelManager {
 
 class ProgressManager: ObservableObject {
     static let shared = ProgressManager()
+    static let lieShared = ProgressManager(prefix: "lie_")
 
     @Published var completedLevels: Set<Int> {
         didSet { save() }
@@ -320,10 +321,13 @@ class ProgressManager: ObservableObject {
         didSet { save() }
     }
 
-    private let completedKey = "completedLevels"
-    private let starsKey = "starsByLevel"
+    private let completedKey: String
+    private let starsKey: String
 
-    private init() {
+    init(prefix: String = "") {
+        completedKey = "\(prefix)completedLevels"
+        starsKey = "\(prefix)starsByLevel"
+
         let savedCompleted = UserDefaults.standard.array(forKey: completedKey) as? [Int] ?? []
         self.completedLevels = Set(savedCompleted)
 
