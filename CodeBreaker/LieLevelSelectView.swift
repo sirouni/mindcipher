@@ -57,16 +57,16 @@ struct LieLevelSelectView: View {
     private var lieLevelPath: some View {
         let cols = 5
         let rows = (levelManager.levels.count + cols - 1) / cols
-        return VStack(spacing: 4) {
+        return VStack(spacing: 0) {
             ForEach(0..<rows, id: \.self) { row in
                 let isReversed = row % 2 == 1
-                HStack(spacing: 4) {
+                HStack(spacing: 6) {
                     ForEach(0..<cols, id: \.self) { col in
                         let idx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
                         if idx < levelManager.levels.count {
                             levelCell(levelManager.levels[idx])
                         } else {
-                            Color.clear.frame(width: 60, height: 60)
+                            Color.clear.frame(width: 54, height: 66)
                         }
                     }
                 }
@@ -75,12 +75,20 @@ struct LieLevelSelectView: View {
                     let connected = connIdx < levelManager.levels.count && progress.completedLevels.contains(levelManager.levels[connIdx].id)
                     HStack {
                         if !isReversed { Spacer() }
-                        Rectangle()
-                            .fill(connected ? AppTheme.danger.opacity(0.4) : AppTheme.textMuted.opacity(0.15))
-                            .frame(width: 2, height: 16)
+                        VStack(spacing: 0) {
+                            Circle()
+                                .fill(connected ? AppTheme.danger : AppTheme.textMuted.opacity(0.2))
+                                .frame(width: 6, height: 6)
+                            Rectangle()
+                                .fill(connected ? AppTheme.danger.opacity(0.5) : AppTheme.textMuted.opacity(0.15))
+                                .frame(width: 3, height: 18)
+                            Circle()
+                                .fill(connected ? AppTheme.danger : AppTheme.textMuted.opacity(0.2))
+                                .frame(width: 6, height: 6)
+                        }
                         if isReversed { Spacer() }
                     }
-                    .padding(.horizontal, 30)
+                    .padding(.horizontal, 28)
                 }
             }
         }
