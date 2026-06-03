@@ -8,6 +8,7 @@ struct HomeView: View {
     @State private var showDaily = false
     @State private var showEditor = false
     @State private var showLieMode = false
+    @State private var showTutorial = false
     @State private var titleScale: CGFloat = 0.8
     @State private var titleOpacity: Double = 0
     @State private var buttonsOffset: CGFloat = 50
@@ -55,6 +56,9 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showLieMode) {
                 LieLevelSelectView()
             }
+            .sheet(isPresented: $showTutorial) {
+                TutorialView()
+            }
             .onAppear { animateEntrance() }
         }
         .preferredColorScheme(.dark)
@@ -62,6 +66,13 @@ struct HomeView: View {
 
     private var settingsButton: some View {
         HStack {
+            Button { showTutorial = true } label: {
+                Image(systemName: "questionmark.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(AppTheme.textSecondary)
+                    .frame(width: 36, height: 36)
+                    .glassCard(cornerRadius: 10)
+            }
             Spacer()
             Button { showSettings = true } label: {
                 Image(systemName: "gearshape.fill")
