@@ -84,7 +84,7 @@ struct SettingsView: View {
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
                 infoRow(icon: "star.fill", title: "Stars", value: "\(progress.totalStars)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "checkmark.circle.fill", title: "Levels done", value: "\(progress.completedLevels.count)/120")
+                infoRow(icon: "checkmark.circle.fill", title: "Levels done", value: "\(progress.completedLevels.count)/240")
             }
             .glassCard(cornerRadius: 14)
         }

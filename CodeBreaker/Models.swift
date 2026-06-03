@@ -128,7 +128,7 @@ struct Level: Identifiable, Codable {
         Difficulty(rawValue: difficultyRaw) ?? .easy
     }
 
-    var tier: Int { (id - 1) / 20 + 1 }
+    var tier: Int { (id - 1) / 40 + 1 }
 
     var tierName: String {
         switch tier {
@@ -267,8 +267,8 @@ class LevelManager {
     private init() {
         var generated: [Level] = []
         let configs: [(Difficulty, Int)] = [
-            (.beginner, 20), (.easy, 20), (.medium, 20),
-            (.hard, 20), (.expert, 20), (.master, 20),
+            (.beginner, 40), (.easy, 40), (.medium, 40),
+            (.hard, 40), (.expert, 40), (.master, 40),
         ]
         var id = 1
         for (diff, count) in configs {
@@ -437,13 +437,13 @@ class AchievementManager: ObservableObject {
         Achievement(id: "duel_20", icon: "person.2.badge.key.fill", title: "Duel Champion", desc: "Win 20 duels", category: .duel) { _,_,_ in AchievementManager.duelWins >= 20 },
 
         // Levels
-        Achievement(id: "tier1", icon: "shield.fill", title: "Junior Graduate", desc: "Complete all Junior Agent levels", category: .levels) { _,p,_ in (1...20).allSatisfy { p.completedLevels.contains($0) } },
-        Achievement(id: "tier2", icon: "shield.lefthalf.filled", title: "Agent Promoted", desc: "Complete all Agent levels", category: .levels) { _,p,_ in (21...40).allSatisfy { p.completedLevels.contains($0) } },
-        Achievement(id: "tier3", icon: "shield.checkered", title: "Senior Agent", desc: "Complete all Senior Agent levels", category: .levels) { _,p,_ in (41...60).allSatisfy { p.completedLevels.contains($0) } },
-        Achievement(id: "tier4", icon: "star.circle.fill", title: "Elite Agent", desc: "Complete all Elite Agent levels", category: .levels) { _,p,_ in (61...80).allSatisfy { p.completedLevels.contains($0) } },
-        Achievement(id: "tier5", icon: "crown.fill", title: "Chief Agent", desc: "Complete all Chief Agent levels", category: .levels) { _,p,_ in (81...100).allSatisfy { p.completedLevels.contains($0) } },
-        Achievement(id: "tier6", icon: "laurel.leading", title: "Legend", desc: "Complete all Legend Agent levels", category: .levels) { _,p,_ in (101...120).allSatisfy { p.completedLevels.contains($0) } },
-        Achievement(id: "all_levels", icon: "brain.head.profile", title: "Grandmaster", desc: "Complete all 120 levels", category: .levels) { _,p,_ in p.completedLevels.count >= 120 },
+        Achievement(id: "tier1", icon: "shield.fill", title: "Junior Graduate", desc: "Complete all Junior Agent levels", category: .levels) { _,p,_ in (1...40).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier2", icon: "shield.lefthalf.filled", title: "Agent Promoted", desc: "Complete all Agent levels", category: .levels) { _,p,_ in (41...80).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier3", icon: "shield.checkered", title: "Senior Agent", desc: "Complete all Senior Agent levels", category: .levels) { _,p,_ in (81...120).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier4", icon: "star.circle.fill", title: "Elite Agent", desc: "Complete all Elite Agent levels", category: .levels) { _,p,_ in (121...160).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier5", icon: "crown.fill", title: "Chief Agent", desc: "Complete all Chief Agent levels", category: .levels) { _,p,_ in (161...200).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "tier6", icon: "laurel.leading", title: "Legend", desc: "Complete all Legend Agent levels", category: .levels) { _,p,_ in (201...240).allSatisfy { p.completedLevels.contains($0) } },
+        Achievement(id: "all_levels", icon: "brain.head.profile", title: "Grandmaster", desc: "Complete all 240 levels", category: .levels) { _,p,_ in p.completedLevels.count >= 240 },
         Achievement(id: "lie_10", icon: "theatermask.and.paintbrush.fill", title: "Lie Detector", desc: "Complete 10 lie mode levels", category: .levels) { _,_,lp in lp.completedLevels.count >= 10 },
         Achievement(id: "lie_30", icon: "theatermask.and.paintbrush.fill", title: "Truth Seeker", desc: "Complete 30 lie mode levels", category: .levels) { _,_,lp in lp.completedLevels.count >= 30 },
 
@@ -453,12 +453,13 @@ class AchievementManager: ObservableObject {
         Achievement(id: "star_50", icon: "star.fill", title: "Star Hunter", desc: "Earn 50 stars", category: .stars) { _,p,_ in p.totalStars >= 50 },
         Achievement(id: "star_100", icon: "diamond.fill", title: "Star Master", desc: "Earn 100 stars", category: .stars) { _,p,_ in p.totalStars >= 100 },
         Achievement(id: "star_200", icon: "diamond.fill", title: "Star Legend", desc: "Earn 200 stars", category: .stars) { _,p,_ in p.totalStars >= 200 },
-        Achievement(id: "star_360", icon: "sparkles", title: "Perfect Stars", desc: "Earn all 360 stars", category: .stars) { _,p,_ in p.totalStars >= 360 },
+        Achievement(id: "star_360", icon: "sparkles", title: "Star Hoarder", desc: "Earn 360 stars", category: .stars) { _,p,_ in p.totalStars >= 360 },
+        Achievement(id: "star_720", icon: "sparkles", title: "Perfect Stars", desc: "Earn all 720 stars", category: .stars) { _,p,_ in p.totalStars >= 720 },
 
         // Mastery
-        Achievement(id: "all_3star_t1", icon: "rosette", title: "Perfection I", desc: "3-star all Junior Agent levels", category: .mastery) { _,p,_ in (1...20).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
-        Achievement(id: "all_3star_t2", icon: "rosette", title: "Perfection II", desc: "3-star all Agent levels", category: .mastery) { _,p,_ in (21...40).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
-        Achievement(id: "all_3star_t3", icon: "rosette", title: "Perfection III", desc: "3-star all Senior Agent levels", category: .mastery) { _,p,_ in (41...60).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
+        Achievement(id: "all_3star_t1", icon: "rosette", title: "Perfection I", desc: "3-star all Junior Agent levels", category: .mastery) { _,p,_ in (1...40).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
+        Achievement(id: "all_3star_t2", icon: "rosette", title: "Perfection II", desc: "3-star all Agent levels", category: .mastery) { _,p,_ in (41...80).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
+        Achievement(id: "all_3star_t3", icon: "rosette", title: "Perfection III", desc: "3-star all Senior Agent levels", category: .mastery) { _,p,_ in (81...120).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 } },
 
         // Speed
         Achievement(id: "speed_1", icon: "hare.fill", title: "Lucky Guess", desc: "Crack a code in 1 attempt", category: .speed) { s,_,_ in s.gamesWon > 0 && s.totalAttempts > 0 && (Double(s.totalAttempts) / Double(s.gamesWon)) <= 1.0 || UserDefaults.standard.bool(forKey: "ach_speed_1") },

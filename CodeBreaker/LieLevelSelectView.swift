@@ -44,7 +44,7 @@ struct LieLevelSelectView: View {
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(AppTheme.danger)
             Spacer()
-            Text("\(progress.completedLevels.count)/120")
+            Text("\(progress.completedLevels.count)/240")
                 .font(.system(size: 12, weight: .bold, design: .monospaced))
                 .foregroundStyle(AppTheme.textSecondary)
         }

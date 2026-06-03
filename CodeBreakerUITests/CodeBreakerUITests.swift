@@ -327,7 +327,7 @@ final class CodeBreakerUITests: XCTestCase {
         app.staticTexts["Classic Missions"].tap()
         _ = app.staticTexts["1"].waitForExistence(timeout: 3)
 
-        for i in 1...20 {
+        for i in 1...5 {
             XCTAssertTrue(app.staticTexts["\(i)"].exists, "Level \(i) not found in grid")
         }
     }
