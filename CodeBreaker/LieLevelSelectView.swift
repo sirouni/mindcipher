@@ -60,7 +60,7 @@ struct LieLevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier > 0 ? AppTheme.danger : AppTheme.textMuted.opacity(0.3))
+                    .foregroundStyle(selectedTier > 0 ? AppTheme.danger : Color.white.opacity(0.25))
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier == 0)
@@ -81,7 +81,7 @@ struct LieLevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier < tiers.count - 1 ? AppTheme.danger : AppTheme.textMuted.opacity(0.3))
+                    .foregroundStyle(selectedTier < tiers.count - 1 ? AppTheme.danger : Color.white.opacity(0.25))
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier >= tiers.count - 1)
@@ -106,7 +106,7 @@ struct LieLevelSelectView: View {
                                 let ci = isReversed ? row*cols+(cols-1-col) : row*cols+col
                                 let ni = isReversed ? row*cols+(cols-2-col) : row*cols+col+1
                                 let lk = ci < levels.count && ni < levels.count && progress.completedLevels.contains(levels[min(ci,ni)].id)
-                                Rectangle().fill(lk ? color : AppTheme.textMuted.opacity(0.3)).frame(height: 3).frame(maxWidth: .infinity)
+                                Rectangle().fill(lk ? color : Color.white.opacity(0.25)).frame(height: 3).frame(maxWidth: .infinity)
                             }
                         }
                     }
@@ -115,7 +115,7 @@ struct LieLevelSelectView: View {
                         let lk = ti < levels.count && progress.completedLevels.contains(levels[ti].id)
                         HStack {
                             if !isReversed { Spacer() }
-                            Rectangle().fill(lk ? color : AppTheme.textMuted.opacity(0.3)).frame(width: 3, height: 22)
+                            Rectangle().fill(lk ? color : Color.white.opacity(0.25)).frame(width: 3, height: 22)
                             if isReversed { Spacer() }
                         }.padding(.horizontal, 26)
                     }

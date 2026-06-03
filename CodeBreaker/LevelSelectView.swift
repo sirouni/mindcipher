@@ -44,7 +44,7 @@ struct LevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier > 0 ? color : AppTheme.textMuted.opacity(0.3))
+                    .foregroundStyle(selectedTier > 0 ? color : Color.white.opacity(0.25))
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier == 0)
@@ -69,7 +69,7 @@ struct LevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier < tiers.count - 1 ? color : AppTheme.textMuted.opacity(0.3))
+                    .foregroundStyle(selectedTier < tiers.count - 1 ? color : Color.white.opacity(0.25))
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier >= tiers.count - 1)
@@ -100,7 +100,7 @@ struct LevelSelectView: View {
                                 let linked = curIdx < levels.count && nextIdx < levels.count &&
                                     progress.completedLevels.contains(levels[min(curIdx, nextIdx)].id)
                                 Rectangle()
-                                    .fill(linked ? color : AppTheme.textMuted.opacity(0.3))
+                                    .fill(linked ? color : Color.white.opacity(0.25))
                                     .frame(height: 3)
                                     .frame(maxWidth: .infinity)
                             }
@@ -112,7 +112,7 @@ struct LevelSelectView: View {
                         HStack {
                             if !isReversed { Spacer() }
                         Rectangle()
-                            .fill(linked ? color : AppTheme.textMuted.opacity(0.3))
+                            .fill(linked ? color : Color.white.opacity(0.25))
                             .frame(width: 3, height: 22)
                             if isReversed { Spacer() }
                         }
