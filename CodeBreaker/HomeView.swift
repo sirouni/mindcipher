@@ -9,6 +9,7 @@ struct HomeView: View {
     @State private var showEditor = false
     @State private var showLieMode = false
     @State private var showTutorial = false
+    @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var titleScale: CGFloat = 0.8
     @State private var titleOpacity: Double = 0
     @State private var buttonsOffset: CGFloat = 50
@@ -53,10 +54,19 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showLieMode) {
                 LieLevelSelectView()
             }
-            .sheet(isPresented: $showTutorial) {
+            .sheet(isPresented: $showTutorial, onDismiss: {
+                hasSeenTutorial = true
+            }) {
                 TutorialView()
             }
-            .onAppear { animateEntrance() }
+            .onAppear {
+                animateEntrance()
+                if !hasSeenTutorial {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showTutorial = true
+                    }
+                }
+            }
         }
         .preferredColorScheme(.light)
     }
