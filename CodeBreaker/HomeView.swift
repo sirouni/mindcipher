@@ -414,89 +414,186 @@ struct FreePlaySetupView: View {
 }
 
 struct DuelSetupView: View {
-    enum DuelPhase { case setting, handoff, playing }
+    enum DuelPhase { case config, setting, handoff }
 
-    @State private var phase: DuelPhase = .setting
-    @State private var colorCount = 6
+    @State private var phase: DuelPhase = .config
+    @State private var selectedDifficulty: Difficulty = .easy
     @State private var secretCode: [PegColor] = []
-    @State private var currentSlot = 0
     @State private var startGame = false
     @State private var countDown = 3
     @StateObject private var viewModel = GameViewModel()
 
-    private let codeLength = 4
-
-    private var availableColors: [PegColor] {
-        Array(PegColor.allCases.prefix(colorCount))
-    }
+    private var codeLength: Int { selectedDifficulty.codeLength }
+    private var colorCount: Int { selectedDifficulty.colorCount }
+    private var maxAttempts: Int { selectedDifficulty.maxAttempts }
+    private var availableColors: [PegColor] { Array(PegColor.allCases.prefix(colorCount)) }
 
     var body: some View {
         ZStack {
             AppTheme.bgGradient.ignoresSafeArea()
 
             switch phase {
+            case .config: configView
             case .setting: codeSetupView
             case .handoff: handoffView
-            case .playing: EmptyView()
             }
         }
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
         }
-        .onAppear { secretCode = [] }
     }
 
-    private var codeSetupView: some View {
-        VStack(spacing: 24) {
-            HStack {
-                Image(systemName: "person.fill")
-                    .foregroundStyle(AppTheme.accent)
-                Text("玩家 1 设置密码")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+    // MARK: - 第1步：选难度
+
+    private var configView: some View {
+        VStack(spacing: 20) {
+            VStack(spacing: 6) {
+                Image(systemName: "person.2.fill")
+                    .font(.system(size: 36))
+                    .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
+                Text("双人对战")
+                    .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
+                Text("一人设密码，一人来破译")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
             }
 
-            Text("选择 \(codeLength) 个颜色组成密码")
-                .font(.system(size: 14, weight: .medium))
-                .foregroundStyle(AppTheme.textSecondary)
+            VStack(spacing: 8) {
+                ForEach(Difficulty.allCases, id: \.rawValue) { diff in
+                    Button {
+                        withAnimation(.spring(response: 0.3)) { selectedDifficulty = diff }
+                    } label: {
+                        HStack {
+                            Text(diff.rawValue)
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundStyle(selectedDifficulty == diff ? .white : AppTheme.textPrimary)
+                            Spacer()
+                            Text("\(diff.codeLength)位·\(diff.colorCount)色·\(diff.maxAttempts)步")
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .foregroundStyle(selectedDifficulty == diff ? .white.opacity(0.7) : AppTheme.textSecondary)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(selectedDifficulty == diff ? Color(red: 0.5, green: 0.5, blue: 1.0) : Color.clear)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(12)
+            .glassCard()
 
-            HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 6) {
+                    Image(systemName: "info.circle.fill")
+                        .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
+                    Text("对战规则")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(AppTheme.textPrimary)
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    ruleText("1. 玩家1 秘密设置一组颜色密码")
+                    ruleText("2. 将手机交给 玩家2")
+                    ruleText("3. 玩家2 在限定步数内破译密码")
+                    ruleText("4. 步数越少越厉害！")
+                }
+            }
+            .padding(14)
+            .glassCard(cornerRadius: 14)
+
+            Spacer()
+
+            Button {
+                secretCode = []
+                withAnimation(.spring(response: 0.3)) { phase = .setting }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "person.fill")
+                    Text("玩家 1 设置密码")
+                }
+                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 16)
+                .background(Color(red: 0.5, green: 0.5, blue: 1.0), in: RoundedRectangle(cornerRadius: 14))
+            }
+        }
+        .padding(24)
+    }
+
+    private func ruleText(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 12, weight: .medium))
+            .foregroundStyle(AppTheme.textSecondary)
+    }
+
+    // MARK: - 第2步：设密码
+
+    private var codeSetupView: some View {
+        VStack(spacing: 20) {
+            HStack {
+                Button {
+                    withAnimation(.spring(response: 0.3)) { phase = .config }
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
+                Spacer()
+                VStack(spacing: 2) {
+                    Text("玩家 1 设置密码")
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.textPrimary)
+                    Text("\(selectedDifficulty.rawValue) · \(codeLength)位\(colorCount)色")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
+                Spacer()
+                Color.clear.frame(width: 20)
+            }
+
+            HStack(spacing: 10) {
                 ForEach(0..<codeLength, id: \.self) { i in
                     ZStack {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: 10)
                             .fill(AppTheme.bgCardLight)
-                            .frame(width: 56, height: 56)
+                            .frame(height: 52)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 12)
+                                RoundedRectangle(cornerRadius: 10)
                                     .stroke(
-                                        i == min(secretCode.count, codeLength - 1) ? AppTheme.accent : Color.clear,
+                                        i == min(secretCode.count, codeLength - 1) ?
+                                            Color(red: 0.5, green: 0.5, blue: 1.0) : Color.clear,
                                         lineWidth: 2
                                     )
                             )
                         if i < secretCode.count {
-                            PegView(color: secretCode[i], size: 36)
+                            PegView(color: secretCode[i], size: 34)
                         }
                     }
                     .onTapGesture {
-                        if i < secretCode.count {
-                            secretCode.remove(at: i)
-                        }
+                        if i < secretCode.count { secretCode.remove(at: i) }
                     }
                 }
             }
 
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4), spacing: 12) {
+            Text("点击颜色添加，点击槽位移除")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(AppTheme.textMuted)
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: min(colorCount, 4)), spacing: 10) {
                 ForEach(availableColors) { color in
                     Button {
-                        if secretCode.count < codeLength {
-                            secretCode.append(color)
-                        }
+                        if secretCode.count < codeLength { secretCode.append(color) }
                     } label: {
-                        PegView(color: color, size: 48)
+                        PegView(color: color, size: 44)
                     }
+                    .disabled(secretCode.count >= codeLength)
                 }
             }
-            .padding(16)
+            .padding(14)
             .glassCard()
 
             Spacer()
@@ -506,64 +603,86 @@ struct DuelSetupView: View {
                     withAnimation(.spring(response: 0.3)) { phase = .handoff }
                     startCountdown()
                 } label: {
-                    Text("确认密码 →")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.bgDark)
+                    Text("密码已设好 →")
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
+                        .background(Color(red: 0.5, green: 0.5, blue: 1.0), in: RoundedRectangle(cornerRadius: 14))
                 }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
         .padding(24)
     }
 
+    // MARK: - 第3步：交接
+
     private var handoffView: some View {
-        VStack(spacing: 30) {
+        VStack(spacing: 28) {
             Spacer()
-
-            Image(systemName: "hand.raised.fill")
-                .font(.system(size: 64))
-                .foregroundStyle(AppTheme.warning)
-
-            Text("请将手机交给对手")
-                .font(.system(size: 26, weight: .black, design: .rounded))
-                .foregroundStyle(AppTheme.textPrimary)
-
-            Text("密码已锁定，请勿偷看！")
-                .font(.system(size: 15, weight: .medium))
-                .foregroundStyle(AppTheme.textSecondary)
 
             ZStack {
                 Circle()
-                    .stroke(AppTheme.textMuted.opacity(0.3), lineWidth: 6)
-                    .frame(width: 100, height: 100)
+                    .fill(AppTheme.warning.opacity(0.1))
+                    .frame(width: 120, height: 120)
+                Image(systemName: "hand.raised.fill")
+                    .font(.system(size: 56))
+                    .foregroundStyle(AppTheme.warning)
+            }
+
+            VStack(spacing: 8) {
+                Text("请将手机交给对手")
+                    .font(.system(size: 24, weight: .black, design: .rounded))
+                    .foregroundStyle(AppTheme.textPrimary)
+                Text("密码已锁定，请勿偷看！")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+
+            ZStack {
                 Circle()
-                    .trim(from: 0, to: CGFloat(countDown) / 3.0)
-                    .stroke(AppTheme.accent, style: StrokeStyle(lineWidth: 6, lineCap: .round))
-                    .frame(width: 100, height: 100)
+                    .stroke(AppTheme.textMuted.opacity(0.2), lineWidth: 6)
+                    .frame(width: 90, height: 90)
+                Circle()
+                    .trim(from: 0, to: CGFloat(max(0, countDown)) / 3.0)
+                    .stroke(Color(red: 0.5, green: 0.5, blue: 1.0),
+                            style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                    .frame(width: 90, height: 90)
                     .rotationEffect(.degrees(-90))
-                Text("\(countDown)")
-                    .font(.system(size: 44, weight: .black, design: .rounded))
-                    .foregroundStyle(AppTheme.accent)
+                if countDown > 0 {
+                    Text("\(countDown)")
+                        .font(.system(size: 40, weight: .black, design: .rounded))
+                        .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
+                } else {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundStyle(AppTheme.accent)
+                }
             }
 
             Spacer()
 
             if countDown <= 0 {
-                Button {
-                    viewModel.startDuel(secretCode: secretCode, colorCount: colorCount, maxAttempts: 8)
-                    startGame = true
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "person.fill")
-                        Text("玩家 2 开始破译")
+                VStack(spacing: 10) {
+                    Text("\(selectedDifficulty.rawValue) · \(codeLength)位\(colorCount)色 · \(maxAttempts)步")
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .foregroundStyle(AppTheme.textSecondary)
+
+                    Button {
+                        viewModel.startDuel(secretCode: secretCode, colorCount: colorCount, maxAttempts: maxAttempts)
+                        startGame = true
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "person.fill")
+                            Text("玩家 2 开始破译")
+                        }
+                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color(red: 0.5, green: 0.5, blue: 1.0), in: RoundedRectangle(cornerRadius: 14))
                     }
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                    .foregroundStyle(AppTheme.bgDark)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
@@ -575,9 +694,7 @@ struct DuelSetupView: View {
         countDown = 3
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             countDown -= 1
-            if countDown <= 0 {
-                timer.invalidate()
-            }
+            if countDown <= 0 { timer.invalidate() }
         }
     }
 }
