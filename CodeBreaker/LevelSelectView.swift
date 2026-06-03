@@ -55,15 +55,20 @@ struct LevelSelectView: View {
 
     private var allLevelsGrid: some View {
         ScrollView {
-            LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 5),
-                spacing: 10
-            ) {
+            LazyVStack(spacing: 0) {
                 ForEach(levelManager.levels) { level in
-                    levelCell(level)
+                    VStack(spacing: 0) {
+                        if level.id > 1 {
+                            Rectangle()
+                                .fill(progress.completedLevels.contains(level.id - 1) ? AppTheme.accent.opacity(0.4) : AppTheme.textMuted.opacity(0.15))
+                                .frame(width: 2, height: 20)
+                        }
+                        levelCell(level)
+                    }
                 }
             }
-            .padding(12)
+            .padding(.horizontal, 40)
+            .padding(.vertical, 12)
         }
     }
 
@@ -148,56 +153,61 @@ struct LevelSelectView: View {
             guard isUnlocked else { return }
             withAnimation(.spring(response: 0.3)) { previewLevel = level }
         } label: {
-            VStack(spacing: 6) {
+            HStack(spacing: 14) {
                 ZStack {
+                    Circle()
+                        .fill(
+                            isCompleted ? AppTheme.accent :
+                            isUnlocked ? AppTheme.bgCardLight :
+                            AppTheme.bgCard.opacity(0.5)
+                        )
+                        .frame(width: 44, height: 44)
+
                     if !isUnlocked {
                         Image(systemName: "lock.fill")
-                            .font(.system(size: 16))
+                            .font(.system(size: 15))
                             .foregroundStyle(AppTheme.textMuted)
                     } else {
                         Text("\(level.id)")
-                            .font(.system(size: 18, weight: .bold, design: .rounded))
-                            .foregroundStyle(isCompleted ? AppTheme.accent : AppTheme.textPrimary)
+                            .font(.system(size: 17, weight: .black, design: .rounded))
+                            .foregroundStyle(isCompleted ? AppTheme.bgDark : AppTheme.textPrimary)
                     }
                 }
-                .frame(height: 28)
 
-                if isCompleted {
-                    HStack(spacing: 2) {
-                        ForEach(0..<3, id: \.self) { i in
-                            Image(systemName: i < stars ? "star.fill" : "star")
-                                .font(.system(size: 8))
-                                .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted)
-                        }
-                    }
-                } else {
-                    HStack(spacing: 2) {
-                        ForEach(0..<3, id: \.self) { _ in
-                            Image(systemName: "star")
-                                .font(.system(size: 8))
-                                .foregroundStyle(AppTheme.textMuted)
-                        }
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(level.difficulty.rawValue)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(isUnlocked ? AppTheme.textPrimary : AppTheme.textMuted)
+                    Text("\(level.codeLength)\(L("param.yes").prefix(0))位·\(level.colorCount)色·\(level.maxAttempts)步")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
+
+                Spacer()
+
+                HStack(spacing: 2) {
+                    ForEach(0..<3, id: \.self) { i in
+                        Image(systemName: i < stars ? "star.fill" : "star")
+                            .font(.system(size: 10))
+                            .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted)
                     }
                 }
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(
-                        isCompleted ? AppTheme.accent.opacity(0.1) :
-                        isUnlocked ? AppTheme.bgCard :
-                        AppTheme.bgCard.opacity(0.4)
-                    )
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(AppTheme.bgCard.opacity(0.7))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: 14)
                             .stroke(
-                                isCompleted ? AppTheme.accent.opacity(0.3) : Color.clear,
+                                isCompleted ? AppTheme.accent.opacity(0.3) :
+                                isUnlocked ? Color.white.opacity(0.05) : Color.clear,
                                 lineWidth: 1
                             )
                     )
             )
-            .opacity(isUnlocked ? 1.0 : 0.5)
+            .opacity(isUnlocked ? 1.0 : 0.4)
         }
         .buttonStyle(.plain)
         .disabled(!isUnlocked)
