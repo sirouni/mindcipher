@@ -163,18 +163,18 @@ struct HomeView: View {
             ) { showLevels = true }
 
             menuButton(
-                title: "自由模式",
-                subtitle: "自定义难度 · 无限挑战",
-                icon: "infinity",
-                color: AppTheme.warning
-            ) { showFreePlay = true }
-
-            menuButton(
                 title: "谎言任务",
                 subtitle: "120关 · 含1次虚假反馈",
                 icon: "theatermask.and.paintbrush.fill",
                 color: AppTheme.danger
             ) { showLieMode = true }
+
+            menuButton(
+                title: "自由模式",
+                subtitle: "自定义难度 · 无限挑战",
+                icon: "infinity",
+                color: AppTheme.warning
+            ) { showFreePlay = true }
 
             menuButton(
                 title: "双人对战",
@@ -302,13 +302,14 @@ struct HomeView: View {
 
 struct FreePlaySetupView: View {
     @State private var selectedDifficulty: Difficulty = .easy
+    @State private var lieMode = false
     @State private var startGame = false
     @StateObject private var viewModel = GameViewModel()
 
     var body: some View {
         ZStack {
             AppTheme.bgGradient.ignoresSafeArea()
-            VStack(spacing: 24) {
+            VStack(spacing: 20) {
                 Text("自由模式")
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
@@ -333,18 +334,38 @@ struct FreePlaySetupView: View {
                 .padding(16)
                 .glassCard()
 
+                HStack(spacing: 12) {
+                    Image(systemName: "theatermask.and.paintbrush.fill")
+                        .font(.system(size: 18))
+                        .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textMuted)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("谎言模式")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textPrimary)
+                        Text("含1次虚假反馈")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(AppTheme.textSecondary)
+                    }
+                    Spacer()
+                    Toggle("", isOn: $lieMode)
+                        .tint(AppTheme.danger)
+                        .labelsHidden()
+                }
+                .padding(14)
+                .glassCard(cornerRadius: 14)
+
                 Spacer()
 
                 Button {
-                    viewModel.startFreePlay(difficulty: selectedDifficulty)
+                    viewModel.startFreePlay(difficulty: selectedDifficulty, lieMode: lieMode)
                     startGame = true
                 } label: {
-                    Text("开始挑战")
+                    Text(lieMode ? "开始谎言挑战" : "开始挑战")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.bgDark)
+                        .foregroundStyle(lieMode ? .white : AppTheme.bgDark)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
+                        .background(lieMode ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
                 }
             }
             .padding(24)
