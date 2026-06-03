@@ -212,7 +212,7 @@ class GameEngine {
         return realFeedback
     }
 
-    private func computeRealFeedback(guess: [PegColor]) -> Feedback {
+    func computeRealFeedback(guess: [PegColor]) -> Feedback {
         var exact = 0
         var secretRemaining: [PegColor] = []
         var guessRemaining: [PegColor] = []

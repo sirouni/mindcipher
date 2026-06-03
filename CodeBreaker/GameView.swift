@@ -488,6 +488,8 @@ struct GameView: View {
 
             revealedCodeRow
 
+            lieRevealSection
+
             resultButtons
         }
     }
@@ -509,6 +511,8 @@ struct GameView: View {
 
             revealedCodeRow
 
+            lieRevealSection
+
             resultButtons
         }
     }
@@ -525,6 +529,51 @@ struct GameView: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
         .glassCard(cornerRadius: 10)
+    }
+
+    @ViewBuilder
+    private var lieRevealSection: some View {
+        if viewModel.engine?.lieMode == true, let lieGuess = viewModel.engine?.lieAtGuess {
+            VStack(spacing: 6) {
+                HStack(spacing: 6) {
+                    Image(systemName: "theatermask.and.paintbrush.fill")
+                        .font(.system(size: 14))
+                        .foregroundStyle(AppTheme.danger)
+                    Text("第 \(lieGuess) 步是谎言！")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(AppTheme.danger)
+                }
+
+                if lieGuess <= viewModel.guessHistory.count {
+                    let record = viewModel.guessHistory[lieGuess - 1]
+                    let realFeedback = viewModel.engine!.computeRealFeedback(guess: record.guess)
+                    HStack(spacing: 4) {
+                        Text("虚假:")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(AppTheme.textMuted)
+                        Text("\(record.feedback.exact)精确 \(record.feedback.partial)位置")
+                            .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            .foregroundStyle(AppTheme.danger)
+                        Text("→ 真实:")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(AppTheme.textMuted)
+                        Text("\(realFeedback.exact)精确 \(realFeedback.partial)位置")
+                            .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            .foregroundStyle(AppTheme.accent)
+                    }
+                }
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(AppTheme.danger.opacity(0.08))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(AppTheme.danger.opacity(0.3), lineWidth: 1)
+                    )
+            )
+        }
     }
 
     private func starsDisplay(attempts: Int) -> some View {
