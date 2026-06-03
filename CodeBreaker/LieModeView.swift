@@ -8,39 +8,39 @@ struct LieModeSetupView: View {
     var body: some View {
         ZStack {
             AppTheme.bgGradient.ignoresSafeArea()
-            VStack(spacing: 20) {
-                header
+            ScrollView {
+                VStack(spacing: 20) {
+                    header
 
-                VStack(spacing: 10) {
-                    ForEach(Difficulty.allCases, id: \.rawValue) { diff in
-                        difficultyRow(diff)
+                    VStack(spacing: 10) {
+                        ForEach(Difficulty.allCases, id: \.rawValue) { diff in
+                            difficultyRow(diff)
+                        }
+                    }
+                    .padding(16)
+                    .glassCard()
+
+                    infoCard
+
+                    rulesCard
+
+                    Button {
+                        startLieGame()
+                        startGame = true
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "theatermask.and.paintbrush.fill")
+                            Text("开始谎言挑战")
+                        }
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(AppTheme.danger, in: RoundedRectangle(cornerRadius: 14))
                     }
                 }
-                .padding(16)
-                .glassCard()
-
-                infoCard
-
-                rulesCard
-
-                Spacer()
-
-                Button {
-                    startLieGame()
-                    startGame = true
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "theatermask.and.paintbrush.fill")
-                        Text("开始谎言挑战")
-                    }
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(AppTheme.danger, in: RoundedRectangle(cornerRadius: 14))
-                }
+                .padding(24)
             }
-            .padding(24)
         }
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
