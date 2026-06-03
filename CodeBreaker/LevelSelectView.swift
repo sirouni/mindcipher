@@ -72,6 +72,7 @@ struct LevelSelectView: View {
                     .foregroundStyle(selectedTier < tiers.count - 1 ? color : Color.black.opacity(0.15))
                     .frame(width: 44, height: 44)
             }
+            .accessibilityLabel("Next tier")
             .disabled(selectedTier >= tiers.count - 1)
         }
         .padding(.horizontal, 12)

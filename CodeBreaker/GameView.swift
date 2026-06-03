@@ -125,6 +125,7 @@ struct GameView: View {
                     .frame(width: 40, height: 40)
                     .glassCard(cornerRadius: 10)
             }
+            .accessibilityLabel("Back")
 
             Spacer()
 
@@ -478,6 +479,7 @@ struct GameView: View {
                     .frame(width: 50, height: 50)
                     .glassCard(cornerRadius: 12)
             }
+            .accessibilityLabel("Share")
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
