@@ -112,13 +112,7 @@ enum Difficulty: String, CaseIterable {
         }
     }
 
-    var timeLimitSeconds: Int {
-        switch self {
-        case .expert: return 120
-        case .master: return 90
-        default: return 0
-        }
-    }
+    var timeLimitSeconds: Int { 0 }
 }
 
 struct Level: Identifiable, Codable {
@@ -390,6 +384,9 @@ struct Achievement: Identifiable {
 enum AchievementCategory: String, CaseIterable {
     case beginner = "Getting Started"
     case streak = "Streaks"
+    case daily = "Daily Challenge"
+    case freeplay = "Free Play"
+    case duel = "Duel Mode"
     case levels = "Levels"
     case stars = "Stars"
     case mastery = "Mastery"
@@ -420,6 +417,24 @@ class AchievementManager: ObservableObject {
         Achievement(id: "streak_10", icon: "scope", title: "Sharpshooter", desc: "Win 10 in a row", category: .streak) { s,_,_ in s.bestStreak >= 10 },
         Achievement(id: "streak_20", icon: "bolt.fill", title: "Unstoppable", desc: "Win 20 in a row", category: .streak) { s,_,_ in s.bestStreak >= 20 },
         Achievement(id: "winrate_80", icon: "percent", title: "Consistent", desc: "Maintain 80%+ win rate (10+ games)", category: .streak) { s,_,_ in s.gamesPlayed >= 10 && s.winRate >= 80 },
+
+        // Daily Challenge
+        Achievement(id: "daily_1", icon: "calendar", title: "Daily Debut", desc: "Complete your first daily challenge", category: .daily) { _,_,_ in AchievementManager.dailyWins >= 1 },
+        Achievement(id: "daily_7", icon: "calendar.badge.clock", title: "Weekly Habit", desc: "Complete 7 daily challenges", category: .daily) { _,_,_ in AchievementManager.dailyWins >= 7 },
+        Achievement(id: "daily_30", icon: "calendar.circle.fill", title: "Monthly Master", desc: "Complete 30 daily challenges", category: .daily) { _,_,_ in AchievementManager.dailyWins >= 30 },
+        Achievement(id: "daily_100", icon: "calendar.badge.checkmark", title: "Daily Devotee", desc: "Complete 100 daily challenges", category: .daily) { _,_,_ in AchievementManager.dailyWins >= 100 },
+
+        // Free Play
+        Achievement(id: "free_1", icon: "infinity", title: "Free Spirit", desc: "Win your first free play game", category: .freeplay) { _,_,_ in AchievementManager.freePlayWins >= 1 },
+        Achievement(id: "free_10", icon: "infinity.circle", title: "Freestyle Pro", desc: "Win 10 free play games", category: .freeplay) { _,_,_ in AchievementManager.freePlayWins >= 10 },
+        Achievement(id: "free_50", icon: "medal.fill", title: "Free Play Legend", desc: "Win 50 free play games", category: .freeplay) { _,_,_ in AchievementManager.freePlayWins >= 50 },
+        Achievement(id: "free_master", icon: "crown.fill", title: "Master Cracker", desc: "Win a Master difficulty free play", category: .freeplay) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_free_master") },
+        Achievement(id: "free_expert", icon: "star.square.fill", title: "Expert Cracker", desc: "Win an Expert difficulty free play", category: .freeplay) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_free_expert") },
+
+        // Duel Mode
+        Achievement(id: "duel_1", icon: "person.2.fill", title: "First Duel", desc: "Win your first duel", category: .duel) { _,_,_ in AchievementManager.duelWins >= 1 },
+        Achievement(id: "duel_5", icon: "person.2.circle.fill", title: "Duelist", desc: "Win 5 duels", category: .duel) { _,_,_ in AchievementManager.duelWins >= 5 },
+        Achievement(id: "duel_20", icon: "person.2.badge.key.fill", title: "Duel Champion", desc: "Win 20 duels", category: .duel) { _,_,_ in AchievementManager.duelWins >= 20 },
 
         // Levels
         Achievement(id: "tier1", icon: "shield.fill", title: "Junior Graduate", desc: "Complete all Junior Agent levels", category: .levels) { _,p,_ in (1...20).allSatisfy { p.completedLevels.contains($0) } },
@@ -476,6 +491,25 @@ class AchievementManager: ObservableObject {
         if attempts <= 2 { UserDefaults.standard.set(true, forKey: "ach_speed_2") }
         if attempts <= 3 { UserDefaults.standard.set(true, forKey: "ach_speed_3") }
     }
+
+    func markDailyWin() {
+        let count = UserDefaults.standard.integer(forKey: "ach_daily_wins") + 1
+        UserDefaults.standard.set(count, forKey: "ach_daily_wins")
+    }
+
+    func markFreePlayWin() {
+        let count = UserDefaults.standard.integer(forKey: "ach_freeplay_wins") + 1
+        UserDefaults.standard.set(count, forKey: "ach_freeplay_wins")
+    }
+
+    func markDuelWin() {
+        let count = UserDefaults.standard.integer(forKey: "ach_duel_wins") + 1
+        UserDefaults.standard.set(count, forKey: "ach_duel_wins")
+    }
+
+    static var dailyWins: Int { UserDefaults.standard.integer(forKey: "ach_daily_wins") }
+    static var freePlayWins: Int { UserDefaults.standard.integer(forKey: "ach_freeplay_wins") }
+    static var duelWins: Int { UserDefaults.standard.integer(forKey: "ach_duel_wins") }
 }
 
 class StatsManager: ObservableObject {

@@ -166,6 +166,7 @@ struct LieModeSetupView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+            .contentShape(Rectangle())
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(selectedDifficulty == diff ? AppTheme.danger : Color.clear)

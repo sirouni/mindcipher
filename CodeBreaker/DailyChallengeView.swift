@@ -136,6 +136,7 @@ struct DailyChallengeView: View {
 
         viewModel.startDuel(secretCode: code, colorCount: 6, maxAttempts: 7)
         viewModel.mode = .freePlay
+        UserDefaults.standard.set(true, forKey: "ach_daily_active")
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             UserDefaults.standard.set(true, forKey: "daily_\(dateString)")

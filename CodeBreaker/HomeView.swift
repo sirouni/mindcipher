@@ -25,7 +25,7 @@ struct HomeView: View {
                 ScanlineEffect().ignoresSafeArea().opacity(0.5)
 
                 VStack(spacing: 0) {
-                    Spacer().frame(height: 8)
+                    Spacer().frame(height: 20)
                     headerSection
                     Spacer().frame(height: 12)
                     menuSection
@@ -97,14 +97,16 @@ struct HomeView: View {
             HStack {
                 Button { showTutorial = true } label: {
                     Image(systemName: "questionmark.circle")
-                        .font(.system(size: 18))
-                        .foregroundStyle(AppTheme.textMuted)
+                        .font(.system(size: 24))
+                        .foregroundStyle(AppTheme.textSecondary)
+                        .frame(width: 44, height: 44)
                 }
                 Spacer()
                 Button { showSettings = true } label: {
                     Image(systemName: "gearshape.fill")
-                        .font(.system(size: 18))
-                        .foregroundStyle(AppTheme.textMuted)
+                        .font(.system(size: 24))
+                        .foregroundStyle(AppTheme.textSecondary)
+                        .frame(width: 44, height: 44)
                 }
             }
 
@@ -409,6 +411,7 @@ struct FreePlaySetupView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+            .contentShape(Rectangle())
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(selectedDifficulty == diff ? AppTheme.accent : Color.clear)
@@ -492,6 +495,7 @@ struct DuelSetupView: View {
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
+                        .contentShape(Rectangle())
                         .background(
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(selectedDifficulty == diff ? Color(red: 0.5, green: 0.5, blue: 1.0) : Color.clear)

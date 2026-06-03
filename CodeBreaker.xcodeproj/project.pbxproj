@@ -26,6 +26,7 @@
 		AA00000000000011 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000011 /* L10n.swift */; };
 		AA00000000000014 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000014 /* TutorialView.swift */; };
 		AA00000000000012 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BB00000000000012 /* Localizable.strings */; };
+		AAUI000000000001 /* CodeBreakerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBUI000000000001 /* CodeBreakerUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,10 +51,19 @@
 		BB00000000000012 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		BB00000000000013 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CC00000000000001 /* CodeBreaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeBreaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBUI000000000001 /* CodeBreakerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerUITests.swift; sourceTree = "<group>"; };
+		CCUI000000000001 /* CodeBreakerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CodeBreakerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		DD00000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDUI000000000003 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -67,8 +77,17 @@
 			isa = PBXGroup;
 			children = (
 				EE00000000000002 /* CodeBreaker */,
+				EEUI000000000001 /* CodeBreakerUITests */,
 				EE00000000000003 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		EEUI000000000001 /* CodeBreakerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				BBUI000000000001 /* CodeBreakerUITests.swift */,
+			);
+			path = CodeBreakerUITests;
 			sourceTree = "<group>";
 		};
 		EE00000000000002 /* CodeBreaker */ = {
@@ -101,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				CC00000000000001 /* CodeBreaker.app */,
+				CCUI000000000001 /* CodeBreakerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,7 +145,42 @@
 			productReference = CC00000000000001 /* CodeBreaker.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FFUI000000000001 /* CodeBreakerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11UI000000000001 /* Build configuration list for PBXNativeTarget "CodeBreakerUITests" */;
+			buildPhases = (
+				DDUI000000000001 /* Sources */,
+				DDUI000000000003 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DDUI000000000004 /* PBXTargetDependency */,
+			);
+			name = CodeBreakerUITests;
+			productName = CodeBreakerUITests;
+			productReference = CCUI000000000001 /* CodeBreakerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		PPUI000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1200000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FF00000000000001;
+			remoteInfo = CodeBreaker;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		DDUI000000000004 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FF00000000000001 /* CodeBreaker */;
+			targetProxy = PPUI000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
 		1200000000000001 /* Project object */ = {
@@ -137,6 +192,10 @@
 				TargetAttributes = {
 					FF00000000000001 = {
 						CreatedOnToolsVersion = 15.4;
+					};
+					FFUI000000000001 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = FF00000000000001;
 					};
 				};
 			};
@@ -156,6 +215,7 @@
 			projectRoot = "";
 			targets = (
 				FF00000000000001 /* CodeBreaker */,
+				FFUI000000000001 /* CodeBreakerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -194,6 +254,14 @@
 				AA00000000000010 /* LieLevelSelectView.swift in Sources */,
 				AA00000000000011 /* L10n.swift in Sources */,
 				AA00000000000014 /* TutorialView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDUI000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAUI000000000001 /* CodeBreakerUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +395,44 @@
 			};
 			name = Release;
 		};
+		13UI000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JR6MLGD7C8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codebreaker.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CodeBreaker;
+			};
+			name = Debug;
+		};
+		13UI000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JR6MLGD7C8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.codebreaker.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CodeBreaker;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -344,6 +450,15 @@
 			buildConfigurations = (
 				1300000000000003 /* Debug */,
 				1300000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		11UI000000000001 /* Build configuration list for PBXNativeTarget "CodeBreakerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13UI000000000001 /* Debug */,
+				13UI000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
