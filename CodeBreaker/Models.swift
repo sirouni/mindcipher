@@ -166,7 +166,15 @@ class GameEngine {
         self.availableColors = Array(PegColor.allCases.prefix(colorCount))
 
         if lieMode {
-            self.lieAttemptNumber = Int.random(in: 1...max(1, maxAttempts - 2))
+            // 谎言分配在普通模式最优求解步数内，保证一定会被遇到
+            let optimalSteps: Int
+            switch codeLength {
+            case 3: optimalSteps = 4
+            case 4: optimalSteps = 6
+            case 5: optimalSteps = 8
+            default: optimalSteps = 8
+            }
+            self.lieAttemptNumber = Int.random(in: 1...max(1, optimalSteps - 1))
         } else {
             self.lieAttemptNumber = nil
         }
