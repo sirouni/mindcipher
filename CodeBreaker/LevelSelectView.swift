@@ -81,40 +81,59 @@ struct LevelSelectView: View {
     private func tierGridView(levels: [Level], color: Color) -> some View {
         let cols = 5
         let rows = (levels.count + cols - 1) / cols
+        let lineInactive = Color.black.opacity(0.15)
 
         return ScrollView {
             VStack(spacing: 0) {
                 ForEach(0..<rows, id: \.self) { row in
-                    let isReversed = row % 2 == 1
                     HStack(spacing: 0) {
                         ForEach(0..<cols, id: \.self) { col in
-                            let idx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
+                            let idx = row * cols + col
                             if idx < levels.count {
                                 levelCell(levels[idx])
                             } else {
                                 Color.clear.frame(width: 56, height: 56)
                             }
                             if col < cols - 1 {
-                                let curIdx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
-                                let nextIdx = isReversed ? row * cols + (cols - 2 - col) : row * cols + col + 1
-                                let linked = curIdx < levels.count && nextIdx < levels.count &&
-                                    progress.completedLevels.contains(levels[min(curIdx, nextIdx)].id)
+                                let curIdx = row * cols + col
+                                let nextIdx = curIdx + 1
+                                let linked = nextIdx < levels.count &&
+                                    progress.completedLevels.contains(levels[curIdx].id)
                                 Rectangle()
-                                    .fill(linked ? color : Color.black.opacity(0.15))
+                                    .fill(linked ? color : lineInactive)
                                     .frame(height: 3)
                                     .frame(maxWidth: .infinity)
                             }
                         }
                     }
+
                     if row < rows - 1 {
-                        let turnIdx = isReversed ? row * cols : (row + 1) * cols - 1
-                        let linked = turnIdx < levels.count && progress.completedLevels.contains(levels[turnIdx].id)
-                        HStack {
-                            if !isReversed { Spacer() }
-                        Rectangle()
-                            .fill(linked ? color : Color.black.opacity(0.15))
-                            .frame(width: 3, height: 22)
-                            if isReversed { Spacer() }
+                        let lastInRow = row * cols + cols - 1
+                        let firstInNext = (row + 1) * cols
+                        let linked = lastInRow < levels.count && firstInNext < levels.count &&
+                            progress.completedLevels.contains(levels[lastInRow].id)
+                        let lineColor = linked ? color : lineInactive
+
+                        HStack(spacing: 0) {
+                            Spacer()
+                            Rectangle()
+                                .fill(lineColor)
+                                .frame(width: 3, height: 16)
+                        }
+                        .padding(.horizontal, 26)
+
+                        HStack(spacing: 0) {
+                            Rectangle()
+                                .fill(lineColor)
+                                .frame(height: 3)
+                        }
+                        .padding(.horizontal, 26)
+
+                        HStack(spacing: 0) {
+                            Rectangle()
+                                .fill(lineColor)
+                                .frame(width: 3, height: 16)
+                            Spacer()
                         }
                         .padding(.horizontal, 26)
                     }
