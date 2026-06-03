@@ -1043,45 +1043,44 @@ struct ShareCardView: View {
     var body: some View {
         VStack(spacing: 0) {
             shareTopBar
-            shareSecretBar
-            Divider()
+            shareFeedbackLegend
+            Divider().overlay(Color(white: 0.82)).padding(.horizontal)
             shareGuessBoard
             shareInfoBar
-            shareLegend
         }
         .background(bgLight)
     }
 
-    // MARK: - Top Bar (mirrors game topBar)
+    // MARK: - Top Bar
 
     private var shareTopBar: some View {
         HStack {
-            HStack(spacing: 6) {
-                Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 14))
-                    .foregroundStyle(accent)
-                Text("Code Breaker")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color(white: 0.3))
-            }
+            Image(systemName: "chevron.left")
+                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(Color(white: 0.55))
+                .frame(width: 40, height: 40)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(Color.white.opacity(0.55))
+                )
 
             Spacer()
 
             VStack(spacing: 2) {
                 if let lid = levelId {
                     Text("Level \(lid)")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color(white: 0.15))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color(white: 0.12))
                     Text(difficultyName)
-                        .font(.system(size: 11, weight: .medium))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(accent)
                 } else {
                     Text("Free Play")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundStyle(Color(white: 0.15))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color(white: 0.12))
                 }
                 if isLieMode {
-                    Label("Lie Mode", systemImage: "exclamationmark.triangle.fill")
+                    Text("Lie Mode")
                         .font(.system(size: 10, weight: .bold))
                         .foregroundStyle(danger)
                 }
@@ -1091,10 +1090,10 @@ struct ShareCardView: View {
 
             HStack(spacing: 4) {
                 Text("\(maxAttempts - rows.count)")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundStyle(accent)
                 Text("left")
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Color(white: 0.5))
             }
             .padding(.horizontal, 10)
@@ -1105,41 +1104,41 @@ struct ShareCardView: View {
             )
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.vertical, 8)
     }
 
-    // MARK: - Secret Code Bar (mirrors game secretCodeBar)
+    // MARK: - Legend
 
-    private var shareSecretBar: some View {
-        HStack(spacing: 8) {
-            HStack(spacing: 6) {
-                ForEach(0..<codeLength, id: \.self) { _ in
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.white.opacity(0.6))
-                            .frame(width: 36, height: 36)
-                        Image(systemName: "questionmark")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundStyle(Color(white: 0.6))
-                    }
-                }
-            }
-            Spacer()
-
-            VStack(alignment: .trailing, spacing: 2) {
-                Text("Secret: \(codeLength) colors")
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(Color(white: 0.5))
-                Text("Choose from: \(colorCount)")
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(Color(white: 0.5))
+    private var shareFeedbackLegend: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            shareLegendLine(color: accent, hollow: false, text: "= One right color in the right position")
+            shareLegendLine(color: warning, hollow: false, text: "= One right color but in the wrong position")
+            shareLegendLine(color: Color(white: 0.65), hollow: true, text: "= One color is not in the secret code")
+            if isLieMode {
+                Text("Lie Mode — one feedback may be fake!")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(danger)
+                    .padding(.top, 2)
             }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 4)
     }
 
-    // MARK: - Guess Board (mirrors game guessBoard)
+    private func shareLegendLine(color: Color, hollow: Bool, text: String) -> some View {
+        HStack(spacing: 6) {
+            if hollow {
+                Circle().stroke(color, lineWidth: 1.5).frame(width: 11, height: 11)
+            } else {
+                Circle().fill(color).frame(width: 11, height: 11)
+            }
+            Text(text)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(Color(white: 0.4))
+        }
+    }
+
+    // MARK: - Guess Board (only filled rows)
 
     private var shareGuessBoard: some View {
         VStack(spacing: 0) {
@@ -1147,28 +1146,13 @@ struct ShareCardView: View {
                 shareGuessRow(row)
                 Divider().padding(.leading, 40)
             }
-
-            let emptyCount = maxAttempts - rows.count
-            if emptyCount > 0 {
-                ForEach(0..<emptyCount, id: \.self) { i in
-                    HStack {
-                        Text("\(rows.count + i + 1)")
-                            .font(.system(size: 12, weight: .bold, design: .monospaced))
-                            .foregroundStyle(Color(white: 0.78))
-                            .frame(width: 20)
-                        Spacer()
-                    }
-                    .padding(.horizontal, 12)
-                    .frame(height: 44)
-                    Divider().padding(.leading, 40)
-                }
-            }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 4)
         .background(
             RoundedRectangle(cornerRadius: 14)
                 .fill(Color.white.opacity(0.75))
+                .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
         )
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .padding(.horizontal, 8)
@@ -1271,39 +1255,6 @@ struct ShareCardView: View {
     }
 
     // MARK: - Legend
-
-    private var shareLegend: some View {
-        VStack(spacing: 5) {
-            Rectangle().fill(Color(white: 0.85)).frame(height: 1)
-            
-            Text("FEEDBACK GUIDE")
-                .font(.system(size: 10, weight: .bold))
-                .foregroundStyle(Color(white: 0.55))
-                .padding(.top, 4)
-
-            VStack(alignment: .leading, spacing: 4) {
-                legendRow(color: accent, hollow: false, text: "= One right color in the right position")
-                legendRow(color: warning, hollow: false, text: "= One right color but in the wrong position")
-                legendRow(color: Color(white: 0.65), hollow: true, text: "= One color is not in the secret code")
-            }
-            .padding(.horizontal, 20)
-        }
-        .padding(.bottom, 12)
-        .frame(maxWidth: .infinity)
-    }
-
-    private func legendRow(color: Color, hollow: Bool, text: String) -> some View {
-        HStack(spacing: 8) {
-            if hollow {
-                Circle().stroke(color, lineWidth: 1.5).frame(width: 11, height: 11)
-            } else {
-                Circle().fill(color).frame(width: 11, height: 11)
-            }
-            Text(text)
-                .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(Color(white: 0.4))
-        }
-    }
 
     // MARK: - Peg Colors
 
