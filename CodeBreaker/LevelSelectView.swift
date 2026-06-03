@@ -100,7 +100,7 @@ struct LevelSelectView: View {
                                 let linked = curIdx < levels.count && nextIdx < levels.count &&
                                     progress.completedLevels.contains(levels[min(curIdx, nextIdx)].id)
                                 Rectangle()
-                                    .fill(linked ? color.opacity(0.5) : AppTheme.textMuted.opacity(0.12))
+                                    .fill(linked ? color : AppTheme.textMuted.opacity(0.3))
                                     .frame(height: 3)
                                     .frame(maxWidth: .infinity)
                             }
@@ -111,9 +111,9 @@ struct LevelSelectView: View {
                         let linked = turnIdx < levels.count && progress.completedLevels.contains(levels[turnIdx].id)
                         HStack {
                             if !isReversed { Spacer() }
-                            Rectangle()
-                                .fill(linked ? color.opacity(0.5) : AppTheme.textMuted.opacity(0.12))
-                                .frame(width: 3, height: 22)
+                        Rectangle()
+                            .fill(linked ? color : AppTheme.textMuted.opacity(0.3))
+                            .frame(width: 3, height: 22)
                             if isReversed { Spacer() }
                         }
                         .padding(.horizontal, 26)
