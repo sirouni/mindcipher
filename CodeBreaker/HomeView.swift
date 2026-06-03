@@ -23,12 +23,9 @@ struct HomeView: View {
                 ScanlineEffect().ignoresSafeArea().opacity(0.5)
 
                 VStack(spacing: 0) {
-                    settingsButton
-                    Spacer()
+                    Spacer().frame(height: 8)
                     headerSection
-                    Spacer().frame(height: 20)
-                    dailyBanner
-                    Spacer().frame(height: 16)
+                    Spacer().frame(height: 12)
                     menuSection
                     Spacer()
                     statsBar
@@ -64,37 +61,7 @@ struct HomeView: View {
         .preferredColorScheme(.dark)
     }
 
-    private var settingsButton: some View {
-        HStack {
-            Button { showTutorial = true } label: {
-                Image(systemName: "questionmark.circle.fill")
-                    .font(.system(size: 16))
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .frame(width: 36, height: 36)
-                    .glassCard(cornerRadius: 10)
-            }
-            Spacer()
-            Button { showSettings = true } label: {
-                Image(systemName: "gearshape.fill")
-                    .font(.system(size: 16))
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .frame(width: 36, height: 36)
-                    .glassCard(cornerRadius: 10)
-            }
-        }
-        .padding(.top, 4)
-        .opacity(titleOpacity)
-    }
-
-    private var dailyBanner: some View {
-        menuButton(
-            title: "每日挑战",
-            subtitle: dailyCompleted ? L("menu.daily.done") : L("menu.daily.todo"),
-            icon: "calendar.badge.clock",
-            color: AppTheme.warning
-        ) { showDaily = true }
-        .opacity(titleOpacity)
-    }
+    
 
     private var dailyCompleted: Bool {
         let key = "daily_\(dailyDateString)"
@@ -108,39 +75,46 @@ struct HomeView: View {
     }
 
     private var headerSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 10) {
+            HStack {
+                Button { showTutorial = true } label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.system(size: 18))
+                        .foregroundStyle(AppTheme.textMuted)
+                }
+                Spacer()
+                Button { showSettings = true } label: {
+                    Image(systemName: "gearshape.fill")
+                        .font(.system(size: 18))
+                        .foregroundStyle(AppTheme.textMuted)
+                }
+            }
+
             ZStack {
                 Circle()
-                    .stroke(AppTheme.accent.opacity(0.15), lineWidth: 1)
-                    .frame(width: 160, height: 160)
-
-                Circle()
-                    .stroke(AppTheme.accent.opacity(0.08), lineWidth: 1)
-                    .frame(width: 200, height: 200)
+                    .stroke(AppTheme.accent.opacity(0.12), lineWidth: 1)
+                    .frame(width: 100, height: 100)
 
                 radarSweep
-                    .frame(width: 160, height: 160)
+                    .frame(width: 100, height: 100)
 
                 Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 56))
+                    .font(.system(size: 36))
                     .foregroundStyle(AppTheme.accent)
-                    .shadow(color: AppTheme.accent.opacity(0.5), radius: 20)
+                    .shadow(color: AppTheme.accent.opacity(0.5), radius: 15)
             }
             .scaleEffect(titleScale)
             .opacity(titleOpacity)
 
-            VStack(spacing: 6) {
+            VStack(spacing: 4) {
                 Text(L("app.title"))
-                    .font(.system(size: 34, weight: .black, design: .rounded))
+                    .font(.system(size: 26, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
                 Text(L("app.subtitle"))
-                    .font(.system(size: 13, weight: .medium, design: .monospaced))
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
                     .foregroundStyle(AppTheme.accent)
-                    .tracking(6)
-
-                MorseIndicator(isActive: true)
-                    .padding(.top, 4)
+                    .tracking(5)
             }
             .opacity(titleOpacity)
         }
@@ -165,7 +139,14 @@ struct HomeView: View {
     }
 
     private var menuSection: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: 8) {
+            menuButton(
+                title: L("menu.daily"),
+                subtitle: dailyCompleted ? L("menu.daily.done") : L("menu.daily.todo"),
+                icon: "calendar.badge.clock",
+                color: AppTheme.warning
+            ) { showDaily = true }
+
             menuButton(
                 title: L("menu.classic"),
                 subtitle: L("menu.classic.sub"),
@@ -210,32 +191,32 @@ struct HomeView: View {
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
-            HStack(spacing: 16) {
+            HStack(spacing: 12) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 10)
                         .fill(color.opacity(0.15))
-                        .frame(width: 48, height: 48)
+                        .frame(width: 40, height: 40)
                     Image(systemName: icon)
-                        .font(.system(size: 20, weight: .semibold))
+                        .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(color)
                 }
 
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(title)
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                     Text(subtitle)
-                        .font(.system(size: 12, weight: .medium))
+                        .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(AppTheme.textMuted)
             }
-            .padding(16)
+            .padding(12)
             .glassCard()
         }
         .buttonStyle(.plain)
