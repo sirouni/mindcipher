@@ -7,15 +7,13 @@ struct GameView: View {
     @State private var hintText = ""
     @State private var showResult = false
     @State private var confettiParticles: [ConfettiParticle] = []
-    @State private var showTutorial: Bool
-    @State private var tutorialStep = 0
+    
     @State private var showShareSheet = false
     @State private var revealedSecretCount = 0
     @State private var secretGlow = false
 
     init(viewModel: GameViewModel) {
         self.viewModel = viewModel
-        _showTutorial = State(initialValue: !UserDefaults.standard.bool(forKey: "tutorialSeen"))
     }
 
     var body: some View {
@@ -39,7 +37,7 @@ struct GameView: View {
                 ConfettiPiece(particle: p)
             }
 
-            if showTutorial { tutorialOverlay }
+            
         }
         .navigationBarHidden(true)
         .onChange(of: viewModel.phase) { _, phase in
@@ -689,69 +687,6 @@ struct GameView: View {
         vc.popoverPresentationController?.sourceView = root.view
         root.present(vc, animated: true)
     }
-
-    // MARK: - Tutorial Overlay
-
-    private var tutorialOverlay: some View {
-        ZStack {
-            Color.black.opacity(0.75).ignoresSafeArea()
-
-            VStack(spacing: 24) {
-                Image(systemName: tutorialIcons[tutorialStep])
-                    .font(.system(size: 44))
-                    .foregroundStyle(AppTheme.accent)
-
-                Text(tutorialTitles[tutorialStep])
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                    .foregroundStyle(AppTheme.textPrimary)
-                    .multilineTextAlignment(.center)
-
-                Text(tutorialTexts[tutorialStep])
-                    .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
-
-                HStack(spacing: 6) {
-                    ForEach(0..<tutorialTitles.count, id: \.self) { i in
-                        Circle()
-                            .fill(i == tutorialStep ? AppTheme.accent : AppTheme.textMuted)
-                            .frame(width: 6, height: 6)
-                    }
-                }
-
-                Button {
-                    if tutorialStep < tutorialTitles.count - 1 {
-                        withAnimation(.spring(response: 0.3)) { tutorialStep += 1 }
-                    } else {
-                        UserDefaults.standard.set(true, forKey: "tutorialSeen")
-                        withAnimation(.spring(response: 0.3)) { showTutorial = false }
-                    }
-                } label: {
-                    Text(tutorialStep < tutorialTitles.count - 1 ? "下一步" : "开始破译！")
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.bgDark)
-                        .frame(width: 200)
-                        .padding(.vertical, 14)
-                        .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
-                }
-            }
-            .padding(40)
-        }
-    }
-
-    private let tutorialIcons = [
-        "lock.shield.fill", "circle.grid.2x2.fill", "checkmark.circle.fill", "lightbulb.fill"
-    ]
-    private let tutorialTitles = [
-        "破译隐藏密码", "选择颜色填入", "解读反馈线索", "善用提示"
-    ]
-    private let tutorialTexts = [
-        "系统生成了一组隐藏的颜色密码\n你需要在有限次数内猜出正确组合",
-        "点击底部颜色球放入猜测槽位\n填满所有位置后点击提交",
-        "🟢 绿色 = 颜色和位置都对\n🟠 橙色 = 颜色对但位置不对\n⚪ 空圈 = 该颜色不在密码中",
-        "每局有一次提示机会\n会告诉你某个位置的正确颜色"
-    ]
 
     // MARK: - Confetti
 
