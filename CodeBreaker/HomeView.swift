@@ -76,46 +76,12 @@ struct HomeView: View {
     }
 
     private var dailyBanner: some View {
-        Button { showDaily = true } label: {
-            HStack(spacing: 12) {
-                ZStack {
-                    Circle()
-                        .fill(AppTheme.warning.opacity(0.15))
-                        .frame(width: 40, height: 40)
-                    Image(systemName: "calendar.badge.clock")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(AppTheme.warning)
-                }
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("每日挑战")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.textPrimary)
-                    Text(dailyCompleted ? "今日已完成 ✓" : "今日尚未挑战")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(dailyCompleted ? AppTheme.accent : AppTheme.warning)
-                }
-
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(AppTheme.textMuted)
-            }
-            .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(AppTheme.bgCard.opacity(0.7))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(
-                                dailyCompleted ? AppTheme.accent.opacity(0.2) : AppTheme.warning.opacity(0.2),
-                                lineWidth: 1
-                            )
-                    )
-            )
-        }
-        .buttonStyle(.plain)
+        menuButton(
+            title: "每日挑战",
+            subtitle: dailyCompleted ? "今日已完成 ✓" : "今日尚未挑战",
+            icon: "calendar.badge.clock",
+            color: AppTheme.warning
+        ) { showDaily = true }
         .opacity(titleOpacity)
     }
 
