@@ -35,7 +35,7 @@ struct LevelEditorView: View {
         }
         .navigationTitle("自定义关卡")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarColorScheme(.light, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
         }
@@ -75,7 +75,7 @@ struct LevelEditorView: View {
                     } label: {
                         Text("\(n)")
                             .font(.system(size: 14, weight: .bold, design: .rounded))
-                            .foregroundStyle(value.wrappedValue == n ? AppTheme.bgDark : AppTheme.textSecondary)
+                            .foregroundStyle(value.wrappedValue == n ? Color.white : AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
                             .background(
@@ -129,7 +129,7 @@ struct LevelEditorView: View {
                     } label: {
                         Text(t == 0 ? "无" : "\(t)s")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
-                            .foregroundStyle(timeLimit == t ? AppTheme.bgDark : AppTheme.textSecondary)
+                            .foregroundStyle(timeLimit == t ? Color.white : AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
                             .background(
@@ -226,7 +226,7 @@ struct LevelEditorView: View {
                 Text("开始自定义挑战")
             }
             .font(.system(size: 17, weight: .bold, design: .rounded))
-            .foregroundStyle(AppTheme.bgDark)
+            .foregroundStyle(Color.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
             .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))

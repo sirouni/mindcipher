@@ -9,22 +9,22 @@ enum AppSkin: String, CaseIterable {
     var bgColors: (Color, Color) {
         switch self {
         case .agent:
-            return (Color(red: 0.06, green: 0.07, blue: 0.15), Color(red: 0.03, green: 0.04, blue: 0.10))
+            return (Color(red: 0.92, green: 0.95, blue: 0.98), Color(red: 0.85, green: 0.90, blue: 0.96))
         case .cyber:
-            return (Color(red: 0.05, green: 0.0, blue: 0.15), Color(red: 0.02, green: 0.0, blue: 0.08))
+            return (Color(red: 0.95, green: 0.91, blue: 0.98), Color(red: 0.90, green: 0.86, blue: 0.95))
         case .military:
-            return (Color(red: 0.08, green: 0.10, blue: 0.06), Color(red: 0.04, green: 0.06, blue: 0.03))
+            return (Color(red: 0.93, green: 0.95, blue: 0.90), Color(red: 0.88, green: 0.92, blue: 0.86))
         case .minimal:
-            return (Color(red: 0.10, green: 0.10, blue: 0.12), Color(red: 0.06, green: 0.06, blue: 0.07))
+            return (Color(red: 0.96, green: 0.96, blue: 0.97), Color(red: 0.92, green: 0.92, blue: 0.93))
         }
     }
 
     var accent: Color {
         switch self {
-        case .agent: return Color(red: 0.0, green: 0.85, blue: 0.65)
-        case .cyber: return Color(red: 0.7, green: 0.3, blue: 1.0)
-        case .military: return Color(red: 0.6, green: 0.8, blue: 0.2)
-        case .minimal: return Color(red: 0.95, green: 0.95, blue: 0.95)
+        case .agent: return Color(red: 0.05, green: 0.60, blue: 0.55)
+        case .cyber: return Color(red: 0.72, green: 0.15, blue: 0.50)
+        case .military: return Color(red: 0.35, green: 0.60, blue: 0.15)
+        case .minimal: return Color(red: 0.25, green: 0.25, blue: 0.30)
         }
     }
 

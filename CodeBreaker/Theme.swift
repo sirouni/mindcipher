@@ -1,37 +1,43 @@
 import SwiftUI
 
 enum AppTheme {
-    static let bgDark = Color(red: 0.06, green: 0.07, blue: 0.13)
-    static let bgCard = Color(red: 0.10, green: 0.12, blue: 0.20)
-    static let bgCardLight = Color(red: 0.14, green: 0.16, blue: 0.26)
-    static let accent = Color(red: 0.0, green: 0.85, blue: 0.65)
-    static let accentDim = Color(red: 0.0, green: 0.55, blue: 0.42)
-    static let warning = Color(red: 1.0, green: 0.6, blue: 0.2)
-    static let danger = Color(red: 1.0, green: 0.3, blue: 0.3)
-    static let textPrimary = Color.white
-    static let textSecondary = Color(white: 0.6)
-    static let textMuted = Color(white: 0.35)
+    private static var skin: AppSkin { ThemeManager.shared.currentSkin }
 
-    static let bgGradient = LinearGradient(
-        colors: [
-            Color(red: 0.06, green: 0.07, blue: 0.15),
-            Color(red: 0.03, green: 0.04, blue: 0.10),
-        ],
-        startPoint: .top,
-        endPoint: .bottom
-    )
+    static var bgDark: Color { skin.bgColors.1 }
+    static var bgCard: Color { Color.white.opacity(0.7) }
+    static var bgCardLight: Color { Color.white.opacity(0.85) }
+    static var accent: Color { skin.accent }
+    static var accentDim: Color { skin.accent.opacity(0.75) }
+    static let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
+    static let danger = Color(red: 0.85, green: 0.20, blue: 0.20)
+    static let textPrimary = Color(white: 0.12)
+    static let textSecondary = Color(white: 0.40)
+    static let textMuted = Color(white: 0.62)
 
-    static let cardGradient = LinearGradient(
-        colors: [bgCard, bgCardLight],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
+    static var bgGradient: LinearGradient {
+        let c = skin.bgColors
+        return LinearGradient(
+            colors: [c.0, c.1],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
 
-    static let glowGradient = LinearGradient(
-        colors: [accent.opacity(0.6), accent.opacity(0.0)],
-        startPoint: .top,
-        endPoint: .bottom
-    )
+    static var cardGradient: LinearGradient {
+        LinearGradient(
+            colors: [bgCard, bgCardLight],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    static var glowGradient: LinearGradient {
+        LinearGradient(
+            colors: [accent.opacity(0.6), accent.opacity(0.0)],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
 
     static func pegColor(for peg: PegColor) -> Color {
         switch peg {
@@ -62,11 +68,12 @@ struct GlassCard: ViewModifier {
         content
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(AppTheme.bgCard.opacity(0.7))
+                    .fill(Color.white.opacity(0.55))
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                            .stroke(Color.black.opacity(0.06), lineWidth: 1)
                     )
+                    .shadow(color: .black.opacity(0.04), radius: 2, y: 1)
             )
     }
 }
@@ -99,7 +106,7 @@ struct ScanlineEffect: View {
         Rectangle()
             .fill(
                 LinearGradient(
-                    colors: [.clear, AppTheme.accent.opacity(0.05), .clear],
+                    colors: [.clear, AppTheme.accent.opacity(0.08), .clear],
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -123,13 +130,13 @@ struct PegView: View {
             Circle()
                 .fill(AppTheme.pegGradient(for: color))
                 .frame(width: size, height: size)
-                .shadow(color: AppTheme.pegColor(for: color).opacity(0.35), radius: size * 0.15)
+                .shadow(color: AppTheme.pegColor(for: color).opacity(0.25), radius: size * 0.12, y: 1)
 
             if AppSettings.shared.colorBlindMode {
                 Text(color.symbol)
                     .font(.system(size: size * 0.4, weight: .black, design: .rounded))
                     .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.5), radius: 1)
+                    .shadow(color: .black.opacity(0.3), radius: 1)
             }
         }
     }

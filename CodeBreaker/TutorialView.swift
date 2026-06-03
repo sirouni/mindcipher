@@ -68,7 +68,7 @@ struct TutorialView: View {
                     } label: {
                         Text(page < totalPages - 1 ? "下一步" : "开始游戏！")
                             .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(AppTheme.bgDark)
+                            .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity).padding(.vertical, 14)
                             .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
                     }

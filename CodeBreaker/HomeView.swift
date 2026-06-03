@@ -58,7 +58,7 @@ struct HomeView: View {
             }
             .onAppear { animateEntrance() }
         }
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
     }
 
     
@@ -354,7 +354,7 @@ struct FreePlaySetupView: View {
                 } label: {
                     Text(lieMode ? "开始谎言挑战" : "开始挑战")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(lieMode ? .white : AppTheme.bgDark)
+                        .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .background(lieMode ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
@@ -376,11 +376,11 @@ struct FreePlaySetupView: View {
             HStack {
                 Text(diff.rawValue)
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(selectedDifficulty == diff ? AppTheme.bgDark : AppTheme.textPrimary)
+                    .foregroundStyle(selectedDifficulty == diff ? Color.white : AppTheme.textPrimary)
                 Spacer()
                 Text("\(diff.codeLength)位·\(diff.colorCount)色")
                     .font(.system(size: 12, weight: .medium, design: .monospaced))
-                    .foregroundStyle(selectedDifficulty == diff ? AppTheme.bgDark.opacity(0.7) : AppTheme.textSecondary)
+                    .foregroundStyle(selectedDifficulty == diff ? Color.white.opacity(0.8) : AppTheme.textSecondary)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)

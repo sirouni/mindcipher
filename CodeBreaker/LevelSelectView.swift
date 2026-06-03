@@ -29,7 +29,7 @@ struct LevelSelectView: View {
         }
         .navigationTitle(L("menu.classic"))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarColorScheme(.light, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
         }
@@ -44,7 +44,7 @@ struct LevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier > 0 ? color : Color.white.opacity(0.25))
+                    .foregroundStyle(selectedTier > 0 ? color : Color.black.opacity(0.15))
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier == 0)
@@ -69,7 +69,7 @@ struct LevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier < tiers.count - 1 ? color : Color.white.opacity(0.25))
+                    .foregroundStyle(selectedTier < tiers.count - 1 ? color : Color.black.opacity(0.15))
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier >= tiers.count - 1)
@@ -100,7 +100,7 @@ struct LevelSelectView: View {
                                 let linked = curIdx < levels.count && nextIdx < levels.count &&
                                     progress.completedLevels.contains(levels[min(curIdx, nextIdx)].id)
                                 Rectangle()
-                                    .fill(linked ? color : Color.white.opacity(0.25))
+                                    .fill(linked ? color : Color.black.opacity(0.15))
                                     .frame(height: 3)
                                     .frame(maxWidth: .infinity)
                             }
@@ -112,7 +112,7 @@ struct LevelSelectView: View {
                         HStack {
                             if !isReversed { Spacer() }
                         Rectangle()
-                            .fill(linked ? color : Color.white.opacity(0.25))
+                            .fill(linked ? color : Color.black.opacity(0.15))
                             .frame(width: 3, height: 22)
                             if isReversed { Spacer() }
                         }
@@ -126,7 +126,7 @@ struct LevelSelectView: View {
 
     private func levelPreviewOverlay(_ level: Level) -> some View {
         ZStack {
-            Color.black.opacity(0.5).ignoresSafeArea()
+            Color.black.opacity(0.35).ignoresSafeArea()
                 .onTapGesture { withAnimation(.spring(response: 0.3)) { previewLevel = nil } }
 
             VStack(spacing: 16) {
@@ -151,7 +151,10 @@ struct LevelSelectView: View {
                     }
                 }
                 .padding(16)
-                .glassCard(cornerRadius: 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(white: 0.96))
+                )
 
                 let stars = progress.starsByLevel[level.id] ?? 0
                 if stars > 0 {
@@ -171,14 +174,18 @@ struct LevelSelectView: View {
                 } label: {
                     Text(progress.completedLevels.contains(level.id) ? "重新挑战" : "开始")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.bgDark)
+                        .foregroundStyle(Color.white)
                         .frame(width: 200)
                         .padding(.vertical, 14)
                         .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
                 }
             }
             .padding(28)
-            .glassCard(cornerRadius: 20)
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color.white)
+                    .shadow(color: .black.opacity(0.12), radius: 20, y: 4)
+            )
             .padding(.horizontal, 40)
             .transition(.scale(scale: 0.85).combined(with: .opacity))
         }

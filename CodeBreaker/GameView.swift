@@ -25,9 +25,19 @@ struct GameView: View {
                 Divider().overlay(AppTheme.textMuted.opacity(0.3)).padding(.horizontal)
                 guessBoard
                 Spacer(minLength: 8)
-                currentGuessRow
-                colorPicker
-                actionBar
+                VStack(spacing: 0) {
+                    currentGuessRow
+                    colorPicker
+                    actionBar
+                }
+                .padding(.top, 6)
+                .background(
+                    Color.white.opacity(0.4)
+                        .ignoresSafeArea(edges: .bottom)
+                )
+                .overlay(alignment: .top) {
+                    Divider().overlay(Color.black.opacity(0.08))
+                }
             }
 
             if showResult { resultOverlay }
@@ -142,7 +152,7 @@ struct GameView: View {
                 ForEach(0..<viewModel.codeLength, id: \.self) { i in
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(AppTheme.bgCardLight)
+                            .fill(Color.white.opacity(0.6))
                             .frame(width: 36, height: 36)
 
                         if viewModel.showSecret && i < revealedSecretCount {
@@ -175,33 +185,51 @@ struct GameView: View {
 
     // MARK: - Guess Board
 
-    private var guessBoard: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                LazyVStack(spacing: 6) {
-                    ForEach(Array(viewModel.guessHistory.enumerated()), id: \.element.id) { index, record in
-                        GuessRowView(
-                            index: index + 1,
-                            guess: record.guess,
-                            feedback: record.feedback,
-                            codeLength: viewModel.codeLength,
-                            gameOver: viewModel.phase != .playing
-                        )
-                        .id(record.id)
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .bottom).combined(with: .opacity),
-                            removal: .opacity
-                        ))
-                    }
+    private let rowHeight: CGFloat = 52
 
-                    if viewModel.phase == .playing {
-                        ForEach(0..<emptyRowCount, id: \.self) { i in
-                            emptyRow(number: viewModel.guessHistory.count + i + 2)
+    private var guessBoard: some View {
+        let totalRows = viewModel.maxAttempts
+
+        return ScrollViewReader { proxy in
+            ScrollView {
+                VStack(spacing: 0) {
+                    ForEach(0..<totalRows, id: \.self) { i in
+                        let hasGuess = i < viewModel.guessHistory.count
+
+                        if hasGuess {
+                            let record = viewModel.guessHistory[i]
+                            GuessRowView(
+                                index: i + 1,
+                                guess: record.guess,
+                                feedback: record.feedback,
+                                codeLength: viewModel.codeLength,
+                                gameOver: viewModel.phase != .playing
+                            )
+                            .frame(minHeight: rowHeight)
+                            .id(record.id)
+                            .transition(.asymmetric(
+                                insertion: .move(edge: .bottom).combined(with: .opacity),
+                                removal: .opacity
+                            ))
+                        } else {
+                            HStack {
+                                Text("\(i + 1)")
+                                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(Color(white: 0.78))
+                                    .frame(width: 20)
+                                Spacer()
+                            }
+                            .padding(.horizontal, 12)
+                            .frame(height: rowHeight)
                         }
+
+                        Divider()
+                            .overlay(Color(white: 0.86))
+                            .padding(.leading, 40)
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
             }
             .onChange(of: viewModel.guessHistory.count) { _, _ in
                 if let last = viewModel.guessHistory.last {
@@ -211,41 +239,16 @@ struct GameView: View {
                 }
             }
         }
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.white.opacity(0.75))
+                .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .padding(.horizontal, 8)
     }
 
-    private var emptyRowCount: Int {
-        max(0, min(4, viewModel.attemptsLeft - 1))
-    }
-
-    private func emptyRow(number: Int) -> some View {
-        HStack(spacing: 10) {
-            Text("\(number)")
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundStyle(AppTheme.textMuted.opacity(0.4))
-                .frame(width: 20)
-
-            HStack(spacing: 6) {
-                ForEach(0..<viewModel.codeLength, id: \.self) { _ in
-                    Circle()
-                        .stroke(AppTheme.textMuted.opacity(0.15), lineWidth: 1)
-                        .frame(width: 32, height: 32)
-                }
-            }
-
-            Spacer()
-
-            HStack(spacing: 3) {
-                ForEach(0..<viewModel.codeLength, id: \.self) { _ in
-                    Circle()
-                        .stroke(AppTheme.textMuted.opacity(0.1), lineWidth: 1)
-                        .frame(width: 10, height: 10)
-                }
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .opacity(0.5)
-    }
+    
 
     // MARK: - Current Guess Row
 
@@ -278,16 +281,16 @@ struct GameView: View {
         let isSelected = index == viewModel.selectedSlot && viewModel.phase == .playing
         return ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(isSelected ? AppTheme.bgCardLight.opacity(1.2) : AppTheme.bgCardLight)
+                .fill(isSelected ? Color.white : Color.white.opacity(0.7))
                 .frame(width: slotSize, height: slotSize)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(
-                            isSelected ? AppTheme.accent : Color.white.opacity(0.05),
+                            isSelected ? AppTheme.accent : Color.black.opacity(0.08),
                             lineWidth: isSelected ? 2 : 1
                         )
                 )
-                .shadow(color: isSelected ? AppTheme.accent.opacity(0.2) : .clear, radius: 8)
+                .shadow(color: isSelected ? AppTheme.accent.opacity(0.15) : .clear, radius: 6)
 
             if let color = viewModel.currentGuess[index] {
                 PegView(color: color, size: pegSize)
@@ -343,7 +346,7 @@ struct GameView: View {
             PegView(color: color, size: size)
                 .overlay(
                     Circle()
-                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                        .stroke(Color.black.opacity(0.08), lineWidth: 1)
                 )
         }
         .disabled(viewModel.phase != .playing)
@@ -379,12 +382,12 @@ struct GameView: View {
                     Text(L("game.submit"))
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                 }
-                .foregroundStyle(viewModel.canSubmit ? AppTheme.bgDark : AppTheme.textMuted)
+                .foregroundStyle(viewModel.canSubmit ? Color.white : AppTheme.textMuted)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(viewModel.canSubmit ? AppTheme.accent : AppTheme.bgCardLight)
+                        .fill(viewModel.canSubmit ? AppTheme.accent : Color(white: 0.88))
                 )
             }
             .disabled(!viewModel.canSubmit)
@@ -397,7 +400,7 @@ struct GameView: View {
 
     private var resultOverlay: some View {
         ZStack {
-            Color.black.opacity(0.6).ignoresSafeArea()
+            Color.black.opacity(0.35).ignoresSafeArea()
                 .onTapGesture { }
 
             VStack(spacing: 20) {
@@ -408,7 +411,11 @@ struct GameView: View {
                 }
             }
             .padding(32)
-            .glassCard(cornerRadius: 24)
+            .background(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(Color.white)
+                    .shadow(color: .black.opacity(0.12), radius: 20, y: 4)
+            )
             .padding(.horizontal, 32)
             .transition(.scale(scale: 0.8).combined(with: .opacity))
         }
@@ -596,7 +603,7 @@ struct GameView: View {
                         } label: {
                             Text("下一关 →")
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
-                                .foregroundStyle(AppTheme.bgDark)
+                                .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
                                 .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
@@ -609,7 +616,7 @@ struct GameView: View {
                         } label: {
                             Text("重新挑战")
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
-                                .foregroundStyle(AppTheme.bgDark)
+                                .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
                                 .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
@@ -624,7 +631,7 @@ struct GameView: View {
                     } label: {
                         Text("再来一局")
                             .font(.system(size: 14, weight: .bold, design: .rounded))
-                            .foregroundStyle(AppTheme.bgDark)
+                            .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
@@ -752,7 +759,7 @@ struct GuessRowView: View {
         HStack(spacing: 10) {
             Text("\(index)")
                 .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundStyle(AppTheme.textMuted)
+                .foregroundStyle(AppTheme.textSecondary)
                 .frame(width: 20)
 
             HStack(spacing: 6) {
@@ -781,17 +788,18 @@ struct GuessRowView: View {
             }
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.vertical, 6)
         .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(AppTheme.bgCard.opacity(0.7))
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.white.opacity(0.9))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 10)
                         .stroke(
-                            gameOver && feedback.isLie ? AppTheme.danger.opacity(0.6) : Color.white.opacity(0.08),
+                            gameOver && feedback.isLie ? AppTheme.danger.opacity(0.7) : Color.black.opacity(0.06),
                             lineWidth: gameOver && feedback.isLie ? 2 : 1
                         )
                 )
+                .shadow(color: .black.opacity(0.03), radius: 2, y: 1)
         )
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("第\(index)步 \(guess.map { $0.displayName }.joined(separator: " ")) 反馈\(feedbackLabel)")
@@ -824,7 +832,7 @@ struct GuessRowView: View {
             }
             ForEach(0..<empty, id: \.self) { _ in
                 Circle()
-                    .stroke(AppTheme.textMuted, lineWidth: 1)
+                    .stroke(Color(white: 0.75), lineWidth: 1)
                     .frame(width: 10, height: 10)
             }
         }

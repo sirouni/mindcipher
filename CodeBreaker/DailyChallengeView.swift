@@ -35,7 +35,7 @@ struct DailyChallengeView: View {
         }
         .navigationTitle("每日挑战")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarColorScheme(.light, for: .navigationBar)
     }
 
     private var preStartView: some View {
@@ -91,7 +91,7 @@ struct DailyChallengeView: View {
                 } label: {
                     Text("开始挑战")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.bgDark)
+                        .foregroundStyle(Color.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .background(AppTheme.warning, in: RoundedRectangle(cornerRadius: 14))
