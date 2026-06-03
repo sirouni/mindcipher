@@ -35,21 +35,7 @@ class GameViewModel: ObservableObject {
         phase == .playing && currentGuess.allSatisfy { $0 != nil }
     }
 
-    var eliminatedColors: Set<PegColor> {
-        // 谎言模式下不标记排除色——任何一条反馈都可能是假的
-        guard engine?.lieMode != true else { return [] }
-
-        var eliminated = Set<PegColor>()
-        for record in guessHistory {
-            let total = record.feedback.exact + record.feedback.partial
-            if total == 0 {
-                for color in record.guess {
-                    eliminated.insert(color)
-                }
-            }
-        }
-        return eliminated
-    }
+    var eliminatedColors: Set<PegColor> { [] }
 
     func startGame(level: Level) {
         self.level = level
