@@ -738,15 +738,6 @@ struct GameView: View {
         let isLie = viewModel.engine?.lieMode ?? false
         let lieAt = viewModel.engine?.lieAtGuess
 
-        let rows: [ShareRowData] = viewModel.guessHistory.enumerated().map { idx, record in
-            ShareRowData(
-                id: idx + 1,
-                guess: record.guess,
-                feedback: record.feedback,
-                isLie: isLie && lieAt == idx + 1
-            )
-        }
-
         let won: Bool
         let attempts: Int
         let isPlaying: Bool
@@ -756,9 +747,18 @@ struct GameView: View {
         case .playing: won = false; attempts = viewModel.guessHistory.count; isPlaying = true
         }
 
+        let rows: [ShareRowData] = viewModel.guessHistory.enumerated().map { idx, record in
+            ShareRowData(
+                id: idx + 1,
+                guess: record.guess,
+                feedback: record.feedback,
+                isLie: !isPlaying && isLie && lieAt == idx + 1
+            )
+        }
+
         var lieFake: Feedback?
         var lieReal: Feedback?
-        if isLie, let step = lieAt, step <= viewModel.guessHistory.count {
+        if !isPlaying, isLie, let step = lieAt, step <= viewModel.guessHistory.count {
             lieFake = viewModel.guessHistory[step - 1].feedback
             lieReal = viewModel.engine?.computeRealFeedback(guess: viewModel.guessHistory[step - 1].guess)
         }
@@ -776,7 +776,8 @@ struct GameView: View {
             lieStep: lieAt,
             lieFakeFeedback: lieFake,
             lieRealFeedback: lieReal,
-            isPlaying: isPlaying
+            isPlaying: isPlaying,
+            availableColors: viewModel.availableColors
         )
 
         let renderer = ImageRenderer(content: card.frame(width: 390))
@@ -1028,6 +1029,7 @@ struct ShareCardView: View {
     let lieFakeFeedback: Feedback?
     let lieRealFeedback: Feedback?
     let isPlaying: Bool
+    let availableColors: [PegColor]
 
     private let accent = Color(red: 0.05, green: 0.60, blue: 0.55)
     private let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
@@ -1046,6 +1048,7 @@ struct ShareCardView: View {
             shareFeedbackLegend
             Divider().overlay(Color(white: 0.82)).padding(.horizontal)
             shareGuessBoard
+            shareColorInfo
             shareInfoBar
         }
         .background(bgLight)
@@ -1212,6 +1215,67 @@ struct ShareCardView: View {
                 }
             }
         }
+    }
+
+    // MARK: - Input Area (mirrors game bottom)
+
+    private var shareColorInfo: some View {
+        let slotSize: CGFloat = codeLength <= 4 ? 52 : codeLength <= 5 ? 46 : 40
+        let slotSpacing: CGFloat = codeLength <= 4 ? 10 : 6
+        let colorSize: CGFloat = availableColors.count <= 6 ? 42 : 36
+
+        return VStack(spacing: 8) {
+            shareSlotsRow(slotSize: slotSize, spacing: slotSpacing)
+            shareColorsRow(colorSize: colorSize)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white.opacity(0.4))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.black.opacity(0.06), lineWidth: 1)
+                )
+        )
+        .padding(.horizontal, 8)
+        .padding(.vertical, 6)
+    }
+
+    private func shareSlotsRow(slotSize: CGFloat, spacing: CGFloat) -> some View {
+        HStack(spacing: spacing) {
+            ForEach(0..<codeLength, id: \.self) { _ in
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.white.opacity(0.7))
+                    .frame(width: slotSize, height: slotSize)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.black.opacity(0.08), lineWidth: 1)
+                    )
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color.white.opacity(0.55))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Color.black.opacity(0.06), lineWidth: 1)
+                )
+        )
+    }
+
+    private func shareColorsRow(colorSize: CGFloat) -> some View {
+        HStack(spacing: 8) {
+            ForEach(Array(availableColors.enumerated()), id: \.offset) { _, peg in
+                Circle()
+                    .fill(pegGrad(peg))
+                    .frame(width: colorSize, height: colorSize)
+                    .overlay(Circle().stroke(Color.black.opacity(0.08), lineWidth: 1))
+            }
+        }
+        .padding(.vertical, 6)
     }
 
     // MARK: - Info Bar (result + lie reveal)
