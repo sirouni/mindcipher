@@ -53,6 +53,19 @@ class GameViewModel: ObservableObject {
         }
     }
 
+    func startLieGame(level: Level, totalAttempts: Int) {
+        self.level = level
+        self.mode = .campaign(level: level.id)
+        engine = GameEngine(
+            codeLength: level.codeLength,
+            colorCount: level.colorCount,
+            allowDuplicates: level.allowDuplicates,
+            maxAttempts: totalAttempts,
+            lieMode: true
+        )
+        resetState()
+    }
+
     func startFreePlay(difficulty: Difficulty, lieMode: Bool = false) {
         self.level = nil
         self.mode = .freePlay

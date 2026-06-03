@@ -211,14 +211,7 @@ struct LieLevelSelectView: View {
                 }
 
                 Button {
-                    viewModel.startGame(level: level)
-                    viewModel.engine = GameEngine(
-                        codeLength: level.codeLength,
-                        colorCount: level.colorCount,
-                        allowDuplicates: level.allowDuplicates,
-                        maxAttempts: totalAttempts,
-                        lieMode: true
-                    )
+                    viewModel.startLieGame(level: level, totalAttempts: totalAttempts)
                     previewLevel = nil
                     startGame = true
                 } label: {
