@@ -74,7 +74,7 @@ class GameViewModel: ObservableObject {
         } else {
             switch difficulty {
             case .beginner, .easy: extraAttempts = 3
-            case .medium: extraAttempts = 3
+            case .medium: extraAttempts = 4
             case .hard: extraAttempts = 4
             case .expert: extraAttempts = 5
             case .master: extraAttempts = 5
