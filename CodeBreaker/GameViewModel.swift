@@ -72,15 +72,14 @@ class GameViewModel: ObservableObject {
         if !lieMode {
             extraAttempts = 0
         } else {
-            // 额外步数基于测试验证的最少可解值 + 保证余量递减
-            // 余量: 新手6 > 简单2 > 中等2 > 困难1 > 专家1 > 大师1
+            // 余量目标: 8 > 6 > 6 > 4 > 4 > 2
             switch difficulty {
-            case .beginner: extraAttempts = 3  // 总13, 需~7, 余量6
-            case .easy: extraAttempts = 3      // 总11, 需9,  余量2
-            case .medium: extraAttempts = 4    // 总11, 需9,  余量2
-            case .hard: extraAttempts = 4      // 总12, 需11, 余量1
-            case .expert: extraAttempts = 4    // 总13, 需12, 余量1
-            case .master: extraAttempts = 4    // 总14, 需13, 余量1
+            case .beginner: extraAttempts = 8  // 总18, 需~7,  余量~8 (非常宽松)
+            case .easy: extraAttempts = 6      // 总14, 需~9,  余量~5 (宽松，但比新手紧)
+            case .medium: extraAttempts = 6    // 总13, 需~9,  余量~4 (有容错)
+            case .hard: extraAttempts = 7      // 总15, 需11, 余量4
+            case .expert: extraAttempts = 7    // 总16, 需12, 余量4
+            case .master: extraAttempts = 5    // 总15, 需13, 余量2
             }
         }
         engine = GameEngine(
