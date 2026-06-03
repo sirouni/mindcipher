@@ -7,6 +7,7 @@ struct HomeView: View {
     @State private var showSettings = false
     @State private var showDaily = false
     @State private var showEditor = false
+    @State private var showLieMode = false
     @State private var titleScale: CGFloat = 0.8
     @State private var titleOpacity: Double = 0
     @State private var buttonsOffset: CGFloat = 50
@@ -50,6 +51,9 @@ struct HomeView: View {
             }
             .navigationDestination(isPresented: $showEditor) {
                 LevelEditorView()
+            }
+            .navigationDestination(isPresented: $showLieMode) {
+                LieModeSetupView()
             }
             .onAppear { animateEntrance() }
         }
@@ -200,6 +204,13 @@ struct HomeView: View {
             ) { showFreePlay = true }
 
             menuButton(
+                title: "谎言模式",
+                subtitle: "系统会骗你一次，识破它！",
+                icon: "theatermask.and.paintbrush.fill",
+                color: AppTheme.danger
+            ) { showLieMode = true }
+
+            menuButton(
                 title: "双人对战",
                 subtitle: "一人设密码 · 一人来破译",
                 icon: "person.2.fill",
@@ -325,7 +336,6 @@ struct HomeView: View {
 
 struct FreePlaySetupView: View {
     @State private var selectedDifficulty: Difficulty = .easy
-    @State private var lieMode = false
     @State private var startGame = false
     @StateObject private var viewModel = GameViewModel()
 
@@ -357,20 +367,18 @@ struct FreePlaySetupView: View {
                 .padding(16)
                 .glassCard()
 
-                lieModeToggle
-
                 Spacer()
 
                 Button {
-                    viewModel.startFreePlay(difficulty: selectedDifficulty, lieMode: lieMode)
+                    viewModel.startFreePlay(difficulty: selectedDifficulty)
                     startGame = true
                 } label: {
-                    Text(lieMode ? "开始挑战（谎言模式）" : "开始挑战")
+                    Text("开始挑战")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(lieMode ? AppTheme.bgDark : AppTheme.bgDark)
+                        .foregroundStyle(AppTheme.bgDark)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(lieMode ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
+                        .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
                 }
             }
             .padding(24)
@@ -380,34 +388,7 @@ struct FreePlaySetupView: View {
         }
     }
 
-    private var lieModeToggle: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "theatermask.and.paintbrush.fill")
-                .font(.system(size: 20))
-                .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textMuted)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("谎言模式")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textPrimary)
-                Text("系统会给出一次虚假反馈，你能识破吗？")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(AppTheme.textSecondary)
-            }
-
-            Spacer()
-
-            Toggle("", isOn: $lieMode)
-                .tint(AppTheme.danger)
-                .labelsHidden()
-        }
-        .padding(14)
-        .glassCard(cornerRadius: 14)
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(lieMode ? AppTheme.danger.opacity(0.3) : .clear, lineWidth: 1)
-        )
-    }
+    
 
     private func difficultyRow(_ diff: Difficulty) -> some View {
         Button {
