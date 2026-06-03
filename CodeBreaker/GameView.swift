@@ -275,13 +275,21 @@ struct GameView: View {
 
     // MARK: - Current Guess Row
 
+    private var slotSize: CGFloat {
+        viewModel.codeLength <= 4 ? 52 : viewModel.codeLength <= 5 ? 46 : 40
+    }
+
+    private var pegSize: CGFloat {
+        viewModel.codeLength <= 4 ? 34 : viewModel.codeLength <= 5 ? 30 : 26
+    }
+
     private var currentGuessRow: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: viewModel.codeLength <= 4 ? 10 : 6) {
             ForEach(0..<viewModel.codeLength, id: \.self) { i in
                 currentSlot(index: i)
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .glassCard(cornerRadius: 14)
         .overlay(
@@ -295,11 +303,11 @@ struct GameView: View {
     private func currentSlot(index: Int) -> some View {
         let isSelected = index == viewModel.selectedSlot && viewModel.phase == .playing
         return ZStack {
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 10)
                 .fill(isSelected ? AppTheme.bgCardLight.opacity(1.2) : AppTheme.bgCardLight)
-                .frame(width: 52, height: 52)
+                .frame(width: slotSize, height: slotSize)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 10)
                         .stroke(
                             isSelected ? AppTheme.accent : Color.white.opacity(0.05),
                             lineWidth: isSelected ? 2 : 1
@@ -308,12 +316,12 @@ struct GameView: View {
                 .shadow(color: isSelected ? AppTheme.accent.opacity(0.2) : .clear, radius: 8)
 
             if let color = viewModel.currentGuess[index] {
-                PegView(color: color, size: 34)
+                PegView(color: color, size: pegSize)
                     .transition(.scale.combined(with: .opacity))
             } else if isSelected {
                 Circle()
                     .stroke(AppTheme.accent.opacity(0.4), style: StrokeStyle(lineWidth: 2, dash: [4, 4]))
-                    .frame(width: 34, height: 34)
+                    .frame(width: pegSize, height: pegSize)
             }
 
             if isSelected {
@@ -322,9 +330,9 @@ struct GameView: View {
                     Triangle()
                         .fill(AppTheme.accent)
                         .frame(width: 8, height: 5)
-                        .offset(y: 4)
+                        .offset(y: 3)
                 }
-                .frame(width: 52, height: 52)
+                .frame(width: slotSize, height: slotSize)
             }
         }
         .onTapGesture {
@@ -341,18 +349,19 @@ struct GameView: View {
     // MARK: - Color Picker
 
     private var colorPicker: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
+        let colorSize: CGFloat = viewModel.availableColors.count <= 6 ? 42 : 36
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
                 ForEach(viewModel.availableColors) { color in
-                    colorButton(color)
+                    colorButton(color, size: colorSize)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
         }
     }
 
-    private func colorButton(_ color: PegColor) -> some View {
+    private func colorButton(_ color: PegColor, size: CGFloat) -> some View {
         let isUsed = viewModel.currentGuess.contains(color)
         let isEliminated = viewModel.eliminatedColors.contains(color)
         return Button {
@@ -360,7 +369,7 @@ struct GameView: View {
             viewModel.selectColor(color)
         } label: {
             ZStack {
-                PegView(color: color, size: 42)
+                PegView(color: color, size: size)
                     .overlay(
                         Circle()
                             .stroke(Color.white.opacity(0.2), lineWidth: 1)
@@ -370,13 +379,13 @@ struct GameView: View {
                 if isUsed {
                     Circle()
                         .fill(Color.black.opacity(0.3))
-                        .frame(width: 42, height: 42)
+                        .frame(width: size, height: size)
                     Image(systemName: "checkmark")
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: size * 0.33, weight: .bold))
                         .foregroundStyle(.white.opacity(0.7))
                 } else if isEliminated {
                     Image(systemName: "xmark")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: size * 0.38, weight: .bold))
                         .foregroundStyle(AppTheme.danger.opacity(0.8))
                 }
             }

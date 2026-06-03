@@ -352,7 +352,11 @@ class ProgressManager: ObservableObject {
     }
 
     func isUnlocked(level: Int) -> Bool {
-        level == 1 || completedLevels.contains(level - 1)
+        #if DEBUG
+        return true
+        #else
+        return level == 1 || completedLevels.contains(level - 1)
+        #endif
     }
 
     var totalStars: Int {
