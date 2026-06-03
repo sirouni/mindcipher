@@ -325,6 +325,7 @@ struct HomeView: View {
 
 struct FreePlaySetupView: View {
     @State private var selectedDifficulty: Difficulty = .easy
+    @State private var lieMode = false
     @State private var startGame = false
     @StateObject private var viewModel = GameViewModel()
 
@@ -356,18 +357,20 @@ struct FreePlaySetupView: View {
                 .padding(16)
                 .glassCard()
 
+                lieModeToggle
+
                 Spacer()
 
                 Button {
-                    viewModel.startFreePlay(difficulty: selectedDifficulty)
+                    viewModel.startFreePlay(difficulty: selectedDifficulty, lieMode: lieMode)
                     startGame = true
                 } label: {
-                    Text("开始挑战")
+                    Text(lieMode ? "开始挑战（谎言模式）" : "开始挑战")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.bgDark)
+                        .foregroundStyle(lieMode ? AppTheme.bgDark : AppTheme.bgDark)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
+                        .background(lieMode ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
                 }
             }
             .padding(24)
@@ -375,6 +378,35 @@ struct FreePlaySetupView: View {
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
         }
+    }
+
+    private var lieModeToggle: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "theatermask.and.paintbrush.fill")
+                .font(.system(size: 20))
+                .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textMuted)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("谎言模式")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textPrimary)
+                Text("系统会给出一次虚假反馈，你能识破吗？")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: $lieMode)
+                .tint(AppTheme.danger)
+                .labelsHidden()
+        }
+        .padding(14)
+        .glassCard(cornerRadius: 14)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(lieMode ? AppTheme.danger.opacity(0.3) : .clear, lineWidth: 1)
+        )
     }
 
     private func difficultyRow(_ diff: Difficulty) -> some View {

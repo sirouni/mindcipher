@@ -33,10 +33,17 @@ enum PegColor: Int, CaseIterable, Codable, Identifiable {
 }
 
 struct Feedback: Equatable {
-    let exact: Int   // right color, right position (black pegs)
-    let partial: Int // right color, wrong position (white pegs)
+    let exact: Int
+    let partial: Int
+    let isLie: Bool
 
-    func isWin(codeLength: Int) -> Bool { exact == codeLength }
+    init(exact: Int, partial: Int, isLie: Bool = false) {
+        self.exact = exact
+        self.partial = partial
+        self.isLie = isLie
+    }
+
+    func isWin(codeLength: Int) -> Bool { exact == codeLength && !isLie }
     var total: Int { exact + partial }
 }
 
@@ -146,11 +153,23 @@ class GameEngine {
     let codeLength: Int
     let availableColors: [PegColor]
     let maxAttempts: Int
+    let lieMode: Bool
+    private(set) var lieUsed: Bool = false
+    private(set) var lieAtGuess: Int? = nil
+    private var guessCount: Int = 0
+    private let lieAttemptNumber: Int?
 
-    init(codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int) {
+    init(codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false) {
         self.codeLength = codeLength
         self.maxAttempts = maxAttempts
+        self.lieMode = lieMode
         self.availableColors = Array(PegColor.allCases.prefix(colorCount))
+
+        if lieMode {
+            self.lieAttemptNumber = Int.random(in: 1...max(1, maxAttempts - 2))
+        } else {
+            self.lieAttemptNumber = nil
+        }
 
         if allowDuplicates {
             self.secretCode = (0..<codeLength).map { _ in
@@ -172,6 +191,8 @@ class GameEngine {
         self.codeLength = secretCode.count
         self.availableColors = Array(PegColor.allCases.prefix(colorCount))
         self.maxAttempts = maxAttempts
+        self.lieMode = false
+        self.lieAttemptNumber = nil
     }
 
     func evaluate(guess: [PegColor]) -> Feedback {
@@ -179,6 +200,19 @@ class GameEngine {
             return Feedback(exact: 0, partial: 0)
         }
 
+        guessCount += 1
+        let realFeedback = computeRealFeedback(guess: guess)
+
+        if lieMode && !lieUsed && guessCount == lieAttemptNumber && !realFeedback.isWin(codeLength: codeLength) {
+            lieUsed = true
+            lieAtGuess = guessCount
+            return generateLie(real: realFeedback)
+        }
+
+        return realFeedback
+    }
+
+    private func computeRealFeedback(guess: [PegColor]) -> Feedback {
         var exact = 0
         var secretRemaining: [PegColor] = []
         var guessRemaining: [PegColor] = []
@@ -202,6 +236,24 @@ class GameEngine {
         }
 
         return Feedback(exact: exact, partial: partial)
+    }
+
+    private func generateLie(real: Feedback) -> Feedback {
+        var options: [Feedback] = []
+        for e in 0...codeLength {
+            for p in 0...(codeLength - e) {
+                let f = Feedback(exact: e, partial: p, isLie: true)
+                if f != Feedback(exact: real.exact, partial: real.partial) {
+                    options.append(f)
+                }
+            }
+        }
+        // 选一个"接近真实值"的谎言，让它更难识破
+        let close = options.filter {
+            abs($0.exact - real.exact) <= 1 && abs($0.partial - real.partial) <= 1
+        }
+        return (close.isEmpty ? options : close).randomElement()
+            ?? Feedback(exact: max(0, real.exact - 1), partial: real.partial, isLie: true)
     }
 }
 

@@ -93,6 +93,11 @@ struct GameView: View {
                     Text("自由模式")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
+                    if viewModel.engine?.lieMode == true {
+                        Text("⚠️ 谎言模式")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(AppTheme.danger)
+                    }
                 }
             }
 
@@ -205,7 +210,8 @@ struct GameView: View {
                             index: index + 1,
                             guess: record.guess,
                             feedback: record.feedback,
-                            codeLength: viewModel.codeLength
+                            codeLength: viewModel.codeLength,
+                            gameOver: viewModel.phase != .playing
                         )
                         .id(record.id)
                         .transition(.asymmetric(
@@ -780,6 +786,7 @@ struct GuessRowView: View {
     let guess: [PegColor]
     let feedback: Feedback
     let codeLength: Int
+    var gameOver: Bool = false
     @State private var revealed = false
 
     var body: some View {
@@ -807,10 +814,26 @@ struct GuessRowView: View {
             feedbackDots
                 .opacity(revealed ? 1.0 : 0)
                 .animation(.easeOut(duration: 0.3).delay(0.4), value: revealed)
+
+            if gameOver && feedback.isLie {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 12))
+                    .foregroundStyle(AppTheme.danger)
+            }
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .glassCard(cornerRadius: 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(AppTheme.bgCard.opacity(0.7))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(
+                            gameOver && feedback.isLie ? AppTheme.danger.opacity(0.6) : Color.white.opacity(0.08),
+                            lineWidth: gameOver && feedback.isLie ? 2 : 1
+                        )
+                )
+        )
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 revealed = true

@@ -64,7 +64,7 @@ class GameViewModel: ObservableObject {
         }
     }
 
-    func startFreePlay(difficulty: Difficulty) {
+    func startFreePlay(difficulty: Difficulty, lieMode: Bool = false) {
         self.level = nil
         self.mode = .freePlay
         self.lastDifficulty = difficulty
@@ -72,7 +72,8 @@ class GameViewModel: ObservableObject {
             codeLength: difficulty.codeLength,
             colorCount: difficulty.colorCount,
             allowDuplicates: difficulty.allowDuplicates,
-            maxAttempts: difficulty.maxAttempts
+            maxAttempts: difficulty.maxAttempts,
+            lieMode: lieMode
         )
         resetState()
     }
