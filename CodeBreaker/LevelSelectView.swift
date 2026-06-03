@@ -14,19 +14,56 @@ struct LevelSelectView: View {
             AppTheme.bgGradient.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                tierSelector
-                levelGrid
+                progressBar
+                allLevelsGrid
             }
 
             if let level = previewLevel {
                 levelPreviewOverlay(level)
             }
         }
-        .navigationTitle("任务模式")
+        .navigationTitle(L("menu.classic"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
+        }
+    }
+
+    private var progressBar: some View {
+        HStack {
+            Text("\(progress.completedLevels.count)/120")
+                .font(.system(size: 13, weight: .bold, design: .monospaced))
+                .foregroundStyle(AppTheme.accent)
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(AppTheme.bgCardLight)
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(AppTheme.accent)
+                        .frame(width: geo.size.width * CGFloat(progress.completedLevels.count) / 120.0)
+                }
+            }
+            .frame(height: 6)
+            Text("⭐\(progress.totalStars)")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(AppTheme.warning)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+    }
+
+    private var allLevelsGrid: some View {
+        ScrollView {
+            LazyVGrid(
+                columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 5),
+                spacing: 10
+            ) {
+                ForEach(levelManager.levels) { level in
+                    levelCell(level)
+                }
+            }
+            .padding(12)
         }
     }
 
@@ -99,60 +136,6 @@ struct LevelSelectView: View {
             Text(value)
                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                 .foregroundStyle(AppTheme.textPrimary)
-        }
-    }
-
-    private var tierSelector: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(0..<levelManager.tiers.count, id: \.self) { i in
-                    tierTab(index: i)
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-        }
-    }
-
-    private func tierTab(index: Int) -> some View {
-        let tier = levelManager.tiers[index]
-        let firstLevel = tier.first!
-        let completedCount = tier.filter { progress.completedLevels.contains($0.id) }.count
-
-        return Button {
-            withAnimation(.spring(response: 0.3)) { selectedTier = index }
-        } label: {
-            VStack(spacing: 4) {
-                Text(firstLevel.tierName)
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(selectedTier == index ? AppTheme.bgDark : AppTheme.textPrimary)
-                Text("\(completedCount)/\(tier.count)")
-                    .font(.system(size: 10, weight: .medium, design: .monospaced))
-                    .foregroundStyle(selectedTier == index ? AppTheme.bgDark.opacity(0.7) : AppTheme.textSecondary)
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(selectedTier == index ? AppTheme.accent : AppTheme.bgCard)
-            )
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var levelGrid: some View {
-        ScrollView {
-            LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4),
-                spacing: 12
-            ) {
-                if selectedTier < levelManager.tiers.count {
-                    ForEach(levelManager.tiers[selectedTier]) { level in
-                        levelCell(level)
-                    }
-                }
-            }
-            .padding(16)
         }
     }
 

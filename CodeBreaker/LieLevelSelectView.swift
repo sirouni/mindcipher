@@ -14,15 +14,14 @@ struct LieLevelSelectView: View {
 
             VStack(spacing: 0) {
                 lieHeader
-                tierSelector
-                levelGrid
+                allLevelsGrid
             }
 
             if let level = previewLevel {
                 levelPreviewOverlay(level)
             }
         }
-        .navigationTitle("谎言任务")
+        .navigationTitle(L("lie.task"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
@@ -48,57 +47,17 @@ struct LieLevelSelectView: View {
         .background(AppTheme.danger.opacity(0.08))
     }
 
-    private var tierSelector: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(0..<levelManager.tiers.count, id: \.self) { i in
-                    tierTab(index: i)
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-        }
-    }
-
-    private func tierTab(index: Int) -> some View {
-        let tier = levelManager.tiers[index]
-        let firstLevel = tier.first!
-        let completedCount = tier.filter { progress.completedLevels.contains($0.id) }.count
-
-        return Button {
-            withAnimation(.spring(response: 0.3)) { selectedTier = index }
-        } label: {
-            VStack(spacing: 4) {
-                Text(firstLevel.tierName)
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(selectedTier == index ? .white : AppTheme.textPrimary)
-                Text("\(completedCount)/\(tier.count)")
-                    .font(.system(size: 10, weight: .medium, design: .monospaced))
-                    .foregroundStyle(selectedTier == index ? .white.opacity(0.7) : AppTheme.textSecondary)
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(selectedTier == index ? AppTheme.danger : AppTheme.bgCard)
-            )
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var levelGrid: some View {
+    private var allLevelsGrid: some View {
         ScrollView {
             LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 4),
-                spacing: 12
+                columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 5),
+                spacing: 10
             ) {
-                if selectedTier < levelManager.tiers.count {
-                    ForEach(levelManager.tiers[selectedTier]) { level in
-                        levelCell(level)
-                    }
+                ForEach(levelManager.levels) { level in
+                    levelCell(level)
                 }
             }
-            .padding(16)
+            .padding(12)
         }
     }
 
