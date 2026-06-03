@@ -656,7 +656,8 @@ struct GameView: View {
                     Button {
                         showResult = false
                         confettiParticles = []
-                        viewModel.startFreePlay(difficulty: viewModel.lastDifficulty)
+                        let wasLie = viewModel.engine?.lieMode ?? false
+                        viewModel.startFreePlay(difficulty: viewModel.lastDifficulty, lieMode: wasLie)
                     } label: {
                         Text("再来一局")
                             .font(.system(size: 14, weight: .bold, design: .rounded))
