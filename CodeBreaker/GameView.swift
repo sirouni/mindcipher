@@ -362,36 +362,18 @@ struct GameView: View {
     }
 
     private func colorButton(_ color: PegColor, size: CGFloat) -> some View {
-        let isUsed = viewModel.currentGuess.contains(color)
-        let isEliminated = viewModel.eliminatedColors.contains(color)
-        return Button {
+        Button {
             SoundManager.shared.playPlace()
             viewModel.selectColor(color)
         } label: {
-            ZStack {
-                PegView(color: color, size: size)
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                    )
-                    .opacity(isEliminated ? 0.35 : 1.0)
-
-                if isUsed {
+            PegView(color: color, size: size)
+                .overlay(
                     Circle()
-                        .fill(Color.black.opacity(0.3))
-                        .frame(width: size, height: size)
-                    Image(systemName: "checkmark")
-                        .font(.system(size: size * 0.33, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.7))
-                } else if isEliminated {
-                    Image(systemName: "xmark")
-                        .font(.system(size: size * 0.38, weight: .bold))
-                        .foregroundStyle(AppTheme.danger.opacity(0.8))
-                }
-            }
+                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                )
         }
         .disabled(viewModel.phase != .playing)
-        .accessibilityLabel(color.displayName + "色" + (isEliminated ? "（已排除）" : ""))
+        .accessibilityLabel(color.displayName + "色")
     }
 
     // MARK: - Action Bar
