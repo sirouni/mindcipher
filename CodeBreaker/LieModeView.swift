@@ -8,39 +8,37 @@ struct LieModeSetupView: View {
     var body: some View {
         ZStack {
             AppTheme.bgGradient.ignoresSafeArea()
-            ScrollView {
-                VStack(spacing: 20) {
-                    header
+            VStack(spacing: 16) {
+                header
 
-                    VStack(spacing: 10) {
-                        ForEach(Difficulty.allCases, id: \.rawValue) { diff in
-                            difficultyRow(diff)
-                        }
-                    }
-                    .padding(16)
-                    .glassCard()
-
-                    infoCard
-
-                    rulesCard
-
-                    Button {
-                        startLieGame()
-                        startGame = true
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: "theatermask.and.paintbrush.fill")
-                            Text("开始谎言挑战")
-                        }
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(AppTheme.danger, in: RoundedRectangle(cornerRadius: 14))
+                VStack(spacing: 8) {
+                    ForEach(Difficulty.allCases, id: \.rawValue) { diff in
+                        difficultyRow(diff)
                     }
                 }
-                .padding(24)
+                .padding(12)
+                .glassCard()
+
+                infoCard
+
+                Spacer()
+
+                Button {
+                    startLieGame()
+                    startGame = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "theatermask.and.paintbrush.fill")
+                        Text("开始谎言挑战")
+                    }
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(AppTheme.danger, in: RoundedRectangle(cornerRadius: 14))
+                }
             }
+            .padding(24)
         }
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
@@ -48,32 +46,52 @@ struct LieModeSetupView: View {
     }
 
     private var header: some View {
-        VStack(spacing: 8) {
+        HStack(spacing: 12) {
             Image(systemName: "theatermask.and.paintbrush.fill")
-                .font(.system(size: 40))
+                .font(.system(size: 28))
                 .foregroundStyle(AppTheme.danger)
 
-            Text("谎言模式")
-                .font(.system(size: 26, weight: .black, design: .rounded))
-                .foregroundStyle(AppTheme.danger)
-
-            Text("系统会给出一次虚假反馈\n你能识破谎言并破译密码吗？")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(AppTheme.textSecondary)
-                .multilineTextAlignment(.center)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("谎言模式")
+                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .foregroundStyle(AppTheme.danger)
+                Text("系统会骗你一次，识破它！")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+            Spacer()
         }
     }
 
     private var infoCard: some View {
         VStack(spacing: 6) {
-            infoRow("密码长度", "\(selectedDifficulty.codeLength) 位")
-            infoRow("可用颜色", "\(selectedDifficulty.colorCount) 种")
-            infoRow("最大尝试", "\(totalAttempts) 次")
-            infoRow("允许重复", selectedDifficulty.allowDuplicates ? "是" : "否")
-            infoRow("虚假反馈", "1 次")
+            HStack {
+                infoChip("\(selectedDifficulty.codeLength)位")
+                infoChip("\(selectedDifficulty.colorCount)色")
+                infoChip("\(totalAttempts)步")
+                infoChip(selectedDifficulty.allowDuplicates ? "可重复" : "不重复")
+                Spacer()
+                Text("含1次谎言")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(AppTheme.danger)
+            }
+
+            Text("⚠️ 有1次反馈是假的（差距≤1），猜对时不骗你，结束后揭晓")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(AppTheme.textMuted)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(14)
+        .padding(12)
         .glassCard()
+    }
+
+    private func infoChip(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 12, weight: .bold, design: .monospaced))
+            .foregroundStyle(AppTheme.textPrimary)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(AppTheme.bgCardLight, in: RoundedRectangle(cornerRadius: 6))
     }
 
     private var rulesCard: some View {
