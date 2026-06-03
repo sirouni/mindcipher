@@ -68,7 +68,18 @@ class GameViewModel: ObservableObject {
         self.level = nil
         self.mode = .freePlay
         self.lastDifficulty = difficulty
-        let extraAttempts = lieMode ? 3 : 0
+        let extraAttempts: Int
+        if !lieMode {
+            extraAttempts = 0
+        } else {
+            switch difficulty {
+            case .beginner, .easy: extraAttempts = 3
+            case .medium: extraAttempts = 3
+            case .hard: extraAttempts = 4
+            case .expert: extraAttempts = 5
+            case .master: extraAttempts = 6
+            }
+        }
         engine = GameEngine(
             codeLength: difficulty.codeLength,
             colorCount: difficulty.colorCount,
