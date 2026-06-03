@@ -212,10 +212,8 @@ struct LevelEditorView: View {
             viewModel.currentGuess = Array(repeating: nil, count: codeLength)
             viewModel.phase = .playing
             viewModel.selectedSlot = 0
-            viewModel.hintUsed = false
             viewModel.showSecret = false
             viewModel.shakeGuessRow = false
-            viewModel.undoAvailable = false
 
             if timeLimit > 0 {
                 viewModel.timeRemaining = timeLimit

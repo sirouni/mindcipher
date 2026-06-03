@@ -61,7 +61,7 @@ private let strings: [String: [String: String]] = [
 
     // 谎言
     "lie.mode":         ["zh": "谎言模式",                     "en": "Lie Mode"],
-    "lie.warning":      ["zh": "⚠️ 谎言模式",                 "en": "⚠️ Lie Mode"],
+    "lie.warning":      ["zh": "谎言模式",                 "en": "Lie Mode"],
     "lie.task":         ["zh": "谎言任务",                     "en": "Lie Missions"],
     "lie.banner":       ["zh": "每关含1次虚假反馈",            "en": "1 fake feedback per level"],
     "lie.reveal":       ["zh": "第 %d 步是谎言！",             "en": "Step %d was a lie!"],

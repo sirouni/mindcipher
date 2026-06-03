@@ -76,7 +76,7 @@ struct LieModeSetupView: View {
                     .foregroundStyle(AppTheme.danger)
             }
 
-            Text("⚠️ 有1次反馈是假的（差距≤1），猜对时不骗你，结束后揭晓")
+            Label("有1次反馈是假的（差距≤1），猜对时不骗你，结束后揭晓", systemImage: "exclamationmark.triangle.fill")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(AppTheme.textMuted)
                 .frame(maxWidth: .infinity, alignment: .leading)

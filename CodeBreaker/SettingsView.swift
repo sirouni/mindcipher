@@ -95,19 +95,19 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 4) {
             sectionHeader("成就")
             VStack(spacing: 0) {
-                achievementRow("🔓", "初次破译", "完成第一局游戏", unlocked: stats.gamesWon >= 1)
+                iconAchievementRow("lock.open.fill", "初次破译", "完成第一局游戏", unlocked: stats.gamesWon >= 1)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                achievementRow("🔥", "连胜达人", "连续赢得 5 局", unlocked: stats.bestStreak >= 5)
+                iconAchievementRow("flame.fill", "连胜达人", "连续赢得 5 局", unlocked: stats.bestStreak >= 5)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                achievementRow("⭐", "三星特工", "任意关卡获得三星", unlocked: progress.starsByLevel.values.contains(3))
+                iconAchievementRow("star.fill", "三星特工", "任意关卡获得三星", unlocked: progress.starsByLevel.values.contains(3))
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                achievementRow("🎯", "百发百中", "连续赢得 10 局", unlocked: stats.bestStreak >= 10)
+                iconAchievementRow("scope", "百发百中", "连续赢得 10 局", unlocked: stats.bestStreak >= 10)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                achievementRow("🏆", "初级毕业", "完成全部初级特工关卡", unlocked: (1...20).allSatisfy { progress.completedLevels.contains($0) })
+                iconAchievementRow("trophy.fill", "初级毕业", "完成全部初级特工关卡", unlocked: (1...20).allSatisfy { progress.completedLevels.contains($0) })
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                achievementRow("💎", "满星大师", "获得 100 颗星", unlocked: progress.totalStars >= 100)
+                iconAchievementRow("diamond.fill", "满星大师", "获得 100 颗星", unlocked: progress.totalStars >= 100)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                achievementRow("🧠", "解码宗师", "完成全部 120 关", unlocked: progress.completedLevels.count >= 120)
+                iconAchievementRow("brain.head.profile", "解码宗师", "完成全部 120 关", unlocked: progress.completedLevels.count >= 120)
             }
             .glassCard(cornerRadius: 14)
         }
@@ -229,11 +229,11 @@ struct SettingsView: View {
         .padding(14)
     }
 
-    private func achievementRow(_ emoji: String, _ title: String, _ desc: String, unlocked: Bool) -> some View {
+    private func iconAchievementRow(_ systemName: String, _ title: String, _ desc: String, unlocked: Bool) -> some View {
         HStack(spacing: 12) {
-            Text(emoji)
-                .font(.system(size: 24))
-                .grayscale(unlocked ? 0 : 1)
+            Image(systemName: systemName)
+                .font(.system(size: 22))
+                .foregroundStyle(unlocked ? AppTheme.warning : AppTheme.textMuted)
                 .opacity(unlocked ? 1 : 0.3)
                 .frame(width: 32)
 

@@ -3,8 +3,7 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var viewModel: GameViewModel
     @Environment(\.dismiss) private var dismiss
-    @State private var showHint = false
-    @State private var hintText = ""
+    
     @State private var showResult = false
     @State private var confettiParticles: [ConfettiParticle] = []
     
@@ -54,11 +53,7 @@ struct GameView: View {
                 }
             }
         }
-        .alert("提示", isPresented: $showHint) {
-            Button("收到！") { }
-        } message: {
-            Text(hintText)
-        }
+        
     }
 
     // MARK: - Top Bar
@@ -92,7 +87,7 @@ struct GameView: View {
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                     if viewModel.engine?.lieMode == true {
-                        Text("⚠️ 谎言模式")
+                        Label("谎言模式", systemImage: "exclamationmark.triangle.fill")
                             .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(AppTheme.danger)
                     }
@@ -172,26 +167,7 @@ struct GameView: View {
 
             Spacer()
 
-            if viewModel.phase == .playing && !viewModel.hintUsed {
-                Button {
-                    SoundManager.shared.playTap()
-                    if let hint = viewModel.useHint() {
-                        hintText = hint
-                        showHint = true
-                    }
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "lightbulb.fill")
-                            .font(.system(size: 12))
-                        Text(L("game.hint"))
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .foregroundStyle(AppTheme.warning)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .glassCard(cornerRadius: 8)
-                }
-            }
+            
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 10)
@@ -392,18 +368,6 @@ struct GameView: View {
                     .glassCard(cornerRadius: 12)
             }
             .disabled(viewModel.phase != .playing)
-
-            Button {
-                SoundManager.shared.playTap()
-                viewModel.undoLastGuess()
-            } label: {
-                Image(systemName: "arrow.uturn.backward")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(viewModel.undoAvailable ? AppTheme.warning : AppTheme.textMuted)
-                    .frame(width: 46, height: 50)
-                    .glassCard(cornerRadius: 12)
-            }
-            .disabled(!viewModel.undoAvailable || viewModel.phase != .playing)
 
             Button {
                 SoundManager.shared.playSubmit()

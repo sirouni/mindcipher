@@ -194,7 +194,7 @@ struct TutorialView: View {
                 feedbackExample(
                     colors: [.green, .blue, .red, .yellow],
                     exact: 4, partial: 0, empty: 0,
-                    explain: "全部正确！密码破译成功 🎉"
+                    explain: "全部正确！密码破译成功"
                 )
             }
 
@@ -293,10 +293,10 @@ struct TutorialView: View {
             .padding(.horizontal, 8)
 
             VStack(alignment: .leading, spacing: 6) {
-                ruleRow("🎭", "有且仅有 1 次反馈是假的")
-                ruleRow("🔍", "谎言与真实差距 ≤1")
-                ruleRow("✅", "猜对时不会骗你")
-                ruleRow("📋", "结束后揭示哪步是谎言")
+                iconRuleRow("theatermask.and.paintbrush.fill", "有且仅有 1 次反馈是假的")
+                iconRuleRow("magnifyingglass", "谎言与真实差距 ≤1")
+                iconRuleRow("checkmark.shield.fill", "猜对时不会骗你")
+                iconRuleRow("doc.text.magnifyingglass", "结束后揭示哪步是谎言")
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
@@ -304,9 +304,12 @@ struct TutorialView: View {
         .padding(.horizontal, 28)
     }
 
-    private func ruleRow(_ emoji: String, _ text: String) -> some View {
+    private func iconRuleRow(_ systemName: String, _ text: String) -> some View {
         HStack(spacing: 8) {
-            Text(emoji).font(.system(size: 16))
+            Image(systemName: systemName)
+                .font(.system(size: 14))
+                .foregroundStyle(AppTheme.danger)
+                .frame(width: 20)
             Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
         }
     }
@@ -324,18 +327,19 @@ struct TutorialView: View {
                 .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 10) {
-                tipCard("💡", "提示", "每局 1 次机会，告诉你某个位置的颜色")
-                tipCard("↩️", "撤销", "提交后可撤回上一步重新选择")
-                tipCard("🧠", "排除法", "先猜不同颜色确定哪些在密码中")
-                tipCard("📊", "对比反馈", "比较两次猜测的差异来定位")
+                iconTipCard("brain.head.profile", "排除法", "先猜不同颜色确定哪些在密码中")
+                iconTipCard("chart.bar.fill", "对比反馈", "比较两次猜测的差异来定位")
             }
         }
         .padding(.horizontal, 28)
     }
 
-    private func tipCard(_ emoji: String, _ title: String, _ desc: String) -> some View {
+    private func iconTipCard(_ systemName: String, _ title: String, _ desc: String) -> some View {
         HStack(spacing: 12) {
-            Text(emoji).font(.system(size: 24)).frame(width: 32)
+            Image(systemName: systemName)
+                .font(.system(size: 20))
+                .foregroundStyle(AppTheme.warning)
+                .frame(width: 32)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.system(size: 14, weight: .bold)).foregroundStyle(AppTheme.textPrimary)
                 Text(desc).font(.system(size: 12, weight: .medium)).foregroundStyle(AppTheme.textSecondary)

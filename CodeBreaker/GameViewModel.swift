@@ -14,11 +14,11 @@ class GameViewModel: ObservableObject {
     @Published var currentGuess: [PegColor?] = []
     @Published var phase: GamePhase = .playing
     @Published var selectedSlot: Int = 0
-    @Published var hintUsed: Bool = false
+    
     @Published var showSecret: Bool = false
     @Published var timeRemaining: Int = 0
     @Published var shakeGuessRow: Bool = false
-    @Published var undoAvailable: Bool = false
+    
 
     var mode: GameMode = .freePlay
     var level: Level?
@@ -110,7 +110,7 @@ class GameViewModel: ObservableObject {
         currentGuess = Array(repeating: nil, count: codeLength)
         phase = .playing
         selectedSlot = 0
-        hintUsed = false
+        
         showSecret = false
         shakeGuessRow = false
     }
@@ -138,16 +138,6 @@ class GameViewModel: ObservableObject {
         }
     }
 
-    func undoLastGuess() {
-        guard phase == .playing, !guessHistory.isEmpty, undoAvailable else { return }
-        withAnimation(.spring(response: 0.3)) {
-            let last = guessHistory.removeLast()
-            currentGuess = last.guess.map { Optional($0) }
-            selectedSlot = codeLength - 1
-            undoAvailable = false
-        }
-    }
-
     func submitGuess() {
         let guess = currentGuess.compactMap { $0 }
         guard guess.count == codeLength, phase == .playing else {
@@ -162,7 +152,7 @@ class GameViewModel: ObservableObject {
             guessHistory.append(record)
             currentGuess = Array(repeating: nil, count: codeLength)
             selectedSlot = 0
-            undoAvailable = true
+            
         }
 
         if feedback.isWin(codeLength: codeLength) {
@@ -191,17 +181,7 @@ class GameViewModel: ObservableObject {
         }
     }
 
-    func useHint() -> String? {
-        guard phase == .playing, !hintUsed else { return nil }
-        hintUsed = true
-
-        let unguessedPositions = (0..<codeLength).filter { pos in
-            !guessHistory.contains { $0.guess[pos] == secretCode[pos] }
-        }
-        guard let pos = unguessedPositions.randomElement() else { return nil }
-        let color = secretCode[pos]
-        return "位置 \(pos + 1) 的颜色是\(color.displayName)色"
-    }
+    
 
     private func triggerShake() {
         shakeGuessRow = true
@@ -246,7 +226,7 @@ class GameViewModel: ObservableObject {
 
         var lines = [title]
         if won, case .won(let a) = phase {
-            lines.append("✅ \(a)/\(maxAttempts) 步破译")
+            lines.append("\(a)/\(maxAttempts) 步破译")
         } else {
             lines.append("❌ 破译失败")
         }
