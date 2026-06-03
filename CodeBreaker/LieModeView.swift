@@ -29,7 +29,7 @@ struct LieModeSetupView: View {
                 } label: {
                     HStack(spacing: 8) {
                         Image(systemName: "theatermask.and.paintbrush.fill")
-                        Text("开始谎言挑战")
+                        Text("Start Lie Challenge")
                     }
                     .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
@@ -52,10 +52,10 @@ struct LieModeSetupView: View {
                 .foregroundStyle(AppTheme.danger)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("谎言模式")
+                Text("Lie Mode")
                     .font(.system(size: 22, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.danger)
-                Text("系统会骗你一次，识破它！")
+                Text("The system lies once. Spot it!")
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -66,17 +66,17 @@ struct LieModeSetupView: View {
     private var infoCard: some View {
         VStack(spacing: 6) {
             HStack {
-                infoChip("\(selectedDifficulty.codeLength)位")
-                infoChip("\(selectedDifficulty.colorCount)色")
-                infoChip("\(totalAttempts)步")
-                infoChip(selectedDifficulty.allowDuplicates ? "可重复" : "不重复")
+                infoChip("\(selectedDifficulty.codeLength)L")
+                infoChip("\(selectedDifficulty.colorCount)C")
+                infoChip("\(totalAttempts)T")
+                infoChip(selectedDifficulty.allowDuplicates ? "Repeats" : "No Repeats")
                 Spacer()
-                Text("含1次谎言")
+                Text("+1 Lie")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(AppTheme.danger)
             }
 
-            Label("有1次反馈是假的（差距≤1），猜对时不骗你，结束后揭晓", systemImage: "exclamationmark.triangle.fill")
+            Label("1 feedback is fake (diff≤1), no lie on correct guess, revealed at end", systemImage: "exclamationmark.triangle.fill")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(AppTheme.textMuted)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -99,16 +99,16 @@ struct LieModeSetupView: View {
             HStack(spacing: 6) {
                 Image(systemName: "info.circle.fill")
                     .foregroundStyle(AppTheme.danger)
-                Text("规则说明")
+                Text("Rules")
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                ruleItem("游戏中有且仅有 1 次反馈是假的")
-                ruleItem("谎言反馈与真实值接近（差距≤1）")
-                ruleItem("猜对时系统不会撒谎")
-                ruleItem("游戏结束后会揭示哪步是谎言")
+                ruleItem("Exactly 1 feedback is fake")
+                ruleItem("Fake feedback is close to real (diff≤1)")
+                ruleItem("No lie when you guess correctly")
+                ruleItem("Reveals which step was a lie after the game")
             }
         }
         .padding(14)
@@ -160,7 +160,7 @@ struct LieModeSetupView: View {
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(selectedDifficulty == diff ? .white : AppTheme.textPrimary)
                 Spacer()
-                Text("\(diff.codeLength)位·\(diff.colorCount)色")
+                Text("\(diff.codeLength)×\(diff.colorCount)")
                     .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundStyle(selectedDifficulty == diff ? .white.opacity(0.7) : AppTheme.textSecondary)
             }

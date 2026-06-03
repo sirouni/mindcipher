@@ -82,22 +82,22 @@ struct GameView: View {
 
             VStack(spacing: 2) {
                 if let level = viewModel.level {
-                    Text("关卡 \(level.id)")
+                    Text("Level \(level.id)")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                     Text(level.difficulty.rawValue)
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(AppTheme.accent)
                 } else if viewModel.mode == .duel {
-                    Text("双人对战")
+                    Text("Duel Mode")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                 } else {
-                    Text("自由模式")
+                    Text("Free Play")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                     if viewModel.engine?.lieMode == true {
-                        Label("谎言模式", systemImage: "exclamationmark.triangle.fill")
+                        Label("Lie Mode", systemImage: "exclamationmark.triangle.fill")
                             .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(AppTheme.danger)
                     }
@@ -135,7 +135,7 @@ struct GameView: View {
             Text("\(viewModel.attemptsLeft)")
                 .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundStyle(viewModel.attemptsLeft <= 2 ? AppTheme.danger : AppTheme.accent)
-            Text("次")
+            Text("left")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
         }
@@ -320,7 +320,7 @@ struct GameView: View {
                 viewModel.tapSlot(index)
             }
         }
-        .accessibilityLabel("槽位 \(index + 1)")
+        .accessibilityLabel("Slot \(index + 1)")
     }
 
     // MARK: - Color Picker
@@ -350,7 +350,7 @@ struct GameView: View {
                 )
         }
         .disabled(viewModel.phase != .playing)
-        .accessibilityLabel(color.displayName + "色")
+        .accessibilityLabel(color.displayName)
     }
 
     // MARK: - Action Bar
@@ -500,7 +500,7 @@ struct GameView: View {
                         Image(systemName: "theatermask.and.paintbrush.fill")
                             .font(.system(size: 14))
                             .foregroundStyle(AppTheme.danger)
-                        Text("第 \(lieGuess) 步是谎言！")
+                        Text("Step \(lieGuess) was a lie!")
                             .font(.system(size: 14, weight: .bold))
                             .foregroundStyle(AppTheme.danger)
                     }
@@ -508,16 +508,16 @@ struct GameView: View {
                     let record = viewModel.guessHistory[lieGuess - 1]
                     let realFeedback = viewModel.engine!.computeRealFeedback(guess: record.guess)
                     HStack(spacing: 4) {
-                        Text("虚假:")
+                        Text("Fake:")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(AppTheme.textMuted)
-                        Text("\(record.feedback.exact)精确 \(record.feedback.partial)位置")
+                        Text("\(record.feedback.exact) exact \(record.feedback.partial) partial")
                             .font(.system(size: 11, weight: .bold, design: .monospaced))
                             .foregroundStyle(AppTheme.danger)
-                        Text("→ 真实:")
+                        Text("→ Real:")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(AppTheme.textMuted)
-                        Text("\(realFeedback.exact)精确 \(realFeedback.partial)位置")
+                        Text("\(realFeedback.exact) exact \(realFeedback.partial) partial")
                             .font(.system(size: 11, weight: .bold, design: .monospaced))
                             .foregroundStyle(AppTheme.accent)
                     }
@@ -537,7 +537,7 @@ struct GameView: View {
                     Image(systemName: "theatermask.and.paintbrush.fill")
                         .font(.system(size: 13))
                         .foregroundStyle(AppTheme.accent)
-                    Text("本局谎言未触发（你赢得太快了！）")
+                    Text("No lie triggered (you won too fast!)")
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AppTheme.accent)
                 }
@@ -581,7 +581,7 @@ struct GameView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "square.and.arrow.up")
                             .font(.system(size: 14))
-                        Text("分享")
+                        Text("Share")
                             .font(.system(size: 14, weight: .bold, design: .rounded))
                     }
                     .foregroundStyle(AppTheme.accent)
@@ -601,7 +601,7 @@ struct GameView: View {
                             confettiParticles = []
                             viewModel.startGame(level: next)
                         } label: {
-                            Text("下一关 →")
+                            Text("Next →")
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
@@ -614,7 +614,7 @@ struct GameView: View {
                             confettiParticles = []
                             viewModel.startGame(level: level)
                         } label: {
-                            Text("重新挑战")
+                            Text("Retry")
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
@@ -629,7 +629,7 @@ struct GameView: View {
                         let wasLie = viewModel.engine?.lieMode ?? false
                         viewModel.startFreePlay(difficulty: viewModel.lastDifficulty, lieMode: wasLie)
                     } label: {
-                        Text("再来一局")
+                        Text("Play Again")
                             .font(.system(size: 14, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity)
@@ -643,7 +643,7 @@ struct GameView: View {
                 confettiParticles = []
                 dismiss()
             } label: {
-                Text("返回")
+                Text("Back")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
                     .padding(.top, 4)
@@ -802,7 +802,7 @@ struct GuessRowView: View {
                 .shadow(color: .black.opacity(0.03), radius: 2, y: 1)
         )
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("第\(index)步 \(guess.map { $0.displayName }.joined(separator: " ")) 反馈\(feedbackLabel)")
+        .accessibilityLabel("Row \(index) \(guess.map { $0.displayName }.joined(separator: " ")) feedback \(feedbackLabel)")
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 revealed = true
@@ -811,7 +811,7 @@ struct GuessRowView: View {
     }
 
     private var feedbackLabel: String {
-        "\(feedback.exact)精确\(feedback.partial)部分\(codeLength - feedback.exact - feedback.partial)空"
+        "\(feedback.exact) exact \(feedback.partial) partial \(codeLength - feedback.exact - feedback.partial) empty"
     }
 
     private var feedbackDots: some View {

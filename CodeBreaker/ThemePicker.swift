@@ -1,10 +1,10 @@
 import SwiftUI
 
 enum AppSkin: String, CaseIterable {
-    case agent = "特工"
-    case cyber = "赛博"
-    case military = "军事"
-    case minimal = "极简"
+    case agent = "Agent"
+    case cyber = "Cyber"
+    case military = "Military"
+    case minimal = "Minimal"
 
     var bgColors: (Color, Color) {
         switch self {
@@ -53,7 +53,7 @@ class ThemeManager: ObservableObject {
     }
 
     private init() {
-        let saved = UserDefaults.standard.string(forKey: "app_skin") ?? "特工"
+        let saved = UserDefaults.standard.string(forKey: "app_skin") ?? "Agent"
         currentSkin = AppSkin(rawValue: saved) ?? .agent
     }
 
@@ -74,7 +74,7 @@ struct ThemePickerView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("主题")
+            Text("Theme")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(AppTheme.textSecondary)
                 .textCase(.uppercase)

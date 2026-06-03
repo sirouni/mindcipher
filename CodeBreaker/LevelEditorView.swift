@@ -17,9 +17,9 @@ struct LevelEditorView: View {
                 VStack(spacing: 20) {
                     header
 
-                    paramSection("密码长度", value: $codeLength, range: 3...6) { "\($0) 位" }
-                    paramSection("颜色数量", value: $colorCount, range: max(codeLength, 4)...8) { "\($0) 种" }
-                    paramSection("最大尝试", value: $maxAttempts, range: (codeLength + 1)...15) { "\($0) 次" }
+                    paramSection("Code length", value: $codeLength, range: 3...6) { "\($0)" }
+                    paramSection("Colors", value: $colorCount, range: max(codeLength, 4)...8) { "\($0)" }
+                    paramSection("Max attempts", value: $maxAttempts, range: (codeLength + 1)...15) { "\($0)" }
 
                     toggleSection
                     timeLimitSection
@@ -33,7 +33,7 @@ struct LevelEditorView: View {
                 .padding(20)
             }
         }
-        .navigationTitle("自定义关卡")
+        .navigationTitle("Custom Level")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.light, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
@@ -49,7 +49,7 @@ struct LevelEditorView: View {
             Image(systemName: "slider.horizontal.3")
                 .font(.system(size: 36))
                 .foregroundStyle(AppTheme.accent)
-            Text("打造你的专属挑战")
+            Text("Build your own challenge")
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
         }
@@ -94,10 +94,10 @@ struct LevelEditorView: View {
     private var toggleSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text("允许重复颜色")
+                Text("Allow repeat colors")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(AppTheme.textPrimary)
-                Text("同一颜色可出现多次")
+                Text("Same color can appear multiple times")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -113,11 +113,11 @@ struct LevelEditorView: View {
     private var timeLimitSection: some View {
         VStack(spacing: 8) {
             HStack {
-                Text("时间限制")
+                Text("Time limit")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(AppTheme.textPrimary)
                 Spacer()
-                Text(timeLimit == 0 ? "无" : "\(timeLimit) 秒")
+                Text(timeLimit == 0 ? "Off" : "\(timeLimit)s")
                     .font(.system(size: 15, weight: .bold, design: .monospaced))
                     .foregroundStyle(timeLimit > 0 ? AppTheme.warning : AppTheme.textSecondary)
             }
@@ -127,7 +127,7 @@ struct LevelEditorView: View {
                     Button {
                         withAnimation(.spring(response: 0.2)) { timeLimit = t }
                     } label: {
-                        Text(t == 0 ? "无" : "\(t)s")
+                        Text(t == 0 ? "Off" : "\(t)s")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
                             .foregroundStyle(timeLimit == t ? Color.white : AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
@@ -150,15 +150,15 @@ struct LevelEditorView: View {
         let label: String
         let color: Color
         switch score {
-        case 0..<30: label = "入门"; color = AppTheme.accent
-        case 30..<50: label = "适中"; color = Color(red: 0.2, green: 0.8, blue: 0.4)
-        case 50..<70: label = "挑战"; color = AppTheme.warning
-        case 70..<85: label = "困难"; color = Color(red: 1.0, green: 0.4, blue: 0.2)
-        default: label = "地狱"; color = AppTheme.danger
+        case 0..<30: label = "Easy"; color = AppTheme.accent
+        case 30..<50: label = "Medium"; color = Color(red: 0.2, green: 0.8, blue: 0.4)
+        case 50..<70: label = "Challenge"; color = AppTheme.warning
+        case 70..<85: label = "Hard"; color = Color(red: 1.0, green: 0.4, blue: 0.2)
+        default: label = "Hell"; color = AppTheme.danger
         }
 
         return HStack(spacing: 12) {
-            Text("难度评估")
+            Text("Difficulty")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(AppTheme.textSecondary)
 
@@ -184,7 +184,7 @@ struct LevelEditorView: View {
 
     private var previewColors: some View {
         HStack(spacing: 6) {
-            Text("可用颜色")
+            Text("Colors")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
             Spacer()
@@ -223,7 +223,7 @@ struct LevelEditorView: View {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "play.fill")
-                Text("开始自定义挑战")
+                Text("Start Custom Challenge")
             }
             .font(.system(size: 17, weight: .bold, design: .rounded))
             .foregroundStyle(Color.white)

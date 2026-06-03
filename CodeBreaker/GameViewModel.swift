@@ -219,16 +219,16 @@ class GameViewModel: ObservableObject {
         let won = phase != .lost
         let title: String
         if let level = level {
-            title = "密码破译局 关卡\(level.id)"
+            title = "Code Breaker Level \(level.id)"
         } else {
-            title = "密码破译局 自由模式"
+            title = "Code Breaker Free Play"
         }
 
         var lines = [title]
         if won, case .won(let a) = phase {
-            lines.append("\(a)/\(maxAttempts) 步破译")
+            lines.append("Solved in \(a)/\(maxAttempts)")
         } else {
-            lines.append("❌ 破译失败")
+            lines.append("❌ Failed")
         }
         lines.append("")
 
@@ -246,7 +246,7 @@ class GameViewModel: ObservableObject {
             lines.append(row)
         }
         lines.append("")
-        lines.append("🔐 来挑战？")
+        lines.append("🔐 Can you crack it?")
         return lines.joined(separator: "\n")
     }
 }

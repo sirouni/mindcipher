@@ -13,8 +13,8 @@ struct DailyChallengeView: View {
 
     private var displayDate: String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "zh_CN")
-        f.dateFormat = "M月d日 EEEE"
+        f.locale = Locale(identifier: "en_US")
+        f.dateFormat = "EEEE, MMM d"
         return f.string(from: Date())
     }
 
@@ -33,7 +33,7 @@ struct DailyChallengeView: View {
         .navigationDestination(isPresented: $started) {
             GameView(viewModel: viewModel)
         }
-        .navigationTitle("每日挑战")
+        .navigationTitle("Daily Challenge")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.light, for: .navigationBar)
     }
@@ -55,15 +55,15 @@ struct DailyChallengeView: View {
                 .font(.system(size: 20, weight: .bold, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
-            Text("每日挑战")
+            Text("Daily Challenge")
                 .font(.system(size: 28, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.warning)
 
             VStack(spacing: 8) {
-                ruleRow("密码长度", "4 位")
-                ruleRow("可用颜色", "6 种")
-                ruleRow("最大尝试", "7 次")
-                ruleRow("允许重复", "否")
+                ruleRow("Code length", "4")
+                ruleRow("Colors", "6")
+                ruleRow("Max attempts", "7")
+                ruleRow("Allow repeats", "No")
             }
             .padding(20)
             .glassCard(cornerRadius: 16)
@@ -73,10 +73,10 @@ struct DailyChallengeView: View {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.system(size: 32))
                         .foregroundStyle(AppTheme.accent)
-                    Text("今日挑战已完成")
+                    Text("Today's challenge complete")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.accent)
-                    Text("明天再来挑战新密码！")
+                    Text("Come back tomorrow!")
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -89,7 +89,7 @@ struct DailyChallengeView: View {
                 Button {
                     startDailyChallenge()
                 } label: {
-                    Text("开始挑战")
+                    Text("Start")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.white)
                         .frame(maxWidth: .infinity)
@@ -98,7 +98,7 @@ struct DailyChallengeView: View {
                 }
             } else {
                 Button { dismiss() } label: {
-                    Text("返回首页")
+                    Text("Back to Home")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textSecondary)
                         .frame(maxWidth: .infinity)

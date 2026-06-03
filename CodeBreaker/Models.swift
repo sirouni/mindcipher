@@ -7,14 +7,14 @@ enum PegColor: Int, CaseIterable, Codable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .red: return "红"
-        case .green: return "绿"
-        case .blue: return "蓝"
-        case .yellow: return "黄"
-        case .purple: return "紫"
-        case .orange: return "橙"
-        case .cyan: return "青"
-        case .pink: return "粉"
+        case .red: return "Red"
+        case .green: return "Green"
+        case .blue: return "Blue"
+        case .yellow: return "Yellow"
+        case .purple: return "Purple"
+        case .orange: return "Orange"
+        case .cyan: return "Cyan"
+        case .pink: return "Pink"
         }
     }
 
@@ -60,12 +60,12 @@ enum GameMode: Equatable {
 }
 
 enum Difficulty: String, CaseIterable {
-    case beginner = "新手"
-    case easy = "简单"
-    case medium = "中等"
-    case hard = "困难"
-    case expert = "专家"
-    case master = "大师"
+    case beginner = "Beginner"
+    case easy = "Easy"
+    case medium = "Medium"
+    case hard = "Hard"
+    case expert = "Expert"
+    case master = "Master"
 
     var codeLength: Int {
         switch self {
@@ -138,12 +138,12 @@ struct Level: Identifiable, Codable {
 
     var tierName: String {
         switch tier {
-        case 1: return "初级特工"
-        case 2: return "中级特工"
-        case 3: return "高级特工"
-        case 4: return "精英特工"
-        case 5: return "首席特工"
-        default: return "传奇特工"
+        case 1: return "Junior Agent"
+        case 2: return "Agent"
+        case 3: return "Senior Agent"
+        case 4: return "Elite Agent"
+        case 5: return "Chief Agent"
+        default: return "Legend Agent"
         }
     }
 }

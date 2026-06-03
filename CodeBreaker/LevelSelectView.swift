@@ -149,7 +149,7 @@ struct LevelSelectView: View {
                 .onTapGesture { withAnimation(.spring(response: 0.3)) { previewLevel = nil } }
 
             VStack(spacing: 16) {
-                Text("关卡 \(level.id)")
+                Text("Level \(level.id)")
                     .font(.system(size: 22, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
@@ -161,12 +161,12 @@ struct LevelSelectView: View {
                     .background(AppTheme.accent.opacity(0.15), in: Capsule())
 
                 VStack(spacing: 6) {
-                    previewRow("密码长度", "\(level.codeLength) 位")
-                    previewRow("可用颜色", "\(level.colorCount) 种")
-                    previewRow("最大尝试", "\(level.maxAttempts) 次")
-                    previewRow("允许重复", level.allowDuplicates ? "是" : "否")
+                    previewRow("Code length", "\(level.codeLength)")
+                    previewRow("Colors", "\(level.colorCount)")
+                    previewRow("Max attempts", "\(level.maxAttempts)")
+                    previewRow("Allow repeats", level.allowDuplicates ? "Yes" : "No")
                     if level.timeLimitSeconds > 0 {
-                        previewRow("时间限制", "\(level.timeLimitSeconds) 秒")
+                        previewRow("Time limit", "\(level.timeLimitSeconds)s")
                     }
                 }
                 .padding(16)
@@ -191,7 +191,7 @@ struct LevelSelectView: View {
                     previewLevel = nil
                     startGame = true
                 } label: {
-                    Text(progress.completedLevels.contains(level.id) ? "重新挑战" : "开始")
+                    Text(progress.completedLevels.contains(level.id) ? "Retry" : "Start")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.white)
                         .frame(width: 200)

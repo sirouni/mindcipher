@@ -1,10 +1,6 @@
 import Foundation
 
-private let currentLanguage: String = {
-    let preferred = Locale.preferredLanguages.first ?? "en"
-    if preferred.hasPrefix("zh") { return "zh" }
-    return "en"
-}()
+private let currentLanguage: String = "en"
 
 private let strings: [String: [String: String]] = [
     // 主页

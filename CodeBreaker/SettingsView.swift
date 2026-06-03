@@ -46,20 +46,20 @@ struct SettingsView: View {
                 .padding(20)
             }
         }
-        .navigationTitle("设置")
+        .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.light, for: .navigationBar)
     }
 
     private var gameSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("游戏")
+            sectionHeader("Game")
             VStack(spacing: 0) {
-                toggleRow(icon: "speaker.wave.2.fill", title: "音效", isOn: $settings.soundEnabled)
+                toggleRow(icon: "speaker.wave.2.fill", title: "Sound", isOn: $settings.soundEnabled)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                toggleRow(icon: "iphone.radiowaves.left.and.right", title: "触觉反馈", isOn: $settings.hapticsEnabled)
+                toggleRow(icon: "iphone.radiowaves.left.and.right", title: "Haptics", isOn: $settings.hapticsEnabled)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                toggleRow(icon: "eye.trianglebadge.exclamationmark", title: "色盲辅助", isOn: $settings.colorBlindMode)
+                toggleRow(icon: "eye.trianglebadge.exclamationmark", title: "Colorblind", isOn: $settings.colorBlindMode)
             }
             .glassCard(cornerRadius: 14)
         }
@@ -71,21 +71,21 @@ struct SettingsView: View {
 
     private var statsSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("数据")
+            sectionHeader("Stats")
             VStack(spacing: 0) {
-                infoRow(icon: "gamecontroller.fill", title: "总局数", value: "\(stats.gamesPlayed)")
+                infoRow(icon: "gamecontroller.fill", title: "Games", value: "\(stats.gamesPlayed)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "trophy.fill", title: "胜利", value: "\(stats.gamesWon)")
+                infoRow(icon: "trophy.fill", title: "Wins", value: "\(stats.gamesWon)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "percent", title: "胜率", value: stats.gamesPlayed > 0 ? "\(Int(stats.winRate))%" : "--")
+                infoRow(icon: "percent", title: "Win%", value: stats.gamesPlayed > 0 ? "\(Int(stats.winRate))%" : "--")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "flame.fill", title: "最佳连胜", value: "\(stats.bestStreak)")
+                infoRow(icon: "flame.fill", title: "Best streak", value: "\(stats.bestStreak)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "number", title: "平均步数", value: stats.gamesWon > 0 ? String(format: "%.1f", stats.avgAttempts) : "--")
+                infoRow(icon: "number", title: "Avg steps", value: stats.gamesWon > 0 ? String(format: "%.1f", stats.avgAttempts) : "--")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "star.fill", title: "总星数", value: "\(progress.totalStars)")
+                infoRow(icon: "star.fill", title: "Stars", value: "\(progress.totalStars)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "checkmark.circle.fill", title: "关卡完成", value: "\(progress.completedLevels.count)/120")
+                infoRow(icon: "checkmark.circle.fill", title: "Levels done", value: "\(progress.completedLevels.count)/120")
             }
             .glassCard(cornerRadius: 14)
         }
@@ -93,21 +93,21 @@ struct SettingsView: View {
 
     private var achievementsSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("成就")
+            sectionHeader("Achievements")
             VStack(spacing: 0) {
-                iconAchievementRow("lock.open.fill", "初次破译", "完成第一局游戏", unlocked: stats.gamesWon >= 1)
+                iconAchievementRow("lock.open.fill", "First Crack", "Complete your first game", unlocked: stats.gamesWon >= 1)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("flame.fill", "连胜达人", "连续赢得 5 局", unlocked: stats.bestStreak >= 5)
+                iconAchievementRow("flame.fill", "Streak Master", "Win 5 in a row", unlocked: stats.bestStreak >= 5)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("star.fill", "三星特工", "任意关卡获得三星", unlocked: progress.starsByLevel.values.contains(3))
+                iconAchievementRow("star.fill", "3-Star Agent", "Get 3 stars on any level", unlocked: progress.starsByLevel.values.contains(3))
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("scope", "百发百中", "连续赢得 10 局", unlocked: stats.bestStreak >= 10)
+                iconAchievementRow("scope", "Sharpshooter", "Win 10 in a row", unlocked: stats.bestStreak >= 10)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("trophy.fill", "初级毕业", "完成全部初级特工关卡", unlocked: (1...20).allSatisfy { progress.completedLevels.contains($0) })
+                iconAchievementRow("trophy.fill", "Junior Graduate", "Complete all Junior Agent levels", unlocked: (1...20).allSatisfy { progress.completedLevels.contains($0) })
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("diamond.fill", "满星大师", "获得 100 颗星", unlocked: progress.totalStars >= 100)
+                iconAchievementRow("diamond.fill", "Star Master", "Earn 100 stars", unlocked: progress.totalStars >= 100)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                iconAchievementRow("brain.head.profile", "解码宗师", "完成全部 120 关", unlocked: progress.completedLevels.count >= 120)
+                iconAchievementRow("brain.head.profile", "Grandmaster", "Complete all 120 levels", unlocked: progress.completedLevels.count >= 120)
             }
             .glassCard(cornerRadius: 14)
         }
@@ -115,7 +115,7 @@ struct SettingsView: View {
 
     private var dangerSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("管理")
+            sectionHeader("Manage")
             VStack(spacing: 0) {
                 Button {
                     showResetStatsAlert = true
@@ -125,20 +125,20 @@ struct SettingsView: View {
                             .font(.system(size: 15))
                             .foregroundStyle(AppTheme.warning)
                             .frame(width: 28)
-                        Text("重置统计数据")
+                        Text("Reset Stats")
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(AppTheme.warning)
                         Spacer()
                     }
                     .padding(14)
                 }
-                .alert("确认重置统计？", isPresented: $showResetStatsAlert) {
-                    Button("取消", role: .cancel) { }
-                    Button("重置", role: .destructive) {
+                .alert("Reset stats?", isPresented: $showResetStatsAlert) {
+                    Button("Cancel", role: .cancel) { }
+                    Button("Reset", role: .destructive) {
                         stats.gamesPlayed = 0; stats.gamesWon = 0
                         stats.currentStreak = 0; stats.bestStreak = 0; stats.totalAttempts = 0
                     }
-                } message: { Text("胜率、连胜等数据将归零") }
+                } message: { Text("Win rate, streaks, etc. will be cleared") }
 
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
 
@@ -150,23 +150,23 @@ struct SettingsView: View {
                             .font(.system(size: 15))
                             .foregroundStyle(AppTheme.danger)
                             .frame(width: 28)
-                        Text("重置全部进度")
+                        Text("Reset All Progress")
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(AppTheme.danger)
                         Spacer()
                     }
                     .padding(14)
                 }
-                .alert("确认重置全部进度？", isPresented: $showResetAlert) {
-                    Button("取消", role: .cancel) { }
-                    Button("重置", role: .destructive) {
+                .alert("Reset all progress?", isPresented: $showResetAlert) {
+                    Button("Cancel", role: .cancel) { }
+                    Button("Reset", role: .destructive) {
                         progress.completedLevels = []
                         progress.starsByLevel = [:]
                         stats.gamesPlayed = 0; stats.gamesWon = 0
                         stats.currentStreak = 0; stats.bestStreak = 0; stats.totalAttempts = 0
                         UserDefaults.standard.set(false, forKey: "tutorialSeen")
                     }
-                } message: { Text("关卡、星级、统计数据全部清零，不可恢复") }
+                } message: { Text("Levels, stars, and stats will be permanently cleared") }
             }
             .glassCard(cornerRadius: 14)
         }
@@ -174,11 +174,11 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("关于")
+            sectionHeader("About")
             VStack(spacing: 0) {
-                infoRow(icon: "info.circle.fill", title: "版本", value: "1.0.0")
+                infoRow(icon: "info.circle.fill", title: "Version", value: "1.0.0")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "lock.shield.fill", title: "密码破译局", value: "Code Breaker")
+                infoRow(icon: "lock.shield.fill", title: "Code Breaker", value: "Code Breaker")
             }
             .glassCard(cornerRadius: 14)
         }

@@ -45,7 +45,7 @@ struct SplashView: View {
                 }
 
                 VStack(spacing: 6) {
-                    Text("密码破译局")
+                    Text("Code Breaker")
                         .font(.system(size: 30, weight: .black, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
 

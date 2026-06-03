@@ -255,7 +255,7 @@ struct HomeView: View {
                                 .font(.system(size: 11))
                                 .foregroundStyle(AppTheme.danger)
                                 .modifier(PulseAnimation())
-                            Text("连胜 \(stats.currentStreak)!")
+                            Text("Streak \(stats.currentStreak)!")
                                 .font(.system(size: 11, weight: .bold))
                                 .foregroundStyle(AppTheme.danger)
                         }
@@ -265,7 +265,7 @@ struct HomeView: View {
                             Image(systemName: "trophy.fill")
                                 .font(.system(size: 10))
                                 .foregroundStyle(AppTheme.warning)
-                            Text("最佳 \(stats.bestStreak)")
+                            Text("Best \(stats.bestStreak)")
                                 .font(.system(size: 11, weight: .medium))
                                 .foregroundStyle(AppTheme.textSecondary)
                         }
@@ -312,7 +312,7 @@ struct FreePlaySetupView: View {
         ZStack {
             AppTheme.bgGradient.ignoresSafeArea()
             VStack(spacing: 20) {
-                Text("自由模式")
+                Text("Free Play")
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
@@ -325,12 +325,12 @@ struct FreePlaySetupView: View {
                 .glassCard()
 
                 VStack(spacing: 8) {
-                    infoRow("密码长度", "\(selectedDifficulty.codeLength) 位")
-                    infoRow("可用颜色", "\(selectedDifficulty.colorCount) 种")
-                    infoRow("最大尝试", "\(selectedDifficulty.maxAttempts) 次")
-                    infoRow("允许重复", selectedDifficulty.allowDuplicates ? "是" : "否")
+                    infoRow("Code length", "\(selectedDifficulty.codeLength)")
+                    infoRow("Colors", "\(selectedDifficulty.colorCount)")
+                    infoRow("Max attempts", "\(selectedDifficulty.maxAttempts)")
+                    infoRow("Allow repeats", selectedDifficulty.allowDuplicates ? "Yes" : "No")
                     if selectedDifficulty.hasTimeLimit {
-                        infoRow("时间限制", "\(selectedDifficulty.timeLimitSeconds) 秒")
+                        infoRow("Time limit", "\(selectedDifficulty.timeLimitSeconds)s")
                     }
                 }
                 .padding(16)
@@ -341,10 +341,10 @@ struct FreePlaySetupView: View {
                         .font(.system(size: 18))
                         .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textMuted)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("谎言模式")
+                        Text("Lie Mode")
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textPrimary)
-                        Text("含1次虚假反馈")
+                        Text("1 fake feedback")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(AppTheme.textSecondary)
                     }
@@ -362,7 +362,7 @@ struct FreePlaySetupView: View {
                     viewModel.startFreePlay(difficulty: selectedDifficulty, lieMode: lieMode)
                     startGame = true
                 } label: {
-                    Text(lieMode ? "开始谎言挑战" : "开始挑战")
+                    Text(lieMode ? "Start Lie Challenge" : "Start Challenge")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -388,7 +388,7 @@ struct FreePlaySetupView: View {
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(selectedDifficulty == diff ? Color.white : AppTheme.textPrimary)
                 Spacer()
-                Text("\(diff.codeLength)位·\(diff.colorCount)色")
+                Text("\(diff.codeLength)×\(diff.colorCount)")
                     .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundStyle(selectedDifficulty == diff ? Color.white.opacity(0.8) : AppTheme.textSecondary)
             }
@@ -453,10 +453,10 @@ struct DuelSetupView: View {
                 Image(systemName: "person.2.fill")
                     .font(.system(size: 36))
                     .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
-                Text("双人对战")
+                Text("Duel Mode")
                     .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
-                Text("一人设密码，一人来破译")
+                Text("One sets code, one cracks it")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -471,7 +471,7 @@ struct DuelSetupView: View {
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundStyle(selectedDifficulty == diff ? .white : AppTheme.textPrimary)
                             Spacer()
-                            Text("\(diff.codeLength)位·\(diff.colorCount)色·\(diff.maxAttempts)步")
+                            Text("\(diff.codeLength)×\(diff.colorCount)×\(diff.maxAttempts)")
                                 .font(.system(size: 11, weight: .medium, design: .monospaced))
                                 .foregroundStyle(selectedDifficulty == diff ? .white.opacity(0.7) : AppTheme.textSecondary)
                         }
@@ -492,15 +492,15 @@ struct DuelSetupView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "info.circle.fill")
                         .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
-                    Text("对战规则")
+                    Text("Rules")
                         .font(.system(size: 13, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                 }
                 VStack(alignment: .leading, spacing: 4) {
-                    ruleText("1. 玩家1 秘密设置一组颜色密码")
-                    ruleText("2. 将手机交给 玩家2")
-                    ruleText("3. 玩家2 在限定步数内破译密码")
-                    ruleText("4. 步数越少越厉害！")
+                    ruleText("1. Player 1 secretly sets a color code")
+                    ruleText("2. Pass the phone to Player 2")
+                    ruleText("3. Player 2 cracks the code within the limit")
+                    ruleText("4. Fewer steps = better!")
                 }
             }
             .padding(14)
@@ -514,7 +514,7 @@ struct DuelSetupView: View {
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "person.fill")
-                    Text("玩家 1 设置密码")
+                    Text("Player 1: Set Code")
                 }
                 .font(.system(size: 17, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
@@ -546,10 +546,10 @@ struct DuelSetupView: View {
                 }
                 Spacer()
                 VStack(spacing: 2) {
-                    Text("玩家 1 设置密码")
+                    Text("Player 1: Set Code")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
-                    Text("\(selectedDifficulty.rawValue) · \(codeLength)位\(colorCount)色")
+                    Text("\(selectedDifficulty.rawValue) · \(codeLength)×\(colorCount)")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -581,7 +581,7 @@ struct DuelSetupView: View {
                 }
             }
 
-            Text("点击颜色添加，点击槽位移除")
+            Text("Tap color to add, tap slot to remove")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(AppTheme.textMuted)
 
@@ -605,7 +605,7 @@ struct DuelSetupView: View {
                     withAnimation(.spring(response: 0.3)) { phase = .handoff }
                     startCountdown()
                 } label: {
-                    Text("密码已设好 →")
+                    Text("Code Set →")
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -634,10 +634,10 @@ struct DuelSetupView: View {
             }
 
             VStack(spacing: 8) {
-                Text("请将手机交给对手")
+                Text("Pass to Opponent")
                     .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
-                Text("密码已锁定，请勿偷看！")
+                Text("Code locked. No peeking!")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -667,7 +667,7 @@ struct DuelSetupView: View {
 
             if countDown <= 0 {
                 VStack(spacing: 10) {
-                    Text("\(selectedDifficulty.rawValue) · \(codeLength)位\(colorCount)色 · \(maxAttempts)步")
+                    Text("\(selectedDifficulty.rawValue) · \(codeLength)×\(colorCount)×\(maxAttempts)")
                         .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundStyle(AppTheme.textSecondary)
 
@@ -677,7 +677,7 @@ struct DuelSetupView: View {
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "person.fill")
-                            Text("玩家 2 开始破译")
+                            Text("Player 2: Start")
                         }
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)

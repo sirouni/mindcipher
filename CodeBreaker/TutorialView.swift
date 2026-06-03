@@ -54,7 +54,7 @@ struct TutorialView: View {
                         Button {
                             withAnimation(.spring(response: 0.3)) { page -= 1 }
                         } label: {
-                            Text("上一步")
+                            Text("Back")
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(AppTheme.textSecondary)
                                 .frame(maxWidth: .infinity).padding(.vertical, 14)
@@ -66,7 +66,7 @@ struct TutorialView: View {
                             withAnimation(.spring(response: 0.3)) { page += 1 }
                         } else { dismiss() }
                     } label: {
-                        Text(page < totalPages - 1 ? "下一步" : "开始游戏！")
+                        Text(page < totalPages - 1 ? "Next" : "Start!")
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity).padding(.vertical, 14)
@@ -83,7 +83,7 @@ struct TutorialView: View {
 
     private var goalPage: some View {
         VStack(spacing: 20) {
-            Text("破译隐藏密码")
+            Text("Crack the Code")
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -101,16 +101,16 @@ struct TutorialView: View {
                 }
             }
 
-            Text("系统生成了一组隐藏的颜色密码\n在有限步数内猜出正确组合")
+            Text("A secret color code is hidden\nGuess it within limited attempts")
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
             // 星级示例
             HStack(spacing: 20) {
-                starsExample(3, "速通")
-                starsExample(2, "不错")
-                starsExample(1, "通关")
+                starsExample(3, "Speed")
+                starsExample(2, "Good")
+                starsExample(1, "Pass")
             }
             .padding(16)
             .glassCard(cornerRadius: 14)
@@ -137,7 +137,7 @@ struct TutorialView: View {
 
     private var pickPage: some View {
         VStack(spacing: 20) {
-            Text("选择颜色填入")
+            Text("Pick Colors")
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -169,7 +169,7 @@ struct TutorialView: View {
                 }
             }
 
-            Text("点击颜色球 → 填入槽位\n填满后点击提交")
+            Text("Tap colors to fill slots\nSubmit when all slots are filled")
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
@@ -181,7 +181,7 @@ struct TutorialView: View {
 
     private var feedbackPage: some View {
         VStack(spacing: 20) {
-            Text("解读反馈线索")
+            Text("Read the Clues")
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -189,19 +189,19 @@ struct TutorialView: View {
                 feedbackExample(
                     colors: [.red, .green, .blue, .yellow],
                     exact: 1, partial: 2, empty: 1,
-                    explain: "1个位置完全正确，2个颜色对但位置错，1个不在密码中"
+                    explain: "1 right spot, 2 right color wrong spot, 1 not in code"
                 )
                 feedbackExample(
                     colors: [.green, .blue, .red, .yellow],
                     exact: 4, partial: 0, empty: 0,
-                    explain: "全部正确！密码破译成功"
+                    explain: "All correct! Code cracked!"
                 )
             }
 
             HStack(spacing: 24) {
-                dotLegend(color: AppTheme.accent, label: "位置正确")
-                dotLegend(color: AppTheme.warning, label: "颜色对位置错")
-                dotLegend(color: AppTheme.textMuted, label: "不在密码中", hollow: true)
+                dotLegend(color: AppTheme.accent, label: "Right spot")
+                dotLegend(color: AppTheme.warning, label: "Right color, wrong spot")
+                dotLegend(color: AppTheme.textMuted, label: "Not in code", hollow: true)
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
@@ -258,7 +258,7 @@ struct TutorialView: View {
                 .font(.system(size: 36))
                 .foregroundStyle(AppTheme.danger)
 
-            Text("谎言模式")
+            Text("Lie Mode")
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.danger)
 
@@ -293,10 +293,10 @@ struct TutorialView: View {
             .padding(.horizontal, 8)
 
             VStack(alignment: .leading, spacing: 6) {
-                iconRuleRow("theatermask.and.paintbrush.fill", "有且仅有 1 次反馈是假的")
-                iconRuleRow("magnifyingglass", "谎言与真实差距 ≤1")
-                iconRuleRow("checkmark.shield.fill", "猜对时不会骗你")
-                iconRuleRow("doc.text.magnifyingglass", "结束后揭示哪步是谎言")
+                iconRuleRow("theatermask.and.paintbrush.fill", "Exactly 1 feedback is fake")
+                iconRuleRow("magnifyingglass", "Lie differs from truth by ≤1")
+                iconRuleRow("checkmark.shield.fill", "No lie when you guess correctly")
+                iconRuleRow("doc.text.magnifyingglass", "Reveals which step was a lie")
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
@@ -322,13 +322,13 @@ struct TutorialView: View {
                 .font(.system(size: 36))
                 .foregroundStyle(AppTheme.warning)
 
-            Text("实用技巧")
+            Text("Tips")
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 10) {
-                iconTipCard("brain.head.profile", "排除法", "先猜不同颜色确定哪些在密码中")
-                iconTipCard("chart.bar.fill", "对比反馈", "比较两次猜测的差异来定位")
+                iconTipCard("brain.head.profile", "Elimination", "Try different colors to find which ones are in the code")
+                iconTipCard("chart.bar.fill", "Compare", "Compare feedback between guesses to narrow down")
             }
         }
         .padding(.horizontal, 28)

@@ -40,7 +40,7 @@ struct LieLevelSelectView: View {
             Image(systemName: "theatermask.and.paintbrush.fill")
                 .font(.system(size: 14))
                 .foregroundStyle(AppTheme.danger)
-            Text("每关含1次虚假反馈")
+            Text("1 fake feedback per level")
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(AppTheme.danger)
             Spacer()
@@ -221,7 +221,7 @@ struct LieLevelSelectView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "theatermask.and.paintbrush.fill")
                         .foregroundStyle(AppTheme.danger)
-                    Text("谎言关卡 \(level.id)")
+                    Text("Lie Level \(level.id)")
                         .font(.system(size: 22, weight: .black, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                 }
@@ -234,11 +234,11 @@ struct LieLevelSelectView: View {
                     .background(AppTheme.danger.opacity(0.15), in: Capsule())
 
                 VStack(spacing: 6) {
-                    previewRow("密码长度", "\(level.codeLength) 位")
-                    previewRow("可用颜色", "\(level.colorCount) 种")
-                    previewRow("最大尝试", "\(totalAttempts) 次")
-                    previewRow("允许重复", level.allowDuplicates ? "是" : "否")
-                    previewRow("虚假反馈", "1 次")
+                    previewRow("Code length", "\(level.codeLength)")
+                    previewRow("Colors", "\(level.colorCount)")
+                    previewRow("Max attempts", "\(totalAttempts)")
+                    previewRow("Allow repeats", level.allowDuplicates ? "Yes" : "No")
+                    previewRow("Fake feedback", "1")
                 }
                 .padding(16)
                 .background(
@@ -265,7 +265,7 @@ struct LieLevelSelectView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "theatermask.and.paintbrush.fill")
                             .font(.system(size: 14))
-                        Text(progress.completedLevels.contains(level.id) ? "重新挑战" : "开始")
+                        Text(progress.completedLevels.contains(level.id) ? "Retry" : "Start")
                     }
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
