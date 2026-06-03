@@ -8,6 +8,7 @@ struct HomeView: View {
     @State private var showDaily = false
     @State private var showEditor = false
     @State private var showLieMode = false
+    @State private var showAchievements = false
     @State private var showTutorial = false
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var titleScale: CGFloat = 0.8
@@ -54,6 +55,9 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showLieMode) {
                 LieLevelSelectView()
             }
+            .navigationDestination(isPresented: $showAchievements) {
+                AchievementsView()
+            }
             .sheet(isPresented: $showTutorial, onDismiss: {
                 hasSeenTutorial = true
             }) {
@@ -72,6 +76,18 @@ struct HomeView: View {
     }
 
     
+
+    private var unlockedCount: Int {
+        var count = 0
+        if stats.gamesWon >= 1 { count += 1 }
+        if stats.bestStreak >= 5 { count += 1 }
+        if progress.starsByLevel.values.contains(3) { count += 1 }
+        if stats.bestStreak >= 10 { count += 1 }
+        if (1...20).allSatisfy({ progress.completedLevels.contains($0) }) { count += 1 }
+        if progress.totalStars >= 100 { count += 1 }
+        if progress.completedLevels.count >= 120 { count += 1 }
+        return count
+    }
 
     private var dailyCompleted: Bool {
         let key = "daily_\(dailyDateString)"
@@ -191,6 +207,13 @@ struct HomeView: View {
                 icon: "slider.horizontal.3",
                 color: Color(red: 0.9, green: 0.4, blue: 0.6)
             ) { showEditor = true }
+
+            menuButton(
+                title: "Achievements",
+                subtitle: "\(unlockedCount)/7 unlocked",
+                icon: "trophy.fill",
+                color: AppTheme.warning
+            ) { showAchievements = true }
         }
         .offset(y: buttonsOffset)
         .opacity(titleOpacity)
