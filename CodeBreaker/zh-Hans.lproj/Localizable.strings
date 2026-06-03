@@ -1,0 +1,200 @@
+/* 主页 */
+"app.title" = "密码破译局";
+"app.subtitle" = "CODE BREAKER";
+"menu.daily" = "每日挑战";
+"menu.daily.done" = "今日已完成 ✓";
+"menu.daily.todo" = "今日尚未挑战";
+"menu.classic" = "经典任务";
+"menu.classic.sub" = "120个关卡 · 逐步解锁";
+"menu.lie" = "谎言任务";
+"menu.lie.sub" = "120关 · 含1次虚假反馈";
+"menu.free" = "自由模式";
+"menu.free.sub" = "自定义难度 · 无限挑战";
+"menu.duel" = "双人对战";
+"menu.duel.sub" = "一人设密码 · 一人来破译";
+"menu.editor" = "自定义关卡";
+"menu.editor.sub" = "调整所有参数 · 创造挑战";
+
+/* 统计 */
+"stats.games" = "总局数";
+"stats.winrate" = "胜率";
+"stats.streak" = "连胜";
+"stats.stars" = "星数";
+"stats.best" = "最佳";
+"stats.streak.fire" = "连胜 %d!";
+
+/* 难度 */
+"diff.beginner" = "新手";
+"diff.easy" = "简单";
+"diff.medium" = "中等";
+"diff.hard" = "困难";
+"diff.expert" = "专家";
+"diff.master" = "大师";
+
+/* 关卡 */
+"level.title" = "关卡 %d";
+"level.tier1" = "初级特工";
+"level.tier2" = "中级特工";
+"level.tier3" = "高级特工";
+"level.tier4" = "精英特工";
+"level.tier5" = "首席特工";
+"level.tier6" = "传奇特工";
+
+/* 游戏 */
+"game.free" = "自由模式";
+"game.duel" = "双人对战";
+"game.attempts" = "次";
+"game.hint" = "提示";
+"game.submit" = "提交";
+"game.undo" = "撤销";
+
+/* 参数 */
+"param.length" = "密码长度";
+"param.colors" = "可用颜色";
+"param.attempts" = "最大尝试";
+"param.repeat" = "允许重复";
+"param.timelimit" = "时间限制";
+"param.yes" = "是";
+"param.no" = "否";
+"param.digits" = "%d 位";
+"param.types" = "%d 种";
+"param.steps" = "%d 次";
+"param.seconds" = "%d 秒";
+
+/* 结果 */
+"result.win" = "密码破译成功！";
+"result.win.steps" = "用了 %d 步完成破译";
+"result.lose" = "破译失败";
+"result.lose.desc" = "密码未能在限定次数内破解";
+"result.code" = "密码：";
+"result.retry" = "重新挑战";
+"result.next" = "下一关 →";
+"result.again" = "再来一局";
+"result.share" = "分享";
+"result.back" = "返回";
+
+/* 谎言模式 */
+"lie.mode" = "谎言模式";
+"lie.warning" = "⚠️ 谎言模式";
+"lie.task" = "谎言任务";
+"lie.banner" = "每关含1次虚假反馈";
+"lie.reveal" = "第 %d 步是谎言！";
+"lie.fake" = "虚假:";
+"lie.real" = "→ 真实:";
+"lie.feedback" = "%d精确 %d位置";
+"lie.notrigger" = "本局谎言未触发（你赢得太快了！）";
+"lie.start" = "开始谎言挑战";
+"lie.toggle" = "谎言模式";
+"lie.toggle.desc" = "含1次虚假反馈";
+"lie.fake.count" = "虚假反馈";
+"lie.1time" = "1 次";
+"lie.rule.title" = "规则说明";
+"lie.rule.1" = "游戏中有且仅有 1 次反馈是假的";
+"lie.rule.2" = "谎言反馈与真实值接近（差距≤1）";
+"lie.rule.3" = "猜对时系统不会撒谎";
+"lie.rule.4" = "游戏结束后会揭示哪步是谎言";
+
+/* 教程 */
+"tutorial.next" = "下一步";
+"tutorial.start" = "开始破译！";
+"tutorial.t1" = "破译隐藏密码";
+"tutorial.t2" = "选择颜色填入";
+"tutorial.t3" = "解读反馈线索";
+"tutorial.t4" = "善用提示";
+"tutorial.d1" = "系统生成了一组隐藏的颜色密码\n你需要在有限次数内猜出正确组合";
+"tutorial.d2" = "点击底部颜色球放入猜测槽位\n填满所有位置后点击提交";
+"tutorial.d3" = "🟢 绿色 = 颜色和位置都对\n🟠 橙色 = 颜色对但位置不对\n⚪ 空圈 = 该颜色不在密码中";
+"tutorial.d4" = "每局有一次提示机会\n会告诉你某个位置的正确颜色";
+
+/* 双人对战 */
+"duel.title" = "双人对战";
+"duel.desc" = "一人设密码，一人来破译";
+"duel.p1.setup" = "玩家 1 设置密码";
+"duel.p2.start" = "玩家 2 开始破译";
+"duel.confirm" = "密码已设好 →";
+"duel.handoff" = "请将手机交给对手";
+"duel.handoff.desc" = "密码已锁定，请勿偷看！";
+"duel.select.hint" = "点击颜色添加，点击槽位移除";
+"duel.rule.1" = "1. 玩家1 秘密设置一组颜色密码";
+"duel.rule.2" = "2. 将手机交给 玩家2";
+"duel.rule.3" = "3. 玩家2 在限定步数内破译密码";
+"duel.rule.4" = "4. 步数越少越厉害！";
+"duel.rules" = "对战规则";
+
+/* 每日挑战 */
+"daily.title" = "每日挑战";
+"daily.completed" = "今日挑战已完成";
+"daily.tomorrow" = "明天再来挑战新密码！";
+"daily.start" = "开始挑战";
+"daily.back" = "返回首页";
+
+/* 设置 */
+"settings.title" = "设置";
+"settings.game" = "游戏";
+"settings.sound" = "音效";
+"settings.haptics" = "触觉反馈";
+"settings.colorblind" = "色盲辅助";
+"settings.data" = "数据";
+"settings.manage" = "管理";
+"settings.reset.stats" = "重置统计数据";
+"settings.reset.all" = "重置全部进度";
+"settings.about" = "关于";
+"settings.version" = "版本";
+
+/* 成就 */
+"achieve.title" = "成就";
+"achieve.first" = "初次破译";
+"achieve.first.desc" = "完成第一局游戏";
+"achieve.streak5" = "连胜达人";
+"achieve.streak5.desc" = "连续赢得 5 局";
+"achieve.star3" = "三星特工";
+"achieve.star3.desc" = "任意关卡获得三星";
+"achieve.streak10" = "百发百中";
+"achieve.streak10.desc" = "连续赢得 10 局";
+"achieve.tier1" = "初级毕业";
+"achieve.tier1.desc" = "完成全部初级特工关卡";
+"achieve.star100" = "满星大师";
+"achieve.star100.desc" = "获得 100 颗星";
+"achieve.all" = "解码宗师";
+"achieve.all.desc" = "完成全部 120 关";
+
+/* 分享 */
+"share.title.level" = "密码破译局 关卡%d";
+"share.title.free" = "密码破译局 自由模式";
+"share.win" = "✅ %d/%d 步破译";
+"share.lose" = "❌ 破译失败";
+"share.cta" = "🔐 来挑战？";
+
+/* 颜色 */
+"color.red" = "红";
+"color.green" = "绿";
+"color.blue" = "蓝";
+"color.yellow" = "黄";
+"color.purple" = "紫";
+"color.orange" = "橙";
+"color.cyan" = "青";
+"color.pink" = "粉";
+
+/* 自定义关卡 */
+"editor.title" = "自定义关卡";
+"editor.desc" = "打造你的专属挑战";
+"editor.start" = "开始自定义挑战";
+"editor.repeat" = "允许重复颜色";
+"editor.repeat.desc" = "同一颜色可出现多次";
+"editor.timelimit" = "时间限制";
+"editor.none" = "无";
+"editor.difficulty" = "难度评估";
+"editor.preview" = "可用颜色";
+"editor.entry" = "入门";
+"editor.moderate" = "适中";
+"editor.challenge" = "挑战";
+"editor.hard" = "困难";
+"editor.hell" = "地狱";
+
+/* 提示 */
+"hint.position" = "位置 %d 的颜色是%@色";
+
+/* Accessibility */
+"a11y.slot" = "槽位 %d";
+"a11y.step" = "第%d步 %@ 反馈%@";
+"a11y.feedback" = "%d精确%d部分%d空";

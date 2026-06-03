@@ -1,0 +1,200 @@
+/* Home */
+"app.title" = "Code Breaker";
+"app.subtitle" = "CODE BREAKER";
+"menu.daily" = "Daily Challenge";
+"menu.daily.done" = "Completed today ✓";
+"menu.daily.todo" = "Not yet today";
+"menu.classic" = "Classic Missions";
+"menu.classic.sub" = "120 levels · Unlock progressively";
+"menu.lie" = "Lie Missions";
+"menu.lie.sub" = "120 levels · 1 fake feedback";
+"menu.free" = "Free Play";
+"menu.free.sub" = "Custom difficulty · Endless";
+"menu.duel" = "Duel Mode";
+"menu.duel.sub" = "One sets code · One cracks it";
+"menu.editor" = "Custom Level";
+"menu.editor.sub" = "Adjust all params · Create challenge";
+
+/* Stats */
+"stats.games" = "Games";
+"stats.winrate" = "Win%";
+"stats.streak" = "Streak";
+"stats.stars" = "Stars";
+"stats.best" = "Best";
+"stats.streak.fire" = "Streak %d!";
+
+/* Difficulty */
+"diff.beginner" = "Beginner";
+"diff.easy" = "Easy";
+"diff.medium" = "Medium";
+"diff.hard" = "Hard";
+"diff.expert" = "Expert";
+"diff.master" = "Master";
+
+/* Level */
+"level.title" = "Level %d";
+"level.tier1" = "Junior Agent";
+"level.tier2" = "Agent";
+"level.tier3" = "Senior Agent";
+"level.tier4" = "Elite Agent";
+"level.tier5" = "Chief Agent";
+"level.tier6" = "Legendary Agent";
+
+/* Game */
+"game.free" = "Free Play";
+"game.duel" = "Duel Mode";
+"game.attempts" = "left";
+"game.hint" = "Hint";
+"game.submit" = "Submit";
+"game.undo" = "Undo";
+
+/* Params */
+"param.length" = "Code length";
+"param.colors" = "Colors";
+"param.attempts" = "Max attempts";
+"param.repeat" = "Allow repeats";
+"param.timelimit" = "Time limit";
+"param.yes" = "Yes";
+"param.no" = "No";
+"param.digits" = "%d digits";
+"param.types" = "%d colors";
+"param.steps" = "%d tries";
+"param.seconds" = "%d sec";
+
+/* Result */
+"result.win" = "Code Cracked!";
+"result.win.steps" = "Solved in %d steps";
+"result.lose" = "Failed";
+"result.lose.desc" = "Code not cracked within the limit";
+"result.code" = "Code:";
+"result.retry" = "Retry";
+"result.next" = "Next →";
+"result.again" = "Play Again";
+"result.share" = "Share";
+"result.back" = "Back";
+
+/* Lie Mode */
+"lie.mode" = "Lie Mode";
+"lie.warning" = "⚠️ Lie Mode";
+"lie.task" = "Lie Missions";
+"lie.banner" = "1 fake feedback per level";
+"lie.reveal" = "Step %d was a lie!";
+"lie.fake" = "Fake:";
+"lie.real" = "→ Real:";
+"lie.feedback" = "%d exact %d partial";
+"lie.notrigger" = "No lie triggered (you won too fast!)";
+"lie.start" = "Start Lie Challenge";
+"lie.toggle" = "Lie Mode";
+"lie.toggle.desc" = "Includes 1 fake feedback";
+"lie.fake.count" = "Fake feedback";
+"lie.1time" = "1 time";
+"lie.rule.title" = "Rules";
+"lie.rule.1" = "Exactly 1 feedback will be fake";
+"lie.rule.2" = "Fake differs from truth by ≤1";
+"lie.rule.3" = "System won't lie when you guess correctly";
+"lie.rule.4" = "The lie is revealed after the game";
+
+/* Tutorial */
+"tutorial.next" = "Next";
+"tutorial.start" = "Start Cracking!";
+"tutorial.t1" = "Crack the Code";
+"tutorial.t2" = "Pick Colors";
+"tutorial.t3" = "Read the Clues";
+"tutorial.t4" = "Use Hints";
+"tutorial.d1" = "A secret color code is hidden\nGuess it within limited attempts";
+"tutorial.d2" = "Tap colors to fill slots\nSubmit when all slots are filled";
+"tutorial.d3" = "🟢 Green = Right color, right spot\n🟠 Orange = Right color, wrong spot\n⚪ Empty = Color not in code";
+"tutorial.d4" = "One hint per game\nReveals the color at a specific position";
+
+/* Duel */
+"duel.title" = "Duel Mode";
+"duel.desc" = "One sets the code, one cracks it";
+"duel.p1.setup" = "Player 1: Set Code";
+"duel.p2.start" = "Player 2: Start Cracking";
+"duel.confirm" = "Code Set →";
+"duel.handoff" = "Pass to Opponent";
+"duel.handoff.desc" = "Code locked. No peeking!";
+"duel.select.hint" = "Tap color to add, tap slot to remove";
+"duel.rule.1" = "1. Player 1 sets a secret code";
+"duel.rule.2" = "2. Pass the phone to Player 2";
+"duel.rule.3" = "3. Player 2 cracks the code";
+"duel.rule.4" = "4. Fewer steps = more impressive!";
+"duel.rules" = "Rules";
+
+/* Daily */
+"daily.title" = "Daily Challenge";
+"daily.completed" = "Today's challenge complete";
+"daily.tomorrow" = "Come back tomorrow for a new code!";
+"daily.start" = "Start Challenge";
+"daily.back" = "Back to Home";
+
+/* Settings */
+"settings.title" = "Settings";
+"settings.game" = "Game";
+"settings.sound" = "Sound";
+"settings.haptics" = "Haptics";
+"settings.colorblind" = "Colorblind Mode";
+"settings.data" = "Data";
+"settings.manage" = "Manage";
+"settings.reset.stats" = "Reset Statistics";
+"settings.reset.all" = "Reset All Progress";
+"settings.about" = "About";
+"settings.version" = "Version";
+
+/* Achievements */
+"achieve.title" = "Achievements";
+"achieve.first" = "First Crack";
+"achieve.first.desc" = "Complete your first game";
+"achieve.streak5" = "Streak Master";
+"achieve.streak5.desc" = "Win 5 games in a row";
+"achieve.star3" = "Three-Star Agent";
+"achieve.star3.desc" = "Get 3 stars on any level";
+"achieve.streak10" = "Perfect Record";
+"achieve.streak10.desc" = "Win 10 games in a row";
+"achieve.tier1" = "Junior Graduate";
+"achieve.tier1.desc" = "Complete all Junior Agent levels";
+"achieve.star100" = "Star Collector";
+"achieve.star100.desc" = "Earn 100 stars";
+"achieve.all" = "Grand Master";
+"achieve.all.desc" = "Complete all 120 levels";
+
+/* Share */
+"share.title.level" = "Code Breaker Level %d";
+"share.title.free" = "Code Breaker Free Play";
+"share.win" = "✅ Cracked in %d/%d steps";
+"share.lose" = "❌ Failed to crack";
+"share.cta" = "🔐 Can you beat this?";
+
+/* Colors */
+"color.red" = "Red";
+"color.green" = "Green";
+"color.blue" = "Blue";
+"color.yellow" = "Yellow";
+"color.purple" = "Purple";
+"color.orange" = "Orange";
+"color.cyan" = "Cyan";
+"color.pink" = "Pink";
+
+/* Custom Level */
+"editor.title" = "Custom Level";
+"editor.desc" = "Build your own challenge";
+"editor.start" = "Start Custom Challenge";
+"editor.repeat" = "Allow Repeats";
+"editor.repeat.desc" = "Same color can appear multiple times";
+"editor.timelimit" = "Time Limit";
+"editor.none" = "None";
+"editor.difficulty" = "Difficulty";
+"editor.preview" = "Available Colors";
+"editor.entry" = "Easy";
+"editor.moderate" = "Medium";
+"editor.challenge" = "Challenge";
+"editor.hard" = "Hard";
+"editor.hell" = "Extreme";
+
+/* Hint */
+"hint.position" = "Position %d is %@";
+
+/* Accessibility */
+"a11y.slot" = "Slot %d";
+"a11y.step" = "Step %d %@ feedback %@";
+"a11y.feedback" = "%d exact %d partial %d empty";

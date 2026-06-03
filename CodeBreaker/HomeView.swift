@@ -78,7 +78,7 @@ struct HomeView: View {
     private var dailyBanner: some View {
         menuButton(
             title: "每日挑战",
-            subtitle: dailyCompleted ? "今日已完成 ✓" : "今日尚未挑战",
+            subtitle: dailyCompleted ? L("menu.daily.done") : L("menu.daily.todo"),
             icon: "calendar.badge.clock",
             color: AppTheme.warning
         ) { showDaily = true }
@@ -119,11 +119,11 @@ struct HomeView: View {
             .opacity(titleOpacity)
 
             VStack(spacing: 6) {
-                Text("密码破译局")
+                Text(L("app.title"))
                     .font(.system(size: 34, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
-                Text("CODE BREAKER")
+                Text(L("app.subtitle"))
                     .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundStyle(AppTheme.accent)
                     .tracking(6)
@@ -156,36 +156,36 @@ struct HomeView: View {
     private var menuSection: some View {
         VStack(spacing: 14) {
             menuButton(
-                title: "经典任务",
-                subtitle: "120个关卡 · 逐步解锁",
+                title: L("menu.classic"),
+                subtitle: L("menu.classic.sub"),
                 icon: "target",
                 color: AppTheme.accent
             ) { showLevels = true }
 
             menuButton(
-                title: "谎言任务",
-                subtitle: "120关 · 含1次虚假反馈",
+                title: L("menu.lie"),
+                subtitle: L("menu.lie.sub"),
                 icon: "theatermask.and.paintbrush.fill",
                 color: AppTheme.danger
             ) { showLieMode = true }
 
             menuButton(
-                title: "自由模式",
-                subtitle: "自定义难度 · 无限挑战",
+                title: L("menu.free"),
+                subtitle: L("menu.free.sub"),
                 icon: "infinity",
                 color: AppTheme.warning
             ) { showFreePlay = true }
 
             menuButton(
-                title: "双人对战",
-                subtitle: "一人设密码 · 一人来破译",
+                title: L("menu.duel"),
+                subtitle: L("menu.duel.sub"),
                 icon: "person.2.fill",
                 color: Color(red: 0.5, green: 0.5, blue: 1.0)
             ) { showDuel = true }
 
             menuButton(
-                title: "自定义关卡",
-                subtitle: "调整所有参数 · 创造挑战",
+                title: L("menu.editor"),
+                subtitle: L("menu.editor.sub"),
                 icon: "slider.horizontal.3",
                 color: Color(red: 0.9, green: 0.4, blue: 0.6)
             ) { showEditor = true }
@@ -233,16 +233,16 @@ struct HomeView: View {
     private var statsBar: some View {
         VStack(spacing: 12) {
             HStack(spacing: 20) {
-                statItem(value: "\(stats.gamesPlayed)", label: "总局数")
+                statItem(value: "\(stats.gamesPlayed)", label: L("stats.games"))
                 Divider().frame(height: 30).overlay(AppTheme.textMuted)
                 statItem(
                     value: stats.gamesPlayed == 0 ? "--" : "\(Int(stats.winRate))%",
-                    label: "胜率"
+                    label: L("stats.winrate")
                 )
                 Divider().frame(height: 30).overlay(AppTheme.textMuted)
-                statItem(value: "\(stats.currentStreak)", label: "连胜")
+                statItem(value: "\(stats.currentStreak)", label: L("stats.streak"))
                 Divider().frame(height: 30).overlay(AppTheme.textMuted)
-                statItem(value: "\(progress.totalStars)", label: "星数")
+                statItem(value: "\(progress.totalStars)", label: L("stats.stars"))
             }
 
             if stats.currentStreak > 0 || stats.bestStreak > 0 {

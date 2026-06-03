@@ -185,7 +185,7 @@ struct GameView: View {
                     HStack(spacing: 4) {
                         Image(systemName: "lightbulb.fill")
                             .font(.system(size: 12))
-                        Text("提示")
+                        Text(L("game.hint"))
                             .font(.system(size: 12, weight: .semibold))
                     }
                     .foregroundStyle(AppTheme.warning)
@@ -414,7 +414,7 @@ struct GameView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "paperplane.fill")
                         .font(.system(size: 15))
-                    Text("提交")
+                    Text(L("game.submit"))
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                 }
                 .foregroundStyle(viewModel.canSubmit ? AppTheme.bgDark : AppTheme.textMuted)
@@ -467,11 +467,11 @@ struct GameView: View {
                     .shadow(color: AppTheme.accent.opacity(0.5), radius: 20)
             }
 
-            Text("密码破译成功！")
+            Text(L("result.win"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
-            Text("用了 \(attempts) 步完成破译")
+            Text(L("result.win.steps", attempts))
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
 
@@ -492,11 +492,11 @@ struct GameView: View {
                 .foregroundStyle(AppTheme.danger)
                 .shadow(color: AppTheme.danger.opacity(0.5), radius: 20)
 
-            Text("破译失败")
+            Text(L("result.lose"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
-            Text("密码未能在限定次数内破解")
+            Text(L("result.lose.desc"))
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
 
@@ -510,7 +510,7 @@ struct GameView: View {
 
     private var revealedCodeRow: some View {
         HStack(spacing: 8) {
-            Text("密码：")
+            Text(L("result.code"))
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
             ForEach(0..<viewModel.secretCode.count, id: \.self) { i in

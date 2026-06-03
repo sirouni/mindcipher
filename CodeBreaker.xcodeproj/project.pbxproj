@@ -23,6 +23,8 @@
 		AA0000000000000E /* LevelEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000E /* LevelEditorView.swift */; };
 		AA0000000000000F /* LieModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000F /* LieModeView.swift */; };
 		AA00000000000010 /* LieLevelSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000010 /* LieLevelSelectView.swift */; };
+		AA00000000000011 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000011 /* L10n.swift */; };
+		AA00000000000012 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BB00000000000012 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,9 @@
 		BB0000000000000E /* LevelEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelEditorView.swift; sourceTree = "<group>"; };
 		BB0000000000000F /* LieModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LieModeView.swift; sourceTree = "<group>"; };
 		BB00000000000010 /* LieLevelSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LieLevelSelectView.swift; sourceTree = "<group>"; };
+		BB00000000000011 /* L10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		BB00000000000012 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		BB00000000000013 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CC00000000000001 /* CodeBreaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeBreaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -82,6 +87,8 @@
 				BB0000000000000E /* LevelEditorView.swift */,
 				BB0000000000000F /* LieModeView.swift */,
 				BB00000000000010 /* LieLevelSelectView.swift */,
+				BB00000000000011 /* L10n.swift */,
+				BB00000000000012 /* Localizable.strings */,
 				BB00000000000009 /* Assets.xcassets */,
 			);
 			path = CodeBreaker;
@@ -139,6 +146,7 @@
 				"zh-Hans",
 				Base,
 			);
+			/* Localizable.strings variant group */
 			mainGroup = EE00000000000001;
 			productRefGroup = EE00000000000003 /* Products */;
 			projectDirPath = "";
@@ -155,6 +163,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA00000000000009 /* Assets.xcassets in Resources */,
+				AA00000000000012 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,6 +189,7 @@
 				AA0000000000000E /* LevelEditorView.swift in Sources */,
 				AA0000000000000F /* LieModeView.swift in Sources */,
 				AA00000000000010 /* LieLevelSelectView.swift in Sources */,
+				AA00000000000011 /* L10n.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
