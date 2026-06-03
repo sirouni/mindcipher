@@ -49,14 +49,43 @@ struct LieLevelSelectView: View {
 
     private var allLevelsGrid: some View {
         ScrollView {
-            connectedGrid
-                .padding(12)
+            VStack(spacing: 0) {
+                ForEach(levelManager.tiers.indices, id: \.self) { tierIdx in
+                    let tier = levelManager.tiers[tierIdx]
+                    let diffName = tier.first?.difficulty.rawValue ?? ""
+                    let completedCount = tier.filter { progress.completedLevels.contains($0.id) }.count
+
+                    tierHeader(title: diffName, done: completedCount, total: tier.count)
+                    tierGrid(levels: tier)
+
+                    if tierIdx < levelManager.tiers.count - 1 {
+                        Rectangle()
+                            .fill(completedCount == tier.count ? AppTheme.danger.opacity(0.4) : AppTheme.textMuted.opacity(0.1))
+                            .frame(width: 3, height: 24)
+                    }
+                }
+            }
+            .padding(12)
         }
     }
 
-    private var connectedGrid: some View {
+    private func tierHeader(title: String, done: Int, total: Int) -> some View {
+        HStack {
+            Text(title)
+                .font(.system(size: 16, weight: .black, design: .rounded))
+                .foregroundStyle(AppTheme.danger)
+            Spacer()
+            Text("\(done)/\(total)")
+                .font(.system(size: 13, weight: .bold, design: .monospaced))
+                .foregroundStyle(done == total ? AppTheme.danger : AppTheme.textMuted)
+        }
+        .padding(.horizontal, 4)
+        .padding(.top, 16)
+        .padding(.bottom, 8)
+    }
+
+    private func tierGrid(levels: [Level]) -> some View {
         let cols = 5
-        let levels = levelManager.levels
         let rows = (levels.count + cols - 1) / cols
         let color = AppTheme.danger
 

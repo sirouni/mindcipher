@@ -55,31 +55,62 @@ struct LevelSelectView: View {
 
     private var allLevelsGrid: some View {
         ScrollView {
-            connectedGrid(color: AppTheme.accent)
-                .padding(12)
+            VStack(spacing: 0) {
+                ForEach(levelManager.tiers.indices, id: \.self) { tierIdx in
+                    let tier = levelManager.tiers[tierIdx]
+                    let tierName = tier.first?.tierName ?? ""
+                    let diffName = tier.first?.difficulty.rawValue ?? ""
+                    let completedCount = tier.filter { progress.completedLevels.contains($0.id) }.count
+
+                    tierHeader(title: diffName, subtitle: tierName, done: completedCount, total: tier.count, color: AppTheme.accent)
+                    tierGrid(levels: tier, color: AppTheme.accent)
+
+                    if tierIdx < levelManager.tiers.count - 1 {
+                        Rectangle()
+                            .fill(completedCount == tier.count ? AppTheme.accent.opacity(0.4) : AppTheme.textMuted.opacity(0.1))
+                            .frame(width: 3, height: 24)
+                    }
+                }
+            }
+            .padding(12)
         }
     }
 
-    private func connectedGrid(color: Color) -> some View {
+    private func tierHeader(title: String, subtitle: String, done: Int, total: Int, color: Color) -> some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 16, weight: .black, design: .rounded))
+                    .foregroundStyle(color)
+                Text(subtitle)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+            Spacer()
+            Text("\(done)/\(total)")
+                .font(.system(size: 13, weight: .bold, design: .monospaced))
+                .foregroundStyle(done == total ? color : AppTheme.textMuted)
+        }
+        .padding(.horizontal, 4)
+        .padding(.top, 16)
+        .padding(.bottom, 8)
+    }
+
+    private func tierGrid(levels: [Level], color: Color) -> some View {
         let cols = 5
-        let levels = levelManager.levels
         let rows = (levels.count + cols - 1) / cols
 
         return VStack(spacing: 0) {
             ForEach(0..<rows, id: \.self) { row in
                 let isReversed = row % 2 == 1
-                // 横向一行：卡片之间有横线
                 HStack(spacing: 0) {
                     ForEach(0..<cols, id: \.self) { col in
                         let idx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
-
                         if idx < levels.count {
                             levelCell(levels[idx])
                         } else {
                             Color.clear.frame(width: 56, height: 56)
                         }
-
-                        // 横向连接线（不是最后一列）
                         if col < cols - 1 {
                             let curIdx = isReversed ? row * cols + (cols - 1 - col) : row * cols + col
                             let nextIdx = isReversed ? row * cols + (cols - 2 - col) : row * cols + col + 1
@@ -92,8 +123,6 @@ struct LevelSelectView: View {
                         }
                     }
                 }
-
-                // 竖向连接线（转弯处）
                 if row < rows - 1 {
                     let turnIdx = isReversed ? row * cols : (row + 1) * cols - 1
                     let linked = turnIdx < levels.count && progress.completedLevels.contains(levels[turnIdx].id)
