@@ -654,15 +654,14 @@ struct GameView: View {
     private var hintCoinProgress: some View {
         let wins = hintCoinManager.winsTowardsCoin
         let needed = HintCoinManager.winsPerCoin
-        let justEarned = wins == 0 && hintCoinManager.coins > 0
 
         return HStack(spacing: 8) {
             Image(systemName: "lightbulb.fill")
                 .font(.system(size: 13))
                 .foregroundStyle(AppTheme.warning)
 
-            if justEarned {
-                Text("+1 Hint Coin!")
+            if hintCoinManager.justEarnedCoin {
+                Text("+1 Hint Coin! (\(hintCoinManager.coins) total)")
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(AppTheme.warning)
             } else {

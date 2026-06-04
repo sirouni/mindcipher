@@ -592,6 +592,7 @@ class HintCoinManager: ObservableObject {
     @Published var consecutiveDays: Int {
         didSet { UserDefaults.standard.set(consecutiveDays, forKey: consecutiveDaysKey) }
     }
+    @Published var justEarnedCoin: Bool = false
 
     private init() {
         coins = UserDefaults.standard.integer(forKey: coinsKey)
@@ -605,6 +606,9 @@ class HintCoinManager: ObservableObject {
         if winsTowardsCoin >= Self.winsPerCoin {
             coins += 1
             winsTowardsCoin = 0
+            justEarnedCoin = true
+        } else {
+            justEarnedCoin = false
         }
     }
 
