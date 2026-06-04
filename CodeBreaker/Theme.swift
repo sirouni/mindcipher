@@ -152,19 +152,10 @@ struct FeedbackDotView: View {
             Circle()
                 .fill(AppTheme.accent)
                 .frame(width: size, height: size)
-                .overlay(
-                    Text("E").font(.system(size: size * 0.55, weight: .black))
-                        .foregroundStyle(.white)
-                )
         case .partial:
             FeedbackTriangle()
                 .fill(AppTheme.warning)
                 .frame(width: size + 2, height: size)
-                .overlay(
-                    Text("P").font(.system(size: size * 0.45, weight: .black))
-                        .foregroundStyle(.white)
-                        .offset(y: 1)
-                )
         case .miss:
             Rectangle()
                 .stroke(Color(white: 0.6), lineWidth: 1.5)
