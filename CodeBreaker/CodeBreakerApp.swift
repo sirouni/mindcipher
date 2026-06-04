@@ -39,6 +39,12 @@ struct CodeBreakerApp: App {
 
 // MARK: - Challenge Manager
 
+// m (mode flags): bit 0 = lie, bits 1-7 reserved for future modes
+enum ChallengeMode: Int {
+    case classic = 0
+    case lie = 1
+}
+
 struct Challenge: Identifiable {
     let id = UUID()
     let seed: UInt64
@@ -46,6 +52,7 @@ struct Challenge: Identifiable {
     let colorCount: Int
     let allowDuplicates: Bool
     let maxAttempts: Int
+    let challengeMode: ChallengeMode
     let fromName: String
 }
 
@@ -66,6 +73,8 @@ class ChallengeManager: ObservableObject {
         let colors = Int(items.first { $0.name == "c" }?.value ?? "6") ?? 6
         let attempts = Int(items.first { $0.name == "a" }?.value ?? "7") ?? 7
         let dup = (items.first { $0.name == "d" }?.value ?? "0") == "1"
+        let modeRaw = Int(items.first { $0.name == "m" }?.value ?? "0") ?? 0
+        let mode = ChallengeMode(rawValue: modeRaw) ?? .classic
         let from = items.first { $0.name == "f" }?.value ?? "A friend"
 
         DispatchQueue.main.async {
@@ -75,12 +84,13 @@ class ChallengeManager: ObservableObject {
                 colorCount: colors,
                 allowDuplicates: dup,
                 maxAttempts: attempts,
+                challengeMode: mode,
                 fromName: from
             )
         }
     }
 
-    func generateChallengeURL(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, playerName: String) -> URL {
+    func generateChallengeURL(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, mode: ChallengeMode = .classic, playerName: String) -> URL {
         let name = playerName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "Agent"
         var components = URLComponents()
         components.scheme = "codebreaker"
@@ -91,6 +101,7 @@ class ChallengeManager: ObservableObject {
             URLQueryItem(name: "c", value: "\(colorCount)"),
             URLQueryItem(name: "a", value: "\(maxAttempts)"),
             URLQueryItem(name: "d", value: allowDuplicates ? "1" : "0"),
+            URLQueryItem(name: "m", value: "\(mode.rawValue)"),
             URLQueryItem(name: "f", value: name),
         ]
         return components.url!
@@ -160,6 +171,12 @@ struct ChallengeGameView: View {
                         .padding(20)
                         .glassCard(cornerRadius: 16)
 
+                        if challenge.challengeMode == .lie {
+                            Label("Lie Mode — one feedback may be fake!", systemImage: "exclamationmark.triangle.fill")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundStyle(AppTheme.danger)
+                        }
+
                         Text("Can you crack their code?")
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(AppTheme.textSecondary)
@@ -172,7 +189,8 @@ struct ChallengeGameView: View {
                                 codeLength: challenge.codeLength,
                                 colorCount: challenge.colorCount,
                                 allowDuplicates: challenge.allowDuplicates,
-                                maxAttempts: challenge.maxAttempts
+                                maxAttempts: challenge.maxAttempts,
+                                lieMode: challenge.challengeMode == .lie
                             )
                             started = true
                         } label: {

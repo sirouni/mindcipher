@@ -940,6 +940,7 @@ struct GameView: View {
             colorCount: engine.availableColors.count,
             allowDuplicates: viewModel.lastDifficulty.allowDuplicates,
             maxAttempts: engine.maxAttempts,
+            mode: engine.lieMode ? .lie : .classic,
             playerName: playerName
         )
 

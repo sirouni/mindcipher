@@ -172,7 +172,7 @@ class GameViewModel: ObservableObject {
         resetState()
     }
 
-    func startChallenge(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int) {
+    func startChallenge(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false) {
         self.level = nil
         self.mode = .duel
         engine = GameEngine(
@@ -180,7 +180,8 @@ class GameViewModel: ObservableObject {
             codeLength: codeLength,
             colorCount: colorCount,
             allowDuplicates: allowDuplicates,
-            maxAttempts: maxAttempts
+            maxAttempts: maxAttempts,
+            lieMode: lieMode
         )
         resetState()
     }
