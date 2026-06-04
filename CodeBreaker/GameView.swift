@@ -126,6 +126,11 @@ struct GameView: View {
                     Text(level.difficulty.rawValue)
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(AppTheme.accent)
+                    if viewModel.engine?.lieMode == true {
+                        Label("Lie Mode", systemImage: "exclamationmark.triangle.fill")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(AppTheme.danger)
+                    }
                 } else if viewModel.mode == .duel {
                     Text("Duel Mode")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
