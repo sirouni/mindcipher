@@ -1111,19 +1111,37 @@ struct NotesGridView: View {
     private var gridContent: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                Color.clear.frame(width: cellSize, height: 24)
+                Color.clear.frame(width: cellSize, height: 28)
                 ForEach(0..<viewModel.codeLength, id: \.self) { pos in
-                    Text("P\(pos + 1)")
-                        .font(.system(size: 13, weight: .bold, design: .monospaced))
-                        .foregroundStyle(AppTheme.textMuted)
-                        .frame(width: cellSize, height: 24)
+                    Button {
+                        SoundManager.shared.playTap()
+                        withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                            viewModel.toggleColumn(position: pos)
+                        }
+                    } label: {
+                        Text("P\(pos + 1)")
+                            .font(.system(size: 13, weight: .bold, design: .monospaced))
+                            .foregroundStyle(AppTheme.accent)
+                            .frame(width: cellSize, height: 28)
+                            .contentShape(Rectangle())
+                    }
+                    .disabled(viewModel.phase != .playing)
                 }
             }
 
             ForEach(viewModel.availableColors) { color in
                 HStack(spacing: 0) {
-                    PegView(color: color, size: cellSize - 6)
-                        .frame(width: cellSize, height: cellSize)
+                    Button {
+                        SoundManager.shared.playTap()
+                        withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                            viewModel.toggleRow(color: color)
+                        }
+                    } label: {
+                        PegView(color: color, size: cellSize - 6)
+                            .frame(width: cellSize, height: cellSize)
+                            .contentShape(Rectangle())
+                    }
+                    .disabled(viewModel.phase != .playing)
 
                     ForEach(0..<viewModel.codeLength, id: \.self) { pos in
                         noteCell(position: pos, color: color)

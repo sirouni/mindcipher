@@ -65,6 +65,30 @@ class GameViewModel: ObservableObject {
         return notes[position][color]
     }
 
+    func toggleRow(color: PegColor) {
+        let allEliminated = (0..<codeLength).allSatisfy { notes[$0][color] == .eliminated }
+        let allConfirmed = (0..<codeLength).allSatisfy { notes[$0][color] == .confirmed }
+        let next: NoteMarker?
+        if allEliminated {
+            next = .confirmed
+        } else if allConfirmed {
+            next = nil
+        } else {
+            next = .eliminated
+        }
+        for pos in 0..<codeLength {
+            notes[pos][color] = next
+        }
+    }
+
+    func toggleColumn(position: Int) {
+        guard position < notes.count else { return }
+        let allEliminated = availableColors.allSatisfy { notes[position][$0] == .eliminated }
+        for color in availableColors {
+            notes[position][color] = allEliminated ? nil : .eliminated
+        }
+    }
+
     func clearAllNotes() {
         notes = Array(repeating: [:], count: codeLength)
     }
