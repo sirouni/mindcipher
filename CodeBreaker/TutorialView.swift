@@ -199,9 +199,9 @@ struct TutorialView: View {
             }
 
             HStack(spacing: 24) {
-                dotLegend(color: AppTheme.accent, label: "Right spot")
-                dotLegend(color: AppTheme.warning, label: "Right color, wrong spot")
-                dotLegend(color: AppTheme.textMuted, label: "Not in code", hollow: true)
+                tutorialDotLegend(type: .exact, label: "Right spot")
+                tutorialDotLegend(type: .partial, label: "Right color, wrong spot")
+                tutorialDotLegend(type: .miss, label: "Not in code")
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
@@ -218,13 +218,13 @@ struct TutorialView: View {
                 Spacer()
                 HStack(spacing: 3) {
                     ForEach(0..<exact, id: \.self) { _ in
-                        Circle().fill(AppTheme.accent).frame(width: 10, height: 10)
+                        FeedbackDotView(type: .exact, size: 18)
                     }
                     ForEach(0..<partial, id: \.self) { _ in
-                        Circle().fill(AppTheme.warning).frame(width: 10, height: 10)
+                        FeedbackDotView(type: .partial, size: 18)
                     }
                     ForEach(0..<empty, id: \.self) { _ in
-                        Circle().stroke(AppTheme.textMuted, lineWidth: 1).frame(width: 10, height: 10)
+                        FeedbackDotView(type: .miss, size: 18)
                     }
                 }
             }
@@ -237,13 +237,9 @@ struct TutorialView: View {
         }
     }
 
-    private func dotLegend(color: Color, label: String, hollow: Bool = false) -> some View {
+    private func tutorialDotLegend(type: FeedbackType, label: String) -> some View {
         VStack(spacing: 4) {
-            if hollow {
-                Circle().stroke(color, lineWidth: 1.5).frame(width: 12, height: 12)
-            } else {
-                Circle().fill(color).frame(width: 12, height: 12)
-            }
+            FeedbackDotView(type: type, size: 18)
             Text(label)
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
