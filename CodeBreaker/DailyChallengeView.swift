@@ -1,8 +1,11 @@
 import SwiftUI
+import GameKit
 
 struct DailyChallengeView: View {
     @StateObject private var viewModel = GameViewModel()
+    @ObservedObject private var gcManager = GameCenterManager.shared
     @State private var started = false
+    @State private var showLeaderboard = false
     @Environment(\.dismiss) private var dismiss
 
     private var dateString: String {
@@ -69,6 +72,26 @@ struct DailyChallengeView: View {
 
                 DailyCalendarView()
                     .padding(.horizontal, 4)
+
+                if gcManager.isAuthenticated {
+                    Button {
+                        showLeaderboard = true
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "trophy.fill")
+                                .font(.system(size: 14))
+                            Text("Leaderboard")
+                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                        }
+                        .foregroundStyle(AppTheme.warning)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .glassCard(cornerRadius: 10)
+                    }
+                    .sheet(isPresented: $showLeaderboard) {
+                        GameCenterLeaderboardView()
+                    }
+                }
 
                 Text(displayDate)
                     .font(.system(size: 17, weight: .bold, design: .rounded))
@@ -149,6 +172,7 @@ struct DailyChallengeView: View {
 
         viewModel.startDuel(secretCode: code, colorCount: 6, maxAttempts: 7)
         viewModel.mode = .freePlay
+        viewModel.isDailyChallenge = true
         UserDefaults.standard.set(true, forKey: "ach_daily_active")
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
@@ -304,6 +328,30 @@ struct DailyCalendarView: View {
                 )
         }
         .frame(height: 32)
+    }
+}
+
+// MARK: - Game Center Leaderboard View
+
+struct GameCenterLeaderboardView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> GKGameCenterViewController {
+        let vc = GKGameCenterViewController(
+            leaderboardID: GameCenterManager.dailyLeaderboardID,
+            playerScope: .global,
+            timeScope: .today
+        )
+        vc.gameCenterDelegate = context.coordinator
+        return vc
+    }
+
+    func updateUIViewController(_ uiViewController: GKGameCenterViewController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    class Coordinator: NSObject, GKGameCenterControllerDelegate {
+        func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+            gameCenterViewController.dismiss(animated: true)
+        }
     }
 }
 

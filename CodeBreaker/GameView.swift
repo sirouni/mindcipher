@@ -643,12 +643,37 @@ struct GameView: View {
 
             starsDisplay(attempts: attempts)
 
+            if viewModel.isDailyChallenge {
+                dailyScoreBadge(attempts: attempts)
+            }
+
             hintCoinProgress
 
             revealedCodeRow
 
             resultButtons
         }
+    }
+
+    private func dailyScoreBadge(attempts: Int) -> some View {
+        let elapsed = Int(Date().timeIntervalSince(viewModel.gameStartTime ?? Date()))
+        let score = (viewModel.maxAttempts - attempts) * 10000 + max(0, 10000 - elapsed)
+        return HStack(spacing: 8) {
+            Image(systemName: "trophy.fill")
+                .font(.system(size: 14))
+                .foregroundStyle(AppTheme.warning)
+            Text("Score: \(score)")
+                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .foregroundStyle(AppTheme.textPrimary)
+            if GameCenterManager.shared.isAuthenticated {
+                Text("Submitted!")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(AppTheme.accent)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .glassCard(cornerRadius: 10)
     }
 
     private var hintCoinProgress: some View {

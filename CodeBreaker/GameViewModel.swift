@@ -40,6 +40,8 @@ class GameViewModel: ObservableObject {
     var mode: GameMode = .freePlay
     var level: Level?
     var lastDifficulty: Difficulty = .easy
+    var isDailyChallenge: Bool = false
+    var gameStartTime: Date?
     private var timer: Timer?
 
     var codeLength: Int { engine?.codeLength ?? 4 }
@@ -182,6 +184,7 @@ class GameViewModel: ObservableObject {
         showNotes = false
         hintUsed = false
         hintedPositions = []
+        gameStartTime = Date()
     }
 
     // MARK: - Hint
@@ -317,6 +320,14 @@ class GameViewModel: ObservableObject {
             }
             StatsManager.shared.recordWin(attempts: attempts)
             HintCoinManager.shared.recordWin()
+            if isDailyChallenge {
+                let elapsed = Int(Date().timeIntervalSince(gameStartTime ?? Date()))
+                GameCenterManager.shared.submitDailyScore(
+                    attempts: attempts,
+                    maxAttempts: maxAttempts,
+                    elapsedSeconds: elapsed
+                )
+            }
             switch mode {
             case .campaign(let levelId):
                 let pm = (engine?.lieMode == true) ? ProgressManager.lieShared : ProgressManager.shared
