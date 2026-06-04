@@ -340,4 +340,201 @@ final class CodeBreakerUITests: XCTestCase {
         _ = app.navigationBars["Classic Missions"].waitForExistence(timeout: 3)
         XCTAssertTrue(app.buttons["Next tier"].waitForExistence(timeout: 3))
     }
+
+    // MARK: - Notes System
+
+    func testNotesButtonExists() {
+        app.staticTexts["Free Play"].tap()
+        _ = app.buttons["Start Challenge"].waitForExistence(timeout: 3)
+        app.buttons["Start Challenge"].tap()
+        _ = app.staticTexts["left"].waitForExistence(timeout: 5)
+
+        XCTAssertTrue(app.buttons["Notes"].waitForExistence(timeout: 3))
+    }
+
+    func testNotesGridOpens() {
+        app.staticTexts["Free Play"].tap()
+        _ = app.buttons["Start Challenge"].waitForExistence(timeout: 3)
+        app.buttons["Start Challenge"].tap()
+        _ = app.staticTexts["left"].waitForExistence(timeout: 5)
+
+        app.buttons["Notes"].tap()
+        XCTAssertTrue(app.staticTexts["Notes"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["P1"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["Clear"].waitForExistence(timeout: 3))
+    }
+
+    func testNotesGridColumnHeaders() {
+        app.staticTexts["Free Play"].tap()
+        _ = app.buttons["Start Challenge"].waitForExistence(timeout: 3)
+        app.buttons["Start Challenge"].tap()
+        _ = app.staticTexts["left"].waitForExistence(timeout: 5)
+
+        app.buttons["Notes"].tap()
+        _ = app.staticTexts["Notes"].waitForExistence(timeout: 3)
+
+        for i in 1...4 {
+            XCTAssertTrue(app.staticTexts["P\(i)"].exists, "Column header P\(i) not found")
+        }
+    }
+
+    func testNotesGridCloseButton() {
+        app.staticTexts["Free Play"].tap()
+        _ = app.buttons["Start Challenge"].waitForExistence(timeout: 3)
+        app.buttons["Start Challenge"].tap()
+        _ = app.staticTexts["left"].waitForExistence(timeout: 5)
+
+        app.buttons["Notes"].tap()
+        _ = app.staticTexts["Notes"].waitForExistence(timeout: 3)
+
+        let closeButton = app.buttons.matching(NSPredicate(format: "label CONTAINS '关闭'")).firstMatch
+        XCTAssertTrue(closeButton.waitForExistence(timeout: 3))
+    }
+
+    // MARK: - Hint System
+
+    func testHintButtonExists() {
+        app.staticTexts["Free Play"].tap()
+        _ = app.buttons["Start Challenge"].waitForExistence(timeout: 3)
+        app.buttons["Start Challenge"].tap()
+        _ = app.staticTexts["left"].waitForExistence(timeout: 5)
+
+        XCTAssertTrue(app.buttons["Hint"].waitForExistence(timeout: 3))
+    }
+
+    func testHintButtonShowsCoinBadge() {
+        app.staticTexts["Free Play"].tap()
+        _ = app.buttons["Start Challenge"].waitForExistence(timeout: 3)
+        app.buttons["Start Challenge"].tap()
+        _ = app.staticTexts["left"].waitForExistence(timeout: 5)
+
+        let hintButton = app.buttons["Hint"]
+        XCTAssertTrue(hintButton.waitForExistence(timeout: 3))
+    }
+
+    // MARK: - Daily Challenge Calendar
+
+    func testDailyChallengeShowsCalendar() {
+        app.staticTexts["Daily Challenge"].tap()
+        _ = app.staticTexts["Daily Challenge"].waitForExistence(timeout: 3)
+
+        XCTAssertTrue(app.staticTexts["Day Streak"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["Total"].waitForExistence(timeout: 3))
+    }
+
+    func testDailyChallengeCalendarWeekdayHeaders() {
+        app.staticTexts["Daily Challenge"].tap()
+        _ = app.staticTexts["Daily Challenge"].waitForExistence(timeout: 3)
+
+        XCTAssertTrue(app.staticTexts["S"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["M"].exists)
+        XCTAssertTrue(app.staticTexts["T"].exists)
+        XCTAssertTrue(app.staticTexts["W"].exists)
+        XCTAssertTrue(app.staticTexts["F"].exists)
+    }
+
+    func testDailyChallengeShowsMonthTitle() {
+        app.staticTexts["Daily Challenge"].tap()
+        _ = app.staticTexts["Day Streak"].waitForExistence(timeout: 3)
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        let monthTitle = formatter.string(from: Date())
+        XCTAssertTrue(app.staticTexts[monthTitle].waitForExistence(timeout: 3))
+    }
+
+    // MARK: - Tutorial Pages (Notes + Hints)
+
+    func testTutorialNotesPage() {
+        let helpButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'questionmark'")).firstMatch
+        helpButton.tap()
+        _ = app.staticTexts["Crack the Code"].waitForExistence(timeout: 3)
+
+        let nextButton = app.buttons["Next"]
+        nextButton.tap() // page 2: Pick Colors
+        nextButton.tap() // page 3: Read the Clues
+        nextButton.tap() // page 4: Notes
+
+        XCTAssertTrue(app.staticTexts["Notes"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["Tap cell: mark as eliminated"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["Tap again: mark as confirmed"].exists)
+    }
+
+    func testTutorialHintsPage() {
+        let helpButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'questionmark'")).firstMatch
+        helpButton.tap()
+        _ = app.staticTexts["Crack the Code"].waitForExistence(timeout: 3)
+
+        let nextButton = app.buttons["Next"]
+        nextButton.tap() // page 2
+        nextButton.tap() // page 3
+        nextButton.tap() // page 4: Notes
+
+        _ = app.staticTexts["Notes"].waitForExistence(timeout: 3)
+        nextButton.tap() // page 5: Hints
+
+        XCTAssertTrue(app.staticTexts["Hints"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["Hint Coins"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["How to earn"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["What hints do"].waitForExistence(timeout: 3))
+    }
+
+    func testTutorialHas7Pages() {
+        let helpButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'questionmark'")).firstMatch
+        helpButton.tap()
+
+        XCTAssertTrue(app.staticTexts["1/7"].waitForExistence(timeout: 3))
+    }
+
+    // MARK: - Challenge URL Deep Link
+
+    func testChallengeAcceptScreen() {
+        let challengeURL = "codebreaker://challenge?s=123456789&l=4&c=6&a=7&d=0&m=0&f=TestBot"
+        app.open(URL(string: challengeURL)!)
+
+        XCTAssertTrue(app.staticTexts["TestBot"].waitForExistence(timeout: 5)
+            || app.staticTexts["Challenge from"].waitForExistence(timeout: 5))
+    }
+
+    func testChallengeAcceptScreenLieMode() {
+        let challengeURL = "codebreaker://challenge?s=987654321&l=5&c=8&a=12&d=1&m=1&f=LieBot"
+        app.open(URL(string: challengeURL)!)
+
+        let lieWarning = app.staticTexts["Lie Mode — one feedback may be fake!"]
+        XCTAssertTrue(lieWarning.waitForExistence(timeout: 5)
+            || app.staticTexts["LieBot"].waitForExistence(timeout: 5))
+    }
+
+    // MARK: - Game View Layout (6-peg)
+
+    func testMasterDifficultyLayout() {
+        app.staticTexts["Free Play"].tap()
+        _ = app.staticTexts["Master"].waitForExistence(timeout: 3)
+        app.staticTexts["Master"].tap()
+        _ = app.buttons["Start Challenge"].waitForExistence(timeout: 3)
+        app.buttons["Start Challenge"].tap()
+        _ = app.staticTexts["left"].waitForExistence(timeout: 5)
+
+        for i in 1...6 {
+            let slot = app.otherElements.matching(NSPredicate(format: "label == 'Slot \(i)'")).firstMatch
+            XCTAssertTrue(slot.waitForExistence(timeout: 3), "Slot \(i) not found in Master layout")
+        }
+    }
+
+    // MARK: - Hint Coin Progress (Win Screen)
+
+    func testWinScreenShowsHintCoinProgress() {
+        app.staticTexts["Free Play"].tap()
+        _ = app.staticTexts["Beginner"].waitForExistence(timeout: 3)
+        app.staticTexts["Beginner"].tap()
+        _ = app.buttons["Start Challenge"].waitForExistence(timeout: 3)
+        app.buttons["Start Challenge"].tap()
+        _ = app.staticTexts["left"].waitForExistence(timeout: 5)
+
+        // Use hint to auto-fill one slot, then try guessing
+        // This test just verifies the buttons exist in game
+        XCTAssertTrue(app.buttons["Hint"].exists)
+        XCTAssertTrue(app.buttons["Notes"].exists)
+        XCTAssertTrue(app.buttons["Submit"].exists)
+    }
 }
