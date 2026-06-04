@@ -180,17 +180,18 @@ struct GameView: View {
     }
 
     private var attemptsBadge: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 3) {
             Text("\(viewModel.attemptsLeft)")
-                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundStyle(viewModel.attemptsLeft <= 2 ? AppTheme.danger : AppTheme.accent)
             Text("left")
-                .font(.system(size: 13, weight: .medium))
+                .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
         .glassCard(cornerRadius: 8)
+        .fixedSize()
     }
 
     // MARK: - Feedback Legend
@@ -892,16 +893,28 @@ struct GuessRowView: View {
     var gameOver: Bool = false
     @State private var revealed = false
 
+    private var pegDisplaySize: CGFloat {
+        codeLength <= 4 ? 32 : codeLength <= 5 ? 28 : 24
+    }
+
+    private var pegSpacing: CGFloat {
+        codeLength <= 4 ? 6 : 4
+    }
+
+    private var feedbackDotSize: CGFloat {
+        codeLength <= 4 ? 18 : 14
+    }
+
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 6) {
             Text("\(index)")
                 .font(.system(size: 12, weight: .bold, design: .monospaced))
                 .foregroundStyle(AppTheme.textSecondary)
-                .frame(width: 20)
+                .frame(width: 16)
 
-            HStack(spacing: 6) {
+            HStack(spacing: pegSpacing) {
                 ForEach(0..<guess.count, id: \.self) { i in
-                    PegView(color: guess[i], size: 32)
+                    PegView(color: guess[i], size: pegDisplaySize)
                         .scaleEffect(revealed ? 1.0 : 0.5)
                         .opacity(revealed ? 1.0 : 0)
                         .animation(
@@ -912,7 +925,7 @@ struct GuessRowView: View {
                 }
             }
 
-            Spacer()
+            Spacer(minLength: 4)
 
             feedbackDots
                 .opacity(revealed ? 1.0 : 0)
@@ -924,7 +937,7 @@ struct GuessRowView: View {
                     .foregroundStyle(AppTheme.danger)
             }
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 10)
         .padding(.vertical, 6)
         .background(
             RoundedRectangle(cornerRadius: 10)
@@ -955,16 +968,33 @@ struct GuessRowView: View {
         let exact = feedback.exact
         let partial = feedback.partial
         let empty = codeLength - exact - partial
+        let size = feedbackDotSize
+        let allTypes: [FeedbackType] =
+            Array(repeating: .exact, count: exact) +
+            Array(repeating: .partial, count: partial) +
+            Array(repeating: .miss, count: empty)
 
-        return HStack(spacing: 3) {
-            ForEach(0..<exact, id: \.self) { _ in
-                FeedbackDotView(type: .exact, size: 18)
-            }
-            ForEach(0..<partial, id: \.self) { _ in
-                FeedbackDotView(type: .partial, size: 18)
-            }
-            ForEach(0..<empty, id: \.self) { _ in
-                FeedbackDotView(type: .miss, size: 18)
+        return Group {
+            if codeLength <= 4 {
+                HStack(spacing: 3) {
+                    ForEach(0..<allTypes.count, id: \.self) { i in
+                        FeedbackDotView(type: allTypes[i], size: size)
+                    }
+                }
+            } else {
+                let columns = Int(ceil(Double(codeLength) / 2.0))
+                VStack(spacing: 2) {
+                    HStack(spacing: 2) {
+                        ForEach(0..<columns, id: \.self) { i in
+                            FeedbackDotView(type: allTypes[i], size: size)
+                        }
+                    }
+                    HStack(spacing: 2) {
+                        ForEach(columns..<allTypes.count, id: \.self) { i in
+                            FeedbackDotView(type: allTypes[i], size: size)
+                        }
+                    }
+                }
             }
         }
     }
@@ -1156,23 +1186,27 @@ struct ShareCardView: View {
         .padding(.vertical, 6)
     }
 
+    private var sharePegSize: CGFloat {
+        codeLength <= 4 ? 32 : codeLength <= 5 ? 28 : 24
+    }
+
     private func shareGuessRow(_ row: ShareRowData) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 6) {
             Text("\(row.id)")
                 .font(.system(size: 12, weight: .bold, design: .monospaced))
                 .foregroundStyle(Color(white: 0.4))
-                .frame(width: 20)
+                .frame(width: 16)
 
-            HStack(spacing: 6) {
+            HStack(spacing: codeLength <= 4 ? 6 : 4) {
                 ForEach(Array(row.guess.enumerated()), id: \.offset) { _, peg in
                     Circle()
                         .fill(pegGrad(peg))
-                        .frame(width: 32, height: 32)
+                        .frame(width: sharePegSize, height: sharePegSize)
                         .shadow(color: pegCol(peg).opacity(0.2), radius: 2, y: 1)
                 }
             }
 
-            Spacer()
+            Spacer(minLength: 4)
 
             feedbackDots(row.feedback)
 
@@ -1182,7 +1216,7 @@ struct ShareCardView: View {
                     .foregroundStyle(danger)
             }
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 10)
         .padding(.vertical, 6)
         .background(
             RoundedRectangle(cornerRadius: 10)
@@ -1195,14 +1229,33 @@ struct ShareCardView: View {
     }
 
     private func feedbackDots(_ fb: Feedback) -> some View {
+        let dotSize: CGFloat = codeLength <= 4 ? 18 : 14
         let types: [FeedbackType] =
             Array(repeating: .exact, count: fb.exact) +
             Array(repeating: .partial, count: fb.partial) +
             Array(repeating: .miss, count: max(0, codeLength - fb.exact - fb.partial))
 
-        return HStack(spacing: 3) {
-            ForEach(Array(types.enumerated()), id: \.offset) { _, t in
-                FeedbackDotView(type: t, size: 18)
+        return Group {
+            if codeLength <= 4 {
+                HStack(spacing: 3) {
+                    ForEach(Array(types.enumerated()), id: \.offset) { _, t in
+                        FeedbackDotView(type: t, size: dotSize)
+                    }
+                }
+            } else {
+                let columns = Int(ceil(Double(codeLength) / 2.0))
+                VStack(spacing: 2) {
+                    HStack(spacing: 2) {
+                        ForEach(0..<columns, id: \.self) { i in
+                            FeedbackDotView(type: types[i], size: dotSize)
+                        }
+                    }
+                    HStack(spacing: 2) {
+                        ForEach(columns..<types.count, id: \.self) { i in
+                            FeedbackDotView(type: types[i], size: dotSize)
+                        }
+                    }
+                }
             }
         }
     }
