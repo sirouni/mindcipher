@@ -250,29 +250,26 @@ struct LevelSelectView: View {
                             )
                     )
 
-                if !isUnlocked {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 14))
-                        .foregroundStyle(AppTheme.textMuted.opacity(0.4))
-                } else {
-                    VStack(spacing: 3) {
-                        Text("\(level.id)")
-                            .font(.system(size: 18, weight: .black, design: .rounded))
-                            .foregroundStyle(isCompleted ? AppTheme.accent : AppTheme.textPrimary)
-                        if isCompleted {
-                            HStack(spacing: 1) {
-                                ForEach(0..<3, id: \.self) { i in
-                                    Image(systemName: i < stars ? "star.fill" : "star")
-                                        .font(.system(size: 7))
-                                        .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted.opacity(0.4))
-                                }
+                VStack(spacing: 3) {
+                    Text("\(level.id)")
+                        .font(.system(size: 18, weight: .black, design: .rounded))
+                        .foregroundStyle(isCompleted ? AppTheme.accent : AppTheme.textPrimary)
+                    if isCompleted {
+                        HStack(spacing: 1) {
+                            ForEach(0..<3, id: \.self) { i in
+                                Image(systemName: i < stars ? "star.fill" : "star")
+                                    .font(.system(size: 7))
+                                    .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted.opacity(0.4))
                             }
                         }
+                    } else if !isUnlocked {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 9))
+                            .foregroundStyle(AppTheme.textMuted)
                     }
                 }
             }
             .frame(width: 56, height: 56)
-            .opacity(isUnlocked ? 1.0 : 0.3)
         }
         .buttonStyle(.plain)
         .disabled(!isUnlocked)
