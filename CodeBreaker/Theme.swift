@@ -142,6 +142,74 @@ struct PegView: View {
     }
 }
 
+enum FeedbackType { case exact, partial, miss }
+
+struct FeedbackDotView: View {
+    let type: FeedbackType
+    let size: CGFloat
+
+    private var isColorBlind: Bool { AppSettings.shared.colorBlindMode }
+
+    var body: some View {
+        if isColorBlind {
+            colorBlindShape
+        } else {
+            normalDot
+        }
+    }
+
+    private var normalDot: some View {
+        Group {
+            switch type {
+            case .exact:
+                Circle().fill(AppTheme.accent).frame(width: size, height: size)
+            case .partial:
+                Circle().fill(AppTheme.warning).frame(width: size, height: size)
+            case .miss:
+                Circle().stroke(Color(white: 0.75), lineWidth: 1).frame(width: size, height: size)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var colorBlindShape: some View {
+        switch type {
+        case .exact:
+            Circle()
+                .fill(AppTheme.accent)
+                .frame(width: size, height: size)
+                .overlay(
+                    Text("E").font(.system(size: size * 0.55, weight: .black))
+                        .foregroundStyle(.white)
+                )
+        case .partial:
+            FeedbackTriangle()
+                .fill(AppTheme.warning)
+                .frame(width: size + 2, height: size)
+                .overlay(
+                    Text("P").font(.system(size: size * 0.45, weight: .black))
+                        .foregroundStyle(.white)
+                        .offset(y: 1)
+                )
+        case .miss:
+            Rectangle()
+                .stroke(Color(white: 0.6), lineWidth: 1.5)
+                .frame(width: size - 1, height: size - 1)
+        }
+    }
+}
+
+struct FeedbackTriangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.closeSubpath()
+        return path
+    }
+}
+
 struct MorseIndicator: View {
     let isActive: Bool
     @State private var blinkPhase = 0

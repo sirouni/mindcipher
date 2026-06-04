@@ -202,9 +202,9 @@ struct GameView: View {
 
     private var feedbackLegend: some View {
         VStack(alignment: .leading, spacing: 3) {
-            legendLine(color: AppTheme.accent, hollow: false, text: "= One right color in the right position")
-            legendLine(color: AppTheme.warning, hollow: false, text: "= One right color but in the wrong position")
-            legendLine(color: AppTheme.textMuted, hollow: true, text: "= One color is not in the secret code")
+            legendLine(type: .exact, text: "= One right color in the right position")
+            legendLine(type: .partial, text: "= One right color but in the wrong position")
+            legendLine(type: .miss, text: "= One color is not in the secret code")
             if viewModel.engine?.lieMode == true {
                 Text("Lie Mode — one feedback may be fake!")
                     .font(.system(size: 13, weight: .bold))
@@ -216,13 +216,9 @@ struct GameView: View {
         .padding(.vertical, 4)
     }
 
-    private func legendLine(color: Color, hollow: Bool, text: String) -> some View {
+    private func legendLine(type: FeedbackType, text: String) -> some View {
         HStack(spacing: 6) {
-            if hollow {
-                Circle().stroke(color, lineWidth: 1.5).frame(width: 11, height: 11)
-            } else {
-                Circle().fill(color).frame(width: 11, height: 11)
-            }
+            FeedbackDotView(type: type, size: 12)
             Text(text)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
@@ -967,19 +963,13 @@ struct GuessRowView: View {
 
         return HStack(spacing: 3) {
             ForEach(0..<exact, id: \.self) { _ in
-                Circle()
-                    .fill(AppTheme.accent)
-                    .frame(width: 10, height: 10)
+                FeedbackDotView(type: .exact, size: 10)
             }
             ForEach(0..<partial, id: \.self) { _ in
-                Circle()
-                    .fill(AppTheme.warning)
-                    .frame(width: 10, height: 10)
+                FeedbackDotView(type: .partial, size: 10)
             }
             ForEach(0..<empty, id: \.self) { _ in
-                Circle()
-                    .stroke(Color(white: 0.75), lineWidth: 1)
-                    .frame(width: 10, height: 10)
+                FeedbackDotView(type: .miss, size: 10)
             }
         }
     }
@@ -1127,9 +1117,9 @@ struct ShareCardView: View {
 
     private var shareFeedbackLegend: some View {
         VStack(alignment: .leading, spacing: 3) {
-            shareLegendLine(color: accent, hollow: false, text: "= One right color in the right position")
-            shareLegendLine(color: warning, hollow: false, text: "= One right color but in the wrong position")
-            shareLegendLine(color: Color(white: 0.65), hollow: true, text: "= One color is not in the secret code")
+            shareLegendLine(type: .exact, text: "= One right color in the right position")
+            shareLegendLine(type: .partial, text: "= One right color but in the wrong position")
+            shareLegendLine(type: .miss, text: "= One color is not in the secret code")
             if isLieMode {
                 Text("Lie Mode — one feedback may be fake!")
                     .font(.system(size: 13, weight: .bold))
@@ -1141,13 +1131,9 @@ struct ShareCardView: View {
         .padding(.vertical, 4)
     }
 
-    private func shareLegendLine(color: Color, hollow: Bool, text: String) -> some View {
+    private func shareLegendLine(type: FeedbackType, text: String) -> some View {
         HStack(spacing: 6) {
-            if hollow {
-                Circle().stroke(color, lineWidth: 1.5).frame(width: 11, height: 11)
-            } else {
-                Circle().fill(color).frame(width: 11, height: 11)
-            }
+            FeedbackDotView(type: type, size: 12)
             Text(text)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(Color(white: 0.4))
@@ -1214,18 +1200,14 @@ struct ShareCardView: View {
     }
 
     private func feedbackDots(_ fb: Feedback) -> some View {
-        let dots: [(Color, Bool)] =
-            Array(repeating: (accent, false), count: fb.exact) +
-            Array(repeating: (warning, false), count: fb.partial) +
-            Array(repeating: (Color(white: 0.65), true), count: max(0, codeLength - fb.exact - fb.partial))
+        let types: [FeedbackType] =
+            Array(repeating: .exact, count: fb.exact) +
+            Array(repeating: .partial, count: fb.partial) +
+            Array(repeating: .miss, count: max(0, codeLength - fb.exact - fb.partial))
 
         return HStack(spacing: 3) {
-            ForEach(Array(dots.enumerated()), id: \.offset) { _, d in
-                if d.1 {
-                    Circle().stroke(d.0, lineWidth: 1).frame(width: 10, height: 10)
-                } else {
-                    Circle().fill(d.0).frame(width: 10, height: 10)
-                }
+            ForEach(Array(types.enumerated()), id: \.offset) { _, t in
+                FeedbackDotView(type: t, size: 10)
             }
         }
     }
