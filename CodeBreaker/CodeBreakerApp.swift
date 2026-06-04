@@ -106,95 +106,96 @@ struct ChallengeGameView: View {
     @State private var started = false
 
     var body: some View {
-        ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+        Group {
+            if started {
+                GameView(viewModel: viewModel)
+            } else {
+                ZStack {
+                    AppTheme.bgGradient.ignoresSafeArea()
 
-            if !started {
-                VStack(spacing: 20) {
-                    Spacer()
+                    VStack(spacing: 20) {
+                        Spacer()
 
-                    Image(systemName: "envelope.open.fill")
-                        .font(.system(size: 48))
-                        .foregroundStyle(AppTheme.accent)
+                        Image(systemName: "envelope.open.fill")
+                            .font(.system(size: 48))
+                            .foregroundStyle(AppTheme.accent)
 
-                    Text("Challenge from")
-                        .font(.system(size: 15, weight: .medium))
-                        .foregroundStyle(AppTheme.textSecondary)
+                        Text("Challenge from")
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundStyle(AppTheme.textSecondary)
 
-                    Text(challenge.fromName)
-                        .font(.system(size: 24, weight: .black, design: .rounded))
-                        .foregroundStyle(AppTheme.textPrimary)
+                        Text(challenge.fromName)
+                            .font(.system(size: 24, weight: .black, design: .rounded))
+                            .foregroundStyle(AppTheme.textPrimary)
 
-                    VStack(spacing: 8) {
-                        HStack {
-                            Text("Code length")
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundStyle(AppTheme.textSecondary)
-                            Spacer()
-                            Text("\(challenge.codeLength)")
-                                .font(.system(size: 14, weight: .bold, design: .monospaced))
-                                .foregroundStyle(AppTheme.textPrimary)
+                        VStack(spacing: 8) {
+                            HStack {
+                                Text("Code length")
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundStyle(AppTheme.textSecondary)
+                                Spacer()
+                                Text("\(challenge.codeLength)")
+                                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(AppTheme.textPrimary)
+                            }
+                            HStack {
+                                Text("Colors")
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundStyle(AppTheme.textSecondary)
+                                Spacer()
+                                Text("\(challenge.colorCount)")
+                                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(AppTheme.textPrimary)
+                            }
+                            HStack {
+                                Text("Max attempts")
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundStyle(AppTheme.textSecondary)
+                                Spacer()
+                                Text("\(challenge.maxAttempts)")
+                                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(AppTheme.textPrimary)
+                            }
                         }
-                        HStack {
-                            Text("Colors")
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundStyle(AppTheme.textSecondary)
-                            Spacer()
-                            Text("\(challenge.colorCount)")
-                                .font(.system(size: 14, weight: .bold, design: .monospaced))
-                                .foregroundStyle(AppTheme.textPrimary)
-                        }
-                        HStack {
-                            Text("Max attempts")
-                                .font(.system(size: 14, weight: .medium))
-                                .foregroundStyle(AppTheme.textSecondary)
-                            Spacer()
-                            Text("\(challenge.maxAttempts)")
-                                .font(.system(size: 14, weight: .bold, design: .monospaced))
-                                .foregroundStyle(AppTheme.textPrimary)
+                        .padding(20)
+                        .glassCard(cornerRadius: 16)
+
+                        Text("Can you crack their code?")
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundStyle(AppTheme.textSecondary)
+
+                        Spacer()
+
+                        Button {
+                            viewModel.startChallenge(
+                                seed: challenge.seed,
+                                codeLength: challenge.codeLength,
+                                colorCount: challenge.colorCount,
+                                allowDuplicates: challenge.allowDuplicates,
+                                maxAttempts: challenge.maxAttempts
+                            )
+                            started = true
+                        } label: {
+                            Text("Accept Challenge")
+                                .font(.system(size: 18, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
                         }
                     }
-                    .padding(20)
-                    .glassCard(cornerRadius: 16)
-
-                    Text("Can you crack their code?")
-                        .font(.system(size: 15, weight: .medium))
-                        .foregroundStyle(AppTheme.textSecondary)
-
-                    Spacer()
-
-                    Button {
-                        viewModel.startChallenge(
-                            seed: challenge.seed,
-                            codeLength: challenge.codeLength,
-                            colorCount: challenge.colorCount,
-                            allowDuplicates: challenge.allowDuplicates,
-                            maxAttempts: challenge.maxAttempts
-                        )
-                        started = true
-                    } label: {
-                        Text("Accept Challenge")
-                            .font(.system(size: 18, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
-                    }
+                    .padding(24)
                 }
-                .padding(24)
-            }
-        }
-        .navigationDestination(isPresented: $started) {
-            GameView(viewModel: viewModel)
-        }
-        .navigationTitle("Challenge")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button { dismiss() } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(AppTheme.textSecondary)
+                .navigationTitle("Challenge")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button { dismiss() } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundStyle(AppTheme.textSecondary)
+                        }
+                    }
                 }
             }
         }
