@@ -108,6 +108,17 @@ enum Difficulty: String, CaseIterable {
     var hasTimeLimit: Bool { false }
 
     var timeLimitSeconds: Int { 0 }
+
+    var lieExtraAttempts: Int {
+        switch self {
+        case .beginner: return 5
+        case .easy: return 7
+        case .medium: return 8
+        case .hard: return 7
+        case .expert: return 7
+        case .master: return 5
+        }
+    }
 }
 
 struct Level: Identifiable, Codable {

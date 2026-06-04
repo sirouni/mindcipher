@@ -685,7 +685,12 @@ struct GameView: View {
                         Button {
                             showResult = false
                             confettiParticles = []
-                            viewModel.startGame(level: next)
+                            if viewModel.engine?.lieMode == true {
+                                let extra = level.difficulty.lieExtraAttempts
+                                viewModel.startLieGame(level: next, totalAttempts: next.maxAttempts + extra)
+                            } else {
+                                viewModel.startGame(level: next)
+                            }
                         } label: {
                             Text("Next →")
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
@@ -698,7 +703,12 @@ struct GameView: View {
                         Button {
                             showResult = false
                             confettiParticles = []
-                            viewModel.startGame(level: level)
+                            if viewModel.engine?.lieMode == true {
+                                let extra = level.difficulty.lieExtraAttempts
+                                viewModel.startLieGame(level: level, totalAttempts: level.maxAttempts + extra)
+                            } else {
+                                viewModel.startGame(level: level)
+                            }
                         } label: {
                             Text("Retry")
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
