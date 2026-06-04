@@ -963,13 +963,13 @@ struct GuessRowView: View {
 
         return HStack(spacing: 3) {
             ForEach(0..<exact, id: \.self) { _ in
-                FeedbackDotView(type: .exact, size: 16)
+                FeedbackDotView(type: .exact, size: 18)
             }
             ForEach(0..<partial, id: \.self) { _ in
-                FeedbackDotView(type: .partial, size: 16)
+                FeedbackDotView(type: .partial, size: 18)
             }
             ForEach(0..<empty, id: \.self) { _ in
-                FeedbackDotView(type: .miss, size: 16)
+                FeedbackDotView(type: .miss, size: 18)
             }
         }
     }
@@ -1207,7 +1207,7 @@ struct ShareCardView: View {
 
         return HStack(spacing: 3) {
             ForEach(Array(types.enumerated()), id: \.offset) { _, t in
-                FeedbackDotView(type: t, size: 16)
+                FeedbackDotView(type: t, size: 18)
             }
         }
     }
