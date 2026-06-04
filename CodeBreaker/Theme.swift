@@ -147,20 +147,20 @@ struct FeedbackDotView: View {
     let size: CGFloat
 
     var body: some View {
-        switch type {
-        case .exact:
-            Circle()
-                .fill(AppTheme.accent)
-                .frame(width: size, height: size)
-        case .partial:
-            FeedbackTriangle()
-                .fill(AppTheme.warning)
-                .frame(width: size + 2, height: size)
-        case .miss:
-            Rectangle()
-                .stroke(Color(white: 0.6), lineWidth: 1.5)
-                .frame(width: size - 1, height: size - 1)
+        Group {
+            switch type {
+            case .exact:
+                Circle()
+                    .fill(AppTheme.accent)
+            case .partial:
+                FeedbackTriangle()
+                    .fill(AppTheme.warning)
+            case .miss:
+                Rectangle()
+                    .stroke(Color(white: 0.6), lineWidth: 1.5)
+            }
         }
+        .frame(width: size, height: size)
     }
 }
 
