@@ -245,7 +245,7 @@ struct LevelSelectView: View {
                             .stroke(
                                 isNext ? AppTheme.accent : 
                                 isCompleted ? AppTheme.accent.opacity(0.4) :
-                                AppTheme.textMuted.opacity(0.7),
+                                AppTheme.textMuted,
                                 lineWidth: isNext ? 2 : 1
                             )
                     )
