@@ -3,7 +3,7 @@ import SwiftUI
 struct TutorialView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var page = 0
-    private let totalPages = 5
+    private let totalPages = 7
 
     var body: some View {
         ZStack {
@@ -30,9 +30,11 @@ struct TutorialView: View {
                     goalPage.tag(0)
                     pickPage.tag(1)
                     feedbackPage.tag(2)
-                    liePage.tag(3)
-                    tipsPage.tag(4)
-                    Color.clear.tag(5)
+                    notesPage.tag(3)
+                    hintPage.tag(4)
+                    liePage.tag(5)
+                    tipsPage.tag(6)
+                    Color.clear.tag(7)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .animation(.spring(response: 0.3), value: page)
@@ -246,7 +248,184 @@ struct TutorialView: View {
         }
     }
 
-    // MARK: - Page 4: 谎言
+    // MARK: - Page 4: 笔记系统
+
+    private var notesPage: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "note.text")
+                .font(.system(size: 36))
+                .foregroundStyle(AppTheme.accent)
+
+            Text("Notes")
+                .font(.system(size: 24, weight: .black, design: .rounded))
+                .foregroundStyle(AppTheme.textPrimary)
+
+            // 模拟笔记网格
+            VStack(spacing: 2) {
+                HStack(spacing: 0) {
+                    Color.clear.frame(width: 36, height: 22)
+                    ForEach(1...4, id: \.self) { i in
+                        Text("P\(i)")
+                            .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            .foregroundStyle(AppTheme.accent)
+                            .frame(width: 36, height: 22)
+                    }
+                }
+                HStack(spacing: 0) {
+                    PegView(color: .red, size: 24).frame(width: 36, height: 36)
+                    noteDemoCell(.eliminated)
+                    noteDemoCell(nil)
+                    noteDemoCell(nil)
+                    noteDemoCell(.confirmed)
+                }
+                HStack(spacing: 0) {
+                    PegView(color: .green, size: 24).frame(width: 36, height: 36)
+                    noteDemoCell(nil)
+                    noteDemoCell(.eliminated)
+                    noteDemoCell(.confirmed)
+                    noteDemoCell(.eliminated)
+                }
+                HStack(spacing: 0) {
+                    PegView(color: .blue, size: 24).frame(width: 36, height: 36)
+                    noteDemoCell(.confirmed)
+                    noteDemoCell(.eliminated)
+                    noteDemoCell(.eliminated)
+                    noteDemoCell(nil)
+                }
+            }
+            .padding(10)
+            .glassCard(cornerRadius: 12)
+
+            VStack(alignment: .leading, spacing: 6) {
+                iconNoteRow("xmark", AppTheme.danger, "Tap cell: mark as eliminated")
+                iconNoteRow("checkmark", AppTheme.accent, "Tap again: mark as confirmed")
+                iconNoteRow("circle.fill", AppTheme.textMuted, "Tap color peg: toggle entire row")
+                iconNoteRow("arrow.down", AppTheme.accent, "Tap P1/P2...: toggle entire column")
+            }
+            .padding(14)
+            .glassCard(cornerRadius: 12)
+
+            Text("Use notes to track your deductions\nEliminated colors are disabled in picker")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(AppTheme.textSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal, 28)
+    }
+
+    private func noteDemoCell(_ marker: NoteMarker?) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 5)
+                .fill(marker == .eliminated ? AppTheme.danger.opacity(0.1) : marker == .confirmed ? AppTheme.accent.opacity(0.12) : Color(white: 0.94))
+                .frame(width: 32, height: 32)
+            if marker == .eliminated {
+                Image(systemName: "xmark").font(.system(size: 12, weight: .bold)).foregroundStyle(AppTheme.danger)
+            } else if marker == .confirmed {
+                Image(systemName: "checkmark").font(.system(size: 12, weight: .bold)).foregroundStyle(AppTheme.accent)
+            }
+        }
+        .frame(width: 36, height: 36)
+    }
+
+    private func iconNoteRow(_ icon: String, _ color: Color, _ text: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 13, weight: .bold))
+                .foregroundStyle(color)
+                .frame(width: 20)
+            Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
+        }
+    }
+
+    // MARK: - Page 5: 提示系统
+
+    private var hintPage: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "lightbulb.max.fill")
+                .font(.system(size: 36))
+                .foregroundStyle(AppTheme.warning)
+
+            Text("Hints")
+                .font(.system(size: 24, weight: .black, design: .rounded))
+                .foregroundStyle(AppTheme.textPrimary)
+
+            // 提示币示例
+            HStack(spacing: 12) {
+                ZStack(alignment: .topTrailing) {
+                    Image(systemName: "lightbulb.max.fill")
+                        .font(.system(size: 28))
+                        .foregroundStyle(AppTheme.warning)
+                        .frame(width: 56, height: 56)
+                        .glassCard(cornerRadius: 14)
+                    Text("3")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 20, height: 20)
+                        .background(AppTheme.warning, in: Circle())
+                        .offset(x: 4, y: -4)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Hint Coins")
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.textPrimary)
+                    Text("Spend 1 coin for a logical deduction")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
+            }
+            .padding(14)
+            .glassCard(cornerRadius: 14)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("How to earn")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                hintEarnRow("trophy.fill", "Win 3 games", "+1 coin")
+                hintEarnRow("calendar.badge.checkmark", "Login 2 days in a row", "+1 coin")
+            }
+            .padding(14)
+            .glassCard(cornerRadius: 12)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("What hints do")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                hintInfoRow("minus.circle", "Eliminate wrong colors from a position")
+                hintInfoRow("checkmark.circle", "Or confirm the correct color if few remain")
+                hintInfoRow("brain.head.profile", "Guides your logic — doesn't solve for you")
+            }
+            .padding(14)
+            .glassCard(cornerRadius: 12)
+        }
+        .padding(.horizontal, 28)
+    }
+
+    private func hintEarnRow(_ icon: String, _ text: String, _ reward: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 13))
+                .foregroundStyle(AppTheme.warning)
+                .frame(width: 20)
+            Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
+            Spacer()
+            Text(reward)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .foregroundStyle(AppTheme.warning)
+        }
+    }
+
+    private func hintInfoRow(_ icon: String, _ text: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.system(size: 13))
+                .foregroundStyle(AppTheme.accent)
+                .frame(width: 20)
+            Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
+        }
+    }
+
+    // MARK: - Page 6: 谎言
 
     private var liePage: some View {
         VStack(spacing: 20) {

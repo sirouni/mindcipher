@@ -569,3 +569,70 @@ class StatsManager: ObservableObject {
         currentStreak = 0
     }
 }
+
+// MARK: - Hint Coin Manager
+
+class HintCoinManager: ObservableObject {
+    static let shared = HintCoinManager()
+
+    private let coinsKey = "hint_coins"
+    private let winsTowardsCoinKey = "hint_wins_towards_coin"
+    private let lastLoginDateKey = "hint_last_login_date"
+    private let consecutiveDaysKey = "hint_consecutive_days"
+
+    static let winsPerCoin = 3
+    static let daysForBonus = 2
+
+    @Published var coins: Int {
+        didSet { UserDefaults.standard.set(coins, forKey: coinsKey) }
+    }
+    @Published var winsTowardsCoin: Int {
+        didSet { UserDefaults.standard.set(winsTowardsCoin, forKey: winsTowardsCoinKey) }
+    }
+    @Published var consecutiveDays: Int {
+        didSet { UserDefaults.standard.set(consecutiveDays, forKey: consecutiveDaysKey) }
+    }
+
+    private init() {
+        coins = UserDefaults.standard.integer(forKey: coinsKey)
+        winsTowardsCoin = UserDefaults.standard.integer(forKey: winsTowardsCoinKey)
+        consecutiveDays = UserDefaults.standard.integer(forKey: consecutiveDaysKey)
+        checkDailyLogin()
+    }
+
+    func recordWin() {
+        winsTowardsCoin += 1
+        if winsTowardsCoin >= Self.winsPerCoin {
+            coins += 1
+            winsTowardsCoin = 0
+        }
+    }
+
+    func spendCoin() -> Bool {
+        guard coins > 0 else { return false }
+        coins -= 1
+        return true
+    }
+
+    private func checkDailyLogin() {
+        let today = Calendar.current.startOfDay(for: Date())
+        let lastDate = UserDefaults.standard.object(forKey: lastLoginDateKey) as? Date
+
+        if let last = lastDate {
+            let lastDay = Calendar.current.startOfDay(for: last)
+            let diff = Calendar.current.dateComponents([.day], from: lastDay, to: today).day ?? 0
+            if diff == 1 {
+                consecutiveDays += 1
+                if consecutiveDays >= Self.daysForBonus {
+                    coins += 1
+                    consecutiveDays = 0
+                }
+            } else if diff > 1 {
+                consecutiveDays = 1
+            }
+        } else {
+            consecutiveDays = 1
+        }
+        UserDefaults.standard.set(today, forKey: lastLoginDateKey)
+    }
+}

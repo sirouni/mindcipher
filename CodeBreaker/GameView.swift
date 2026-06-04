@@ -11,7 +11,9 @@ struct GameView: View {
     @State private var revealedSecretCount = 0
     @State private var secretGlow = false
     @ObservedObject private var achievementManager = AchievementManager.shared
+    @ObservedObject private var hintCoinManager = HintCoinManager.shared
     @State private var achievementToast: Achievement?
+    @State private var hintToast: String?
 
     init(viewModel: GameViewModel) {
         self.viewModel = viewModel
@@ -63,6 +65,29 @@ struct GameView: View {
                     .transition(.move(edge: .top).combined(with: .opacity))
                     .zIndex(100)
             }
+
+            if let hint = hintToast {
+                VStack {
+                    Spacer()
+                    HStack(spacing: 8) {
+                        Image(systemName: "lightbulb.fill")
+                            .font(.system(size: 14))
+                            .foregroundStyle(AppTheme.warning)
+                        Text(hint)
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .foregroundStyle(AppTheme.textPrimary)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(
+                        Capsule().fill(Color.white)
+                            .shadow(color: .black.opacity(0.1), radius: 8, y: 2)
+                    )
+                    .padding(.bottom, 160)
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .zIndex(99)
+            }
         }
         .navigationBarHidden(true)
         .onChange(of: viewModel.phase) { _, phase in
@@ -88,6 +113,14 @@ struct GameView: View {
             withAnimation(.spring(response: 0.4)) { achievementToast = a }
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 withAnimation(.easeOut(duration: 0.3)) { achievementToast = nil }
+            }
+        }
+        .onChange(of: viewModel.lastHintMessage) { _, msg in
+            guard let msg else { return }
+            withAnimation(.spring(response: 0.3)) { hintToast = msg }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                withAnimation(.easeOut(duration: 0.3)) { hintToast = nil }
+                viewModel.lastHintMessage = nil
             }
         }
         
@@ -501,6 +534,31 @@ struct GameView: View {
                     )
             }
             .accessibilityLabel("Notes")
+
+            Button {
+                SoundManager.shared.playTap()
+                viewModel.useHint()
+            } label: {
+                ZStack(alignment: .topTrailing) {
+                    Image(systemName: "lightbulb.max.fill")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(viewModel.canUseHint ? AppTheme.warning : AppTheme.textMuted)
+                        .frame(width: 44, height: 50)
+                        .glassCard(cornerRadius: 12)
+
+                    Text("\(hintCoinManager.coins)")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 16, height: 16)
+                        .background(
+                            hintCoinManager.coins > 0 ? AppTheme.warning : Color(white: 0.7),
+                            in: Circle()
+                        )
+                        .offset(x: 2, y: -2)
+                }
+            }
+            .disabled(!viewModel.canUseHint)
+            .accessibilityLabel("Hint")
 
             Button {
                 SoundManager.shared.playSubmit()

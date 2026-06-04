@@ -28,6 +28,15 @@ class GameViewModel: ObservableObject {
     @Published var notes: [[PegColor: NoteMarker]] = []
     @Published var showNotes: Bool = false
 
+    // Hint system
+    @Published var hintUsed: Bool = false
+    @Published var hintedPositions: Set<Int> = []
+    @Published var lastHintMessage: String?
+
+    var canUseHint: Bool {
+        phase == .playing && !hintUsed && secretCode.count > 0 && HintCoinManager.shared.coins > 0
+    }
+
     var mode: GameMode = .freePlay
     var level: Level?
     var lastDifficulty: Difficulty = .easy
@@ -171,6 +180,87 @@ class GameViewModel: ObservableObject {
         shakeGuessRow = false
         notes = Array(repeating: [:], count: codeLength)
         showNotes = false
+        hintUsed = false
+        hintedPositions = []
+    }
+
+    // MARK: - Hint
+
+    func useHint() {
+        guard canUseHint else { return }
+        guard HintCoinManager.shared.spendCoin() else { return }
+        hintUsed = true
+
+        // Strategy: find the most useful logical deduction
+        // Priority 1: Eliminate multiple colors from a position that has few marks
+        // Priority 2: Confirm a color in a position
+
+        let deduction = findBestDeduction()
+
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+            applyDeduction(deduction)
+        }
+    }
+
+    private enum HintDeduction {
+        case eliminateFromPosition(position: Int, colors: [PegColor])
+        case confirmPosition(position: Int, color: PegColor)
+    }
+
+    private func findBestDeduction() -> HintDeduction {
+        // Find a position where we can reveal the most info
+        // Prefer positions that haven't been hinted and don't have the correct guess
+        let unhinted = (0..<codeLength).filter { pos in
+            !hintedPositions.contains(pos) && currentGuess[pos] != secretCode[pos]
+        }
+        let targetPositions = unhinted.isEmpty ? Array(0..<codeLength) : unhinted
+
+        // For each candidate position, check how many colors are NOT yet eliminated
+        var bestPos = targetPositions.first ?? 0
+        var bestUnmarked = 0
+        for pos in targetPositions {
+            let unmarked = availableColors.filter { notes[pos][$0] == nil }.count
+            if unmarked > bestUnmarked {
+                bestUnmarked = unmarked
+                bestPos = pos
+            }
+        }
+
+        let correctColor = secretCode[bestPos]
+        let wrongColors = availableColors.filter { $0 != correctColor && notes[bestPos][$0] != .eliminated }
+
+        // If there are many wrong colors unmarked, eliminate some (up to half)
+        if wrongColors.count > 2 {
+            let eliminateCount = max(2, wrongColors.count / 2)
+            let toEliminate = Array(wrongColors.shuffled().prefix(eliminateCount))
+            return .eliminateFromPosition(position: bestPos, colors: toEliminate)
+        } else {
+            // Few options left — just confirm the right one
+            return .confirmPosition(position: bestPos, color: correctColor)
+        }
+    }
+
+    private func applyDeduction(_ deduction: HintDeduction) {
+        switch deduction {
+        case .eliminateFromPosition(let pos, let colors):
+            hintedPositions.insert(pos)
+            for color in colors {
+                notes[pos][color] = .eliminated
+            }
+            lastHintMessage = "P\(pos + 1): eliminated \(colors.count) colors"
+            selectedSlot = pos
+
+        case .confirmPosition(let pos, let color):
+            hintedPositions.insert(pos)
+            for c in availableColors {
+                notes[pos][c] = (c == color) ? .confirmed : .eliminated
+            }
+            currentGuess[pos] = color
+            lastHintMessage = "P\(pos + 1): confirmed!"
+            if pos + 1 < codeLength {
+                selectedSlot = pos + 1
+            }
+        }
     }
 
     func selectColor(_ color: PegColor) {
@@ -221,6 +311,7 @@ class GameViewModel: ObservableObject {
                 showSecret = true
             }
             StatsManager.shared.recordWin(attempts: attempts)
+            HintCoinManager.shared.recordWin()
             switch mode {
             case .campaign(let levelId):
                 let pm = (engine?.lieMode == true) ? ProgressManager.lieShared : ProgressManager.shared
