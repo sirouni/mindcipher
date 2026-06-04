@@ -1,4 +1,5 @@
 import SwiftUI
+import GameKit
 
 struct GameView: View {
     @ObservedObject var viewModel: GameViewModel
@@ -897,6 +898,26 @@ struct GameView: View {
                 }
             }
 
+            if case .won = viewModel.phase {
+                Button {
+                    shareChallengeLink()
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "person.badge.plus")
+                            .font(.system(size: 13))
+                        Text("Challenge a Friend")
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                    }
+                    .foregroundStyle(AppTheme.warning)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(AppTheme.warning, lineWidth: 1.5)
+                    )
+                }
+            }
+
             Button {
                 confettiParticles = []
                 dismiss()
@@ -906,6 +927,22 @@ struct GameView: View {
                     .foregroundStyle(AppTheme.textSecondary)
                     .padding(.top, 4)
             }
+        }
+    }
+
+    private func shareChallengeLink() {
+        let url = ChallengeManager.shared.generateChallengeURL(
+            secretCode: viewModel.secretCode,
+            colorCount: viewModel.availableColors.count,
+            maxAttempts: viewModel.maxAttempts,
+            playerName: GKLocalPlayer.local.isAuthenticated ? GKLocalPlayer.local.displayName : "Agent"
+        )
+
+        let text = "I cracked this code — can you? 🔐\n\(url.absoluteString)"
+        let av = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let root = windowScene.windows.first?.rootViewController {
+            root.present(av, animated: true)
         }
     }
 
