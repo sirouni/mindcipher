@@ -255,10 +255,10 @@ struct LevelSelectView: View {
                         .font(.system(size: 18, weight: .black, design: .rounded))
                         .foregroundStyle(isCompleted ? AppTheme.accent : AppTheme.textPrimary)
                     if isCompleted {
-                        HStack(spacing: 1) {
+                        HStack(spacing: 2) {
                             ForEach(0..<3, id: \.self) { i in
                                 Image(systemName: i < stars ? "star.fill" : "star")
-                                    .font(.system(size: 7))
+                                    .font(.system(size: 10))
                                     .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted.opacity(0.4))
                             }
                         }
