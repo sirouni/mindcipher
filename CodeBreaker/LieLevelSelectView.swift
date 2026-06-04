@@ -186,8 +186,8 @@ struct LieLevelSelectView: View {
                         }
                     } else if !isUnlocked {
                         Image(systemName: "lock.fill")
-                            .font(.system(size: 9))
-                            .foregroundStyle(AppTheme.textMuted)
+                            .font(.system(size: 14))
+                            .foregroundStyle(Color.black.opacity(0.4))
                     }
                 }
             }
