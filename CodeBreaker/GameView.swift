@@ -117,18 +117,7 @@ struct GameView: View {
     // MARK: - Top Bar
 
     private var topBar: some View {
-        HStack {
-            Button { dismiss() } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .frame(width: 40, height: 40)
-                    .glassCard(cornerRadius: 10)
-            }
-            .accessibilityLabel("Back")
-
-            Spacer()
-
+        ZStack {
             VStack(spacing: 2) {
                 if let level = viewModel.level {
                     Text("Level \(level.id)")
@@ -153,13 +142,24 @@ struct GameView: View {
                 }
             }
 
-            Spacer()
-
-            HStack(spacing: 8) {
-                if viewModel.timeRemaining > 0 {
-                    timerBadge
+            HStack {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(AppTheme.textSecondary)
+                        .frame(width: 40, height: 40)
+                        .glassCard(cornerRadius: 10)
                 }
-                attemptsBadge
+                .accessibilityLabel("Back")
+
+                Spacer()
+
+                HStack(spacing: 8) {
+                    if viewModel.timeRemaining > 0 {
+                        timerBadge
+                    }
+                    attemptsBadge
+                }
             }
         }
         .padding(.horizontal, 16)
@@ -537,8 +537,6 @@ struct GameView: View {
 
             revealedCodeRow
 
-            lieRevealSection
-
             resultButtons
         }
     }
@@ -559,8 +557,6 @@ struct GameView: View {
                 .foregroundStyle(AppTheme.textSecondary)
 
             revealedCodeRow
-
-            lieRevealSection
 
             resultButtons
         }
