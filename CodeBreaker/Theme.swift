@@ -170,7 +170,7 @@ struct FeedbackDotView: View {
                     Rectangle().stroke(Color(white: 0.55), lineWidth: 1.5)
                 }
             }
-            .frame(width: size * 0.6, height: size * 0.6)
+            .frame(width: size * 0.8, height: size * 0.8)
         }
     }
 }
