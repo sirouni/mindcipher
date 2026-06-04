@@ -228,15 +228,20 @@ class GameViewModel: ObservableObject {
 
         let correctColor = secretCode[bestPos]
         let wrongColors = availableColors.filter { $0 != correctColor && notes[bestPos][$0] != .eliminated }
+        let totalPossible = wrongColors.count + 1 // +1 for the correct color
 
-        // If there are many wrong colors unmarked, eliminate some (up to half)
-        if wrongColors.count > 2 {
-            let eliminateCount = max(2, wrongColors.count / 2)
+        // Ensure at least 3 possibilities remain after elimination (keeps it challenging)
+        let maxEliminate = max(0, totalPossible - 3)
+
+        if maxEliminate >= 1 && wrongColors.count > 1 {
+            let eliminateCount = min(maxEliminate, max(1, wrongColors.count / 3))
             let toEliminate = Array(wrongColors.shuffled().prefix(eliminateCount))
             return .eliminateFromPosition(position: bestPos, colors: toEliminate)
-        } else {
-            // Few options left — just confirm the right one
+        } else if wrongColors.count == 1 || totalPossible <= 3 {
             return .confirmPosition(position: bestPos, color: correctColor)
+        } else {
+            let toEliminate = Array(wrongColors.shuffled().prefix(1))
+            return .eliminateFromPosition(position: bestPos, colors: toEliminate)
         }
     }
 
