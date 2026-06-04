@@ -7,6 +7,11 @@ enum GamePhase: Equatable {
     case lost
 }
 
+enum NoteMarker: Equatable {
+    case eliminated
+    case confirmed
+}
+
 @MainActor
 class GameViewModel: ObservableObject {
     @Published var engine: GameEngine!
@@ -18,7 +23,10 @@ class GameViewModel: ObservableObject {
     @Published var showSecret: Bool = false
     @Published var timeRemaining: Int = 0
     @Published var shakeGuessRow: Bool = false
-    
+
+    // Notes system: [position: [color: marker]]
+    @Published var notes: [[PegColor: NoteMarker]] = []
+    @Published var showNotes: Bool = false
 
     var mode: GameMode = .freePlay
     var level: Level?
@@ -36,6 +44,30 @@ class GameViewModel: ObservableObject {
     }
 
     var eliminatedColors: Set<PegColor> { [] }
+
+    // MARK: - Notes
+
+    func toggleNote(position: Int, color: PegColor) {
+        guard position < notes.count else { return }
+        let current = notes[position][color]
+        switch current {
+        case nil:
+            notes[position][color] = .eliminated
+        case .eliminated:
+            notes[position][color] = .confirmed
+        case .confirmed:
+            notes[position][color] = nil
+        }
+    }
+
+    func noteMarker(position: Int, color: PegColor) -> NoteMarker? {
+        guard position < notes.count else { return nil }
+        return notes[position][color]
+    }
+
+    func clearAllNotes() {
+        notes = Array(repeating: [:], count: codeLength)
+    }
 
     func startGame(level: Level) {
         self.level = level
@@ -113,6 +145,8 @@ class GameViewModel: ObservableObject {
         
         showSecret = false
         shakeGuessRow = false
+        notes = Array(repeating: [:], count: codeLength)
+        showNotes = false
     }
 
     func selectColor(_ color: PegColor) {

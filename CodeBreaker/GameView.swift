@@ -25,7 +25,17 @@ struct GameView: View {
                 topBar
                 feedbackLegend
                 Divider().overlay(AppTheme.textMuted.opacity(0.3)).padding(.horizontal)
-                guessBoard
+
+                ZStack(alignment: .top) {
+                    guessBoard
+
+                    if viewModel.showNotes {
+                        NotesGridView(viewModel: viewModel)
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                            .padding(.top, 6)
+                    }
+                }
+
                 Spacer(minLength: 8)
                 VStack(spacing: 0) {
                     currentGuessRow
@@ -416,7 +426,8 @@ struct GameView: View {
     }
 
     private func colorButton(_ color: PegColor, size: CGFloat) -> some View {
-        Button {
+        let marker = viewModel.noteMarker(position: viewModel.selectedSlot, color: color)
+        return Button {
             SoundManager.shared.playPlace()
             viewModel.selectColor(color)
         } label: {
@@ -425,6 +436,19 @@ struct GameView: View {
                     Circle()
                         .stroke(Color.black.opacity(0.08), lineWidth: 1)
                 )
+                .overlay {
+                    if marker == .eliminated {
+                        Circle()
+                            .fill(Color.white.opacity(0.6))
+                        Image(systemName: "xmark")
+                            .font(.system(size: size * 0.35, weight: .bold))
+                            .foregroundStyle(AppTheme.danger.opacity(0.8))
+                    } else if marker == .confirmed {
+                        Circle()
+                            .stroke(AppTheme.accent, lineWidth: 2.5)
+                            .frame(width: size + 4, height: size + 4)
+                    }
+                }
         }
         .disabled(viewModel.phase != .playing)
         .accessibilityLabel(color.displayName)
@@ -433,7 +457,7 @@ struct GameView: View {
     // MARK: - Action Bar
 
     private var actionBar: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             Button {
                 SoundManager.shared.playTap()
                 for i in 0..<viewModel.codeLength {
@@ -442,12 +466,30 @@ struct GameView: View {
                 viewModel.selectedSlot = 0
             } label: {
                 Image(systemName: "arrow.counterclockwise")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(AppTheme.textSecondary)
-                    .frame(width: 50, height: 50)
+                    .frame(width: 44, height: 50)
                     .glassCard(cornerRadius: 12)
             }
             .disabled(viewModel.phase != .playing)
+
+            Button {
+                SoundManager.shared.playTap()
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                    viewModel.showNotes.toggle()
+                }
+            } label: {
+                Image(systemName: viewModel.showNotes ? "note.text" : "note.text.badge.plus")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(viewModel.showNotes ? AppTheme.accent : AppTheme.textSecondary)
+                    .frame(width: 44, height: 50)
+                    .glassCard(cornerRadius: 12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(viewModel.showNotes ? AppTheme.accent.opacity(0.4) : .clear, lineWidth: 1.5)
+                    )
+            }
+            .accessibilityLabel("Notes")
 
             Button {
                 SoundManager.shared.playSubmit()
@@ -471,9 +513,9 @@ struct GameView: View {
 
             Button { shareImage() } label: {
                 Image(systemName: "square.and.arrow.up")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(AppTheme.textSecondary)
-                    .frame(width: 50, height: 50)
+                    .frame(width: 44, height: 50)
                     .glassCard(cornerRadius: 12)
             }
             .accessibilityLabel("Share")
@@ -996,6 +1038,139 @@ struct GuessRowView: View {
                     }
                 }
             }
+        }
+    }
+}
+
+// MARK: - Notes Grid View
+
+struct NotesGridView: View {
+    @ObservedObject var viewModel: GameViewModel
+
+    private var cellSize: CGFloat {
+        let positions = viewModel.codeLength
+        let columns = positions + 1
+        let availableWidth = UIScreen.main.bounds.width - 44
+        let maxCell = availableWidth / CGFloat(columns)
+        return min(maxCell, 48).rounded(.down)
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            header
+            Divider().padding(.horizontal, 12)
+            gridContent
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.white.opacity(0.95))
+                .shadow(color: .black.opacity(0.08), radius: 8, y: 2)
+        )
+        .padding(.horizontal, 12)
+    }
+
+    private var header: some View {
+        HStack {
+            Image(systemName: "note.text")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(AppTheme.accent)
+            Text("Notes")
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(AppTheme.textPrimary)
+
+            Spacer()
+
+            Button {
+                SoundManager.shared.playTap()
+                viewModel.clearAllNotes()
+            } label: {
+                Text("Clear")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color(white: 0.94), in: Capsule())
+            }
+
+            Button {
+                withAnimation(.easeOut(duration: 0.2)) {
+                    viewModel.showNotes = false
+                }
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(AppTheme.textMuted)
+                    .frame(width: 28, height: 28)
+                    .background(Color(white: 0.94), in: Circle())
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+    }
+
+    private var gridContent: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                Color.clear.frame(width: cellSize, height: 24)
+                ForEach(0..<viewModel.codeLength, id: \.self) { pos in
+                    Text("P\(pos + 1)")
+                        .font(.system(size: 13, weight: .bold, design: .monospaced))
+                        .foregroundStyle(AppTheme.textMuted)
+                        .frame(width: cellSize, height: 24)
+                }
+            }
+
+            ForEach(viewModel.availableColors) { color in
+                HStack(spacing: 0) {
+                    PegView(color: color, size: cellSize - 6)
+                        .frame(width: cellSize, height: cellSize)
+
+                    ForEach(0..<viewModel.codeLength, id: \.self) { pos in
+                        noteCell(position: pos, color: color)
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 8)
+    }
+
+    private func noteCell(position: Int, color: PegColor) -> some View {
+        let marker = viewModel.noteMarker(position: position, color: color)
+        return Button {
+            SoundManager.shared.playTap()
+            withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
+                viewModel.toggleNote(position: position, color: color)
+            }
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 7)
+                    .fill(cellBackground(marker))
+                    .frame(width: cellSize - 4, height: cellSize - 4)
+
+                switch marker {
+                case .eliminated:
+                    Image(systemName: "xmark")
+                        .font(.system(size: cellSize * 0.38, weight: .bold))
+                        .foregroundStyle(AppTheme.danger)
+                case .confirmed:
+                    Image(systemName: "checkmark")
+                        .font(.system(size: cellSize * 0.38, weight: .bold))
+                        .foregroundStyle(AppTheme.accent)
+                case nil:
+                    EmptyView()
+                }
+            }
+            .frame(width: cellSize, height: cellSize)
+        }
+        .disabled(viewModel.phase != .playing)
+    }
+
+    private func cellBackground(_ marker: NoteMarker?) -> Color {
+        switch marker {
+        case .eliminated: return AppTheme.danger.opacity(0.1)
+        case .confirmed: return AppTheme.accent.opacity(0.12)
+        case nil: return Color(white: 0.96)
         }
     }
 }
