@@ -643,10 +643,45 @@ struct GameView: View {
 
             starsDisplay(attempts: attempts)
 
+            hintCoinProgress
+
             revealedCodeRow
 
             resultButtons
         }
+    }
+
+    private var hintCoinProgress: some View {
+        let wins = hintCoinManager.winsTowardsCoin
+        let needed = HintCoinManager.winsPerCoin
+        let justEarned = wins == 0 && hintCoinManager.coins > 0
+
+        return HStack(spacing: 8) {
+            Image(systemName: "lightbulb.fill")
+                .font(.system(size: 13))
+                .foregroundStyle(AppTheme.warning)
+
+            if justEarned {
+                Text("+1 Hint Coin!")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(AppTheme.warning)
+            } else {
+                Text("\(wins)/\(needed) wins to next coin")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
+
+                HStack(spacing: 3) {
+                    ForEach(0..<needed, id: \.self) { i in
+                        Circle()
+                            .fill(i < wins ? AppTheme.warning : AppTheme.textMuted.opacity(0.3))
+                            .frame(width: 8, height: 8)
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .glassCard(cornerRadius: 10)
     }
 
     private var loseContent: some View {
