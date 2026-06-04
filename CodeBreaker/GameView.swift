@@ -931,33 +931,17 @@ struct GameView: View {
     }
 
     private func shareChallengeLink() {
-        let code = viewModel.secretCode
-        let colorCount = viewModel.availableColors.count
-        let maxAttempts = viewModel.maxAttempts
-        let codeLength = viewModel.codeLength
-        let allowDuplicates = Set(code).count < code.count
+        guard let engine = viewModel.engine else { return }
         let playerName = GKLocalPlayer.local.isAuthenticated ? GKLocalPlayer.local.displayName : "Agent"
 
-        // Encode code into a seed-like token: XOR with a fixed key to obfuscate
-        let key: UInt64 = 0xC0DE_B4EA_4E72_9A1B
-        var raw: UInt64 = 0
-        for (i, peg) in code.enumerated() {
-            raw |= UInt64(peg.rawValue) << (i * 4)
-        }
-        let token = raw ^ key
-
-        var components = URLComponents()
-        components.scheme = "codebreaker"
-        components.host = "challenge"
-        components.queryItems = [
-            URLQueryItem(name: "t", value: "\(token)"),
-            URLQueryItem(name: "l", value: "\(codeLength)"),
-            URLQueryItem(name: "c", value: "\(colorCount)"),
-            URLQueryItem(name: "a", value: "\(maxAttempts)"),
-            URLQueryItem(name: "d", value: allowDuplicates ? "1" : "0"),
-            URLQueryItem(name: "f", value: playerName),
-        ]
-        let url = components.url!
+        let url = ChallengeManager.shared.generateChallengeURL(
+            seed: engine.seed,
+            codeLength: engine.codeLength,
+            colorCount: engine.availableColors.count,
+            allowDuplicates: viewModel.lastDifficulty.allowDuplicates,
+            maxAttempts: engine.maxAttempts,
+            playerName: playerName
+        )
 
         let text = "I cracked this code — can you?\n\(url.absoluteString)"
         let av = UIActivityViewController(activityItems: [text], applicationActivities: nil)

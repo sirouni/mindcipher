@@ -47,14 +47,11 @@ struct Challenge: Identifiable {
     let allowDuplicates: Bool
     let maxAttempts: Int
     let fromName: String
-    var decodedCode: [PegColor]?
 }
 
 class ChallengeManager: ObservableObject {
     static let shared = ChallengeManager()
     @Published var pendingChallenge: Challenge?
-
-    private static let obfuscationKey: UInt64 = 0xC0DE_B4EA_4E72_9A1B
 
     func handleURL(_ url: URL) {
         guard url.scheme == "codebreaker",
@@ -62,8 +59,8 @@ class ChallengeManager: ObservableObject {
               let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let items = components.queryItems else { return }
 
-        guard let tokenStr = items.first(where: { $0.name == "t" })?.value,
-              let token = UInt64(tokenStr) else { return }
+        guard let seedStr = items.first(where: { $0.name == "s" })?.value,
+              let seed = UInt64(seedStr), seed != 0 else { return }
 
         let len = Int(items.first { $0.name == "l" }?.value ?? "4") ?? 4
         let colors = Int(items.first { $0.name == "c" }?.value ?? "6") ?? 6
@@ -71,25 +68,32 @@ class ChallengeManager: ObservableObject {
         let dup = (items.first { $0.name == "d" }?.value ?? "0") == "1"
         let from = items.first { $0.name == "f" }?.value ?? "A friend"
 
-        let raw = token ^ Self.obfuscationKey
-        var code: [PegColor] = []
-        for i in 0..<len {
-            let val = Int((raw >> (i * 4)) & 0xF)
-            guard val < PegColor.allCases.count else { return }
-            code.append(PegColor(rawValue: val)!)
-        }
-
         DispatchQueue.main.async {
             self.pendingChallenge = Challenge(
-                seed: 0,
+                seed: seed,
                 codeLength: len,
                 colorCount: colors,
                 allowDuplicates: dup,
                 maxAttempts: attempts,
-                fromName: from,
-                decodedCode: code
+                fromName: from
             )
         }
+    }
+
+    func generateChallengeURL(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, playerName: String) -> URL {
+        let name = playerName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "Agent"
+        var components = URLComponents()
+        components.scheme = "codebreaker"
+        components.host = "challenge"
+        components.queryItems = [
+            URLQueryItem(name: "s", value: "\(seed)"),
+            URLQueryItem(name: "l", value: "\(codeLength)"),
+            URLQueryItem(name: "c", value: "\(colorCount)"),
+            URLQueryItem(name: "a", value: "\(maxAttempts)"),
+            URLQueryItem(name: "d", value: allowDuplicates ? "1" : "0"),
+            URLQueryItem(name: "f", value: name),
+        ]
+        return components.url!
     }
 }
 
@@ -160,21 +164,13 @@ struct ChallengeGameView: View {
                     Spacer()
 
                     Button {
-                        if let code = challenge.decodedCode {
-                            viewModel.startDuel(
-                                secretCode: code,
-                                colorCount: challenge.colorCount,
-                                maxAttempts: challenge.maxAttempts
-                            )
-                        } else {
-                            viewModel.startChallenge(
-                                seed: challenge.seed,
-                                codeLength: challenge.codeLength,
-                                colorCount: challenge.colorCount,
-                                allowDuplicates: challenge.allowDuplicates,
-                                maxAttempts: challenge.maxAttempts
-                            )
-                        }
+                        viewModel.startChallenge(
+                            seed: challenge.seed,
+                            codeLength: challenge.codeLength,
+                            colorCount: challenge.colorCount,
+                            allowDuplicates: challenge.allowDuplicates,
+                            maxAttempts: challenge.maxAttempts
+                        )
                         started = true
                     } label: {
                         Text("Accept Challenge")

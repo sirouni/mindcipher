@@ -169,19 +169,23 @@ class GameEngine {
     let availableColors: [PegColor]
     let maxAttempts: Int
     let lieMode: Bool
+    let seed: UInt64
     private(set) var lieUsed: Bool = false
     private(set) var lieAtGuess: Int? = nil
     private var guessCount: Int = 0
     private let lieAttemptNumber: Int?
 
     init(codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false) {
+        let seed = UInt64.random(in: 1...UInt64.max)
+        self.seed = seed
         self.codeLength = codeLength
         self.maxAttempts = maxAttempts
         self.lieMode = lieMode
         self.availableColors = Array(PegColor.allCases.prefix(colorCount))
 
+        var rng = SeededRNG(seed: seed)
+
         if lieMode {
-            // 谎言分配在普通模式最优求解步数内，保证一定会被遇到
             let optimalSteps: Int
             switch codeLength {
             case 3: optimalSteps = 4
@@ -189,43 +193,11 @@ class GameEngine {
             case 5: optimalSteps = 8
             default: optimalSteps = 8
             }
-            self.lieAttemptNumber = Int.random(in: 1...max(1, optimalSteps - 1))
+            self.lieAttemptNumber = Int(rng.next() % UInt64(max(1, optimalSteps - 1))) + 1
         } else {
             self.lieAttemptNumber = nil
         }
 
-        if allowDuplicates {
-            self.secretCode = (0..<codeLength).map { _ in
-                PegColor.allCases[Int.random(in: 0..<colorCount)]
-            }
-        } else {
-            var pool = Array(PegColor.allCases.prefix(colorCount))
-            var code: [PegColor] = []
-            for _ in 0..<codeLength {
-                let idx = Int.random(in: 0..<pool.count)
-                code.append(pool.remove(at: idx))
-            }
-            self.secretCode = code
-        }
-    }
-
-    init(secretCode: [PegColor], colorCount: Int, maxAttempts: Int) {
-        self.secretCode = secretCode
-        self.codeLength = secretCode.count
-        self.availableColors = Array(PegColor.allCases.prefix(colorCount))
-        self.maxAttempts = maxAttempts
-        self.lieMode = false
-        self.lieAttemptNumber = nil
-    }
-
-    init(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int) {
-        self.codeLength = codeLength
-        self.maxAttempts = maxAttempts
-        self.lieMode = false
-        self.lieAttemptNumber = nil
-        self.availableColors = Array(PegColor.allCases.prefix(colorCount))
-
-        var rng = SeededRNG(seed: seed)
         if allowDuplicates {
             self.secretCode = (0..<codeLength).map { _ in
                 PegColor.allCases[Int(rng.next() % UInt64(colorCount))]
@@ -241,8 +213,51 @@ class GameEngine {
         }
     }
 
-    static func generateSeed() -> UInt64 {
-        UInt64.random(in: 1...UInt64.max)
+    init(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false) {
+        self.seed = seed
+        self.codeLength = codeLength
+        self.maxAttempts = maxAttempts
+        self.lieMode = lieMode
+        self.availableColors = Array(PegColor.allCases.prefix(colorCount))
+
+        var rng = SeededRNG(seed: seed)
+
+        if lieMode {
+            let optimalSteps: Int
+            switch codeLength {
+            case 3: optimalSteps = 4
+            case 4: optimalSteps = 6
+            case 5: optimalSteps = 8
+            default: optimalSteps = 8
+            }
+            self.lieAttemptNumber = Int(rng.next() % UInt64(max(1, optimalSteps - 1))) + 1
+        } else {
+            self.lieAttemptNumber = nil
+        }
+
+        if allowDuplicates {
+            self.secretCode = (0..<codeLength).map { _ in
+                PegColor.allCases[Int(rng.next() % UInt64(colorCount))]
+            }
+        } else {
+            var pool = Array(PegColor.allCases.prefix(colorCount))
+            var code: [PegColor] = []
+            for _ in 0..<codeLength {
+                let idx = Int(rng.next() % UInt64(pool.count))
+                code.append(pool.remove(at: idx))
+            }
+            self.secretCode = code
+        }
+    }
+
+    init(secretCode: [PegColor], colorCount: Int, maxAttempts: Int) {
+        self.secretCode = secretCode
+        self.codeLength = secretCode.count
+        self.availableColors = Array(PegColor.allCases.prefix(colorCount))
+        self.maxAttempts = maxAttempts
+        self.lieMode = false
+        self.lieAttemptNumber = nil
+        self.seed = 0
     }
 
     func evaluate(guess: [PegColor]) -> Feedback {
