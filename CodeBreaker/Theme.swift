@@ -133,7 +133,7 @@ struct PegView: View {
                 .shadow(color: AppTheme.pegColor(for: color).opacity(0.25), radius: size * 0.12, y: 1)
 
             Text(color.symbol)
-                .font(.system(size: size * 0.4, weight: .black, design: .rounded))
+                .font(.system(size: size * 0.6, weight: .black, design: .rounded))
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.3), radius: 1)
         }
