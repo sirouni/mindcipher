@@ -90,11 +90,11 @@ enum Difficulty: String, CaseIterable {
     var maxAttempts: Int {
         switch self {
         case .beginner: return 10
-        case .easy: return 8
-        case .medium: return 7
-        case .hard: return 8
-        case .expert: return 9
-        case .master: return 10
+        case .easy: return 9
+        case .medium: return 9
+        case .hard: return 10
+        case .expert: return 12
+        case .master: return 14
         }
     }
 
@@ -265,13 +265,19 @@ class LevelManager {
             (.beginner, 40), (.easy, 40), (.medium, 40),
             (.hard, 40), (.expert, 40), (.master, 40),
         ]
+        let minAttempts: [Difficulty: Int] = [
+            .beginner: 8, .easy: 8, .medium: 8,
+            .hard: 9, .expert: 10, .master: 12,
+        ]
         var id = 1
         for (diff, count) in configs {
+            let floor = minAttempts[diff] ?? (diff.codeLength + 2)
             for j in 0..<count {
                 let progress = Double(j) / Double(count)
                 var attempts = diff.maxAttempts
-                if progress > 0.5 { attempts = max(attempts - 1, diff.codeLength + 1) }
-                if progress > 0.8 { attempts = max(attempts - 1, diff.codeLength + 1) }
+                if progress > 0.5 { attempts -= 1 }
+                if progress > 0.8 { attempts -= 1 }
+                attempts = max(attempts, floor)
 
                 let timeLimit: Int
                 if diff.hasTimeLimit {
