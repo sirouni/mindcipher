@@ -3,10 +3,12 @@ import SwiftUI
 struct LevelSelectView: View {
     let levelManager = LevelManager.shared
     @ObservedObject var progress = ProgressManager.shared
+    @ObservedObject var store = StoreManager.shared
     @State private var selectedTier = 0
     @State private var startGame = false
     @State private var selectedLevel: Level?
     @State private var previewLevel: Level?
+    @State private var showPaywall = false
     @StateObject private var viewModel = GameViewModel()
 
     private var tiers: [[Level]] { levelManager.tiers }
@@ -226,25 +228,31 @@ struct LevelSelectView: View {
     private func levelCell(_ level: Level) -> some View {
         let isCompleted = progress.completedLevels.contains(level.id)
         let isUnlocked = progress.isUnlocked(level: level.id)
+        let isProLocked = store.isLevelLocked(level.id)
         let stars = progress.starsByLevel[level.id] ?? 0
         let isNext = !isCompleted && isUnlocked
 
         return Button {
-            guard isUnlocked else { return }
-            withAnimation(.spring(response: 0.3)) { previewLevel = level }
+            if isProLocked {
+                showPaywall = true
+            } else if isUnlocked {
+                withAnimation(.spring(response: 0.3)) { previewLevel = level }
+            }
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(
                         isCompleted ? AppTheme.accent.opacity(0.25) :
                         isNext ? AppTheme.accent.opacity(0.15) :
+                        isProLocked ? AppTheme.warning.opacity(0.08) :
                         AppTheme.bgCard.opacity(0.5)
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(
-                                isNext ? AppTheme.accent : 
+                                isNext ? AppTheme.accent :
                                 isCompleted ? AppTheme.accent.opacity(0.4) :
+                                isProLocked ? AppTheme.warning.opacity(0.3) :
                                 Color.black,
                                 lineWidth: isNext ? 2 : 1
                             )
@@ -253,7 +261,7 @@ struct LevelSelectView: View {
                 VStack(spacing: 3) {
                     Text("\(level.id)")
                         .font(.system(size: 18, weight: .black, design: .rounded))
-                        .foregroundStyle(isCompleted ? AppTheme.accent : AppTheme.textPrimary)
+                        .foregroundStyle(isCompleted ? AppTheme.accent : isProLocked ? AppTheme.textMuted : AppTheme.textPrimary)
                     if isCompleted {
                         HStack(spacing: 2) {
                             ForEach(0..<3, id: \.self) { i in
@@ -262,6 +270,10 @@ struct LevelSelectView: View {
                                     .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted.opacity(0.4))
                             }
                         }
+                    } else if isProLocked {
+                        Image(systemName: "crown.fill")
+                            .font(.system(size: 12))
+                            .foregroundStyle(AppTheme.warning)
                     } else if !isUnlocked {
                         Image(systemName: "lock.fill")
                             .font(.system(size: 14))
@@ -272,6 +284,9 @@ struct LevelSelectView: View {
             .frame(width: 56, height: 56)
         }
         .buttonStyle(.plain)
-        .disabled(!isUnlocked)
+        .disabled(!isUnlocked && !isProLocked)
+        .sheet(isPresented: $showPaywall) {
+            NavigationStack { StoreView() }
+        }
     }
 }

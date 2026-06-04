@@ -1,0 +1,79 @@
+{
+  "identifier" : "com.codebreaker.app.products",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "hints5",
+      "localizations" : [
+        {
+          "description" : "A small pack of hints",
+          "displayName" : "5 Hint Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.codebreaker.app.hints5",
+      "referenceName" : "5 Hint Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "hints15",
+      "localizations" : [
+        {
+          "description" : "Best value for casual players",
+          "displayName" : "15 Hint Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.codebreaker.app.hints15",
+      "referenceName" : "15 Hint Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "hints50",
+      "localizations" : [
+        {
+          "description" : "Never run out of hints",
+          "displayName" : "50 Hint Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.codebreaker.app.hints50",
+      "referenceName" : "50 Hint Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : true,
+      "internalID" : "pro",
+      "localizations" : [
+        {
+          "description" : "Unlock all 240 levels in Classic and Lie campaigns",
+          "displayName" : "Pro Unlock",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.codebreaker.app.pro",
+      "referenceName" : "Pro Unlock",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "app",
+    "_developerTeamID" : "JR6MLGD7C8"
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

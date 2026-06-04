@@ -427,7 +427,10 @@ class ProgressManager: ObservableObject {
     }
 
     func isUnlocked(level: Int) -> Bool {
-        level == 1 || completedLevels.contains(level - 1)
+        if level > StoreManager.freeLevelCap && !UserDefaults.standard.bool(forKey: "store_is_pro") {
+            return false
+        }
+        return level == 1 || completedLevels.contains(level - 1)
     }
 
     var totalStars: Int {

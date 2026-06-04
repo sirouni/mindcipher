@@ -10,6 +10,7 @@ struct HomeView: View {
     @State private var showLieMode = false
     @State private var showAchievements = false
     @State private var showTutorial = false
+    @State private var showStore = false
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var titleScale: CGFloat = 0.8
     @State private var titleOpacity: Double = 0
@@ -47,6 +48,9 @@ struct HomeView: View {
             }
             .navigationDestination(isPresented: $showSettings) {
                 SettingsView()
+            }
+            .navigationDestination(isPresented: $showStore) {
+                StoreView()
             }
             .navigationDestination(isPresented: $showDaily) {
                 DailyChallengeView()
@@ -104,6 +108,12 @@ struct HomeView: View {
                         .frame(width: 44, height: 44)
                 }
                 Spacer()
+                Button { showStore = true } label: {
+                    Image(systemName: "bag.fill")
+                        .font(.system(size: 20))
+                        .foregroundStyle(AppTheme.warning)
+                        .frame(width: 44, height: 44)
+                }
                 Button { showSettings = true } label: {
                     Image(systemName: "gearshape.fill")
                         .font(.system(size: 24))
