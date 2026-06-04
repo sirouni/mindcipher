@@ -168,7 +168,7 @@ struct FeedbackDotView: View {
                     FeedbackTriangle().fill(AppTheme.warning)
                 case .miss:
                     Image(systemName: "xmark")
-                        .font(.system(size: size * 0.7, weight: .black))
+                        .font(.system(size: size * 0.9, weight: .black))
                         .foregroundStyle(Color.black)
                 }
             }
