@@ -111,24 +111,25 @@ struct HomeView: View {
                         .frame(width: 44, height: 44)
                 }
             }
+            .padding(.top, 30)
 
             ZStack {
                 Circle()
                     .stroke(AppTheme.accent.opacity(0.12), lineWidth: 1)
-                    .frame(width: 100, height: 100)
+                    .frame(width: 70, height: 70)
 
                 radarSweep
-                    .frame(width: 100, height: 100)
+                    .frame(width: 70, height: 70)
 
                 Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 36))
+                    .font(.system(size: 28))
                     .foregroundStyle(AppTheme.accent)
-                    .shadow(color: AppTheme.accent.opacity(0.5), radius: 15)
+                    .shadow(color: AppTheme.accent.opacity(0.5), radius: 10)
             }
             .scaleEffect(titleScale)
             .opacity(titleOpacity)
 
-            VStack(spacing: 4) {
+            VStack(spacing: 3) {
                 Text(L("app.title"))
                     .font(.system(size: 26, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
