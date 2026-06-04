@@ -58,7 +58,7 @@ struct SettingsView: View {
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
                 toggleRow(icon: "iphone.radiowaves.left.and.right", title: "Haptics", isOn: $settings.hapticsEnabled)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                toggleRow(icon: "eye.trianglebadge.exclamationmark", title: "Colorblind", isOn: $settings.colorBlindMode)
+                
             }
             .glassCard(cornerRadius: 14)
         }
