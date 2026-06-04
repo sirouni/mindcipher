@@ -272,14 +272,13 @@ struct TutorialView: View {
                 .glassCard(cornerRadius: 8)
 
                 HStack(spacing: 6) {
-                    Text("4").font(.system(size: 11, weight: .bold, design: .monospaced)).foregroundStyle(AppTheme.textMuted).frame(width: 16)
+                    Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10)).foregroundStyle(AppTheme.danger)
                     PegView(color: .red, size: 26); PegView(color: .green, size: 26); PegView(color: .blue, size: 26); PegView(color: .yellow, size: 26)
                     Spacer()
                     FeedbackDotView(type: .partial, size: 16)
                     FeedbackDotView(type: .partial, size: 16)
                     FeedbackDotView(type: .miss, size: 16)
                     FeedbackDotView(type: .miss, size: 16)
-                    Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10)).foregroundStyle(AppTheme.danger)
                 }
                 .padding(8)
                 .background(RoundedRectangle(cornerRadius: 8).fill(AppTheme.danger.opacity(0.1)).overlay(RoundedRectangle(cornerRadius: 8).stroke(AppTheme.danger.opacity(0.3), lineWidth: 1)))
