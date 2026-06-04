@@ -289,8 +289,8 @@ struct TutorialView: View {
             VStack(alignment: .leading, spacing: 6) {
                 iconRuleRow("theatermask.and.paintbrush.fill", "Exactly 1 feedback is fake")
                 iconRuleRow("magnifyingglass", "Lie differs from truth by ≤1")
-                iconRuleRow("checkmark.shield.fill", "No lie when you guess correctly")
-                iconRuleRow("doc.text.magnifyingglass", "Reveals which step was a lie")
+                iconRuleRow("checkmark.shield.fill", "The winning guess is always truthful")
+                iconRuleRow("brain.head.profile", "Figure out which feedback was fake")
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
