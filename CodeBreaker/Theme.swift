@@ -132,12 +132,10 @@ struct PegView: View {
                 .frame(width: size, height: size)
                 .shadow(color: AppTheme.pegColor(for: color).opacity(0.25), radius: size * 0.12, y: 1)
 
-            if AppSettings.shared.colorBlindMode {
-                Text(color.symbol)
-                    .font(.system(size: size * 0.4, weight: .black, design: .rounded))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.3), radius: 1)
-            }
+            Text(color.symbol)
+                .font(.system(size: size * 0.4, weight: .black, design: .rounded))
+                .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.3), radius: 1)
         }
     }
 }
@@ -148,31 +146,7 @@ struct FeedbackDotView: View {
     let type: FeedbackType
     let size: CGFloat
 
-    private var isColorBlind: Bool { AppSettings.shared.colorBlindMode }
-
     var body: some View {
-        if isColorBlind {
-            colorBlindShape
-        } else {
-            normalDot
-        }
-    }
-
-    private var normalDot: some View {
-        Group {
-            switch type {
-            case .exact:
-                Circle().fill(AppTheme.accent).frame(width: size, height: size)
-            case .partial:
-                Circle().fill(AppTheme.warning).frame(width: size, height: size)
-            case .miss:
-                Circle().stroke(Color(white: 0.75), lineWidth: 1).frame(width: size, height: size)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var colorBlindShape: some View {
         switch type {
         case .exact:
             Circle()
