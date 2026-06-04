@@ -42,6 +42,7 @@ class GameViewModel: ObservableObject {
     var lastDifficulty: Difficulty = .easy
     var isDailyChallenge: Bool = false
     var gameStartTime: Date?
+    var gameSeed: UInt64?
     private var timer: Timer?
 
     var codeLength: Int { engine?.codeLength ?? 4 }
@@ -167,6 +168,20 @@ class GameViewModel: ObservableObject {
         engine = GameEngine(
             secretCode: secretCode,
             colorCount: colorCount,
+            maxAttempts: maxAttempts
+        )
+        resetState()
+    }
+
+    func startChallenge(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int) {
+        self.level = nil
+        self.mode = .duel
+        self.gameSeed = seed
+        engine = GameEngine(
+            seed: seed,
+            codeLength: codeLength,
+            colorCount: colorCount,
+            allowDuplicates: allowDuplicates,
             maxAttempts: maxAttempts
         )
         resetState()

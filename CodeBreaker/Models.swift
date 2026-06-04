@@ -1,5 +1,20 @@
 import Foundation
 
+struct SeededRNG: RandomNumberGenerator {
+    private var state: UInt64
+
+    init(seed: UInt64) {
+        state = seed == 0 ? 1 : seed
+    }
+
+    mutating func next() -> UInt64 {
+        state ^= state << 13
+        state ^= state >> 7
+        state ^= state << 17
+        return state
+    }
+}
+
 enum PegColor: Int, CaseIterable, Codable, Identifiable {
     case red, green, blue, yellow, purple, orange, cyan, pink
 
@@ -201,6 +216,33 @@ class GameEngine {
         self.maxAttempts = maxAttempts
         self.lieMode = false
         self.lieAttemptNumber = nil
+    }
+
+    init(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int) {
+        self.codeLength = codeLength
+        self.maxAttempts = maxAttempts
+        self.lieMode = false
+        self.lieAttemptNumber = nil
+        self.availableColors = Array(PegColor.allCases.prefix(colorCount))
+
+        var rng = SeededRNG(seed: seed)
+        if allowDuplicates {
+            self.secretCode = (0..<codeLength).map { _ in
+                PegColor.allCases[Int(rng.next() % UInt64(colorCount))]
+            }
+        } else {
+            var pool = Array(PegColor.allCases.prefix(colorCount))
+            var code: [PegColor] = []
+            for _ in 0..<codeLength {
+                let idx = Int(rng.next() % UInt64(pool.count))
+                code.append(pool.remove(at: idx))
+            }
+            self.secretCode = code
+        }
+    }
+
+    static func generateSeed() -> UInt64 {
+        UInt64.random(in: 1...UInt64.max)
     }
 
     func evaluate(guess: [PegColor]) -> Feedback {
