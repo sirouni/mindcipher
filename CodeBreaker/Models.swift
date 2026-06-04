@@ -105,12 +105,7 @@ enum Difficulty: String, CaseIterable {
         }
     }
 
-    var hasTimeLimit: Bool {
-        switch self {
-        case .expert, .master: return true
-        default: return false
-        }
-    }
+    var hasTimeLimit: Bool { false }
 
     var timeLimitSeconds: Int { 0 }
 }

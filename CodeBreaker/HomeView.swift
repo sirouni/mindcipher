@@ -293,7 +293,7 @@ struct HomeView: View {
         .padding(.vertical, 14)
         .padding(.horizontal, 20)
         .glassCard(cornerRadius: 20)
-        .padding(.bottom, 8)
+        .padding(.bottom, 20)
         .opacity(titleOpacity)
     }
 
