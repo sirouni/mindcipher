@@ -364,8 +364,15 @@ struct GameView: View {
         .modifier(ShakeModifier(trigger: viewModel.shakeGuessRow))
     }
 
+    private func confirmedColor(for position: Int) -> PegColor? {
+        guard position < viewModel.notes.count else { return nil }
+        let confirmed = viewModel.availableColors.filter { viewModel.notes[position][$0] == .confirmed }
+        return confirmed.count == 1 ? confirmed.first : nil
+    }
+
     private func currentSlot(index: Int) -> some View {
         let isSelected = index == viewModel.selectedSlot && viewModel.phase == .playing
+        let hintColor = confirmedColor(for: index)
         return ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .fill(isSelected ? Color.white : Color.white.opacity(0.7))
@@ -382,6 +389,9 @@ struct GameView: View {
             if let color = viewModel.currentGuess[index] {
                 PegView(color: color, size: pegSize)
                     .transition(.scale.combined(with: .opacity))
+            } else if let hint = hintColor {
+                PegView(color: hint, size: pegSize)
+                    .opacity(0.35)
             } else if isSelected {
                 Circle()
                     .stroke(AppTheme.accent.opacity(0.4), style: StrokeStyle(lineWidth: 2, dash: [4, 4]))
@@ -427,6 +437,7 @@ struct GameView: View {
 
     private func colorButton(_ color: PegColor, size: CGFloat) -> some View {
         let marker = viewModel.noteMarker(position: viewModel.selectedSlot, color: color)
+        let isEliminated = marker == .eliminated
         return Button {
             SoundManager.shared.playPlace()
             viewModel.selectColor(color)
@@ -437,7 +448,7 @@ struct GameView: View {
                         .stroke(Color.black.opacity(0.08), lineWidth: 1)
                 )
                 .overlay {
-                    if marker == .eliminated {
+                    if isEliminated {
                         Circle()
                             .fill(Color.white.opacity(0.6))
                         Image(systemName: "xmark")
@@ -450,7 +461,7 @@ struct GameView: View {
                     }
                 }
         }
-        .disabled(viewModel.phase != .playing)
+        .disabled(viewModel.phase != .playing || isEliminated)
         .accessibilityLabel(color.displayName)
     }
 
