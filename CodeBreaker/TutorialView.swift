@@ -26,26 +26,26 @@ struct TutorialView: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
 
-                Spacer()
-
-                Group {
-                    switch page {
-                    case 0: goalPage
-                    case 1: pickPage
-                    case 2: feedbackPage
-                    case 3: liePage
-                    default: tipsPage
-                    }
+                TabView(selection: $page) {
+                    goalPage.tag(0)
+                    pickPage.tag(1)
+                    feedbackPage.tag(2)
+                    liePage.tag(3)
+                    tipsPage.tag(4)
+                    Color.clear.tag(5)
                 }
-                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-
-                Spacer()
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(.spring(response: 0.3), value: page)
+                .onChange(of: page) { _, newPage in
+                    if newPage >= totalPages { dismiss() }
+                }
 
                 HStack(spacing: 6) {
                     ForEach(0..<totalPages, id: \.self) { i in
                         Circle()
                             .fill(i == page ? AppTheme.accent : AppTheme.textMuted.opacity(0.3))
                             .frame(width: 8, height: 8)
+                            .animation(.easeInOut(duration: 0.2), value: page)
                     }
                 }
 

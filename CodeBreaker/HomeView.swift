@@ -20,20 +20,22 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                AppTheme.bgGradient.ignoresSafeArea()
-                ScanlineEffect().ignoresSafeArea().opacity(0.5)
-
-                VStack(spacing: 0) {
-                    Spacer().frame(height: 20)
-                    headerSection
-                    Spacer().frame(height: 12)
-                    menuSection
-                    Spacer()
-                    statsBar
-                }
-                .padding(.horizontal, 24)
+            VStack(spacing: 0) {
+                headerSection
+                Spacer().frame(height: 12)
+                menuSection
+                Spacer(minLength: 8)
+                statsBar
+                    .padding(.bottom, 10)
             }
+            .padding(.horizontal, 24)
+            .background(
+                ZStack {
+                    AppTheme.bgGradient
+                    ScanlineEffect().opacity(0.5)
+                }
+                .ignoresSafeArea()
+            )
             .navigationDestination(isPresented: $showLevels) {
                 LevelSelectView()
             }
@@ -293,7 +295,6 @@ struct HomeView: View {
         .padding(.vertical, 14)
         .padding(.horizontal, 20)
         .glassCard(cornerRadius: 20)
-        .padding(.bottom, 20)
         .opacity(titleOpacity)
     }
 
