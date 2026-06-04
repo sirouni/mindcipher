@@ -167,7 +167,7 @@ struct LieLevelSelectView: View {
                             .stroke(
                                 isNext ? AppTheme.danger :
                                 isCompleted ? AppTheme.danger.opacity(0.4) :
-                                Color.black.opacity(0.3),
+                                Color.black,
                                 lineWidth: isNext ? 2 : 1
                             )
                     )
