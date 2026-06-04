@@ -259,28 +259,26 @@ struct TutorialView: View {
                 .foregroundStyle(AppTheme.danger)
 
             VStack(spacing: 10) {
-                // 正常反馈行
                 HStack(spacing: 6) {
                     Text("3").font(.system(size: 11, weight: .bold, design: .monospaced)).foregroundStyle(AppTheme.textMuted).frame(width: 16)
                     PegView(color: .blue, size: 26); PegView(color: .red, size: 26); PegView(color: .yellow, size: 26); PegView(color: .green, size: 26)
                     Spacer()
-                    Circle().fill(AppTheme.accent).frame(width: 8, height: 8)
-                    Circle().fill(AppTheme.warning).frame(width: 8, height: 8)
-                    Circle().stroke(AppTheme.textMuted, lineWidth: 1).frame(width: 8, height: 8)
-                    Circle().stroke(AppTheme.textMuted, lineWidth: 1).frame(width: 8, height: 8)
+                    FeedbackDotView(type: .exact, size: 16)
+                    FeedbackDotView(type: .partial, size: 16)
+                    FeedbackDotView(type: .miss, size: 16)
+                    FeedbackDotView(type: .miss, size: 16)
                 }
                 .padding(8)
                 .glassCard(cornerRadius: 8)
 
-                // 谎言反馈行（红色高亮）
                 HStack(spacing: 6) {
                     Text("4").font(.system(size: 11, weight: .bold, design: .monospaced)).foregroundStyle(AppTheme.textMuted).frame(width: 16)
                     PegView(color: .red, size: 26); PegView(color: .green, size: 26); PegView(color: .blue, size: 26); PegView(color: .yellow, size: 26)
                     Spacer()
-                    Circle().fill(AppTheme.warning).frame(width: 8, height: 8)
-                    Circle().fill(AppTheme.warning).frame(width: 8, height: 8)
-                    Circle().stroke(AppTheme.textMuted, lineWidth: 1).frame(width: 8, height: 8)
-                    Circle().stroke(AppTheme.textMuted, lineWidth: 1).frame(width: 8, height: 8)
+                    FeedbackDotView(type: .partial, size: 16)
+                    FeedbackDotView(type: .partial, size: 16)
+                    FeedbackDotView(type: .miss, size: 16)
+                    FeedbackDotView(type: .miss, size: 16)
                     Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10)).foregroundStyle(AppTheme.danger)
                 }
                 .padding(8)
