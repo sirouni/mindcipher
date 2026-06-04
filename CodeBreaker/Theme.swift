@@ -146,21 +146,32 @@ struct FeedbackDotView: View {
     let type: FeedbackType
     let size: CGFloat
 
-    var body: some View {
-        Group {
-            switch type {
-            case .exact:
-                Circle()
-                    .fill(AppTheme.accent)
-            case .partial:
-                FeedbackTriangle()
-                    .fill(AppTheme.warning)
-            case .miss:
-                Rectangle()
-                    .stroke(Color(white: 0.6), lineWidth: 1.5)
-            }
+    private var bgColor: Color {
+        switch type {
+        case .exact: return AppTheme.accent.opacity(0.15)
+        case .partial: return AppTheme.warning.opacity(0.15)
+        case .miss: return Color(white: 0.88)
         }
-        .frame(width: size, height: size)
+    }
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(bgColor)
+                .frame(width: size, height: size)
+
+            Group {
+                switch type {
+                case .exact:
+                    Circle().fill(AppTheme.accent)
+                case .partial:
+                    FeedbackTriangle().fill(AppTheme.warning)
+                case .miss:
+                    Rectangle().stroke(Color(white: 0.55), lineWidth: 1.5)
+                }
+            }
+            .frame(width: size * 0.6, height: size * 0.6)
+        }
     }
 }
 

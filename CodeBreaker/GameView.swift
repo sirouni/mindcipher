@@ -218,12 +218,7 @@ struct GameView: View {
 
     private func legendLine(type: FeedbackType, text: String) -> some View {
         HStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .stroke(Color.black.opacity(0.15), lineWidth: 1)
-                    .frame(width: 18, height: 18)
-                FeedbackDotView(type: type, size: 10)
-            }
+            FeedbackDotView(type: type, size: 18)
             Text(text)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
@@ -1138,12 +1133,7 @@ struct ShareCardView: View {
 
     private func shareLegendLine(type: FeedbackType, text: String) -> some View {
         HStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .stroke(Color.black.opacity(0.15), lineWidth: 1)
-                    .frame(width: 18, height: 18)
-                FeedbackDotView(type: type, size: 10)
-            }
+            FeedbackDotView(type: type, size: 18)
             Text(text)
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(Color(white: 0.4))
