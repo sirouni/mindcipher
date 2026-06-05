@@ -24,12 +24,22 @@
 		AA0000000000000F /* LieModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000F /* LieModeView.swift */; };
 		AA00000000000010 /* LieLevelSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000010 /* LieLevelSelectView.swift */; };
 		AA00000000000011 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000011 /* L10n.swift */; };
+		AA00000000000012 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BB00000000000012 /* Localizable.strings */; };
 		AA00000000000014 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000014 /* TutorialView.swift */; };
 		AA00000000000015 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000015 /* StoreManager.swift */; };
 		AA00000000000016 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000016 /* StoreView.swift */; };
-		AA00000000000012 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BB00000000000012 /* Localizable.strings */; };
 		AAUI000000000001 /* CodeBreakerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBUI000000000001 /* CodeBreakerUITests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		PPUI000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1200000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FF00000000000001;
+			remoteInfo = CodeBreaker;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		BB00000000000001 /* CodeBreakerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerApp.swift; sourceTree = "<group>"; };
@@ -49,13 +59,12 @@
 		BB0000000000000F /* LieModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LieModeView.swift; sourceTree = "<group>"; };
 		BB00000000000010 /* LieLevelSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LieLevelSelectView.swift; sourceTree = "<group>"; };
 		BB00000000000011 /* L10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		BB00000000000012 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		BB00000000000014 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		BB00000000000015 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		BB00000000000016 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
-		BB00000000000012 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		BB00000000000013 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		CC00000000000001 /* CodeBreaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeBreaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBUI000000000001 /* CodeBreakerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerUITests.swift; sourceTree = "<group>"; };
+		CC00000000000001 /* CodeBreaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeBreaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCUI000000000001 /* CodeBreakerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CodeBreakerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -84,14 +93,6 @@
 				EEUI000000000001 /* CodeBreakerUITests */,
 				EE00000000000003 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		EEUI000000000001 /* CodeBreakerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				BBUI000000000001 /* CodeBreakerUITests.swift */,
-			);
-			path = CodeBreakerUITests;
 			sourceTree = "<group>";
 		};
 		EE00000000000002 /* CodeBreaker */ = {
@@ -129,6 +130,14 @@
 				CCUI000000000001 /* CodeBreakerUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		EEUI000000000001 /* CodeBreakerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				BBUI000000000001 /* CodeBreakerUITests.swift */,
+			);
+			path = CodeBreakerUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,24 +179,6 @@
 		};
 /* End PBXNativeTarget section */
 
-/* Begin PBXContainerItemProxy section */
-		PPUI000000000001 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1200000000000001 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FF00000000000001;
-			remoteInfo = CodeBreaker;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXTargetDependency section */
-		DDUI000000000004 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FF00000000000001 /* CodeBreaker */;
-			targetProxy = PPUI000000000001 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXProject section */
 		1200000000000001 /* Project object */ = {
 			isa = PBXProject;
@@ -214,7 +205,6 @@
 				"zh-Hans",
 				Base,
 			);
-			/* Localizable.strings variant group */
 			mainGroup = EE00000000000001;
 			productRefGroup = EE00000000000003 /* Products */;
 			projectDirPath = "";
@@ -274,6 +264,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DDUI000000000004 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FF00000000000001 /* CodeBreaker */;
+			targetProxy = PPUI000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1300000000000001 /* Debug */ = {
@@ -364,7 +362,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.codebreaker.app;
+				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -397,7 +395,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.codebreaker.app;
+				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

@@ -61,8 +61,9 @@ class ChallengeManager: ObservableObject {
     @Published var pendingChallenge: Challenge?
 
     func handleURL(_ url: URL) {
-        guard url.scheme == "codebreaker",
-              url.host == "challenge",
+        let isCustomScheme = url.scheme == "codebreaker" && url.host == "challenge"
+        let isUniversalLink = url.host == "sirouni.github.io" && url.path.hasPrefix("/challenge")
+        guard isCustomScheme || isUniversalLink,
               let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let items = components.queryItems else { return }
 
@@ -93,8 +94,9 @@ class ChallengeManager: ObservableObject {
     func generateChallengeURL(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, mode: ChallengeMode = .classic, playerName: String) -> URL {
         let name = playerName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "Agent"
         var components = URLComponents()
-        components.scheme = "codebreaker"
-        components.host = "challenge"
+        components.scheme = "https"
+        components.host = "sirouni.github.io"
+        components.path = "/challenge"
         components.queryItems = [
             URLQueryItem(name: "s", value: "\(seed)"),
             URLQueryItem(name: "l", value: "\(codeLength)"),
