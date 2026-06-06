@@ -22,7 +22,14 @@ struct LieLevelSelectView: View {
             VStack(spacing: 0) {
                 lieHeader
                 tierSwitcher
-                tierGridView
+                TabView(selection: $selectedTier) {
+                    ForEach(0..<tiers.count, id: \.self) { i in
+                        tierGridView(for: i)
+                            .tag(i)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(.spring(response: 0.3), value: selectedTier)
             }
 
             if let level = previewLevel {
@@ -92,8 +99,8 @@ struct LieLevelSelectView: View {
         .padding(.vertical, 8)
     }
 
-    private var tierGridView: some View {
-        let cols = 5; let levels = currentTier
+    private func tierGridView(for tierIndex: Int) -> some View {
+        let cols = 5; let levels = tiers[tierIndex]
         let rows = (levels.count + cols - 1) / cols; let color = AppTheme.danger
         let lineInactive = Color.black.opacity(0.15)
 

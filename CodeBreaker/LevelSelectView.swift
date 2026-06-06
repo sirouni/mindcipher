@@ -22,7 +22,14 @@ struct LevelSelectView: View {
 
             VStack(spacing: 0) {
                 tierSwitcher(color: AppTheme.accent)
-                tierGridView(levels: currentTier, color: AppTheme.accent)
+                TabView(selection: $selectedTier) {
+                    ForEach(0..<tiers.count, id: \.self) { i in
+                        tierGridView(levels: tiers[i], color: AppTheme.accent)
+                            .tag(i)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(.spring(response: 0.3), value: selectedTier)
             }
 
             if let level = previewLevel {
