@@ -271,9 +271,12 @@ struct LevelSelectView: View {
                             }
                         }
                     } else if isProLocked {
-                        Image(systemName: "crown.fill")
-                            .font(.system(size: 12))
-                            .foregroundStyle(AppTheme.warning)
+                        Text("PRO")
+                            .font(.system(size: 9, weight: .black, design: .rounded))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 2)
+                            .background(AppTheme.warning, in: Capsule())
                     } else if !isUnlocked {
                         Image(systemName: "lock.fill")
                             .font(.system(size: 14))
