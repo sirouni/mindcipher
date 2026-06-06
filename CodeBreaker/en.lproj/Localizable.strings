@@ -1,6 +1,6 @@
 /* Home */
-"app.title" = "Code Breaker";
-"app.subtitle" = "CODE BREAKER";
+"app.title" = "Mind Cipher";
+"app.subtitle" = "MIND CIPHER";
 "menu.daily" = "Daily Challenge";
 "menu.daily.done" = "Completed today ✓";
 "menu.daily.todo" = "Not yet today";

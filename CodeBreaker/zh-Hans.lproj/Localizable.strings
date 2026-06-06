@@ -1,6 +1,6 @@
 /* 主页 */
-"app.title" = "密码破译局";
-"app.subtitle" = "CODE BREAKER";
+"app.title" = "Mind Cipher";
+"app.subtitle" = "MIND CIPHER";
 "menu.daily" = "每日挑战";
 "menu.daily.done" = "今日已完成 ✓";
 "menu.daily.todo" = "今日尚未挑战";
@@ -159,8 +159,8 @@
 "achieve.all.desc" = "完成全部 120 关";
 
 /* 分享 */
-"share.title.level" = "密码破译局 关卡%d";
-"share.title.free" = "密码破译局 自由模式";
+"share.title.level" = "Mind Cipher 关卡%d";
+"share.title.free" = "Mind Cipher 自由模式";
 "share.win" = "✅ %d/%d 步破译";
 "share.lose" = "❌ 破译失败";
 "share.cta" = "🔐 来挑战？";

@@ -4,8 +4,8 @@ private let currentLanguage: String = "en"
 
 private let strings: [String: [String: String]] = [
     // 主页
-    "app.title":        ["zh": "密码破译局",       "en": "Code Breaker"],
-    "app.subtitle":     ["zh": "CODE BREAKER",     "en": "CODE BREAKER"],
+    "app.title":        ["zh": "Mind Cipher",       "en": "Mind Cipher"],
+    "app.subtitle":     ["zh": "MIND CIPHER",      "en": "MIND CIPHER"],
     "menu.daily":       ["zh": "每日挑战",         "en": "Daily Challenge"],
     "menu.daily.done":  ["zh": "今日已完成 ✓",     "en": "Done today ✓"],
     "menu.daily.todo":  ["zh": "今日尚未挑战",     "en": "Not yet today"],
