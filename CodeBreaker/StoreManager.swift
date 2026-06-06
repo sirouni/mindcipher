@@ -63,10 +63,12 @@ class StoreManager: ObservableObject {
     func loadProducts() async {
         do {
             let ids = StoreProduct.allCases.map(\.rawValue)
-            products = try await Product.products(for: Set(ids))
-                .sorted { $0.price < $1.price }
+            print("[Store] Requesting products: \(ids)")
+            let fetched = try await Product.products(for: Set(ids))
+            print("[Store] Loaded \(fetched.count) products: \(fetched.map { $0.id })")
+            products = fetched.sorted { $0.price < $1.price }
         } catch {
-            print("Failed to load products: \(error)")
+            print("[Store] Failed to load products: \(error)")
         }
     }
 

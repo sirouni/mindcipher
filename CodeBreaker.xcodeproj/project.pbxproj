@@ -42,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		30E8FA372FD3D66300640EFF /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = Products.storekit; path = CodeBreaker/Products.storekit; sourceTree = "<group>"; };
 		BB00000000000001 /* CodeBreakerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerApp.swift; sourceTree = "<group>"; };
 		BB00000000000002 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		BB00000000000003 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -89,6 +90,7 @@
 		EE00000000000001 = {
 			isa = PBXGroup;
 			children = (
+				30E8FA372FD3D66300640EFF /* Products.storekit */,
 				EE00000000000002 /* CodeBreaker */,
 				EEUI000000000001 /* CodeBreakerUITests */,
 				EE00000000000003 /* Products */,

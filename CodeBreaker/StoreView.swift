@@ -20,6 +20,11 @@ struct StoreView: View {
         .background(AppTheme.bgGradient.ignoresSafeArea())
         .navigationTitle("Store")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            if store.products.isEmpty {
+                await store.loadProducts()
+            }
+        }
     }
 
     private var header: some View {
