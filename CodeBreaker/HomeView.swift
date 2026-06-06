@@ -18,6 +18,8 @@ struct HomeView: View {
     @State private var radarAngle: Double = 0
     @ObservedObject var progress = ProgressManager.shared
     @ObservedObject var stats = StatsManager.shared
+    @ObservedObject var storeManager = StoreManager.shared
+    @State private var showProAlert = false
 
     var body: some View {
         NavigationStack {
@@ -63,6 +65,12 @@ struct HomeView: View {
             }
             .navigationDestination(isPresented: $showAchievements) {
                 AchievementsView()
+            }
+            .alert("Pro Required", isPresented: $showProAlert) {
+                Button("Unlock Pro") { showStore = true }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This mode requires Pro. Unlock Pro to access Free Play, Duel Mode, and Custom Levels.")
             }
             .sheet(isPresented: $showTutorial, onDismiss: {
                 hasSeenTutorial = true
@@ -198,22 +206,25 @@ struct HomeView: View {
                 title: L("menu.free"),
                 subtitle: L("menu.free.sub"),
                 icon: "infinity",
-                color: AppTheme.warning
-            ) { showFreePlay = true }
+                color: AppTheme.warning,
+                requiresPro: true
+            ) { if storeManager.isPro { showFreePlay = true } else { showProAlert = true } }
 
             menuButton(
                 title: L("menu.duel"),
                 subtitle: L("menu.duel.sub"),
                 icon: "person.2.fill",
-                color: Color(red: 0.5, green: 0.5, blue: 1.0)
-            ) { showDuel = true }
+                color: Color(red: 0.5, green: 0.5, blue: 1.0),
+                requiresPro: true
+            ) { if storeManager.isPro { showDuel = true } else { showProAlert = true } }
 
             menuButton(
                 title: L("menu.editor"),
                 subtitle: L("menu.editor.sub"),
                 icon: "slider.horizontal.3",
-                color: Color(red: 0.9, green: 0.4, blue: 0.6)
-            ) { showEditor = true }
+                color: Color(red: 0.9, green: 0.4, blue: 0.6),
+                requiresPro: true
+            ) { if storeManager.isPro { showEditor = true } else { showProAlert = true } }
 
             menuButton(
                 title: "Achievements",
@@ -228,33 +239,51 @@ struct HomeView: View {
 
     private func menuButton(
         title: String, subtitle: String, icon: String, color: Color,
+        requiresPro: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
-        Button(action: action) {
+        let locked = requiresPro && !storeManager.isPro
+        return Button(action: action) {
             HStack(spacing: 12) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(color.opacity(0.15))
+                        .fill(color.opacity(locked ? 0.08 : 0.15))
                         .frame(width: 40, height: 40)
                     Image(systemName: icon)
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(color)
+                        .foregroundStyle(locked ? color.opacity(0.4) : color)
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(AppTheme.textPrimary)
+                    HStack(spacing: 5) {
+                        Text(title)
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .foregroundStyle(locked ? AppTheme.textMuted : AppTheme.textPrimary)
+                        if locked {
+                            Text("PRO")
+                                .font(.system(size: 9, weight: .black, design: .rounded))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 2)
+                                .background(AppTheme.warning, in: Capsule())
+                        }
+                    }
                     Text(subtitle)
                         .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(AppTheme.textSecondary)
+                        .foregroundStyle(locked ? AppTheme.textMuted : AppTheme.textSecondary)
                 }
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(AppTheme.textMuted)
+                if locked {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AppTheme.textMuted)
+                } else {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AppTheme.textMuted)
+                }
             }
             .padding(12)
             .glassCard()

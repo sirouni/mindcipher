@@ -30,7 +30,7 @@ enum StoreProduct: String, CaseIterable {
         case .hintPack5: return "A small pack of hints"
         case .hintPack15: return "Best value for casual players"
         case .hintPack50: return "Never run out of hints"
-        case .proUnlock: return "Unlock all 240 levels"
+        case .proUnlock: return "Unlock all levels, Free Play, Duel & Custom"
         }
     }
 }
