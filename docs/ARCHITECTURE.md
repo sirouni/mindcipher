@@ -151,9 +151,13 @@ Interactions:
 
 ## Game Center
 
-- Leaderboard ID: `com.codebreaker.app.daily`
-- Score: `(maxAttempts - attempts) * 10000 + max(0, 10000 - elapsedSeconds)`
-- Submitted on daily challenge win only
+- Leaderboard ID: `com.codebreaker.app.total`
+- Unified leaderboard = Daily total + Classic campaign total + Lie campaign total
+- Daily contribution: best score per day, where daily score = `(maxAttempts - attempts) * 10000 + max(0, 10000 - elapsedSeconds)`
+- Campaign score per level: `difficultyBase + starBonus`
+- Difficulty base: Beginner `100`, Easy `140`, Medium `180`, Hard `240`, Expert `320`, Master `420`
+- Star bonus: 1-star `20`, 2-star `60`, 3-star `120`
+- Unified score is re-submitted on Game Center auth and after each daily/campaign win
 - Auth on app launch via `GKLocalPlayer.local.authenticateHandler`
 
 ## Level Progression

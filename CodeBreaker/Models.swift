@@ -438,6 +438,86 @@ class ProgressManager: ObservableObject {
     }
 }
 
+// MARK: - Unified Leaderboard Scoring
+
+class DailyScoreManager {
+    static let shared = DailyScoreManager()
+
+    private let bestScoresKey = "daily_best_scores"
+
+    private init() {}
+
+    var bestScoresByDate: [String: Int] {
+        UserDefaults.standard.dictionary(forKey: bestScoresKey) as? [String: Int] ?? [:]
+    }
+
+    var totalScore: Int {
+        bestScoresByDate.values.reduce(0, +)
+    }
+
+    @discardableResult
+    func recordScore(_ score: Int, for dateKey: String) -> Bool {
+        var scores = bestScoresByDate
+        guard score > (scores[dateKey] ?? 0) else { return false }
+        scores[dateKey] = score
+        UserDefaults.standard.set(scores, forKey: bestScoresKey)
+        return true
+    }
+}
+
+class LeaderboardScoreManager {
+    static let shared = LeaderboardScoreManager()
+
+    private init() {}
+
+    func classicScore() -> Int {
+        campaignScore(for: ProgressManager.shared)
+    }
+
+    func lieScore() -> Int {
+        campaignScore(for: ProgressManager.lieShared)
+    }
+
+    func dailyScore() -> Int {
+        DailyScoreManager.shared.totalScore
+    }
+
+    func campaignScore() -> Int {
+        classicScore() + lieScore()
+    }
+
+    func totalScore() -> Int {
+        dailyScore() + campaignScore()
+    }
+
+    private func campaignScore(for progress: ProgressManager) -> Int {
+        LevelManager.shared.levels.reduce(0) { total, level in
+            let earnedStars = max(progress.starsByLevel[level.id] ?? 0, progress.completedLevels.contains(level.id) ? 1 : 0)
+            guard earnedStars > 0 else { return total }
+            return total + baseScore(for: level.difficulty) + starBonus(for: earnedStars)
+        }
+    }
+
+    private func baseScore(for difficulty: Difficulty) -> Int {
+        switch difficulty {
+        case .beginner: return 100
+        case .easy: return 140
+        case .medium: return 180
+        case .hard: return 240
+        case .expert: return 320
+        case .master: return 420
+        }
+    }
+
+    private func starBonus(for stars: Int) -> Int {
+        switch min(max(stars, 1), 3) {
+        case 1: return 20
+        case 2: return 60
+        default: return 120
+        }
+    }
+}
+
 // MARK: - Achievements
 
 struct Achievement: Identifiable {

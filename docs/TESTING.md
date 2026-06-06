@@ -98,12 +98,24 @@
 | Step | Action | Expected |
 |------|--------|----------|
 | 1 | Authenticate (requires sandbox account) | `isAuthenticated = true` |
-| 2 | Win daily challenge | Score computed and submitted |
+| 2 | Win daily challenge | Daily score computed, stored, and included in unified leaderboard |
 | 3 | Score formula | `(7-attempts)*10000 + max(0, 10000-seconds)` |
 | 4 | Tap "Leaderboard" button in Daily view | GKGameCenterViewController opens |
-| 5 | Win overlay shows score | "Score: XXXXX Submitted!" displayed |
+| 5 | Relaunch app after auth | Unified score re-submits from saved data |
 
 **Note:** Game Center does not work on Simulator. Test on real device with sandbox account.
+
+### TC-006B: Unified Leaderboard
+
+| Step | Action | Expected |
+|------|--------|----------|
+| 1 | Authenticate on real device | Unified leaderboard submission enabled |
+| 2 | Complete a Classic campaign level | Total leaderboard score increases |
+| 3 | Complete a Lie campaign level | Total leaderboard score increases |
+| 4 | Improve a daily score or level from 1★ to 3★ | Total leaderboard score increases |
+| 5 | Open leaderboard from Daily / Classic / Lie screens | Same leaderboard opens everywhere |
+
+**Unified score formula:** `best daily scores by date + classic campaign score + lie campaign score`.
 
 ### TC-007: Layout (6-peg codes)
 

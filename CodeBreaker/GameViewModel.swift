@@ -337,6 +337,7 @@ class GameViewModel: ObservableObject {
             if isDailyChallenge {
                 let elapsed = Int(Date().timeIntervalSince(gameStartTime ?? Date()))
                 GameCenterManager.shared.submitDailyScore(
+                    dateKey: dailyScoreDateKey(),
                     attempts: attempts,
                     maxAttempts: maxAttempts,
                     elapsedSeconds: elapsed
@@ -346,6 +347,7 @@ class GameViewModel: ObservableObject {
             case .campaign(let levelId):
                 let pm = (engine?.lieMode == true) ? ProgressManager.lieShared : ProgressManager.shared
                 pm.complete(level: levelId, attempts: attempts, maxAttempts: maxAttempts)
+                GameCenterManager.shared.submitTotalScore()
                 AchievementManager.shared.markEliteAchievements(difficulty: lastDifficulty, attempts: attempts, hintUsed: hintUsed, lieMode: engine?.lieMode ?? false)
             case .freePlay:
                 if UserDefaults.standard.bool(forKey: "ach_daily_active") {
@@ -402,6 +404,12 @@ class GameViewModel: ObservableObject {
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
+    }
+
+    private func dailyScoreDateKey() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: gameStartTime ?? Date())
     }
 
     func generateShareText() -> String {

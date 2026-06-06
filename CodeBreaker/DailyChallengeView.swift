@@ -334,11 +334,20 @@ struct DailyCalendarView: View {
 // MARK: - Game Center Leaderboard View
 
 struct GameCenterLeaderboardView: UIViewControllerRepresentable {
+    let leaderboardID: String
+    let timeScope: GKLeaderboard.TimeScope
+
+    init(leaderboardID: String = GameCenterManager.totalLeaderboardID,
+         timeScope: GKLeaderboard.TimeScope = .allTime) {
+        self.leaderboardID = leaderboardID
+        self.timeScope = timeScope
+    }
+
     func makeUIViewController(context: Context) -> GKGameCenterViewController {
         let vc = GKGameCenterViewController(
-            leaderboardID: GameCenterManager.dailyLeaderboardID,
+            leaderboardID: leaderboardID,
             playerScope: .global,
-            timeScope: .today
+            timeScope: timeScope
         )
         vc.gameCenterDelegate = context.coordinator
         return vc

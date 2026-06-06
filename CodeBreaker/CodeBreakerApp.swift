@@ -226,7 +226,7 @@ struct ChallengeGameView: View {
 
 class GameCenterManager: ObservableObject {
     static let shared = GameCenterManager()
-    static let dailyLeaderboardID = "com.codebreaker.app.daily"
+    static let totalLeaderboardID = "com.codebreaker.app.total"
 
     @Published var isAuthenticated = false
 
@@ -235,7 +235,11 @@ class GameCenterManager: ObservableObject {
     func authenticate() {
         GKLocalPlayer.local.authenticateHandler = { [weak self] _, error in
             DispatchQueue.main.async {
-                self?.isAuthenticated = GKLocalPlayer.local.isAuthenticated
+                let isAuthenticated = GKLocalPlayer.local.isAuthenticated
+                self?.isAuthenticated = isAuthenticated
+                if isAuthenticated {
+                    self?.submitTotalScore()
+                }
             }
             if let error {
                 print("Game Center auth failed: \(error.localizedDescription)")
@@ -243,26 +247,43 @@ class GameCenterManager: ObservableObject {
         }
     }
 
-    func submitDailyScore(attempts: Int, maxAttempts: Int, elapsedSeconds: Int) {
-        guard isAuthenticated else { return }
+    func submitDailyScore(dateKey: String, attempts: Int, maxAttempts: Int, elapsedSeconds: Int) {
         let score = (maxAttempts - attempts) * 10000 + max(0, 10000 - elapsedSeconds)
+        let updated = DailyScoreManager.shared.recordScore(score, for: dateKey)
+        if updated {
+            print("Daily score recorded for \(dateKey): \(score)")
+        }
+        submitTotalScore()
+    }
+
+    func submitTotalScore() {
+        guard isAuthenticated else { return }
+        let score = LeaderboardScoreManager.shared.totalScore()
+        submitScore(score, leaderboardID: Self.totalLeaderboardID, label: "Unified")
+    }
+
+    private func submitScore(_ score: Int, leaderboardID: String, label: String) {
         GKLeaderboard.submitScore(
             score,
             context: 0,
             player: GKLocalPlayer.local,
-            leaderboardIDs: [Self.dailyLeaderboardID]
+            leaderboardIDs: [leaderboardID]
         ) { error in
             if let error {
-                print("Score submission failed: \(error.localizedDescription)")
+                print("\(label) score submission failed: \(error.localizedDescription)")
+            } else {
+                print("\(label) score submitted: \(score)")
             }
         }
     }
 
-    func showLeaderboard(from viewController: UIViewController) {
+    func showLeaderboard(from viewController: UIViewController,
+                         leaderboardID: String = GameCenterManager.totalLeaderboardID,
+                         timeScope: GKLeaderboard.TimeScope = .allTime) {
         guard isAuthenticated else { return }
-        let gcVC = GKGameCenterViewController(leaderboardID: Self.dailyLeaderboardID,
+        let gcVC = GKGameCenterViewController(leaderboardID: leaderboardID,
                                               playerScope: .global,
-                                              timeScope: .today)
+                                              timeScope: timeScope)
         gcVC.gameCenterDelegate = GameCenterDismissHandler.shared
         viewController.present(gcVC, animated: true)
     }

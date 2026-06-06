@@ -1,4 +1,5 @@
 import SwiftUI
+import GameKit
 
 struct HomeView: View {
     @State private var showLevels = false
@@ -9,8 +10,10 @@ struct HomeView: View {
     @State private var showEditor = false
     @State private var showLieMode = false
     @State private var showAchievements = false
+    @State private var showLeaderboard = false
     @State private var showTutorial = false
     @State private var showStore = false
+    @ObservedObject private var gcManager = GameCenterManager.shared
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var titleScale: CGFloat = 0.8
     @State private var titleOpacity: Double = 0
@@ -66,6 +69,9 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showAchievements) {
                 AchievementsView()
             }
+            .sheet(isPresented: $showLeaderboard) {
+                GameCenterLeaderboardView()
+            }
             .alert("Pro Required", isPresented: $showProAlert) {
                 Button("Unlock Pro") { showStore = true }
                 Button("Cancel", role: .cancel) {}
@@ -114,6 +120,14 @@ struct HomeView: View {
                         .font(.system(size: 24))
                         .foregroundStyle(AppTheme.textSecondary)
                         .frame(width: 44, height: 44)
+                }
+                if gcManager.isAuthenticated {
+                    Button { showLeaderboard = true } label: {
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 20))
+                            .foregroundStyle(Color(red: 0.3, green: 0.7, blue: 0.9))
+                            .frame(width: 44, height: 44)
+                    }
                 }
                 Spacer()
                 Button { showStore = true } label: {

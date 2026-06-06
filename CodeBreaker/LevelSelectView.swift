@@ -4,11 +4,13 @@ struct LevelSelectView: View {
     let levelManager = LevelManager.shared
     @ObservedObject var progress = ProgressManager.shared
     @ObservedObject var store = StoreManager.shared
+    @ObservedObject private var gcManager = GameCenterManager.shared
     @State private var selectedTier = 0
     @State private var startGame = false
     @State private var selectedLevel: Level?
     @State private var previewLevel: Level?
     @State private var showPaywall = false
+    @State private var showLeaderboard = false
     @StateObject private var viewModel = GameViewModel()
 
     private var tiers: [[Level]] { levelManager.tiers }
@@ -39,8 +41,24 @@ struct LevelSelectView: View {
         .navigationTitle(L("menu.classic"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbar {
+            if gcManager.isAuthenticated {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showLeaderboard = true
+                    } label: {
+                        Image(systemName: "trophy.fill")
+                            .foregroundStyle(AppTheme.warning)
+                    }
+                    .accessibilityLabel("Leaderboard")
+                }
+            }
+        }
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
+        }
+        .sheet(isPresented: $showLeaderboard) {
+            GameCenterLeaderboardView()
         }
     }
 
