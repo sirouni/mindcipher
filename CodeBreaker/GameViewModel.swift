@@ -346,6 +346,7 @@ class GameViewModel: ObservableObject {
             case .campaign(let levelId):
                 let pm = (engine?.lieMode == true) ? ProgressManager.lieShared : ProgressManager.shared
                 pm.complete(level: levelId, attempts: attempts, maxAttempts: maxAttempts)
+                AchievementManager.shared.markEliteAchievements(difficulty: lastDifficulty, attempts: attempts, hintUsed: hintUsed, lieMode: engine?.lieMode ?? false)
             case .freePlay:
                 if UserDefaults.standard.bool(forKey: "ach_daily_active") {
                     AchievementManager.shared.markDailyWin()
@@ -355,12 +356,14 @@ class GameViewModel: ObservableObject {
                 }
                 if lastDifficulty == .master { UserDefaults.standard.set(true, forKey: "ach_free_master") }
                 if lastDifficulty == .expert { UserDefaults.standard.set(true, forKey: "ach_free_expert") }
+                AchievementManager.shared.markEliteAchievements(difficulty: lastDifficulty, attempts: attempts, hintUsed: hintUsed, lieMode: engine?.lieMode ?? false)
             case .duel:
                 AchievementManager.shared.markDuelWin()
             }
         } else if guessHistory.count >= maxAttempts {
             stopTimer()
             StatsManager.shared.recordLoss()
+            UserDefaults.standard.set(0, forKey: "ach_elite_hard_streak")
             withAnimation(.spring(response: 0.5)) {
                 phase = .lost
                 showSecret = true

@@ -459,6 +459,7 @@ enum AchievementCategory: String, CaseIterable {
     case stars = "Stars"
     case mastery = "Mastery"
     case speed = "Speed"
+    case elite = "Elite"
 }
 
 class AchievementManager: ObservableObject {
@@ -533,6 +534,22 @@ class AchievementManager: ObservableObject {
         Achievement(id: "speed_1", icon: "hare.fill", title: "Lucky Guess", desc: "Crack a code in 1 attempt", category: .speed) { s,_,_ in s.gamesWon > 0 && s.totalAttempts > 0 && (Double(s.totalAttempts) / Double(s.gamesWon)) <= 1.0 || UserDefaults.standard.bool(forKey: "ach_speed_1") },
         Achievement(id: "speed_2", icon: "bolt.circle.fill", title: "Speed Cracker", desc: "Crack a code in 2 attempts", category: .speed) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_speed_2") },
         Achievement(id: "speed_3", icon: "timer", title: "Quick Thinker", desc: "Crack a code in 3 attempts", category: .speed) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_speed_3") },
+
+        // Elite
+        Achievement(id: "elite_hard_2", icon: "bolt.shield.fill", title: "Impossible Instinct", desc: "Crack Hard difficulty in ≤2 attempts", category: .elite) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_elite_hard_2") },
+        Achievement(id: "elite_expert_3", icon: "eye.trianglebadge.exclamationmark.fill", title: "Mind Reader", desc: "Crack Expert difficulty in ≤3 attempts", category: .elite) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_elite_expert_3") },
+        Achievement(id: "elite_master_4", icon: "brain.fill", title: "Psychic", desc: "Crack Master difficulty in ≤4 attempts", category: .elite) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_elite_master_4") },
+        Achievement(id: "elite_no_hint_expert", icon: "hand.raised.slash.fill", title: "No Crutches", desc: "Win Expert without using hints", category: .elite) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_elite_no_hint_expert") },
+        Achievement(id: "elite_no_hint_master", icon: "figure.mind.and.body", title: "Pure Logic", desc: "Win Master without using hints", category: .elite) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_elite_no_hint_master") },
+        Achievement(id: "elite_lie_master", icon: "theatermasks.fill", title: "Lie Breaker", desc: "Win a Master lie mode level", category: .elite) { _,_,_ in UserDefaults.standard.bool(forKey: "ach_elite_lie_master") },
+        Achievement(id: "elite_streak_10_hard", icon: "flame.circle.fill", title: "Relentless", desc: "Win 10 Hard+ games in a row", category: .elite) { _,_,_ in UserDefaults.standard.integer(forKey: "ach_elite_hard_streak") >= 10 },
+        Achievement(id: "elite_all_lie", icon: "checkmark.seal.fill", title: "Truth Prevails", desc: "Complete all 240 lie mode levels", category: .elite) { _,_,lp in lp.completedLevels.count >= 240 },
+        Achievement(id: "elite_all_3star", icon: "crown.fill", title: "Absolute Perfection", desc: "3-star all 240 levels in both modes", category: .elite) { _,p,lp in
+            let classic = (1...240).allSatisfy { (p.starsByLevel[$0] ?? 0) >= 3 }
+            let lie = (1...240).allSatisfy { (lp.starsByLevel[$0] ?? 0) >= 3 }
+            return classic && lie
+        },
+        Achievement(id: "elite_play_500", icon: "figure.run.circle.fill", title: "Obsessed", desc: "Play 500 games", category: .elite) { s,_,_ in s.gamesPlayed >= 500 },
     ]
 
     private init() {
@@ -559,6 +576,31 @@ class AchievementManager: ObservableObject {
         if attempts <= 1 { UserDefaults.standard.set(true, forKey: "ach_speed_1") }
         if attempts <= 2 { UserDefaults.standard.set(true, forKey: "ach_speed_2") }
         if attempts <= 3 { UserDefaults.standard.set(true, forKey: "ach_speed_3") }
+    }
+
+    func markEliteAchievements(difficulty: Difficulty, attempts: Int, hintUsed: Bool, lieMode: Bool) {
+        if difficulty == .hard && attempts <= 2 {
+            UserDefaults.standard.set(true, forKey: "ach_elite_hard_2")
+        }
+        if difficulty == .expert && attempts <= 3 {
+            UserDefaults.standard.set(true, forKey: "ach_elite_expert_3")
+        }
+        if difficulty == .master && attempts <= 4 {
+            UserDefaults.standard.set(true, forKey: "ach_elite_master_4")
+        }
+        if difficulty == .expert && !hintUsed {
+            UserDefaults.standard.set(true, forKey: "ach_elite_no_hint_expert")
+        }
+        if difficulty == .master && !hintUsed {
+            UserDefaults.standard.set(true, forKey: "ach_elite_no_hint_master")
+        }
+        if lieMode && difficulty == .master {
+            UserDefaults.standard.set(true, forKey: "ach_elite_lie_master")
+        }
+        if difficulty.codeLength >= 5 {
+            let streak = UserDefaults.standard.integer(forKey: "ach_elite_hard_streak") + 1
+            UserDefaults.standard.set(streak, forKey: "ach_elite_hard_streak")
+        }
     }
 
     func markDailyWin() {
