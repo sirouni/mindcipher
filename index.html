@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Cipher — Logic Code-Breaking Puzzle</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1a1a3e 50%, #0d1117 100%);
+            color: #e6e6e6;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 60px 24px; }
+        h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d4ff, #7b61ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .subtitle { color: #8892b0; font-size: 1.2em; margin-bottom: 40px; }
+        .features { list-style: none; margin: 30px 0; }
+        .features li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            font-size: 1.05em;
+        }
+        .features li::before { content: "→ "; color: #00d4ff; font-weight: bold; }
+        .section { margin-top: 50px; }
+        .section h2 { font-size: 1.5em; color: #ccd6f6; margin-bottom: 16px; }
+        .section p { color: #8892b0; margin-bottom: 12px; }
+        a { color: #00d4ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .badge {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 14px 28px;
+            background: linear-gradient(90deg, #00d4ff, #7b61ff);
+            color: #fff;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .footer { margin-top: 80px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.08); color: #5a6078; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mind Cipher</h1>
+        <p class="subtitle">A logic-based code-breaking puzzle game for iOS</p>
+
+        <p>Guess the hidden color code using feedback from each attempt. Green means correct position, orange means right color wrong spot, red means not in the code.</p>
+
+        <ul class="features">
+            <li><strong>Classic Missions</strong> — 120 progressively harder levels from Beginner to Master</li>
+            <li><strong>Lie Missions</strong> — 120 levels where one feedback per round is fake. Spot the contradiction.</li>
+            <li><strong>Daily Challenge</strong> — A new puzzle every day with Game Center leaderboards</li>
+            <li><strong>Smart Notes</strong> — Mark eliminated (✗) and confirmed (✓) colors on the board</li>
+            <li><strong>Duel Mode</strong> — One player sets the code, the other cracks it</li>
+            <li><strong>Challenge a Friend</strong> — Send a custom puzzle via link</li>
+            <li><strong>Free Play</strong> — Customize code length, colors, attempts, and time limits</li>
+        </ul>
+
+        <a class="badge" href="https://apps.apple.com/app/mind-cipher/id6777428188">Download on the App Store</a>
+
+        <div class="section" id="support">
+            <h2>Support</h2>
+            <p>Having trouble or have a suggestion? We'd love to hear from you.</p>
+            <p>Email: <a href="mailto:sirouni@gmail.com">sirouni@gmail.com</a></p>
+            <p>Or open an issue on <a href="https://github.com/sirouni/mindcipher/issues">GitHub</a>.</p>
+        </div>
+
+        <div class="section" id="privacy">
+            <h2>Privacy Policy</h2>
+            <p>Mind Cipher does not collect, store, or share any personal data.</p>
+            <p>The app uses Game Center for leaderboards and achievements, which is governed by Apple's privacy policy. No analytics, tracking, or third-party SDKs are used.</p>
+            <p>Last updated: June 2026.</p>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Xiao Wang. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
