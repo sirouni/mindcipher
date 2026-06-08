@@ -75,7 +75,7 @@ struct StoreView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(AppTheme.accent)
-                    Text("All 240 levels unlocked!")
+                    Text("All 480 levels unlocked!")
                         .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(AppTheme.accent)
                 }
@@ -92,26 +92,27 @@ struct StoreView: View {
                             Text("Pro Unlock")
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(AppTheme.textPrimary)
-                            Text("Unlock all 240 levels in Classic & Lie campaigns")
+                            Text("Unlock all 480 levels in Classic & Lie campaigns")
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundStyle(AppTheme.textSecondary)
                         }
                         Spacer()
                     }
 
-                    if let product = store.products.first(where: { $0.id == StoreProduct.proUnlock.rawValue }) {
-                        Button {
+                    let proProduct = store.products.first(where: { $0.id == StoreProduct.proUnlock.rawValue })
+                    Button {
+                        if let product = proProduct {
                             Task { await store.purchase(product) }
-                        } label: {
-                            Text(product.displayPrice)
-                                .font(.system(size: 16, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
                         }
-                        .disabled(store.purchaseInProgress)
+                    } label: {
+                        Text(proProduct?.displayPrice ?? "$2.99")
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
                     }
+                    .disabled(store.purchaseInProgress || proProduct == nil)
                 }
                 .padding(14)
                 .glassCard(cornerRadius: 12)
@@ -129,10 +130,57 @@ struct StoreView: View {
                 [StoreProduct.hintPack5.rawValue, StoreProduct.hintPack15.rawValue, StoreProduct.hintPack50.rawValue].contains(p.id)
             }
 
-            ForEach(hintProducts, id: \.id) { product in
-                hintProductRow(product)
+            if hintProducts.isEmpty {
+                ForEach([StoreProduct.hintPack5, .hintPack15, .hintPack50], id: \.rawValue) { sp in
+                    hintFallbackRow(sp)
+                }
+            } else {
+                ForEach(hintProducts, id: \.id) { product in
+                    hintProductRow(product)
+                }
             }
         }
+    }
+
+    private func hintFallbackRow(_ sp: StoreProduct) -> some View {
+        let price: String = {
+            switch sp {
+            case .hintPack5: return "$0.99"
+            case .hintPack15: return "$1.99"
+            case .hintPack50: return "$4.99"
+            default: return ""
+            }
+        }()
+        return HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(AppTheme.warning.opacity(0.1))
+                    .frame(width: 44, height: 44)
+                Image(systemName: "lightbulb.fill")
+                    .font(.system(size: 18))
+                    .foregroundStyle(AppTheme.warning)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(sp.displayName)
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                Text(sp.description)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
+            }
+
+            Spacer()
+
+            Text(price)
+                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(AppTheme.warning, in: Capsule())
+        }
+        .padding(12)
+        .glassCard(cornerRadius: 12)
     }
 
     private func hintProductRow(_ product: Product) -> some View {

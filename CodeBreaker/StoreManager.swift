@@ -52,7 +52,7 @@ class StoreManager: ObservableObject {
 
     private init() {
         #if DEBUG
-        isPro = true
+        isPro = false
         #else
         isPro = UserDefaults.standard.bool(forKey: proKey)
         #endif
