@@ -8,6 +8,7 @@ build/
 # Test screenshots
 *.png
 !CodeBreaker/Assets.xcassets/**/*.png
+!assets/*.png
 
 # macOS
 .DS_Store
