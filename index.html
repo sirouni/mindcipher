@@ -13,7 +13,7 @@
             min-height: 100vh;
             line-height: 1.6;
         }
-        .container { max-width: 800px; margin: 0 auto; padding: 60px 24px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 60px 24px; }
         h1 {
             font-size: 2.8em;
             font-weight: 700;
@@ -45,6 +45,38 @@
             font-weight: 600;
             font-size: 1.1em;
         }
+
+        /* Gallery */
+        .gallery { margin-top: 50px; }
+        .gallery h2 { font-size: 1.5em; color: #ccd6f6; margin-bottom: 20px; }
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .screenshots img {
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            transition: transform 0.2s;
+        }
+        .screenshots img:hover { transform: scale(1.03); }
+        .video-wrapper {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .video-wrapper video {
+            max-width: 280px;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+        }
+        .video-label {
+            color: #8892b0;
+            margin-top: 12px;
+            font-size: 0.95em;
+        }
+
         .footer { margin-top: 80px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.08); color: #5a6078; font-size: 0.9em; }
     </style>
 </head>
@@ -53,7 +85,7 @@
         <h1>Mind Cipher</h1>
         <p class="subtitle">A logic-based code-breaking puzzle game for iOS</p>
 
-        <p>Guess the hidden color code using feedback from each attempt. Green means correct position, orange means right color wrong spot, red means not in the code.</p>
+        <p>Guess the hidden color code using feedback from each attempt. Green means correct position, orange means right color wrong spot, red means not in the code. Sounds simple? Try it when one feedback is a lie.</p>
 
         <ul class="features">
             <li><strong>Classic Missions</strong> — 120 progressively harder levels from Beginner to Master</li>
@@ -66,6 +98,27 @@
         </ul>
 
         <a class="badge" href="https://apps.apple.com/app/mind-cipher/id6777428188">Download on the App Store</a>
+
+        <div class="gallery">
+            <h2>Screenshots</h2>
+            <div class="screenshots">
+                <img src="assets/02_daily_challenge.png" alt="Daily Challenge">
+                <img src="assets/03_campaign.png" alt="Classic Missions">
+                <img src="assets/04_gameplay.png" alt="Gameplay">
+                <img src="assets/05_smart_notes.png" alt="Smart Notes">
+                <img src="assets/07_lie_missions.png" alt="Lie Missions">
+                <img src="assets/08_duel_mode.png" alt="Duel Mode">
+                <img src="assets/09_challenge_friend.png" alt="Challenge a Friend">
+            </div>
+
+            <div class="video-wrapper">
+                <h2>App Preview</h2>
+                <video autoplay muted loop playsinline>
+                    <source src="assets/app_preview.mp4" type="video/mp4">
+                </video>
+                <p class="video-label">30-second gameplay preview</p>
+            </div>
+        </div>
 
         <div class="section" id="support">
             <h2>Support</h2>
