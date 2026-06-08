@@ -51,7 +51,11 @@ class StoreManager: ObservableObject {
     static let freeLevelCap = 40
 
     private init() {
+        #if DEBUG
+        isPro = true
+        #else
         isPro = UserDefaults.standard.bool(forKey: proKey)
+        #endif
         updateTask = listenForTransactions()
         Task { await loadProducts() }
     }
