@@ -276,7 +276,7 @@ struct DailyCalendarView: View {
 
             // Weekday headers
             HStack(spacing: 0) {
-                ForEach(["S","M","T","W","T","F","S"], id: \.self) { d in
+                ForEach(Array(["S","M","T","W","T","F","S"].enumerated()), id: \.offset) { _, d in
                     Text(d)
                         .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(AppTheme.textMuted)

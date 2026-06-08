@@ -1,5 +1,6 @@
 import SwiftUI
 import GameKit
+import CoreImage.CIFilterBuiltins
 
 struct GameView: View {
     @ObservedObject var viewModel: GameViewModel
@@ -1434,6 +1435,8 @@ struct ShareCardView: View {
         return ratio <= 0.3 ? 3 : ratio <= 0.6 ? 2 : 1
     }
 
+    private let appStoreURL = "https://apps.apple.com/app/mind-cipher/id6777428188"
+
     var body: some View {
         VStack(spacing: 0) {
             shareTopBar
@@ -1442,6 +1445,7 @@ struct ShareCardView: View {
             shareGuessBoard
             shareColorInfo
             shareInfoBar
+            shareAppLink
         }
         .background(bgLight)
     }
@@ -1567,6 +1571,12 @@ struct ShareCardView: View {
                         .fill(pegGrad(peg))
                         .frame(width: sharePegSize, height: sharePegSize)
                         .shadow(color: pegCol(peg).opacity(0.2), radius: 2, y: 1)
+                        .overlay(
+                            Text("\(pegNumber(peg))")
+                                .font(.system(size: sharePegSize * 0.45, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .shadow(color: .black.opacity(0.3), radius: 1, y: 1)
+                        )
                 }
             }
 
@@ -1675,11 +1685,17 @@ struct ShareCardView: View {
 
     private func shareColorsRow(colorSize: CGFloat) -> some View {
         HStack(spacing: 8) {
-            ForEach(Array(availableColors.enumerated()), id: \.offset) { _, peg in
+            ForEach(Array(availableColors.enumerated()), id: \.offset) { idx, peg in
                 Circle()
                     .fill(pegGrad(peg))
                     .frame(width: colorSize, height: colorSize)
                     .overlay(Circle().stroke(Color.black.opacity(0.08), lineWidth: 1))
+                    .overlay(
+                        Text("\(idx + 1)")
+                            .font(.system(size: colorSize * 0.4, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .shadow(color: .black.opacity(0.3), radius: 1, y: 1)
+                    )
             }
         }
         .padding(.vertical, 6)
@@ -1725,7 +1741,54 @@ struct ShareCardView: View {
         .frame(maxWidth: .infinity)
     }
 
-    // MARK: - Legend
+    // MARK: - App Store QR Code
+
+    private var shareAppLink: some View {
+        HStack(spacing: 10) {
+            Image("AppLogo")
+                .resizable()
+                .frame(width: 40, height: 40)
+                .clipShape(RoundedRectangle(cornerRadius: 9))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Mind Cipher")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(white: 0.15))
+                Text("Scan to download")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(Color(white: 0.5))
+            }
+            Spacer()
+            if let qrImage = generateQRCode(from: appStoreURL) {
+                Image(uiImage: qrImage)
+                    .interpolation(.none)
+                    .resizable()
+                    .frame(width: 56, height: 56)
+                    .cornerRadius(4)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+    }
+
+    private func generateQRCode(from string: String) -> UIImage? {
+        let data = string.data(using: .utf8)
+        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
+        filter.setValue(data, forKey: "inputMessage")
+        filter.setValue("M", forKey: "inputCorrectionLevel")
+        guard let ciImage = filter.outputImage else { return nil }
+        let scale = 256.0 / ciImage.extent.width
+        let transformed = ciImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(transformed, from: transformed.extent) else { return nil }
+        return UIImage(cgImage: cgImage)
+    }
+
+    private func pegNumber(_ peg: PegColor) -> Int {
+        if let idx = availableColors.firstIndex(of: peg) {
+            return idx + 1
+        }
+        return peg.rawValue + 1
+    }
 
     // MARK: - Peg Colors
 
