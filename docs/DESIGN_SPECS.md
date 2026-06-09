@@ -107,17 +107,44 @@ ffmpeg -y -i input.mp4 \
 
 ---
 
-## Marketing Website (GitHub Pages)
+## URLs & Accounts
 
-### URLs
+### App Store Connect
+- **App ID**: 6777428188
+- **App Store URL**: https://apps.apple.com/app/mind-cipher/id6777428188
+- **Bundle ID**: Jason-Wang.CodeBreaker
+- **SKU**: codebreaker-ios-001
+
+### Marketing Website (GitHub Pages)
 - **Marketing**: https://mywangxiao.github.io/CodeBreaker/
 - **Support**: https://mywangxiao.github.io/CodeBreaker/support
+- **Privacy Policy**: https://mywangxiao.github.io/CodeBreaker/privacy.html
 
-### Structure
+### Sandbox Testing Account
+- **Email**: mindcipher.sandbox01@outlook.com
+- **Password**: Mc$andbox2026Xk!
+- **Region**: United States
+
+### In-App Purchase Product IDs
+| Product | ID | Type | Price |
+|---------|-----|------|-------|
+| Pro Unlock | `com.codebreaker.app.pro` | Non-consumable | $2.99 |
+| 5 Hint Coins | `com.codebreaker.app.hints5` | Consumable | $0.99 |
+| 15 Hint Coins | `com.codebreaker.app.hints15` | Consumable | $1.99 |
+| 50 Hint Coins | `com.codebreaker.app.hints50` | Consumable | $4.99 |
+
+### Game Center
+- **Leaderboard ID**: `com.codebreaker.app.total`
+
+---
+
+## Marketing Website Structure
+
 ```
 docs/
 ├── index.html       (Marketing landing page)
 ├── support.html     (Support/FAQ page)
+├── privacy.html     (Privacy Policy)
 └── DESIGN_SPECS.md  (This file)
 ```
 
