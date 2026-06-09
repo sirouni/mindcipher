@@ -116,9 +116,9 @@ ffmpeg -y -i input.mp4 \
 - **SKU**: codebreaker-ios-001
 
 ### Marketing Website (GitHub Pages)
-- **Marketing**: https://mywangxiao.github.io/CodeBreaker/
-- **Support**: https://mywangxiao.github.io/CodeBreaker/support
-- **Privacy Policy**: https://mywangxiao.github.io/CodeBreaker/privacy.html
+- **Marketing**: https://sirouni.github.io/mindcipher/
+- **Support**: https://sirouni.github.io/mindcipher/support.html
+- **Privacy Policy**: https://sirouni.github.io/mindcipher/privacy.html
 
 ### Sandbox Testing Account
 - **Email**: mindcipher.sandbox01@outlook.com
