@@ -1,10 +1,12 @@
 import SwiftUI
 import GameKit
+import StoreKit
 import CoreImage.CIFilterBuiltins
 
 struct GameView: View {
     @ObservedObject var viewModel: GameViewModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.requestReview) private var requestReview
     
     @State private var showResult = false
     @State private var confettiParticles: [ConfettiParticle] = []
@@ -99,6 +101,11 @@ struct GameView: View {
                     SoundManager.shared.playWin()
                     spawnConfetti()
                     achievementManager.markSpeedAchievement(attempts: attempts)
+                    if [3, 15, 50].contains(StatsManager.shared.gamesWon) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            requestReview()
+                        }
+                    }
                 } else {
                     SoundManager.shared.playLose()
                 }
@@ -172,7 +179,11 @@ struct GameView: View {
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(AppTheme.accent)
                 } else if viewModel.mode == .duel {
-                    Text("Duel Mode")
+                    Text(L("game.duel"))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.textPrimary)
+                } else if viewModel.mode == .online {
+                    Text(L("online.title"))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                 } else {
@@ -975,31 +986,49 @@ struct GameView: View {
             )
         }
 
-        var lieFake: Feedback?
-        var lieReal: Feedback?
-        if !isPlaying, isLie, let step = lieAt, step <= viewModel.guessHistory.count {
-            lieFake = viewModel.guessHistory[step - 1].feedback
-            lieReal = viewModel.engine?.computeRealFeedback(guess: viewModel.guessHistory[step - 1].guess)
+        let cardView: AnyView
+        if viewModel.isDailyChallenge {
+            cardView = AnyView(
+                DailyShareCardView(
+                    rows: rows,
+                    codeLength: viewModel.codeLength,
+                    maxAttempts: viewModel.maxAttempts,
+                    won: won,
+                    attempts: attempts,
+                    availableColors: viewModel.availableColors
+                )
+                .frame(width: 390)
+            )
+        } else {
+            var lieFake: Feedback?
+            var lieReal: Feedback?
+            if !isPlaying, isLie, let step = lieAt, step <= viewModel.guessHistory.count {
+                lieFake = viewModel.guessHistory[step - 1].feedback
+                lieReal = viewModel.engine?.computeRealFeedback(guess: viewModel.guessHistory[step - 1].guess)
+            }
+
+            cardView = AnyView(
+                ShareCardView(
+                    rows: rows,
+                    codeLength: viewModel.codeLength,
+                    maxAttempts: viewModel.maxAttempts,
+                    colorCount: viewModel.availableColors.count,
+                    won: won,
+                    attempts: attempts,
+                    levelId: viewModel.level?.id,
+                    difficultyName: viewModel.lastDifficulty.rawValue,
+                    isLieMode: isLie,
+                    lieStep: lieAt,
+                    lieFakeFeedback: lieFake,
+                    lieRealFeedback: lieReal,
+                    isPlaying: isPlaying,
+                    availableColors: viewModel.availableColors
+                )
+                .frame(width: 390)
+            )
         }
 
-        let card = ShareCardView(
-            rows: rows,
-            codeLength: viewModel.codeLength,
-            maxAttempts: viewModel.maxAttempts,
-            colorCount: viewModel.availableColors.count,
-            won: won,
-            attempts: attempts,
-            levelId: viewModel.level?.id,
-            difficultyName: viewModel.lastDifficulty.rawValue,
-            isLieMode: isLie,
-            lieStep: lieAt,
-            lieFakeFeedback: lieFake,
-            lieRealFeedback: lieReal,
-            isPlaying: isPlaying,
-            availableColors: viewModel.availableColors
-        )
-
-        let renderer = ImageRenderer(content: card.frame(width: 390))
+        let renderer = ImageRenderer(content: cardView)
         renderer.scale = UIScreen.main.scale
         guard let image = renderer.uiImage else { return }
 
@@ -1807,6 +1836,448 @@ struct ShareCardView: View {
 
     private func pegGrad(_ peg: PegColor) -> LinearGradient {
         let c = pegCol(peg)
+        return LinearGradient(colors: [c.opacity(0.85), c, c.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+}
+
+// MARK: - Daily Challenge Share Card
+
+struct DailyShareCardView: View {
+    let rows: [ShareRowData]
+    let codeLength: Int
+    let maxAttempts: Int
+    let won: Bool
+    let attempts: Int
+    let availableColors: [PegColor]
+
+    private let accent = Color(red: 0.05, green: 0.60, blue: 0.55)
+    private let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
+    private let danger = Color(red: 0.85, green: 0.20, blue: 0.20)
+    private let bgTop = Color(red: 0.10, green: 0.15, blue: 0.25)
+    private let bgBot = Color(red: 0.14, green: 0.20, blue: 0.32)
+    private let cardBg = Color(red: 0.16, green: 0.22, blue: 0.34)
+    private let subtleBg = Color.white.opacity(0.06)
+
+    private let appStoreURL = "https://apps.apple.com/app/mind-cipher/id6777428188"
+
+    private var streak: Int { DailyStreakManager.shared.currentStreak }
+    private var totalCompleted: Int { DailyStreakManager.shared.totalCompleted }
+
+    private var displayDate: String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US")
+        f.dateFormat = "EEEE, MMM d"
+        return f.string(from: Date())
+    }
+
+    private var stars: Int {
+        guard won else { return 0 }
+        let ratio = Double(attempts) / Double(maxAttempts)
+        return ratio <= 0.3 ? 3 : ratio <= 0.6 ? 2 : 1
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            headerSection
+            resultSection
+            calendarHeatmap
+                .padding(.horizontal, 16)
+                .padding(.top, 14)
+            guessBoardSection
+            appLinkSection
+        }
+        .background(
+            LinearGradient(colors: [bgTop, bgBot], startPoint: .top, endPoint: .bottom)
+        )
+    }
+
+    // MARK: - Header
+
+    private var headerSection: some View {
+        VStack(spacing: 6) {
+            HStack(spacing: 8) {
+                Image(systemName: "calendar.badge.clock")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(warning)
+                Text("Daily Challenge")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+            }
+            Text(displayDate)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(.white.opacity(0.5))
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 16)
+        .background(subtleBg)
+    }
+
+    // MARK: - Result + Streak Badges
+
+    private var resultSection: some View {
+        VStack(spacing: 12) {
+            if won {
+                HStack(spacing: 6) {
+                    ForEach(0..<3, id: \.self) { i in
+                        Image(systemName: i < stars ? "star.fill" : "star")
+                            .font(.system(size: 22))
+                            .foregroundStyle(i < stars ? warning : .white.opacity(0.15))
+                    }
+                }
+                Text("Solved in \(attempts)/\(maxAttempts) steps")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(accent)
+            } else {
+                Text("Failed — \(rows.count)/\(maxAttempts)")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(danger)
+            }
+
+            HStack(spacing: 12) {
+                streakBadge
+                totalBadge
+            }
+        }
+        .padding(.top, 14)
+    }
+
+    private var streakBadge: some View {
+        HStack(spacing: 6) {
+            ZStack {
+                Circle()
+                    .fill(streakBadgeColor.opacity(0.2))
+                    .frame(width: 32, height: 32)
+                Image(systemName: streakIcon)
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(streakBadgeColor)
+            }
+            VStack(alignment: .leading, spacing: 1) {
+                Text("\(streak)")
+                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+                Text("Day Streak")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.45))
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(subtleBg)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(streakBadgeColor.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+
+    private var streakIcon: String {
+        if streak >= 30 { return "flame.circle.fill" }
+        if streak >= 7 { return "flame.fill" }
+        if streak >= 3 { return "flame" }
+        return "bolt.fill"
+    }
+
+    private var streakBadgeColor: Color {
+        if streak >= 30 { return Color(red: 1.0, green: 0.3, blue: 0.1) }
+        if streak >= 7 { return warning }
+        if streak >= 3 { return Color(red: 1.0, green: 0.65, blue: 0.2) }
+        return accent
+    }
+
+    private var totalBadge: some View {
+        HStack(spacing: 6) {
+            ZStack {
+                Circle()
+                    .fill(accent.opacity(0.2))
+                    .frame(width: 32, height: 32)
+                Image(systemName: "checkmark.seal.fill")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(accent)
+            }
+            VStack(alignment: .leading, spacing: 1) {
+                Text("\(totalCompleted)")
+                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+                Text("Total")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.45))
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(subtleBg)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(accent.opacity(0.2), lineWidth: 1)
+                )
+        )
+    }
+
+    // MARK: - Calendar Heatmap
+
+    private var calendarHeatmap: some View {
+        let cal = Calendar.current
+        let today = Date()
+        let comps = cal.dateComponents([.year, .month], from: today)
+        let firstOfMonth = cal.date(from: comps)!
+        let weekdayOfFirst = cal.component(.weekday, from: firstOfMonth)
+        let daysInMonth = cal.range(of: .day, in: .month, for: firstOfMonth)!.count
+
+        let fmt = DateFormatter()
+        fmt.dateFormat = "yyyy-MM-dd"
+
+        let monthFmt = DateFormatter()
+        monthFmt.dateFormat = "MMMM yyyy"
+        let monthTitle = monthFmt.string(from: today)
+
+        var days: [Date?] = Array(repeating: nil, count: weekdayOfFirst - 1)
+        for day in 1...daysInMonth {
+            var dc = comps
+            dc.day = day
+            days.append(cal.date(from: dc))
+        }
+        while days.count % 7 != 0 { days.append(nil) }
+
+        return VStack(spacing: 6) {
+            Text(monthTitle)
+                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .foregroundStyle(.white.opacity(0.7))
+
+            HStack(spacing: 0) {
+                ForEach(Array(["S","M","T","W","T","F","S"].enumerated()), id: \.offset) { _, d in
+                    Text(d)
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(.white.opacity(0.3))
+                        .frame(maxWidth: .infinity)
+                }
+            }
+
+            let columns = Array(repeating: GridItem(.flexible(), spacing: 3), count: 7)
+            LazyVGrid(columns: columns, spacing: 3) {
+                ForEach(0..<days.count, id: \.self) { i in
+                    if let date = days[i] {
+                        heatmapCell(date: date, today: today, cal: cal, fmt: fmt)
+                    } else {
+                        Color.clear.frame(width: 28, height: 28)
+                    }
+                }
+            }
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(subtleBg)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(.white.opacity(0.06), lineWidth: 1)
+                )
+        )
+    }
+
+    private func heatmapCell(date: Date, today: Date, cal: Calendar, fmt: DateFormatter) -> some View {
+        let key = fmt.string(from: date)
+        let completed = DailyStreakManager.shared.isCompleted(key)
+        let isToday = cal.isDateInToday(date)
+        let isFuture = date > today
+        let dayNum = cal.component(.day, from: date)
+
+        return ZStack {
+            RoundedRectangle(cornerRadius: 5)
+                .fill(heatmapCellColor(completed: completed, isToday: isToday, isFuture: isFuture))
+                .frame(width: 28, height: 28)
+
+            if isToday && !completed {
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(warning, lineWidth: 1.5)
+                    .frame(width: 28, height: 28)
+            }
+
+            Text("\(dayNum)")
+                .font(.system(size: 10, weight: completed ? .bold : .medium, design: .rounded))
+                .foregroundStyle(
+                    completed ? .white :
+                    isToday ? warning :
+                    isFuture ? .white.opacity(0.15) :
+                    .white.opacity(0.35)
+                )
+        }
+    }
+
+    private func heatmapCellColor(completed: Bool, isToday: Bool, isFuture: Bool) -> Color {
+        if completed { return accent.opacity(0.85) }
+        if isFuture { return .white.opacity(0.03) }
+        return .white.opacity(0.06)
+    }
+
+    // MARK: - Guess Board
+
+    private var guessBoardSection: some View {
+        VStack(spacing: 0) {
+            ForEach(rows) { row in
+                dailyGuessRow(row)
+                if row.id < rows.count {
+                    Rectangle().fill(.white.opacity(0.04)).frame(height: 1)
+                        .padding(.leading, 32)
+                }
+            }
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 6)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(subtleBg)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(.white.opacity(0.06), lineWidth: 1)
+                )
+        )
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+    }
+
+    private var dailyPegSize: CGFloat {
+        codeLength <= 4 ? 28 : codeLength <= 5 ? 24 : 20
+    }
+
+    private func dailyGuessRow(_ row: ShareRowData) -> some View {
+        HStack(spacing: 5) {
+            Text("\(row.id)")
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                .foregroundStyle(.white.opacity(0.3))
+                .frame(width: 14)
+
+            HStack(spacing: codeLength <= 4 ? 5 : 3) {
+                ForEach(Array(row.guess.enumerated()), id: \.offset) { _, peg in
+                    Circle()
+                        .fill(dailyPegGrad(peg))
+                        .frame(width: dailyPegSize, height: dailyPegSize)
+                        .overlay(
+                            Text("\(dailyPegNumber(peg))")
+                                .font(.system(size: dailyPegSize * 0.42, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .shadow(color: .black.opacity(0.4), radius: 1, y: 1)
+                        )
+                }
+            }
+
+            Spacer(minLength: 4)
+
+            dailyFeedbackDots(row.feedback)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
+    }
+
+    private func dailyFeedbackDots(_ fb: Feedback) -> some View {
+        let dotSize: CGFloat = codeLength <= 4 ? 14 : 11
+        let types: [FeedbackType] =
+            Array(repeating: .exact, count: fb.exact) +
+            Array(repeating: .partial, count: fb.partial) +
+            Array(repeating: .miss, count: max(0, codeLength - fb.exact - fb.partial))
+
+        return HStack(spacing: 2) {
+            ForEach(Array(types.enumerated()), id: \.offset) { _, t in
+                dailyFeedbackDot(type: t, size: dotSize)
+            }
+        }
+    }
+
+    private func dailyFeedbackDot(type: FeedbackType, size: CGFloat) -> some View {
+        ZStack {
+            Circle()
+                .fill(dailyFeedbackBgColor(type))
+                .frame(width: size, height: size)
+
+            switch type {
+            case .exact:
+                Circle().fill(accent).frame(width: size * 0.8, height: size * 0.8)
+            case .partial:
+                FeedbackTriangle().fill(warning).frame(width: size * 0.8, height: size * 0.8)
+            case .miss:
+                Image(systemName: "xmark")
+                    .font(.system(size: size * 0.85, weight: .black))
+                    .foregroundStyle(.white.opacity(0.2))
+            }
+        }
+    }
+
+    private func dailyFeedbackBgColor(_ type: FeedbackType) -> Color {
+        switch type {
+        case .exact: return accent.opacity(0.2)
+        case .partial: return warning.opacity(0.2)
+        case .miss: return .white.opacity(0.06)
+        }
+    }
+
+    // MARK: - App Link
+
+    private var appLinkSection: some View {
+        HStack(spacing: 10) {
+            Image("AppLogo")
+                .resizable()
+                .frame(width: 36, height: 36)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Mind Cipher")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.85))
+                Text("Scan to download")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.35))
+            }
+            Spacer()
+            if let qrImage = generateDailyQRCode(from: appStoreURL) {
+                Image(uiImage: qrImage)
+                    .interpolation(.none)
+                    .resizable()
+                    .frame(width: 48, height: 48)
+                    .cornerRadius(4)
+                    .colorInvert()
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+    }
+
+    private func generateDailyQRCode(from string: String) -> UIImage? {
+        let data = string.data(using: .utf8)
+        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
+        filter.setValue(data, forKey: "inputMessage")
+        filter.setValue("M", forKey: "inputCorrectionLevel")
+        guard let ciImage = filter.outputImage else { return nil }
+        let scale = 256.0 / ciImage.extent.width
+        let transformed = ciImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(transformed, from: transformed.extent) else { return nil }
+        return UIImage(cgImage: cgImage)
+    }
+
+    private func dailyPegNumber(_ peg: PegColor) -> Int {
+        if let idx = availableColors.firstIndex(of: peg) {
+            return idx + 1
+        }
+        return peg.rawValue + 1
+    }
+
+    private func dailyPegCol(_ peg: PegColor) -> Color {
+        switch peg {
+        case .red: return Color(red: 0.95, green: 0.25, blue: 0.25)
+        case .green: return Color(red: 0.2, green: 0.85, blue: 0.35)
+        case .blue: return Color(red: 0.25, green: 0.45, blue: 0.95)
+        case .yellow: return Color(red: 0.95, green: 0.85, blue: 0.15)
+        case .purple: return Color(red: 0.65, green: 0.3, blue: 0.9)
+        case .orange: return Color(red: 1.0, green: 0.55, blue: 0.1)
+        case .cyan: return Color(red: 0.1, green: 0.85, blue: 0.9)
+        case .pink: return Color(red: 0.95, green: 0.4, blue: 0.65)
+        }
+    }
+
+    private func dailyPegGrad(_ peg: PegColor) -> LinearGradient {
+        let c = dailyPegCol(peg)
         return LinearGradient(colors: [c.opacity(0.85), c, c.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
     }
 }
