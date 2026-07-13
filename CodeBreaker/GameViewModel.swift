@@ -186,6 +186,19 @@ class GameViewModel: ObservableObject {
         resetState()
     }
 
+    func startOnlineGame(seed: UInt64, codeLength: Int, colorCount: Int, maxAttempts: Int, allowDuplicates: Bool) {
+        self.level = nil
+        self.mode = .online
+        engine = GameEngine(
+            seed: seed,
+            codeLength: codeLength,
+            colorCount: colorCount,
+            allowDuplicates: allowDuplicates,
+            maxAttempts: maxAttempts
+        )
+        resetState()
+    }
+
     private func resetState() {
         guessHistory = []
         currentGuess = Array(repeating: nil, count: codeLength)
@@ -361,6 +374,9 @@ class GameViewModel: ObservableObject {
                 AchievementManager.shared.markEliteAchievements(difficulty: lastDifficulty, attempts: attempts, hintUsed: hintUsed, lieMode: engine?.lieMode ?? false)
             case .duel:
                 AchievementManager.shared.markDuelWin()
+            case .online:
+                let onlineWins = UserDefaults.standard.integer(forKey: "online_wins") + 1
+                UserDefaults.standard.set(onlineWins, forKey: "online_wins")
             }
         } else if guessHistory.count >= maxAttempts {
             stopTimer()

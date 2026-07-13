@@ -5,6 +5,7 @@ struct HomeView: View {
     @State private var showLevels = false
     @State private var showFreePlay = false
     @State private var showDuel = false
+    @State private var showOnline = false
     @State private var showSettings = false
     @State private var showDaily = false
     @State private var showEditor = false
@@ -51,6 +52,9 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showDuel) {
                 DuelSetupView()
             }
+            .navigationDestination(isPresented: $showOnline) {
+                MultiplayerView()
+            }
             .navigationDestination(isPresented: $showSettings) {
                 SettingsView()
             }
@@ -76,7 +80,7 @@ struct HomeView: View {
                 Button("Unlock Pro") { showStore = true }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This mode requires Pro. Unlock Pro to access Free Play, Duel Mode, and Custom Levels.")
+                Text("This mode requires Pro. Unlock Pro to access all 480 levels, Free Play, and the Custom Level Editor.")
             }
             .sheet(isPresented: $showTutorial, onDismiss: {
                 hasSeenTutorial = true
@@ -228,9 +232,15 @@ struct HomeView: View {
                 title: L("menu.duel"),
                 subtitle: L("menu.duel.sub"),
                 icon: "person.2.fill",
-                color: Color(red: 0.5, green: 0.5, blue: 1.0),
-                requiresPro: true
-            ) { if storeManager.isPro { showDuel = true } else { showProAlert = true } }
+                color: Color(red: 0.5, green: 0.5, blue: 1.0)
+            ) { showDuel = true }
+
+            menuButton(
+                title: L("menu.online"),
+                subtitle: L("menu.online.sub"),
+                icon: "wifi",
+                color: Color(red: 0.2, green: 0.8, blue: 0.6)
+            ) { showOnline = true }
 
             menuButton(
                 title: L("menu.editor"),

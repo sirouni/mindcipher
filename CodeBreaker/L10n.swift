@@ -130,6 +130,29 @@ private let strings: [String: [String: String]] = [
     // 编辑器
     "editor.title":     ["zh": "自定义关卡", "en": "Custom Level"],
     "editor.start":     ["zh": "开始自定义挑战", "en": "Start Custom Challenge"],
+
+    // 在线对战
+    "menu.online":      ["zh": "在线对战",                 "en": "Online Match"],
+    "menu.online.sub":  ["zh": "Game Center 实时竞速",     "en": "Game Center speed duel"],
+    "online.title":     ["zh": "在线对战",                 "en": "Online Match"],
+    "online.desc":      ["zh": "与全球玩家实时竞速破译",   "en": "Race against players worldwide"],
+    "online.find":      ["zh": "寻找对手",                 "en": "Find Match"],
+    "online.searching": ["zh": "正在匹配对手…",            "en": "Searching for opponent…"],
+    "online.waiting":   ["zh": "等待对手就绪…",            "en": "Waiting for opponent…"],
+    "online.gc.required":["zh": "请先登录 Game Center",    "en": "Sign in to Game Center first"],
+    "online.disconnected":["zh": "%@ 已断开连接",          "en": "%@ disconnected"],
+    "online.rules.title":["zh": "对战规则",                "en": "Rules"],
+    "online.rule1":     ["zh": "1. 匹配成功后双方破解同一密码", "en": "1. Both players crack the same code"],
+    "online.rule2":     ["zh": "2. 先破解者获胜",          "en": "2. First to solve wins"],
+    "online.rule3":     ["zh": "3. 步数相同则用时短者胜",  "en": "3. Fewer steps wins; ties broken by time"],
+    "online.steps":     ["zh": "步",                       "en": "steps"],
+    "online.rematch":   ["zh": "再来一局",                 "en": "Rematch"],
+    "online.exit":      ["zh": "退出对战",                 "en": "Exit Match"],
+    "online.timeout":   ["zh": "连接超时，请重新匹配",     "en": "Connection timed out. Please try again"],
+    "online.opponent.left":["zh": "对手已离开",            "en": "Opponent left"],
+    "online.you.win":   ["zh": "你赢了！",                 "en": "You Win!"],
+    "online.you.lose":  ["zh": "你输了",                   "en": "You Lose"],
+    "online.draw":      ["zh": "平局",                     "en": "Draw"],
 ]
 
 func L(_ key: String) -> String {

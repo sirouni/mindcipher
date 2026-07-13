@@ -72,6 +72,7 @@ enum GameMode: Equatable {
     case campaign(level: Int)
     case freePlay
     case duel
+    case online
 }
 
 enum Difficulty: String, CaseIterable {
@@ -769,8 +770,13 @@ class HintCoinManager: ObservableObject {
     static let winsPerCoin = 3
     static let daysForBonus = 2
 
+    private let cloudStore = NSUbiquitousKeyValueStore.default
+
     @Published var coins: Int {
-        didSet { UserDefaults.standard.set(coins, forKey: coinsKey) }
+        didSet {
+            UserDefaults.standard.set(coins, forKey: coinsKey)
+            cloudStore.set(Int64(coins), forKey: coinsKey)
+        }
     }
     @Published var winsTowardsCoin: Int {
         didSet { UserDefaults.standard.set(winsTowardsCoin, forKey: winsTowardsCoinKey) }
@@ -781,10 +787,34 @@ class HintCoinManager: ObservableObject {
     @Published var justEarnedCoin: Bool = false
 
     private init() {
-        coins = UserDefaults.standard.integer(forKey: coinsKey)
+        cloudStore.synchronize()
+        // Purchased coins are consumables and can't be restored through
+        // StoreKit, so the balance is mirrored to iCloud. Merging with max()
+        // never loses coins across reinstall/device change, at the cost of
+        // occasionally resurrecting a few just-spent ones.
+        let localCoins = UserDefaults.standard.integer(forKey: coinsKey)
+        let cloudCoins = Int(cloudStore.longLong(forKey: coinsKey))
+        coins = max(localCoins, cloudCoins)
         winsTowardsCoin = UserDefaults.standard.integer(forKey: winsTowardsCoinKey)
         consecutiveDays = UserDefaults.standard.integer(forKey: consecutiveDaysKey)
+        UserDefaults.standard.set(coins, forKey: coinsKey)
+        cloudStore.set(Int64(coins), forKey: coinsKey)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(cloudStoreDidChange),
+            name: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+            object: cloudStore
+        )
         checkDailyLogin()
+    }
+
+    @objc private func cloudStoreDidChange(_ notification: Notification) {
+        let cloudCoins = Int(cloudStore.longLong(forKey: coinsKey))
+        DispatchQueue.main.async {
+            if cloudCoins > self.coins {
+                self.coins = cloudCoins
+            }
+        }
     }
 
     func recordWin() {
