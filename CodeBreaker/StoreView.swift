@@ -92,7 +92,7 @@ struct StoreView: View {
                             Text("Pro Unlock")
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(AppTheme.textPrimary)
-                            Text("Unlock all 480 levels in Classic & Lie campaigns")
+                            Text("All 480 levels, Free Play & Custom Level Editor")
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundStyle(AppTheme.textSecondary)
                         }

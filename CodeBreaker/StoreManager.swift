@@ -30,7 +30,7 @@ enum StoreProduct: String, CaseIterable {
         case .hintPack5: return "A small pack of hints"
         case .hintPack15: return "Best value for casual players"
         case .hintPack50: return "Never run out of hints"
-        case .proUnlock: return "Unlock all levels, Free Play, Duel & Custom"
+        case .proUnlock: return "All 480 levels, Free Play & Custom Editor"
         }
     }
 }
@@ -58,6 +58,19 @@ class StoreManager: ObservableObject {
         #endif
         updateTask = listenForTransactions()
         Task { await loadProducts() }
+        #if !DEBUG
+        Task { await refreshEntitlements() }
+        #endif
+    }
+
+    /// Re-grants non-consumable entitlements (Pro) after reinstall or device
+    /// change without requiring the user to tap "Restore Purchases".
+    func refreshEntitlements() async {
+        for await result in Transaction.currentEntitlements {
+            if let transaction = try? checkVerified(result) {
+                await handleTransaction(transaction)
+            }
+        }
     }
 
     deinit {
