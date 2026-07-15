@@ -55,6 +55,9 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showOnline) {
                 MultiplayerView()
             }
+            .onReceive(gcManager.$pendingInvite) { invite in
+                if invite != nil { showOnline = true }
+            }
             .navigationDestination(isPresented: $showSettings) {
                 SettingsView()
             }

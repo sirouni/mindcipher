@@ -224,13 +224,18 @@ struct ChallengeGameView: View {
 
 // MARK: - Game Center Manager
 
-class GameCenterManager: ObservableObject {
+class GameCenterManager: NSObject, ObservableObject, GKLocalPlayerListener {
     static let shared = GameCenterManager()
     static let totalLeaderboardID = "com.codebreaker.app.total"
 
     @Published var isAuthenticated = false
+    /// Set when the local player accepts a Game Center invite. MultiplayerView
+    /// observes this and hands it to its MultiplayerManager to join the match.
+    @Published var pendingInvite: GKInvite?
 
-    private init() {}
+    private var didRegisterListener = false
+
+    private override init() { super.init() }
 
     func authenticate() {
         GKLocalPlayer.local.authenticateHandler = { [weak self] _, error in
@@ -238,12 +243,29 @@ class GameCenterManager: ObservableObject {
                 let isAuthenticated = GKLocalPlayer.local.isAuthenticated
                 self?.isAuthenticated = isAuthenticated
                 if isAuthenticated {
+                    self?.registerInviteListener()
                     self?.submitTotalScore()
                 }
             }
             if let error {
                 print("Game Center auth failed: \(error.localizedDescription)")
             }
+        }
+    }
+
+    private func registerInviteListener() {
+        guard !didRegisterListener else { return }
+        didRegisterListener = true
+        GKLocalPlayer.local.register(self)
+    }
+
+    // MARK: - GKInviteEventListener
+
+    /// Fired when the local player taps an invite from a friend. Stash it so the
+    /// online-match UI can present the matchmaker and join.
+    func player(_ player: GKPlayer, didAccept invite: GKInvite) {
+        DispatchQueue.main.async {
+            self.pendingInvite = invite
         }
     }
 

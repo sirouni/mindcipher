@@ -82,6 +82,18 @@ class MultiplayerManager: NSObject, ObservableObject {
         presentFromRoot(mmVC)
     }
 
+    /// Join a match from an accepted Game Center invite. Reuses the same
+    /// matchmaker delegate as findMatch(), so didFind handles host/setup.
+    func acceptInvite(_ invite: GKInvite) {
+        guard let mmVC = GKMatchmakerViewController(invite: invite) else {
+            phase = .lobby
+            return
+        }
+        phase = .matchmaking
+        mmVC.matchmakerDelegate = self
+        presentFromRoot(mmVC)
+    }
+
     func sendProgress(guessCount: Int, exact: Int, partial: Int) {
         send(MPMessage(type: .progress, guessCount: guessCount, lastExact: exact, lastPartial: partial))
     }

@@ -4,6 +4,7 @@ import GameKit
 struct MultiplayerView: View {
     @StateObject private var manager = MultiplayerManager()
     @StateObject private var viewModel = GameViewModel()
+    @ObservedObject private var gcManager = GameCenterManager.shared
     @Environment(\.dismiss) private var dismiss
 
     @State private var localFinished = false
@@ -46,6 +47,8 @@ struct MultiplayerView: View {
             }
         }
         .navigationBarBackButtonHidden(manager.phase != .lobby)
+        .onAppear { consumePendingInvite() }
+        .onReceive(gcManager.$pendingInvite) { _ in consumePendingInvite() }
         .onChange(of: manager.phase) { _, newPhase in
             if case .playing = newPhase {
                 startNewRound()
@@ -54,6 +57,13 @@ struct MultiplayerView: View {
         .onChange(of: manager.opponentFinished) { _, finished in
             if finished { tryShowComparison() }
         }
+    }
+
+    /// If the player arrived here by accepting an invite, join that match.
+    private func consumePendingInvite() {
+        guard let invite = gcManager.pendingInvite, manager.phase == .lobby else { return }
+        gcManager.pendingInvite = nil
+        manager.acceptInvite(invite)
     }
 
     // MARK: - Lobby
