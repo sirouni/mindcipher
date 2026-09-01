@@ -3,7 +3,7 @@ import UIKit
 
 enum FeedbackSupport {
     static let githubIssueURL = URL(string: "https://github.com/sirouni/mindcipher/issues/new?template=feedback.yml")!
-    static let emailAddress = "mindcipher.app@outlook.com"
+    static let emailAddress = "sirouni@msn.com"
 
     static var emailURL: URL {
         var components = URLComponents()

@@ -31,6 +31,7 @@ struct SettingsView: View {
     @ObservedObject var store = StoreManager.shared
     @State private var showResetAlert = false
     @State private var showResetStatsAlert = false
+    @State private var showFeedback = false
 
     var body: some View {
         ZStack {
@@ -51,6 +52,9 @@ struct SettingsView: View {
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.light, for: .navigationBar)
+        .navigationDestination(isPresented: $showFeedback) {
+            FeedbackView()
+        }
     }
 
     private var gameSection: some View {
@@ -77,8 +81,8 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 4) {
             sectionHeader(L("feedback.section"))
             VStack(spacing: 0) {
-                NavigationLink {
-                    FeedbackView()
+                Button {
+                    showFeedback = true
                 } label: {
                     HStack {
                         Image(systemName: "envelope.fill")
@@ -94,6 +98,7 @@ struct SettingsView: View {
                             .foregroundStyle(AppTheme.textMuted)
                     }
                     .padding(14)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(L("feedback.row"))

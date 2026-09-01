@@ -126,7 +126,7 @@ private let strings: [String: [String: String]] = [
     "feedback.github.sub": ["zh": "在浏览器中打开，可用 Google / Apple 登录",
                             "en": "Opens GitHub in the browser"],
     "feedback.email":     ["zh": "改用邮件",             "en": "Email instead"],
-    "feedback.email.sub":  ["zh": "mindcipher.app@outlook.com", "en": "mindcipher.app@outlook.com"],
+    "feedback.email.sub":  ["zh": "sirouni@msn.com", "en": "sirouni@msn.com"],
 
     // 颜色
     "color.red":    ["zh": "红", "en": "Red"],
