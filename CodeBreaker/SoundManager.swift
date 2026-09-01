@@ -60,6 +60,24 @@ class SoundManager {
         if haptics { UINotificationFeedbackGenerator().notificationOccurred(.warning) }
     }
 
+    func playLieSubmit() {
+        if haptics { UINotificationFeedbackGenerator().notificationOccurred(.warning) }
+        if sound { playMorseSequence([.short, .long, .short]) }
+    }
+
+    func playLieReveal() {
+        if haptics { UINotificationFeedbackGenerator().notificationOccurred(.warning) }
+        if sound {
+            playTone(frequency: 392, duration: 0.08)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                self?.playTone(frequency: 311, duration: 0.1)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) { [weak self] in
+                self?.playTone(frequency: 523, duration: 0.18, volume: 0.16)
+            }
+        }
+    }
+
     // MARK: - Tone Generation
 
     private func playTone(frequency: Double, duration: Double, volume: Float = 0.15) {

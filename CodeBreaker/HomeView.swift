@@ -56,7 +56,7 @@ struct HomeView: View {
                 MultiplayerView()
             }
             .onReceive(gcManager.$pendingInvite) { invite in
-                if invite != nil { showOnline = true }
+                if FeatureFlags.onlineMatchEnabled, invite != nil { showOnline = true }
             }
             .navigationDestination(isPresented: $showSettings) {
                 SettingsView()
@@ -238,12 +238,14 @@ struct HomeView: View {
                 color: Color(red: 0.5, green: 0.5, blue: 1.0)
             ) { showDuel = true }
 
-            menuButton(
-                title: L("menu.online"),
-                subtitle: L("menu.online.sub"),
-                icon: "wifi",
-                color: Color(red: 0.2, green: 0.8, blue: 0.6)
-            ) { showOnline = true }
+            if FeatureFlags.onlineMatchEnabled {
+                menuButton(
+                    title: L("menu.online"),
+                    subtitle: L("menu.online.sub"),
+                    icon: "wifi",
+                    color: Color(red: 0.2, green: 0.8, blue: 0.6)
+                ) { showOnline = true }
+            }
 
             menuButton(
                 title: L("menu.editor"),

@@ -75,6 +75,11 @@ enum GameMode: Equatable {
     case online
 }
 
+enum FeatureFlags {
+    /// Game Center 1v1. Off until matchmaking is solid enough to show again.
+    static let onlineMatchEnabled = false
+}
+
 enum Difficulty: String, CaseIterable {
     case beginner = "Beginner"
     case easy = "Easy"

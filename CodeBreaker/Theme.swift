@@ -177,6 +177,26 @@ struct FeedbackDotView: View {
     }
 }
 
+struct FeedbackDotsRow: View {
+    let feedback: Feedback
+    let codeLength: Int
+    var size: CGFloat = 16
+
+    var body: some View {
+        let types: [FeedbackType] =
+            Array(repeating: .exact, count: feedback.exact) +
+            Array(repeating: .partial, count: feedback.partial) +
+            Array(repeating: .miss, count: max(0, codeLength - feedback.exact - feedback.partial))
+
+        HStack(spacing: 3) {
+            ForEach(Array(types.enumerated()), id: \.offset) { _, type in
+                FeedbackDotView(type: type, size: size)
+            }
+        }
+        .accessibilityLabel("\(feedback.exact) exact, \(feedback.partial) wrong position")
+    }
+}
+
 struct FeedbackTriangle: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()

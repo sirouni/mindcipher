@@ -243,7 +243,9 @@ class GameCenterManager: NSObject, ObservableObject, GKLocalPlayerListener {
                 let isAuthenticated = GKLocalPlayer.local.isAuthenticated
                 self?.isAuthenticated = isAuthenticated
                 if isAuthenticated {
-                    self?.registerInviteListener()
+                    if FeatureFlags.onlineMatchEnabled {
+                        self?.registerInviteListener()
+                    }
                     self?.submitTotalScore()
                 }
             }

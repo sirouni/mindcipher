@@ -18,6 +18,8 @@ struct GameView: View {
     @ObservedObject private var hintCoinManager = HintCoinManager.shared
     @State private var achievementToast: Achievement?
     @State private var hintToast: String?
+    @State private var lieRevealShowReal = false
+    @State private var showLieKickoff = false
 
     init(viewModel: GameViewModel) {
         self.viewModel = viewModel
@@ -58,6 +60,13 @@ struct GameView: View {
                 }
             }
 
+            if showLieKickoff,
+               viewModel.engine?.lieMode == true,
+               viewModel.phase == .playing,
+               viewModel.guessHistory.isEmpty {
+                lieKickoffBanner
+            }
+
             if showResult { resultOverlay }
 
             ForEach(confettiParticles) { p in
@@ -94,6 +103,19 @@ struct GameView: View {
             }
         }
         .navigationBarHidden(true)
+        .task(id: viewModel.gameStartTime) {
+            guard viewModel.engine?.lieMode == true, viewModel.phase == .playing else {
+                showLieKickoff = false
+                return
+            }
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
+                showLieKickoff = true
+            }
+            try? await Task.sleep(for: .seconds(2.8))
+            withAnimation(.easeOut(duration: 0.35)) {
+                showLieKickoff = false
+            }
+        }
         .onChange(of: viewModel.phase) { _, phase in
             if phase != .playing {
                 revealSecretSequentially()
@@ -109,11 +131,27 @@ struct GameView: View {
                 } else {
                     SoundManager.shared.playLose()
                 }
+                if viewModel.engine?.lieMode == true {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        SoundManager.shared.playLieReveal()
+                    }
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     achievementManager.checkAll()
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + Double(viewModel.codeLength) * 0.2 + 0.6) {
+                let overlayDelay = Double(viewModel.codeLength) * 0.2 + 0.6
+                    + (viewModel.engine?.lieMode == true ? 0.45 : 0)
+                DispatchQueue.main.asyncAfter(deadline: .now() + overlayDelay) {
                     withAnimation(.spring(response: 0.5)) { showResult = true }
+                }
+            }
+        }
+        .onChange(of: showResult) { _, shown in
+            guard shown, viewModel.engine?.lieMode == true else { return }
+            lieRevealShowReal = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                    lieRevealShowReal = true
                 }
             }
         }
@@ -133,6 +171,32 @@ struct GameView: View {
             }
         }
         
+    }
+
+    private var lieKickoffBanner: some View {
+        VStack {
+            HStack(spacing: 10) {
+                Image(systemName: "theatermask.and.paintbrush.fill")
+                    .font(.system(size: 18, weight: .bold))
+                    .symbolEffect(.pulse, options: .repeating)
+                Text(L("lie.kickoff"))
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+            }
+            .foregroundStyle(AppTheme.danger)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color.white)
+                    .shadow(color: AppTheme.danger.opacity(0.35), radius: 16, y: 6)
+            )
+            .padding(.top, 100)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .transition(.move(edge: .top).combined(with: .opacity))
+        .zIndex(80)
+        .allowsHitTesting(false)
     }
 
     private func achievementBanner(_ a: Achievement) -> some View {
@@ -175,9 +239,15 @@ struct GameView: View {
                     Text("Level \(level.id)")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
-                    Text(level.difficulty.rawValue)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(AppTheme.accent)
+                    if viewModel.engine?.lieMode == true {
+                        Text("\(level.difficulty.rawValue) · \(L("lie.mode"))")
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundStyle(AppTheme.danger)
+                    } else {
+                        Text(level.difficulty.rawValue)
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(AppTheme.accent)
+                    }
                 } else if viewModel.mode == .duel {
                     Text(L("game.duel"))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
@@ -257,11 +327,16 @@ struct GameView: View {
             legendLine(type: .exact, text: "= One right color in the right position")
             legendLine(type: .partial, text: "= One right color but in the wrong position")
             legendLine(type: .miss, text: "= One color is not in the secret code")
-            if viewModel.engine?.lieMode == true {
-                Text("Lie Mode — one feedback may be fake!")
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundStyle(AppTheme.danger)
-                    .padding(.top, 2)
+            if viewModel.engine?.lieMode == true, !showLieKickoff {
+                HStack(spacing: 6) {
+                    Image(systemName: "theatermask.and.paintbrush.fill")
+                        .font(.system(size: 12, weight: .bold))
+                        .symbolEffect(.pulse)
+                    Text(L("lie.clue"))
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                }
+                .foregroundStyle(AppTheme.danger)
+                .padding(.top, 2)
             }
         }
         .padding(.horizontal, 16)
@@ -336,7 +411,8 @@ struct GameView: View {
                                 guess: record.guess,
                                 feedback: record.feedback,
                                 codeLength: viewModel.codeLength,
-                                gameOver: viewModel.phase != .playing
+                                gameOver: viewModel.phase != .playing,
+                                isLieMode: viewModel.engine?.lieMode == true
                             )
                             .frame(minHeight: rowHeight)
                             .id(record.id)
@@ -574,7 +650,11 @@ struct GameView: View {
             .accessibilityLabel("Hint")
 
             Button {
-                SoundManager.shared.playSubmit()
+                if viewModel.engine?.lieMode == true {
+                    SoundManager.shared.playLieSubmit()
+                } else {
+                    SoundManager.shared.playSubmit()
+                }
                 viewModel.submitGuess()
             } label: {
                 HStack(spacing: 8) {
@@ -664,6 +744,8 @@ struct GameView: View {
 
             revealedCodeRow
 
+            lieRevealSection
+
             resultButtons
         }
     }
@@ -738,6 +820,8 @@ struct GameView: View {
 
             revealedCodeRow
 
+            lieRevealSection
+
             resultButtons
         }
     }
@@ -760,31 +844,48 @@ struct GameView: View {
     private var lieRevealSection: some View {
         if viewModel.engine?.lieMode == true {
             if let lieGuess = viewModel.engine?.lieAtGuess, lieGuess <= viewModel.guessHistory.count {
-                VStack(spacing: 6) {
+                let record = viewModel.guessHistory[lieGuess - 1]
+                let realFeedback = viewModel.engine!.computeRealFeedback(guess: record.guess)
+                VStack(spacing: 8) {
                     HStack(spacing: 6) {
                         Image(systemName: "theatermask.and.paintbrush.fill")
-                            .font(.system(size: 14))
-                            .foregroundStyle(AppTheme.danger)
-                        Text("Step \(lieGuess) was a lie!")
                             .font(.system(size: 14, weight: .bold))
-                            .foregroundStyle(AppTheme.danger)
+                        Text(L("lie.reveal", lieGuess))
+                            .font(.system(size: 14, weight: .bold, design: .rounded))
                     }
+                    .foregroundStyle(AppTheme.danger)
 
-                    let record = viewModel.guessHistory[lieGuess - 1]
-                    let realFeedback = viewModel.engine!.computeRealFeedback(guess: record.guess)
-                    HStack(spacing: 4) {
-                        Text("Fake:")
-                            .font(.system(size: 11, weight: .medium))
+                    HStack(spacing: 10) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(L("lie.fake"))
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundStyle(AppTheme.textMuted)
+                            FeedbackDotsRow(
+                                feedback: record.feedback,
+                                codeLength: viewModel.codeLength,
+                                size: 16
+                            )
+                            .opacity(lieRevealShowReal ? 0.4 : 1)
+                        }
+
+                        Image(systemName: "arrow.right")
+                            .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(AppTheme.textMuted)
-                        Text("\(record.feedback.exact) exact \(record.feedback.partial) partial")
-                            .font(.system(size: 11, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AppTheme.danger)
-                        Text("→ Real:")
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(AppTheme.textMuted)
-                        Text("\(realFeedback.exact) exact \(realFeedback.partial) partial")
-                            .font(.system(size: 11, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AppTheme.accent)
+                            .padding(.top, 12)
+                            .opacity(lieRevealShowReal ? 1 : 0.25)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(L("lie.real.short"))
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundStyle(AppTheme.textMuted)
+                            FeedbackDotsRow(
+                                feedback: realFeedback,
+                                codeLength: viewModel.codeLength,
+                                size: 16
+                            )
+                            .scaleEffect(lieRevealShowReal ? 1 : 0.7)
+                            .opacity(lieRevealShowReal ? 1 : 0)
+                        }
                     }
                 }
                 .padding(.vertical, 10)
@@ -802,7 +903,7 @@ struct GameView: View {
                     Image(systemName: "theatermask.and.paintbrush.fill")
                         .font(.system(size: 13))
                         .foregroundStyle(AppTheme.accent)
-                    Text("No lie triggered (you won too fast!)")
+                    Text(L("lie.notrigger"))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AppTheme.accent)
                 }
@@ -1134,7 +1235,10 @@ struct GuessRowView: View {
     let feedback: Feedback
     let codeLength: Int
     var gameOver: Bool = false
+    var isLieMode: Bool = false
     @State private var revealed = false
+    @State private var glitch = false
+    @State private var stampIn = false
 
     private var pegDisplaySize: CGFloat {
         codeLength <= 4 ? 32 : codeLength <= 5 ? 28 : 24
@@ -1171,34 +1275,72 @@ struct GuessRowView: View {
             Spacer(minLength: 4)
 
             feedbackDots
-                .opacity(revealed ? 1.0 : 0)
+                .opacity(revealed ? (glitch ? 0.2 : 1.0) : 0)
+                .offset(x: glitch ? 1.5 : 0)
                 .animation(.easeOut(duration: 0.3).delay(0.4), value: revealed)
+                .animation(.easeInOut(duration: 0.06), value: glitch)
 
             if gameOver && feedback.isLie {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 12))
-                    .foregroundStyle(AppTheme.danger)
+                Text(L("lie.stamp"))
+                    .font(.system(size: 9, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(AppTheme.danger, in: Capsule())
+                    .rotationEffect(.degrees(-9))
+                    .scaleEffect(stampIn ? 1 : 1.7)
+                    .opacity(stampIn ? 1 : 0)
             }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color.white.opacity(0.9))
+                .fill(gameOver && feedback.isLie ? AppTheme.danger.opacity(0.08) : Color.white.opacity(0.9))
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(
-                            gameOver && feedback.isLie ? AppTheme.danger.opacity(0.7) : Color.black.opacity(0.06),
+                            gameOver && feedback.isLie ? AppTheme.danger.opacity(stampIn ? 0.85 : 0.35) : Color.black.opacity(0.06),
                             lineWidth: gameOver && feedback.isLie ? 2 : 1
                         )
                 )
-                .shadow(color: .black.opacity(0.03), radius: 2, y: 1)
+                .shadow(
+                    color: gameOver && feedback.isLie && stampIn ? AppTheme.danger.opacity(0.22) : .black.opacity(0.03),
+                    radius: gameOver && feedback.isLie ? 6 : 2,
+                    y: 1
+                )
         )
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Row \(index) \(guess.map { $0.displayName }.joined(separator: " ")) feedback \(feedbackLabel)")
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 revealed = true
+            }
+            if isLieMode {
+                flickerFeedback()
+            }
+            if gameOver && feedback.isLie {
+                slamLieStamp()
+            }
+        }
+        .onChange(of: gameOver) { _, over in
+            if over && feedback.isLie { slamLieStamp() }
+        }
+    }
+
+    private func flickerFeedback() {
+        let beats: [Double] = [0.48, 0.58, 0.68, 0.78]
+        for (i, t) in beats.enumerated() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + t) {
+                glitch = i % 2 == 0
+            }
+        }
+    }
+
+    private func slamLieStamp() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            withAnimation(.spring(response: 0.32, dampingFraction: 0.52)) {
+                stampIn = true
             }
         }
     }
@@ -1756,13 +1898,24 @@ struct ShareCardView: View {
             }
 
             if isLieMode, let step = lieStep, let fakeFb = lieFakeFeedback, let realFb = lieRealFeedback {
-                HStack(spacing: 6) {
-                    Image(systemName: "theatermask.and.paintbrush.fill")
-                        .font(.system(size: 12))
-                    Text("Step \(step) was a lie!  Fake: \(fakeFb.exact)E \(fakeFb.partial)P → Real: \(realFb.exact)E \(realFb.partial)P")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                VStack(spacing: 6) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "theatermask.and.paintbrush.fill")
+                            .font(.system(size: 12))
+                        Text("Step \(step) was a lie!")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                    }
+                    .foregroundStyle(danger)
+
+                    HStack(spacing: 8) {
+                        FeedbackDotsRow(feedback: fakeFb, codeLength: codeLength, size: 14)
+                            .opacity(0.45)
+                        Image(systemName: "arrow.right")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(Color(white: 0.55))
+                        FeedbackDotsRow(feedback: realFb, codeLength: codeLength, size: 14)
+                    }
                 }
-                .foregroundStyle(danger)
                 .padding(.top, 2)
             }
         }
