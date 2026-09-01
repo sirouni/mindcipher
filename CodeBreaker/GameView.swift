@@ -20,6 +20,9 @@ struct GameView: View {
     @State private var hintToast: String?
     @State private var lieRevealShowReal = false
     @State private var showLieKickoff = false
+    @ObservedObject private var storeManager = StoreManager.shared
+    @State private var showPaywall = false
+    @State private var paywallReason: PaywallReason = .classicLevels
 
     init(viewModel: GameViewModel) {
         self.viewModel = viewModel
@@ -147,13 +150,21 @@ struct GameView: View {
             }
         }
         .onChange(of: showResult) { _, shown in
-            guard shown, viewModel.engine?.lieMode == true else { return }
-            lieRevealShowReal = false
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                    lieRevealShowReal = true
+            guard shown else { return }
+            if viewModel.engine?.lieMode == true {
+                lieRevealShowReal = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                        lieRevealShowReal = true
+                    }
                 }
             }
+            if case .won = viewModel.phase {
+                presentCapPaywallIfNeeded()
+            }
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(reason: paywallReason)
         }
         .onChange(of: achievementManager.newlyUnlocked?.id) { _, newId in
             guard newId != nil, let a = achievementManager.newlyUnlocked else { return }
@@ -171,6 +182,19 @@ struct GameView: View {
             }
         }
         
+    }
+
+    private func presentCapPaywallIfNeeded() {
+        guard !storeManager.isPro, let level = viewModel.level else { return }
+        let lie = viewModel.engine?.lieMode == true
+        guard level.id == StoreManager.freeCap(lieMode: lie) else { return }
+        let key = lie ? "paywall_auto_lie" : "paywall_auto_classic"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        paywallReason = lie ? .finishedLieFree : .finishedClassicFree
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+            showPaywall = true
+        }
     }
 
     private var lieKickoffBanner: some View {
@@ -958,10 +982,27 @@ struct GameView: View {
                 if let level = viewModel.level {
                     if case .won = viewModel.phase,
                        let next = LevelManager.shared.level(for: level.id + 1) {
+                        let lie = viewModel.engine?.lieMode == true
+                        if storeManager.isLevelLocked(next.id, lieMode: lie) {
+                            Button {
+                                paywallReason = lie ? .finishedLieFree : .finishedClassicFree
+                                if level.id != StoreManager.freeCap(lieMode: lie) {
+                                    paywallReason = lie ? .lieLevels : .classicLevels
+                                }
+                                showPaywall = true
+                            } label: {
+                                Text(L("paywall.unlock"))
+                                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Color.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 14)
+                                    .background(lie ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
+                            }
+                        } else {
                         Button {
                             showResult = false
                             confettiParticles = []
-                            if viewModel.engine?.lieMode == true {
+                            if lie {
                                 let extra = level.difficulty.lieExtraAttempts
                                 viewModel.startLieGame(level: next, totalAttempts: next.maxAttempts + extra)
                             } else {
@@ -974,6 +1015,7 @@ struct GameView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
                                 .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
+                        }
                         }
                     } else {
                         Button {

@@ -400,8 +400,10 @@ class ProgressManager: ObservableObject {
 
     private let completedKey: String
     private let starsKey: String
+    private let isLieProgress: Bool
 
     init(prefix: String = "") {
+        isLieProgress = prefix.hasPrefix("lie")
         completedKey = "\(prefix)completedLevels"
         starsKey = "\(prefix)starsByLevel"
 
@@ -436,7 +438,8 @@ class ProgressManager: ObservableObject {
         #if DEBUG
         return true
         #else
-        if level > StoreManager.freeLevelCap && !UserDefaults.standard.bool(forKey: "store_is_pro") {
+        let cap = StoreManager.freeCap(lieMode: isLieProgress)
+        if level > cap && !UserDefaults.standard.bool(forKey: "store_is_pro") {
             return false
         }
         return level == 1 || completedLevels.contains(level - 1)

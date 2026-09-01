@@ -30,7 +30,7 @@ enum StoreProduct: String, CaseIterable {
         case .hintPack5: return "A small pack of hints"
         case .hintPack15: return "Best value for casual players"
         case .hintPack50: return "Never run out of hints"
-        case .proUnlock: return "All 480 levels, Free Play & Custom Editor"
+        case .proUnlock: return "Deeper Lie missions, remaining campaign, Free Play & editor"
         }
     }
 }
@@ -48,14 +48,21 @@ class StoreManager: ObservableObject {
     private let proKey = "store_is_pro"
     private var updateTask: Task<Void, Never>?
 
-    static let freeLevelCap = 40
+    static let classicFreeLevelCap = 40
+    static let lieFreeLevelCap = 80
+    /// Classic cap; prefer `freeCap(lieMode:)`.
+    static let freeLevelCap = classicFreeLevelCap
+
+    static func freeCap(lieMode: Bool) -> Int {
+        lieMode ? lieFreeLevelCap : classicFreeLevelCap
+    }
 
     private init() {
-        #if DEBUG
-        isPro = false
-        #else
-        isPro = UserDefaults.standard.bool(forKey: proKey)
-        #endif
+        if ProcessInfo.processInfo.arguments.contains("-isPro") {
+            isPro = true
+        } else {
+            isPro = UserDefaults.standard.bool(forKey: proKey)
+        }
         updateTask = listenForTransactions()
         Task { await loadProducts() }
         #if !DEBUG
@@ -157,8 +164,8 @@ class StoreManager: ObservableObject {
         }
     }
 
-    func isLevelLocked(_ levelId: Int) -> Bool {
-        !isPro && levelId > Self.freeLevelCap
+    func isLevelLocked(_ levelId: Int, lieMode: Bool = false) -> Bool {
+        !isPro && levelId > Self.freeCap(lieMode: lieMode)
     }
 }
 

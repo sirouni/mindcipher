@@ -52,8 +52,18 @@ class DailyStreakManager {
 
 class StoreManager: ObservableObject {
     static let shared = StoreManager()
-    static let freeLevelCap = 80
+    static let classicFreeLevelCap = 40
+    static let lieFreeLevelCap = 80
+    static let freeLevelCap = classicFreeLevelCap
     @Published var isPro: Bool = false
+
+    static func freeCap(lieMode: Bool) -> Int {
+        lieMode ? lieFreeLevelCap : classicFreeLevelCap
+    }
+
+    func isLevelLocked(_ levelId: Int, lieMode: Bool = false) -> Bool {
+        !isPro && levelId > Self.freeCap(lieMode: lieMode)
+    }
 }
 
 class AppSettings: ObservableObject {

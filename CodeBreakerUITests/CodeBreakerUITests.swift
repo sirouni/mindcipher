@@ -5,7 +5,7 @@ final class CodeBreakerUITests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
-        app.launchArguments += ["-hasSeenTutorial", "YES"]
+        app.launchArguments += ["-hasSeenTutorial", "YES", "-isPro"]
         app.launch()
     }
 
@@ -321,6 +321,20 @@ final class CodeBreakerUITests: XCTestCase {
 
         app.swipeUp()
         XCTAssertTrue(app.staticTexts["Version"].waitForExistence(timeout: 3))
+    }
+
+    func testSettingsFeedback() {
+        let settingsButton = app.buttons.matching(NSPredicate(format: "label CONTAINS 'gearshape'")).firstMatch
+        settingsButton.tap()
+        _ = app.navigationBars["Settings"].waitForExistence(timeout: 3)
+
+        let row = app.buttons["Send Feedback"]
+        XCTAssertTrue(row.waitForExistence(timeout: 3))
+        row.tap()
+
+        XCTAssertTrue(app.navigationBars["Feedback"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["Open GitHub Issue"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["Email instead"].exists)
     }
 
     // MARK: - Lie Mode (Free Play)

@@ -314,7 +314,7 @@ struct LevelSelectView: View {
         .buttonStyle(.plain)
         .disabled(!isUnlocked && !isProLocked)
         .sheet(isPresented: $showPaywall) {
-            NavigationStack { StoreView() }
+            PaywallView(reason: .classicLevels)
         }
     }
 }

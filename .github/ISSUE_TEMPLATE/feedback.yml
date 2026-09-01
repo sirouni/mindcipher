@@ -1,0 +1,54 @@
+name: Feedback
+description: Bug, gameplay, or idea. Genuine feedback may receive a Pro offer code after review.
+title: "[Feedback]: "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping **Mind Cipher**.
+
+        You can sign in to GitHub with **Google** or **Apple**.
+
+        Specific, useful feedback (a bug we can reproduce, a rough edge, a clear idea) may receive a **Pro offer code** after we read it. We send codes **privately** — never in a public comment. App Store ratings are **not** required and are **not** rewarded.
+
+        Issues are **public**. Do not include anything you want to keep private.
+
+        If your feedback qualifies, email [mindcipher.app@outlook.com](mailto:mindcipher.app@outlook.com) with this issue number so we can send the code.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Type
+      options:
+        - Bug
+        - Gameplay / UX
+        - Idea
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What happened, what you expected, or the idea. Concrete beats vague.
+      placeholder: e.g. Lie Mission 81 — the fake clue never showed, iPhone 16, iOS 26.2
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device / iOS / app version
+      placeholder: e.g. iPhone 16, iOS 26.2, Mind Cipher 1.0.0
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Please confirm
+      options:
+        - label: I understand this issue is public, App Store ratings are not part of this, and Pro is only granted after review (codes are sent privately).
+          required: true

@@ -176,7 +176,7 @@ struct LieLevelSelectView: View {
     private func levelCell(_ level: Level) -> some View {
         let isCompleted = progress.completedLevels.contains(level.id)
         let isUnlocked = progress.isUnlocked(level: level.id)
-        let isProLocked = store.isLevelLocked(level.id)
+        let isProLocked = store.isLevelLocked(level.id, lieMode: true)
         let stars = progress.starsByLevel[level.id] ?? 0
         let isNext = !isCompleted && isUnlocked
 
@@ -235,7 +235,7 @@ struct LieLevelSelectView: View {
         .buttonStyle(.plain)
         .disabled(!isUnlocked && !isProLocked)
         .sheet(isPresented: $showPaywall) {
-            NavigationStack { StoreView() }
+            PaywallView(reason: .lieLevels)
         }
     }
 

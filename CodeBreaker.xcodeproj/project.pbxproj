@@ -30,6 +30,7 @@
 		AA00000000000016 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000016 /* StoreView.swift */; };
 		AA00000000000017 /* MultiplayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000017 /* MultiplayerManager.swift */; };
 		AA00000000000018 /* MultiplayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000018 /* MultiplayerView.swift */; };
+		AA00000000000019 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000019 /* FeedbackView.swift */; };
 		AAUI000000000001 /* CodeBreakerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBUI000000000001 /* CodeBreakerUITests.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		BB00000000000016 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
 		BB00000000000017 /* MultiplayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerManager.swift; sourceTree = "<group>"; };
 		BB00000000000018 /* MultiplayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerView.swift; sourceTree = "<group>"; };
+		BB00000000000019 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		BBUI000000000001 /* CodeBreakerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerUITests.swift; sourceTree = "<group>"; };
 		CC00000000000001 /* CodeBreaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeBreaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCUI000000000001 /* CodeBreakerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CodeBreakerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +127,7 @@
 				BB00000000000016 /* StoreView.swift */,
 				BB00000000000017 /* MultiplayerManager.swift */,
 				BB00000000000018 /* MultiplayerView.swift */,
+				BB00000000000019 /* FeedbackView.swift */,
 				BB00000000000012 /* Localizable.strings */,
 				BB00000000000009 /* Assets.xcassets */,
 			);
@@ -262,6 +265,7 @@
 				AA00000000000016 /* StoreView.swift in Sources */,
 				AA00000000000017 /* MultiplayerManager.swift in Sources */,
 				AA00000000000018 /* MultiplayerView.swift in Sources */,
+				AA00000000000019 /* FeedbackView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

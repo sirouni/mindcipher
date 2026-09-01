@@ -23,7 +23,7 @@ struct HomeView: View {
     @ObservedObject var progress = ProgressManager.shared
     @ObservedObject var stats = StatsManager.shared
     @ObservedObject var storeManager = StoreManager.shared
-    @State private var showProAlert = false
+    @State private var paywallReason: PaywallReason?
 
     var body: some View {
         NavigationStack {
@@ -79,11 +79,8 @@ struct HomeView: View {
             .sheet(isPresented: $showLeaderboard) {
                 GameCenterLeaderboardView()
             }
-            .alert("Pro Required", isPresented: $showProAlert) {
-                Button("Unlock Pro") { showStore = true }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("This mode requires Pro. Unlock Pro to access all 480 levels, Free Play, and the Custom Level Editor.")
+            .sheet(item: $paywallReason) { reason in
+                PaywallView(reason: reason)
             }
             .sheet(isPresented: $showTutorial, onDismiss: {
                 hasSeenTutorial = true
@@ -229,7 +226,7 @@ struct HomeView: View {
                 icon: "infinity",
                 color: AppTheme.warning,
                 requiresPro: true
-            ) { if storeManager.isPro { showFreePlay = true } else { showProAlert = true } }
+            ) { if storeManager.isPro { showFreePlay = true } else { paywallReason = .freePlay } }
 
             menuButton(
                 title: L("menu.duel"),
@@ -253,7 +250,7 @@ struct HomeView: View {
                 icon: "slider.horizontal.3",
                 color: Color(red: 0.9, green: 0.4, blue: 0.6),
                 requiresPro: true
-            ) { if storeManager.isPro { showEditor = true } else { showProAlert = true } }
+            ) { if storeManager.isPro { showEditor = true } else { paywallReason = .editor } }
 
             menuButton(
                 title: "Achievements",

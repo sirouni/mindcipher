@@ -28,6 +28,7 @@ struct SettingsView: View {
     @ObservedObject var settings = AppSettings.shared
     @ObservedObject var stats = StatsManager.shared
     @ObservedObject var progress = ProgressManager.shared
+    @ObservedObject var store = StoreManager.shared
     @State private var showResetAlert = false
     @State private var showResetStatsAlert = false
 
@@ -39,6 +40,7 @@ struct SettingsView: View {
                 VStack(spacing: 20) {
                     gameSection
                     themeSection
+                    supportSection
                     statsSection
                     dangerSection
                     aboutSection
@@ -58,8 +60,10 @@ struct SettingsView: View {
                 toggleRow(icon: "speaker.wave.2.fill", title: "Sound", isOn: $settings.soundEnabled)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
                 toggleRow(icon: "iphone.radiowaves.left.and.right", title: "Haptics", isOn: $settings.hapticsEnabled)
+                #if DEBUG
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                
+                toggleRow(icon: "checkmark.seal.fill", title: "Unlock Pro (Debug)", isOn: $store.isPro)
+                #endif
             }
             .glassCard(cornerRadius: 14)
         }
@@ -67,6 +71,36 @@ struct SettingsView: View {
 
     private var themeSection: some View {
         ThemePickerView()
+    }
+
+    private var supportSection: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            sectionHeader(L("feedback.section"))
+            VStack(spacing: 0) {
+                NavigationLink {
+                    FeedbackView()
+                } label: {
+                    HStack {
+                        Image(systemName: "envelope.fill")
+                            .font(.system(size: 15))
+                            .foregroundStyle(AppTheme.accent)
+                            .frame(width: 28)
+                        Text(L("feedback.row"))
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundStyle(AppTheme.textPrimary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(AppTheme.textMuted)
+                    }
+                    .padding(14)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L("feedback.row"))
+                .accessibilityIdentifier("feedback.row")
+            }
+            .glassCard(cornerRadius: 14)
+        }
     }
 
     private var statsSection: some View {
