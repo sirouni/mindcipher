@@ -19,6 +19,9 @@ private let strings: [String: [String: String]] = [
     "menu.duel.sub":    ["zh": "一人设密码 · 一人来破译", "en": "One sets · One cracks"],
     "menu.editor":      ["zh": "自定义关卡",       "en": "Custom Level"],
     "menu.editor.sub":  ["zh": "调整所有参数 · 创造挑战", "en": "All params · Create challenge"],
+    "menu.feedback":     ["zh": "发送反馈",         "en": "Send Feedback"],
+    "menu.feedback.sub": ["zh": "认真反馈可送 Pro", "en": "Useful feedback may unlock Pro"],
+    "home.feedback.tip":  ["zh": "有用的反馈可送 Pro", "en": "Useful feedback can unlock Pro"],
 
     // 统计
     "stats.games":      ["zh": "总局数", "en": "Games"],

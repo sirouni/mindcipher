@@ -229,6 +229,9 @@ class GameCenterManager: NSObject, ObservableObject, GKLocalPlayerListener {
     static let totalLeaderboardID = "com.codebreaker.app.total"
 
     @Published var isAuthenticated = false
+    /// True once Game Center has answered (success or failure). The system
+    /// welcome banner may still be on screen for a few seconds after this.
+    @Published var authenticationFinished = false
     /// Set when the local player accepts a Game Center invite. MultiplayerView
     /// observes this and hands it to its MultiplayerManager to join the match.
     @Published var pendingInvite: GKInvite?
@@ -248,6 +251,7 @@ class GameCenterManager: NSObject, ObservableObject, GKLocalPlayerListener {
                     }
                     self?.submitTotalScore()
                 }
+                self?.authenticationFinished = true
             }
             if let error {
                 print("Game Center auth failed: \(error.localizedDescription)")

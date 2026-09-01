@@ -39,6 +39,10 @@ final class CodeBreakerUITests: XCTestCase {
         XCTAssertTrue(helpButton.waitForExistence(timeout: 3))
     }
 
+    func testHomeFeedbackButtonExists() {
+        XCTAssertTrue(app.buttons["home.feedback"].waitForExistence(timeout: 3))
+    }
+
     // MARK: - Tutorial
 
     func testTutorialAutoShowsOnFirstLaunch() {

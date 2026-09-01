@@ -14,6 +14,7 @@ struct HomeView: View {
     @State private var showLeaderboard = false
     @State private var showTutorial = false
     @State private var showStore = false
+    @State private var showFeedback = false
     @ObservedObject private var gcManager = GameCenterManager.shared
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
     @State private var titleScale: CGFloat = 0.8
@@ -24,6 +25,8 @@ struct HomeView: View {
     @ObservedObject var stats = StatsManager.shared
     @ObservedObject var storeManager = StoreManager.shared
     @State private var paywallReason: PaywallReason?
+    @State private var showFeedbackTip = false
+    @State private var didOfferFeedbackTip = false
 
     var body: some View {
         NavigationStack {
@@ -76,6 +79,9 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showAchievements) {
                 AchievementsView()
             }
+            .navigationDestination(isPresented: $showFeedback) {
+                FeedbackView()
+            }
             .sheet(isPresented: $showLeaderboard) {
                 GameCenterLeaderboardView()
             }
@@ -84,6 +90,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showTutorial, onDismiss: {
                 hasSeenTutorial = true
+                scheduleFeedbackTip(waitForGameCenterBanner: false)
             }) {
                 TutorialView()
             }
@@ -94,6 +101,8 @@ struct HomeView: View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         showTutorial = true
                     }
+                } else {
+                    scheduleFeedbackTip(waitForGameCenterBanner: true)
                 }
             }
         }
@@ -134,6 +143,15 @@ struct HomeView: View {
                     }
                 }
                 Spacer()
+                feedbackHeaderButton
+                    .overlay(alignment: .top) {
+                        if showFeedbackTip {
+                            feedbackTipBubble
+                                .offset(y: 48)
+                                .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
+                        }
+                    }
+                    .zIndex(10)
                 Button { showStore = true } label: {
                     Image(systemName: "bag.fill")
                         .font(.system(size: 20))
@@ -148,6 +166,7 @@ struct HomeView: View {
                 }
             }
             .padding(.top, 30)
+            .zIndex(10)
 
             ZStack {
                 Circle()
@@ -176,6 +195,66 @@ struct HomeView: View {
                     .tracking(5)
             }
             .opacity(titleOpacity)
+        }
+    }
+
+    private var feedbackHeaderButton: some View {
+        Button {
+            showFeedbackTip = false
+            showFeedback = true
+        } label: {
+            Image(systemName: "text.bubble.fill")
+                .font(.system(size: 20))
+                .foregroundStyle(AppTheme.textSecondary)
+                .frame(width: 44, height: 44)
+        }
+        .accessibilityLabel(L("menu.feedback"))
+        .accessibilityIdentifier("home.feedback")
+    }
+
+    private var feedbackTipBubble: some View {
+        VStack(spacing: 0) {
+            FeedbackTipCaret()
+                .fill(Color(white: 0.16))
+                .frame(width: 12, height: 6)
+            Text(L("home.feedback.tip"))
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.white)
+                .fixedSize()
+                .padding(.horizontal, 10)
+                .padding(.vertical, 7)
+                .background(Color(white: 0.16), in: RoundedRectangle(cornerRadius: 8))
+        }
+        .shadow(color: .black.opacity(0.14), radius: 8, y: 3)
+        .onTapGesture {
+            showFeedbackTip = false
+            showFeedback = true
+        }
+        .accessibilityIdentifier("home.feedback.tip")
+    }
+
+    private func scheduleFeedbackTip(waitForGameCenterBanner: Bool) {
+        guard !storeManager.isPro, !didOfferFeedbackTip, hasSeenTutorial else { return }
+        didOfferFeedbackTip = true
+        Task { @MainActor in
+            if waitForGameCenterBanner {
+                let timeout = Date().addingTimeInterval(6)
+                while !gcManager.authenticationFinished && Date() < timeout {
+                    try? await Task.sleep(for: .milliseconds(200))
+                }
+                // System "Welcome back" banner covers the top of the screen.
+                try? await Task.sleep(for: .seconds(4.5))
+            } else {
+                try? await Task.sleep(for: .seconds(0.8))
+            }
+            guard !showTutorial, !showFeedback else { return }
+            withAnimation(.spring(response: 0.38, dampingFraction: 0.82)) {
+                showFeedbackTip = true
+            }
+            try? await Task.sleep(for: .seconds(3.2))
+            withAnimation(.easeOut(duration: 0.22)) {
+                showFeedbackTip = false
+            }
         }
     }
 
@@ -383,6 +462,17 @@ struct HomeView: View {
         withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.3)) {
             buttonsOffset = 0
         }
+    }
+}
+
+private struct FeedbackTipCaret: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.closeSubpath()
+        return path
     }
 }
 
