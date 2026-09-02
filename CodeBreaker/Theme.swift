@@ -14,6 +14,12 @@ enum AppTheme {
     static let textSecondary = Color(white: 0.40)
     static let textMuted = Color(white: 0.62)
 
+    /// Feedback marks are a game rule, not a theme accent.
+    /// Teal circle / orange triangle / black cross stay the same in every skin.
+    static let markExact = Color(red: 0.05, green: 0.60, blue: 0.55)
+    static let markPartial = Color(red: 0.90, green: 0.52, blue: 0.05)
+    static let markMiss = Color(white: 0.12)
+
     static var bgGradient: LinearGradient {
         let c = skin.bgColors
         return LinearGradient(
@@ -49,6 +55,23 @@ enum AppTheme {
         case .orange: return Color(red: 1.0, green: 0.55, blue: 0.1)
         case .cyan: return Color(red: 0.1, green: 0.85, blue: 0.9)
         case .pink: return Color(red: 0.95, green: 0.4, blue: 0.65)
+        }
+    }
+
+    /// Numeral on a peg: dark ink on light chips, near-white on the two darkest.
+    static func pegInk(for peg: PegColor) -> Color {
+        switch peg {
+        case .blue, .purple:
+            return Color(white: 0.99)
+        default:
+            return Color(white: 0.10)
+        }
+    }
+
+    static func pegInkNeedsHalo(_ peg: PegColor) -> Bool {
+        switch peg {
+        case .blue, .purple: return true
+        default: return false
         }
     }
 
@@ -134,8 +157,11 @@ struct PegView: View {
 
             Text(color.symbol)
                 .font(.system(size: size * 0.6, weight: .black, design: .rounded))
-                .foregroundStyle(.white)
-                .shadow(color: .black.opacity(0.3), radius: 1)
+                .foregroundStyle(AppTheme.pegInk(for: color))
+                .shadow(
+                    color: AppTheme.pegInkNeedsHalo(color) ? .black.opacity(0.28) : .clear,
+                    radius: 1
+                )
         }
     }
 }
@@ -148,8 +174,8 @@ struct FeedbackDotView: View {
 
     private var bgColor: Color {
         switch type {
-        case .exact: return AppTheme.accent.opacity(0.15)
-        case .partial: return AppTheme.warning.opacity(0.15)
+        case .exact: return AppTheme.markExact.opacity(0.15)
+        case .partial: return AppTheme.markPartial.opacity(0.15)
         case .miss: return Color(white: 0.88)
         }
     }
@@ -163,13 +189,13 @@ struct FeedbackDotView: View {
             Group {
                 switch type {
                 case .exact:
-                    Circle().fill(AppTheme.accent)
+                    Circle().fill(AppTheme.markExact)
                 case .partial:
-                    FeedbackTriangle().fill(AppTheme.warning)
+                    FeedbackTriangle().fill(AppTheme.markPartial)
                 case .miss:
                     Image(systemName: "xmark")
                         .font(.system(size: size * 0.9, weight: .black))
-                        .foregroundStyle(Color.black)
+                        .foregroundStyle(AppTheme.markMiss)
                 }
             }
             .frame(width: size * 0.8, height: size * 0.8)

@@ -1787,8 +1787,11 @@ struct ShareCardView: View {
                         .overlay(
                             Text("\(pegNumber(peg))")
                                 .font(.system(size: sharePegSize * 0.45, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
-                                .shadow(color: .black.opacity(0.3), radius: 1, y: 1)
+                                .foregroundStyle(AppTheme.pegInk(for: peg))
+                                .shadow(
+                                    color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.28) : .clear,
+                                    radius: 1, y: 1
+                                )
                         )
                 }
             }
@@ -1906,8 +1909,11 @@ struct ShareCardView: View {
                     .overlay(
                         Text("\(idx + 1)")
                             .font(.system(size: colorSize * 0.4, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .shadow(color: .black.opacity(0.3), radius: 1, y: 1)
+                            .foregroundStyle(AppTheme.pegInk(for: peg))
+                            .shadow(
+                                color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.28) : .clear,
+                                radius: 1, y: 1
+                            )
                     )
             }
         }
@@ -2353,8 +2359,11 @@ struct DailyShareCardView: View {
                         .overlay(
                             Text("\(dailyPegNumber(peg))")
                                 .font(.system(size: dailyPegSize * 0.42, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
-                                .shadow(color: .black.opacity(0.4), radius: 1, y: 1)
+                                .foregroundStyle(AppTheme.pegInk(for: peg))
+                                .shadow(
+                                    color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.4) : .clear,
+                                    radius: 1, y: 1
+                                )
                         )
                 }
             }
@@ -2389,9 +2398,9 @@ struct DailyShareCardView: View {
 
             switch type {
             case .exact:
-                Circle().fill(accent).frame(width: size * 0.8, height: size * 0.8)
+                Circle().fill(AppTheme.markExact).frame(width: size * 0.8, height: size * 0.8)
             case .partial:
-                FeedbackTriangle().fill(warning).frame(width: size * 0.8, height: size * 0.8)
+                FeedbackTriangle().fill(AppTheme.markPartial).frame(width: size * 0.8, height: size * 0.8)
             case .miss:
                 Image(systemName: "xmark")
                     .font(.system(size: size * 0.85, weight: .black))
@@ -2402,8 +2411,8 @@ struct DailyShareCardView: View {
 
     private func dailyFeedbackBgColor(_ type: FeedbackType) -> Color {
         switch type {
-        case .exact: return accent.opacity(0.2)
-        case .partial: return warning.opacity(0.2)
+        case .exact: return AppTheme.markExact.opacity(0.2)
+        case .partial: return AppTheme.markPartial.opacity(0.2)
         case .miss: return .white.opacity(0.06)
         }
     }
