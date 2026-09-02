@@ -1,0 +1,88 @@
+/* Hallmark · tokens · custom (tuned) · vibe: "case file, teal lock, one liar"
+ * paper: oklch(95.2% 0.012 244) · accent: oklch(46% 0.12 183)
+ * display: Newsreader · body: IBM Plex Sans · outlier: IBM Plex Mono
+ * axes: light / roman-serif / cool
+ */
+
+:root {
+  --color-paper: oklch(95.2% 0.012 244);
+  --color-paper-2: oklch(92.4% 0.014 244);
+  --color-paper-3: oklch(88.8% 0.016 244);
+  --color-rule: oklch(78% 0.012 244);
+  --color-rule-2: oklch(84% 0.010 244);
+  --color-muted: oklch(48% 0.018 260);
+  --color-neutral: oklch(40% 0.020 262);
+  --color-ink: oklch(20% 0.028 266);
+  --color-ink-2: oklch(28% 0.032 266);
+  --color-accent: oklch(46% 0.12 183);
+  --color-accent-soft: oklch(72% 0.10 183);
+  --color-accent-ink: oklch(20% 0.028 266);
+  --color-focus: oklch(48% 0.16 183);
+  --color-danger: oklch(50% 0.17 26);
+  --color-flag-wash: oklch(93% 0.028 26);
+  --color-warn: oklch(58% 0.14 62);
+  --color-warn-ink: oklch(42% 0.11 62);
+  --color-warn-wash: oklch(94% 0.035 70);
+  /* peg 1–8 · matched to the in-app color chips */
+  --color-peg-1: oklch(63% 0.20 22);
+  --color-peg-2: oklch(68% 0.16 155);
+  /* 3 and 5 sit at 54% so their white numerals clear 4.5:1 */
+  --color-peg-3: oklch(54% 0.17 258);
+  --color-peg-4: oklch(83% 0.15 92);
+  --color-peg-5: oklch(54% 0.17 300);
+  --color-peg-6: oklch(72% 0.16 55);
+  --color-peg-7: oklch(76% 0.12 195);
+  --color-peg-8: oklch(72% 0.13 5);
+  --color-peg-ink: oklch(99% 0.004 244);
+  --color-night: oklch(24% 0.045 266);
+  --color-night-2: oklch(30% 0.05 266);
+  --color-night-ink: oklch(94% 0.012 244);
+  --color-night-rule: oklch(38% 0.03 266);
+
+  --font-display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", sans-serif;
+  --font-outlier: "IBM Plex Mono", ui-monospace, monospace;
+
+  --text-display: clamp(2.75rem, 8vw, 5.25rem);
+  --text-display-s: clamp(2rem, 5vw, 3.25rem);
+  --text-4xl: clamp(1.75rem, 3.4vw, 2.35rem);
+  --text-3xl: clamp(1.4rem, 2.4vw, 1.85rem);
+  --text-2xl: 1.35rem;
+  --text-xl: 1.125rem;
+  --text-lg: 1.05rem;
+  --text-md: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 9rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+
+  --rule: 1px;
+  --radius: 0;
+  --measure: 62ch;
+  --page: min(68rem, calc(100% - clamp(2rem, 6vw, 4rem)));
+  --page-gutter: clamp(1rem, 4vw, 2rem);
+  --bar-h: 3.5rem;
+
+  --z-base: 0;
+  --z-raised: 1;
+  --z-sticky: 20;
+  --z-nav: 30;
+  --z-overlay: 40;
+  --z-toast: 50;
+}

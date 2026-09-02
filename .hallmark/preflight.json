@@ -1,0 +1,9 @@
+{
+  "date": "2026-09-02",
+  "framework": "vanilla HTML (GitHub Pages via docs/)",
+  "fonts": "none in repo; site now loads Newsreader + IBM Plex Sans + IBM Plex Mono",
+  "palette": "app brand navy #1B2640, teal #2FBFAE, paper #E8EFF5 — converted to OKLCH tokens",
+  "motion": "none",
+  "spacing": "none — introduced 4pt semantic scale",
+  "preserved": ["brand palette", "privacy policy copy", "App Store / support / privacy URLs"]
+}

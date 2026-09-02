@@ -9,6 +9,7 @@ build/
 *.png
 !CodeBreaker/Assets.xcassets/**/*.png
 !assets/*.png
+!docs/images/*.png
 
 # macOS
 .DS_Store
