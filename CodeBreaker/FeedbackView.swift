@@ -42,7 +42,7 @@ struct FeedbackView: View {
         }
         .navigationTitle(L("feedback.title"))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
     }
 
     private var header: some View {

@@ -107,7 +107,7 @@ struct HomeView: View {
                 }
             }
         }
-        .preferredColorScheme(.light)
+        .preferredColorScheme(ThemeManager.shared.currentSkin.colorScheme)
     }
 
     
@@ -287,19 +287,25 @@ struct HomeView: View {
                 accessibilityID: "home.daily"
             ) { showDaily = true }
 
-            menuButton(
-                title: L("menu.classic"),
-                subtitle: "\(progress.completedLevels.count)/240 · \(L("menu.classic.short"))",
-                icon: "target",
-                color: AppTheme.accent
-            ) { showLevels = true }
+            HStack(spacing: 8) {
+                campaignCard(
+                    title: L("menu.classic"),
+                    done: progress.completedLevels.count,
+                    total: 240,
+                    icon: "target",
+                    color: AppTheme.accent,
+                    accessibilityID: "home.classic"
+                ) { showLevels = true }
 
-            menuButton(
-                title: L("menu.lie"),
-                subtitle: "\(lieProgress.completedLevels.count)/240 · \(L("menu.lie.short"))",
-                icon: "theatermask.and.paintbrush.fill",
-                color: AppTheme.danger
-            ) { showLieMode = true }
+                campaignCard(
+                    title: L("menu.lie"),
+                    done: lieProgress.completedLevels.count,
+                    total: 240,
+                    icon: "theatermask.and.paintbrush.fill",
+                    color: AppTheme.danger,
+                    accessibilityID: "home.lie"
+                ) { showLieMode = true }
+            }
 
             Text(L("menu.more"))
                 .font(.system(size: 11, weight: .semibold))
@@ -311,7 +317,7 @@ struct HomeView: View {
                 title: L("menu.free"),
                 subtitle: L("menu.free.sub"),
                 icon: "infinity",
-                color: AppTheme.warning,
+                color: AppTheme.textSecondary,
                 requiresPro: true
             ) { if storeManager.isPro { showFreePlay = true } else { paywallReason = .freePlay } }
 
@@ -319,14 +325,14 @@ struct HomeView: View {
                 title: L("menu.duel"),
                 subtitle: L("menu.duel.sub"),
                 icon: "person.2.fill",
-                color: Color(red: 0.5, green: 0.5, blue: 1.0)
+                color: AppTheme.textSecondary
             ) { showDuel = true }
 
             menuButton(
                 title: L("menu.editor"),
                 subtitle: L("menu.editor.sub"),
                 icon: "slider.horizontal.3",
-                color: Color(red: 0.9, green: 0.4, blue: 0.6),
+                color: AppTheme.textSecondary,
                 requiresPro: true
             ) { if storeManager.isPro { showEditor = true } else { paywallReason = .editor } }
 
@@ -334,7 +340,7 @@ struct HomeView: View {
                 title: L("menu.achievements"),
                 subtitle: "\(unlockedCount)/\(totalAchievements) unlocked",
                 icon: "trophy.fill",
-                color: AppTheme.warning
+                color: AppTheme.textSecondary
             ) { showAchievements = true }
 
             if FeatureFlags.onlineMatchEnabled {
@@ -342,12 +348,44 @@ struct HomeView: View {
                     title: L("menu.online"),
                     subtitle: L("menu.online.sub"),
                     icon: "wifi",
-                    color: Color(red: 0.2, green: 0.8, blue: 0.6)
+                    color: AppTheme.textSecondary
                 ) { showOnline = true }
             }
         }
         .offset(y: buttonsOffset)
         .opacity(titleOpacity)
+    }
+
+    private func campaignCard(
+        title: String, done: Int, total: Int, icon: String, color: Color,
+        accessibilityID: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(color)
+
+                Text(title)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(AppTheme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+
+                Text("\(done)/\(total)")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(color)
+
+                ProgressView(value: Double(done), total: Double(total))
+                    .tint(color)
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .glassCard(cornerRadius: 14)
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier(accessibilityID)
     }
 
     private func menuButton(

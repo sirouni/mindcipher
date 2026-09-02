@@ -4,15 +4,16 @@ enum AppTheme {
     private static var skin: AppSkin { ThemeManager.shared.currentSkin }
 
     static var bgDark: Color { skin.bgColors.1 }
-    static var bgCard: Color { Color.white.opacity(0.7) }
-    static var bgCardLight: Color { Color.white.opacity(0.85) }
+    static var bgCard: Color { skin.cardFill }
+    static var bgCardLight: Color { skin.cardFillStrong }
+    static var cardStroke: Color { skin.cardStroke }
     static var accent: Color { skin.accent }
     static var accentDim: Color { skin.accent.opacity(0.75) }
     static let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
     static let danger = Color(red: 0.85, green: 0.20, blue: 0.20)
-    static let textPrimary = Color(white: 0.12)
-    static let textSecondary = Color(white: 0.40)
-    static let textMuted = Color(white: 0.62)
+    static var textPrimary: Color { skin.textPrimary }
+    static var textSecondary: Color { skin.textSecondary }
+    static var textMuted: Color { skin.textMuted }
 
     /// Feedback marks are a game rule, not a theme accent.
     /// Teal circle / orange triangle / black cross stay the same in every skin.
@@ -91,12 +92,12 @@ struct GlassCard: ViewModifier {
         content
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(Color.white.opacity(0.55))
+                    .fill(AppTheme.bgCard)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(Color.black.opacity(0.06), lineWidth: 1)
+                            .stroke(AppTheme.cardStroke, lineWidth: 1)
                     )
-                    .shadow(color: .black.opacity(0.04), radius: 2, y: 1)
+                    .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.35 : 0.04), radius: 2, y: 1)
             )
     }
 }

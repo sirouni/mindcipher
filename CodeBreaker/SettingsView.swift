@@ -51,7 +51,7 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .navigationDestination(isPresented: $showFeedback) {
             FeedbackView()
         }
@@ -271,7 +271,7 @@ struct AchievementsView: View {
         }
         .navigationTitle("Achievements")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .onAppear { manager.checkAll() }
     }
 
@@ -284,7 +284,7 @@ struct AchievementsView: View {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.black.opacity(0.06))
+                        .fill(AppTheme.cardStroke)
                         .frame(height: 8)
                     RoundedRectangle(cornerRadius: 4)
                         .fill(AppTheme.accent)
@@ -327,7 +327,7 @@ struct AchievementsView: View {
             HStack(spacing: 12) {
                 ZStack {
                     Circle()
-                        .fill(unlocked ? AppTheme.warning.opacity(0.15) : Color.black.opacity(0.04))
+                        .fill(unlocked ? AppTheme.warning.opacity(0.15) : AppTheme.cardStroke)
                         .frame(width: 42, height: 42)
                     Image(systemName: a.icon)
                         .font(.system(size: 18))
@@ -385,14 +385,14 @@ struct AchievementDetailView: View {
         }
         .navigationTitle(achievement.title)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
     }
 
     private var achievementHero: some View {
         VStack(spacing: 16) {
             ZStack {
                 Circle()
-                    .fill(unlocked ? AppTheme.warning.opacity(0.2) : Color.black.opacity(0.06))
+                    .fill(unlocked ? AppTheme.warning.opacity(0.2) : AppTheme.cardStroke)
                     .frame(width: 100, height: 100)
                 if unlocked {
                     Circle()

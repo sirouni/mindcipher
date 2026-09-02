@@ -4,7 +4,11 @@ enum AppSkin: String, CaseIterable {
     case agent = "Agent"
     case cyber = "Cyber"
     case military = "Military"
-    case minimal = "Minimal"
+    case dark = "Dark"
+
+    var isDark: Bool { self == .dark }
+
+    var colorScheme: ColorScheme { isDark ? .dark : .light }
 
     var bgColors: (Color, Color) {
         switch self {
@@ -13,9 +17,9 @@ enum AppSkin: String, CaseIterable {
         case .cyber:
             return (Color(red: 0.95, green: 0.91, blue: 0.98), Color(red: 0.90, green: 0.86, blue: 0.95))
         case .military:
-            return (Color(red: 0.93, green: 0.95, blue: 0.90), Color(red: 0.88, green: 0.92, blue: 0.86))
-        case .minimal:
-            return (Color(red: 0.96, green: 0.96, blue: 0.97), Color(red: 0.92, green: 0.92, blue: 0.93))
+            return (Color(red: 0.94, green: 0.95, blue: 0.88), Color(red: 0.88, green: 0.90, blue: 0.80))
+        case .dark:
+            return (Color(red: 0.11, green: 0.13, blue: 0.18), Color(red: 0.07, green: 0.08, blue: 0.11))
         }
     }
 
@@ -23,9 +27,48 @@ enum AppSkin: String, CaseIterable {
         switch self {
         case .agent: return Color(red: 0.05, green: 0.60, blue: 0.55)
         case .cyber: return Color(red: 0.72, green: 0.15, blue: 0.50)
-        case .military: return Color(red: 0.35, green: 0.60, blue: 0.15)
-        case .minimal: return Color(red: 0.25, green: 0.25, blue: 0.30)
+        case .military: return Color(red: 0.32, green: 0.52, blue: 0.16)
+        case .dark: return Color(red: 0.28, green: 0.78, blue: 0.72)
         }
+    }
+
+    var cardFill: Color {
+        switch self {
+        case .agent: return Color.white.opacity(0.72)
+        case .cyber: return Color(red: 1.0, green: 0.97, blue: 1.0).opacity(0.78)
+        case .military: return Color(red: 0.97, green: 0.98, blue: 0.90).opacity(0.80)
+        case .dark: return Color(red: 0.16, green: 0.18, blue: 0.24)
+        }
+    }
+
+    var cardFillStrong: Color {
+        switch self {
+        case .agent: return Color.white.opacity(0.90)
+        case .cyber: return Color(red: 1.0, green: 0.97, blue: 1.0).opacity(0.92)
+        case .military: return Color(red: 0.97, green: 0.98, blue: 0.90).opacity(0.94)
+        case .dark: return Color(red: 0.20, green: 0.22, blue: 0.30)
+        }
+    }
+
+    var cardStroke: Color {
+        switch self {
+        case .agent: return Color.black.opacity(0.06)
+        case .cyber: return Color(red: 0.72, green: 0.15, blue: 0.50).opacity(0.14)
+        case .military: return Color(red: 0.32, green: 0.52, blue: 0.16).opacity(0.18)
+        case .dark: return Color.white.opacity(0.10)
+        }
+    }
+
+    var textPrimary: Color {
+        isDark ? Color(white: 0.94) : Color(white: 0.12)
+    }
+
+    var textSecondary: Color {
+        isDark ? Color(white: 0.70) : Color(white: 0.40)
+    }
+
+    var textMuted: Color {
+        isDark ? Color(white: 0.52) : Color(white: 0.62)
     }
 
     var icon: String {
@@ -33,7 +76,7 @@ enum AppSkin: String, CaseIterable {
         case .agent: return "lock.shield.fill"
         case .cyber: return "bolt.shield.fill"
         case .military: return "shield.checkered"
-        case .minimal: return "circle.grid.2x2.fill"
+        case .dark: return "moon.fill"
         }
     }
 
@@ -54,7 +97,11 @@ class ThemeManager: ObservableObject {
 
     private init() {
         let saved = UserDefaults.standard.string(forKey: "app_skin") ?? "Agent"
-        currentSkin = AppSkin(rawValue: saved) ?? .agent
+        if saved == "Minimal" {
+            currentSkin = .dark
+        } else {
+            currentSkin = AppSkin(rawValue: saved) ?? .agent
+        }
     }
 
     func applyTheme() {
@@ -101,16 +148,14 @@ struct ThemePickerView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(skin.preview)
                         .frame(height: 70)
-                        .overlay(
-                            Image(systemName: skin.icon)
-                                .font(.system(size: 24))
-                                .foregroundStyle(skin.accent)
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(isSelected ? skin.accent : Color.clear, lineWidth: 2)
-                        )
+                    Image(systemName: skin.icon)
+                        .font(.system(size: 22))
+                        .foregroundStyle(skin.accent)
                 }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(isSelected ? skin.accent : skin.cardStroke, lineWidth: isSelected ? 2 : 1)
+                )
 
                 Text(skin.rawValue)
                     .font(.system(size: 13, weight: .semibold))

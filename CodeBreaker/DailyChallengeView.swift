@@ -42,7 +42,7 @@ struct DailyChallengeView: View {
         }
         .navigationTitle("Daily Challenge")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
     }
 
     private var preStartView: some View {

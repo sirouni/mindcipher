@@ -22,7 +22,7 @@ struct CodeBreakerApp: App {
                         .allowsHitTesting(false)
                 }
             }
-            .preferredColorScheme(.light)
+            .preferredColorScheme(themeManager.currentSkin.colorScheme)
             .id(themeManager.currentSkin.rawValue)
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {

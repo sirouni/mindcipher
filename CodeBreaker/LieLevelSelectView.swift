@@ -40,7 +40,7 @@ struct LieLevelSelectView: View {
         }
         .navigationTitle(L("lie.task"))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .toolbar {
             if gcManager.isAuthenticated {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -88,7 +88,7 @@ struct LieLevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier > 0 ? AppTheme.danger : Color.black.opacity(0.15))
+                    .foregroundStyle(selectedTier > 0 ? AppTheme.danger : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier == 0)
@@ -109,7 +109,7 @@ struct LieLevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier < tiers.count - 1 ? AppTheme.danger : Color.black.opacity(0.15))
+                    .foregroundStyle(selectedTier < tiers.count - 1 ? AppTheme.danger : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier >= tiers.count - 1)
@@ -121,7 +121,7 @@ struct LieLevelSelectView: View {
     private func tierGridView(for tierIndex: Int) -> some View {
         let cols = 5; let levels = tiers[tierIndex]
         let rows = (levels.count + cols - 1) / cols; let color = AppTheme.danger
-        let lineInactive = Color.black.opacity(0.15)
+        let lineInactive = AppTheme.cardStroke
 
         return ScrollView {
             VStack(spacing: 0) {
@@ -282,7 +282,7 @@ struct LieLevelSelectView: View {
                 .padding(16)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(white: 0.96))
+                        .fill(AppTheme.bgCard)
                 )
 
                 let stars = progress.starsByLevel[level.id] ?? 0
@@ -316,8 +316,8 @@ struct LieLevelSelectView: View {
             .padding(28)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.white)
-                    .shadow(color: .black.opacity(0.12), radius: 20, y: 4)
+                    .fill(AppTheme.bgCardLight)
+                    .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.45 : 0.12), radius: 20, y: 4)
             )
             .padding(.horizontal, 40)
             .transition(.scale(scale: 0.85).combined(with: .opacity))

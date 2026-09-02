@@ -55,11 +55,11 @@ struct GameView: View {
                 }
                 .padding(.top, 6)
                 .background(
-                    Color.white.opacity(0.4)
+                    AppTheme.bgCard
                         .ignoresSafeArea(edges: .bottom)
                 )
                 .overlay(alignment: .top) {
-                    Divider().overlay(Color.black.opacity(0.08))
+                    Divider().overlay(AppTheme.cardStroke)
                 }
             }
 
@@ -96,7 +96,7 @@ struct GameView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .background(
-                        Capsule().fill(Color.white)
+                        Capsule().fill(AppTheme.bgCardLight)
                             .shadow(color: .black.opacity(0.1), radius: 8, y: 2)
                     )
                     .padding(.bottom, 160)
@@ -211,7 +211,7 @@ struct GameView: View {
             .padding(.vertical, 12)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(Color.white)
+                    .fill(AppTheme.bgCardLight)
                     .shadow(color: AppTheme.danger.opacity(0.35), radius: 16, y: 6)
             )
             .padding(.top, 100)
@@ -244,7 +244,7 @@ struct GameView: View {
             .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(Color.white)
+                    .fill(AppTheme.bgCardLight)
                     .shadow(color: AppTheme.warning.opacity(0.3), radius: 12, y: 4)
             )
             .padding(.horizontal, 20)
@@ -384,7 +384,7 @@ struct GameView: View {
                 ForEach(0..<viewModel.codeLength, id: \.self) { i in
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.white.opacity(0.6))
+                            .fill(AppTheme.bgCardLight)
                             .frame(width: 36, height: 36)
 
                         if viewModel.showSecret && i < revealedSecretCount {
@@ -448,7 +448,7 @@ struct GameView: View {
                             HStack {
                                 Text("\(i + 1)")
                                     .font(.system(size: 12, weight: .bold, design: .monospaced))
-                                    .foregroundStyle(Color(white: 0.78))
+                                    .foregroundStyle(AppTheme.textMuted)
                                     .frame(width: 20)
                                 Spacer()
                             }
@@ -457,7 +457,7 @@ struct GameView: View {
                         }
 
                         Divider()
-                            .overlay(Color(white: 0.86))
+                            .overlay(AppTheme.cardStroke)
                             .padding(.leading, 40)
                     }
                 }
@@ -474,8 +474,8 @@ struct GameView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(Color.white.opacity(0.75))
-                .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
+                .fill(AppTheme.bgCardLight)
+                .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.35 : 0.06), radius: 6, y: 2)
         )
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .padding(.horizontal, 8)
@@ -521,12 +521,12 @@ struct GameView: View {
         let hintColor = confirmedColor(for: index)
         return ZStack {
             RoundedRectangle(cornerRadius: 10)
-                .fill(isSelected ? Color.white : Color.white.opacity(0.7))
+                .fill(isSelected ? AppTheme.bgCardLight : AppTheme.bgCard)
                 .frame(width: slotSize, height: slotSize)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(
-                            isSelected ? AppTheme.accent : Color.black.opacity(0.08),
+                            isSelected ? AppTheme.accent : AppTheme.cardStroke,
                             lineWidth: isSelected ? 2 : 1
                         )
                 )
@@ -591,7 +591,7 @@ struct GameView: View {
             PegView(color: color, size: size)
                 .overlay(
                     Circle()
-                        .stroke(Color.black.opacity(0.08), lineWidth: 1)
+                        .stroke(AppTheme.cardStroke, lineWidth: 1)
                 )
                 .overlay {
                     if isEliminated {
@@ -692,7 +692,7 @@ struct GameView: View {
                 .frame(height: 50)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(viewModel.canSubmit ? AppTheme.accent : Color(white: 0.88))
+                        .fill(viewModel.canSubmit ? AppTheme.accent : AppTheme.cardStroke)
                 )
             }
             .disabled(!viewModel.canSubmit)
@@ -727,8 +727,8 @@ struct GameView: View {
             .padding(32)
             .background(
                 RoundedRectangle(cornerRadius: 24)
-                    .fill(Color.white)
-                    .shadow(color: .black.opacity(0.12), radius: 20, y: 4)
+                    .fill(AppTheme.bgCardLight)
+                    .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.45 : 0.12), radius: 20, y: 4)
             )
             .padding(.horizontal, 32)
             .transition(.scale(scale: 0.8).combined(with: .opacity))
@@ -1338,11 +1338,11 @@ struct GuessRowView: View {
         .padding(.vertical, 6)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(gameOver && feedback.isLie ? AppTheme.danger.opacity(0.08) : Color.white.opacity(0.9))
+                .fill(gameOver && feedback.isLie ? AppTheme.danger.opacity(0.08) : AppTheme.bgCardLight)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(
-                            gameOver && feedback.isLie ? AppTheme.danger.opacity(stampIn ? 0.85 : 0.35) : Color.black.opacity(0.06),
+                            gameOver && feedback.isLie ? AppTheme.danger.opacity(stampIn ? 0.85 : 0.35) : AppTheme.cardStroke,
                             lineWidth: gameOver && feedback.isLie ? 2 : 1
                         )
                 )
@@ -1448,8 +1448,8 @@ struct NotesGridView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.white.opacity(0.95))
-                .shadow(color: .black.opacity(0.08), radius: 8, y: 2)
+                .fill(AppTheme.bgCardLight)
+                .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.4 : 0.08), radius: 8, y: 2)
         )
         .padding(.horizontal, 12)
     }

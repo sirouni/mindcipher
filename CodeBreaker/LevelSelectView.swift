@@ -40,7 +40,7 @@ struct LevelSelectView: View {
         }
         .navigationTitle(L("menu.classic"))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .toolbar {
             if gcManager.isAuthenticated {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -71,7 +71,7 @@ struct LevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier > 0 ? color : Color.black.opacity(0.15))
+                    .foregroundStyle(selectedTier > 0 ? color : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
             }
             .disabled(selectedTier == 0)
@@ -96,7 +96,7 @@ struct LevelSelectView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(selectedTier < tiers.count - 1 ? color : Color.black.opacity(0.15))
+                    .foregroundStyle(selectedTier < tiers.count - 1 ? color : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
             }
             .accessibilityLabel("Next tier")
@@ -109,7 +109,7 @@ struct LevelSelectView: View {
     private func tierGridView(levels: [Level], color: Color) -> some View {
         let cols = 5
         let rows = (levels.count + cols - 1) / cols
-        let lineInactive = Color.black.opacity(0.15)
+        let lineInactive = AppTheme.cardStroke
 
         return ScrollView {
             VStack(spacing: 0) {
@@ -200,7 +200,7 @@ struct LevelSelectView: View {
                 .padding(16)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(white: 0.96))
+                        .fill(AppTheme.bgCard)
                 )
 
                 let stars = progress.starsByLevel[level.id] ?? 0
@@ -229,9 +229,9 @@ struct LevelSelectView: View {
             }
             .padding(28)
             .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.white)
-                    .shadow(color: .black.opacity(0.12), radius: 20, y: 4)
+                    RoundedRectangle(cornerRadius: 20)
+                    .fill(AppTheme.bgCardLight)
+                    .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.45 : 0.12), radius: 20, y: 4)
             )
             .padding(.horizontal, 40)
             .transition(.scale(scale: 0.85).combined(with: .opacity))

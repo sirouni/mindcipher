@@ -35,7 +35,7 @@ struct LevelEditorView: View {
         }
         .navigationTitle("Custom Level")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarColorScheme(.light, for: .navigationBar)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
         }
