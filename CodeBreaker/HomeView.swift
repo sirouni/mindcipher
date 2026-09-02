@@ -332,7 +332,7 @@ struct HomeView: View {
 
             menuButton(
                 title: L("menu.achievements"),
-                subtitle: "\(unlockedCount)/\(totalAchievements) unlocked",
+                subtitle: L("home.unlocked", unlockedCount, totalAchievements),
                 icon: "trophy.fill",
                 color: AppTheme.textSecondary
             ) { showAchievements = true }
@@ -456,7 +456,7 @@ struct HomeView: View {
                             Image(systemName: "flame.fill")
                                 .font(.system(size: 11))
                                 .foregroundStyle(AppTheme.danger)
-                            Text("Streak \(stats.currentStreak)!")
+                            Text(L("home.streak.fire", stats.currentStreak))
                                 .font(.system(size: 11, weight: .bold))
                                 .foregroundStyle(AppTheme.danger)
                         }
@@ -466,7 +466,7 @@ struct HomeView: View {
                             Image(systemName: "trophy.fill")
                                 .font(.system(size: 10))
                                 .foregroundStyle(AppTheme.warning)
-                            Text("Best \(stats.bestStreak)")
+                            Text(L("home.streak.best", stats.bestStreak))
                                 .font(.system(size: 11, weight: .medium))
                                 .foregroundStyle(AppTheme.textSecondary)
                         }
@@ -523,7 +523,7 @@ struct FreePlaySetupView: View {
         ZStack {
             AppTheme.bgGradient.ignoresSafeArea()
             VStack(spacing: 20) {
-                Text("Free Play")
+                Text(L("game.free"))
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
@@ -536,12 +536,12 @@ struct FreePlaySetupView: View {
                 .glassCard()
 
                 VStack(spacing: 8) {
-                    infoRow("Code length", "\(selectedDifficulty.codeLength)")
-                    infoRow("Colors", "\(selectedDifficulty.colorCount)")
-                    infoRow("Max attempts", "\(selectedDifficulty.maxAttempts)")
-                    infoRow("Allow repeats", selectedDifficulty.allowDuplicates ? "Yes" : "No")
+                    infoRow(L("param.length"), "\(selectedDifficulty.codeLength)")
+                    infoRow(L("param.colors"), "\(selectedDifficulty.colorCount)")
+                    infoRow(L("param.attempts"), "\(selectedDifficulty.maxAttempts)")
+                    infoRow(L("param.repeat"), selectedDifficulty.allowDuplicates ? L("param.yes") : L("param.no"))
                     if selectedDifficulty.hasTimeLimit {
-                        infoRow("Time limit", "\(selectedDifficulty.timeLimitSeconds)s")
+                        infoRow(L("param.timelimit"), "\(selectedDifficulty.timeLimitSeconds)s")
                     }
                 }
                 .padding(16)
@@ -552,10 +552,10 @@ struct FreePlaySetupView: View {
                         .font(.system(size: 18))
                         .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textMuted)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Lie Mode")
+                        Text(L("lie.toggle"))
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(lieMode ? AppTheme.danger : AppTheme.textPrimary)
-                        Text("1 fake feedback")
+                        Text(L("lie.toggle.desc"))
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(AppTheme.textSecondary)
                     }
@@ -573,7 +573,7 @@ struct FreePlaySetupView: View {
                     viewModel.startFreePlay(difficulty: selectedDifficulty, lieMode: lieMode)
                     startGame = true
                 } label: {
-                    Text(lieMode ? "Start Lie Challenge" : "Start Challenge")
+                    Text(lieMode ? L("lie.start") : L("game.start"))
                         .font(.system(size: 18, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -665,10 +665,10 @@ struct DuelSetupView: View {
                 Image(systemName: "person.2.fill")
                     .font(.system(size: 36))
                     .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
-                Text("Duel Mode")
+                Text(L("duel.title"))
                     .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
-                Text("One sets code, one cracks it")
+                Text(L("duel.desc"))
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -705,15 +705,15 @@ struct DuelSetupView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "info.circle.fill")
                         .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
-                    Text("Rules")
+                    Text(L("duel.rules"))
                         .font(.system(size: 13, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                 }
                 VStack(alignment: .leading, spacing: 4) {
-                    ruleText("1. Player 1 secretly sets a color code")
-                    ruleText("2. Pass the phone to Player 2")
-                    ruleText("3. Player 2 cracks the code within the limit")
-                    ruleText("4. Fewer steps = better!")
+                    ruleText(L("duel.rule1"))
+                    ruleText(L("duel.rule2"))
+                    ruleText(L("duel.rule3"))
+                    ruleText(L("duel.rule4"))
                 }
             }
             .padding(14)
@@ -727,7 +727,7 @@ struct DuelSetupView: View {
             } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "person.fill")
-                    Text("Player 1: Set Code")
+                    Text(L("duel.p1.setup"))
                 }
                 .font(.system(size: 17, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
@@ -759,7 +759,7 @@ struct DuelSetupView: View {
                 }
                 Spacer()
                 VStack(spacing: 2) {
-                    Text("Player 1: Set Code")
+                    Text(L("duel.p1.setup"))
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                     Text("\(selectedDifficulty.rawValue) · \(codeLength)×\(colorCount)")
@@ -794,7 +794,7 @@ struct DuelSetupView: View {
                 }
             }
 
-            Text("Tap color to add, tap slot to remove")
+            Text(L("duel.tap"))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(AppTheme.textMuted)
 
@@ -818,7 +818,7 @@ struct DuelSetupView: View {
                     withAnimation(.spring(response: 0.3)) { phase = .handoff }
                     startCountdown()
                 } label: {
-                    Text("Code Set →")
+                    Text(L("duel.confirm"))
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -847,10 +847,10 @@ struct DuelSetupView: View {
             }
 
             VStack(spacing: 8) {
-                Text("Pass to Opponent")
+                Text(L("duel.handoff"))
                     .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
-                Text("Code locked. No peeking!")
+                Text(L("duel.handoff.desc"))
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -890,7 +890,7 @@ struct DuelSetupView: View {
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "person.fill")
-                            Text("Player 2: Start")
+                            Text(L("duel.p2.start"))
                         }
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)

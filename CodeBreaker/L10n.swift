@@ -1,6 +1,19 @@
 import Foundation
 
-private let currentLanguage: String = "en"
+private var currentLanguage: String {
+    let id = (Bundle.main.preferredLocalizations.first
+              ?? Locale.preferredLanguages.first
+              ?? "en").lowercased()
+    return id.hasPrefix("zh") ? "zh" : "en"
+}
+
+private func localizedTemplate(_ key: String) -> String {
+    let lang = currentLanguage
+    return strings[key]?[lang]
+        ?? strings[key]?["en"]
+        ?? strings[key]?["zh"]
+        ?? key
+}
 
 private let strings: [String: [String: String]] = [
     // 主页
@@ -36,6 +49,7 @@ private let strings: [String: [String: String]] = [
 
     // 游戏
     "game.free":        ["zh": "自由模式",   "en": "Free Play"],
+    "game.start":       ["zh": "开始挑战",   "en": "Start Challenge"],
     "game.duel":        ["zh": "双人对战",   "en": "Duel Mode"],
     "game.attempts":    ["zh": "次",         "en": "left"],
     "game.hint":        ["zh": "提示",       "en": "Hint"],
@@ -100,8 +114,8 @@ private let strings: [String: [String: String]] = [
                           "en": "A secret color code is hidden\nGuess it within limited attempts"],
     "tutorial.d2":      ["zh": "点击底部颜色球放入猜测槽位\n填满所有位置后点击提交",
                           "en": "Tap colors to fill slots\nSubmit when all slots are filled"],
-    "tutorial.d3":      ["zh": "🟢 绿色 = 颜色和位置都对\n🟠 橙色 = 颜色对但位置不对\n⚪ 空圈 = 该颜色不在密码中",
-                          "en": "🟢 Green = Right color, right spot\n🟠 Orange = Right color, wrong spot\n⚪ Empty = Not in code"],
+    "tutorial.d3":      ["zh": "青圆 = 颜色和位置都对\n橙三角 = 颜色对但位置不对\n黑叉 = 该颜色不在密码中",
+                          "en": "Teal circle = Right color, right spot\nOrange triangle = Right color, wrong spot\nBlack cross = Not in the code"],
     "tutorial.d4":      ["zh": "每局有一次提示机会\n会告诉你某个位置的正确颜色",
                           "en": "One hint per game\nReveals the color at a position"],
 
@@ -201,13 +215,107 @@ private let strings: [String: [String: String]] = [
     "paywall.done.lie.sub": ["zh": "后面要交叉验证线索。$2.99 解锁剩余谎言关和全部内容。", "en": "Now the clues need cross-checking. Unlock the rest of Lie Mode and the full game."],
     "store.pro.blurb":      ["zh": "更深的谎言任务、剩余战役、自由模式和编辑器", "en": "Deeper Lie missions, remaining campaign, Free Play & editor"],
     "store.pro.done":       ["zh": "Pro 已解锁",                       "en": "Pro unlocked"],
+    "store.title":          ["zh": "商店",                             "en": "Store"],
+    "store.unlock":         ["zh": "解锁完整游戏",                     "en": "Unlock Full Game"],
+    "store.hints":          ["zh": "提示币",                           "en": "Hint Coins"],
+
+    "legend.exact":         ["zh": "= 颜色对，位置也对",               "en": "= One right color in the right position"],
+    "legend.partial":       ["zh": "= 颜色对，位置不对",               "en": "= One right color but in the wrong position"],
+    "legend.miss":          ["zh": "= 这个颜色不在密码里",             "en": "= One color is not in the secret code"],
+
+    "game.notes":           ["zh": "笔记",                             "en": "Notes"],
+    "game.notes.clear":     ["zh": "清除",                             "en": "Clear"],
+    "game.score":           ["zh": "得分：%d",                         "en": "Score: %d"],
+    "game.submitted":       ["zh": "已提交",                           "en": "Submitted!"],
+    "game.hint.earned":     ["zh": "+1 提示币！（现有 %d）",            "en": "+1 Hint Coin! (%d total)"],
+    "game.hint.progress":   ["zh": "%d/%d 局后得下一枚",               "en": "%d/%d wins to next coin"],
+    "result.challenge":     ["zh": "向朋友发起挑战",                   "en": "Challenge a Friend"],
+    "achieve.toast":        ["zh": "解锁成就！",                       "en": "Achievement Unlocked!"],
+    "home.streak.fire":     ["zh": "连胜 %d！",                        "en": "Streak %d!"],
+    "home.streak.best":     ["zh": "最佳 %d",                          "en": "Best %d"],
+    "home.unlocked":        ["zh": "%d/%d 已解锁",                     "en": "%d/%d unlocked"],
+
+    "settings.game":        ["zh": "游戏",                             "en": "Game"],
+    "settings.theme":       ["zh": "主题",                             "en": "Theme"],
+    "settings.stats":       ["zh": "统计",                             "en": "Stats"],
+    "settings.manage":      ["zh": "管理",                             "en": "Manage"],
+    "settings.about":       ["zh": "关于",                             "en": "About"],
+    "settings.wins":        ["zh": "胜场",                             "en": "Wins"],
+    "settings.beststreak":  ["zh": "最长连胜",                         "en": "Best streak"],
+    "settings.avg":         ["zh": "平均步数",                         "en": "Avg steps"],
+    "settings.levels":      ["zh": "已完成关卡",                       "en": "Levels done"],
+    "settings.version":     ["zh": "版本",                             "en": "Version"],
+    "settings.reset.stats": ["zh": "重置统计",                         "en": "Reset Stats"],
+    "settings.reset.stats.q":["zh": "重置统计？",                      "en": "Reset stats?"],
+    "settings.reset.stats.msg":["zh": "胜率、连胜等数据将被清空",       "en": "Win rate, streaks, etc. will be cleared"],
+    "settings.reset.all":   ["zh": "重置全部进度",                     "en": "Reset All Progress"],
+    "settings.reset.all.q": ["zh": "重置全部进度？",                   "en": "Reset all progress?"],
+    "settings.reset.all.msg":["zh": "关卡、星数和统计将被永久清除",     "en": "Levels, stars, and stats will be permanently cleared"],
+    "settings.cancel":      ["zh": "取消",                             "en": "Cancel"],
+    "settings.reset":       ["zh": "重置",                             "en": "Reset"],
+    "settings.debug.pro":   ["zh": "解锁 Pro（调试）",                 "en": "Unlock Pro (Debug)"],
+
+    "daily.streak":         ["zh": "连续天数",                         "en": "Day Streak"],
+    "daily.total":          ["zh": "总计",                             "en": "Total"],
+    "daily.leaderboard":    ["zh": "排行榜",                           "en": "Leaderboard"],
+
+    "tutorial.back":        ["zh": "返回",                             "en": "Back"],
+    "tutorial.go":          ["zh": "开始！",                           "en": "Start!"],
+    "tutorial.star.speed":  ["zh": "速通",                             "en": "Speed"],
+    "tutorial.star.good":   ["zh": "良好",                             "en": "Good"],
+    "tutorial.star.pass":   ["zh": "通过",                             "en": "Pass"],
+    "tutorial.ex1":         ["zh": "1 个位置对，2 个颜色对位置错，1 个不在密码中",
+                            "en": "1 right spot, 2 right color wrong spot, 1 not in code"],
+    "tutorial.ex2":         ["zh": "全对！密码破译成功！",               "en": "All correct! Code cracked!"],
+    "tutorial.dot.exact":   ["zh": "位置对",                           "en": "Right spot"],
+    "tutorial.dot.partial": ["zh": "颜色对、位置错",                   "en": "Right color, wrong spot"],
+    "tutorial.dot.miss":    ["zh": "不在密码中",                       "en": "Not in code"],
+    "tutorial.notes":       ["zh": "笔记",                             "en": "Notes"],
+    "tutorial.notes.d":     ["zh": "用笔记记下推理\n排除的颜色不能再选", "en": "Use notes to track your deductions\nEliminated colors are disabled in picker"],
+    "tutorial.notes.x":     ["zh": "点格子：标为排除",                 "en": "Tap cell: mark as eliminated"],
+    "tutorial.notes.check": ["zh": "再点：标为确认",                   "en": "Tap again: mark as confirmed"],
+    "tutorial.notes.row":   ["zh": "点色钉：切换整行",                 "en": "Tap color peg: toggle entire row"],
+    "tutorial.notes.col":   ["zh": "点 P1/P2…：切换整列",              "en": "Tap P1/P2...: toggle entire column"],
+    "tutorial.hints":       ["zh": "提示",                             "en": "Hints"],
+    "tutorial.hints.coins": ["zh": "提示币",                           "en": "Hint Coins"],
+    "tutorial.hints.spend": ["zh": "花 1 枚换一次逻辑提示",            "en": "Spend 1 coin for a logical deduction"],
+    "tutorial.hints.earn":  ["zh": "怎么获得",                         "en": "How to earn"],
+    "tutorial.hints.win":   ["zh": "赢 3 局",                          "en": "Win 3 games"],
+    "tutorial.hints.login": ["zh": "连续登录 2 天",                    "en": "Login 2 days in a row"],
+    "tutorial.hints.reward":["zh": "+1 枚",                            "en": "+1 coin"],
+    "tutorial.hints.do":    ["zh": "提示会做什么",                     "en": "What hints do"],
+    "tutorial.hints.do1":   ["zh": "从这个位置排除错误颜色",            "en": "Eliminate wrong colors from a position"],
+    "tutorial.hints.do2":   ["zh": "剩余很少时，确认正确颜色",          "en": "Or confirm the correct color if few remain"],
+    "tutorial.hints.do3":   ["zh": "帮你推理，不会直接给出答案",        "en": "Guides your logic — doesn't solve for you"],
+    "tutorial.lie.r1":      ["zh": "恰好有 1 条反馈是假的",             "en": "Exactly 1 feedback is fake"],
+    "tutorial.lie.r2":      ["zh": "假线索与真相最多差 1",              "en": "Lie differs from truth by ≤1"],
+    "tutorial.lie.r3":      ["zh": "猜中密码的那一步一定是真的",        "en": "The winning guess is always truthful"],
+    "tutorial.lie.r4":      ["zh": "找出哪一条反馈在说谎",              "en": "Figure out which feedback was fake"],
+    "tutorial.tips":        ["zh": "技巧",                             "en": "Tips"],
+    "tutorial.tips.elim":   ["zh": "排除",                             "en": "Elimination"],
+    "tutorial.tips.elim.d": ["zh": "换不同颜色，找出哪些在密码里",      "en": "Try different colors to find which ones are in the code"],
+    "tutorial.tips.compare":["zh": "对比",                             "en": "Compare"],
+    "tutorial.tips.compare.d":["zh": "对比各步反馈，缩小范围",          "en": "Compare feedback between guesses to narrow down"],
+
+    "duel.tap":             ["zh": "点颜色添加，点空位删除",            "en": "Tap color to add, tap slot to remove"],
+    "duel.rule1":           ["zh": "1. 玩家 1 秘密设置一组颜色密码",    "en": "1. Player 1 secretly sets a color code"],
+    "duel.rule2":           ["zh": "2. 把手机交给玩家 2",              "en": "2. Pass the phone to Player 2"],
+    "duel.rule3":           ["zh": "3. 玩家 2 在次数内破解密码",        "en": "3. Player 2 cracks the code within the limit"],
+    "duel.rule4":           ["zh": "4. 步数越少越好！",                "en": "4. Fewer steps = better!"],
+    "settings.unlocked":    ["zh": "已解锁",                           "en": "Unlocked"],
+    "param.fake":           ["zh": "虚假反馈",                         "en": "Fake feedback"],
+    "level.start":          ["zh": "开始",                             "en": "Start"],
+    "challenge.from":       ["zh": "来自好友的挑战",                   "en": "Challenge from"],
+    "challenge.prompt":     ["zh": "能破解他们的密码吗？",             "en": "Can you crack their code?"],
+    "challenge.accept":     ["zh": "接受挑战",                         "en": "Accept Challenge"],
+    "challenge.title":      ["zh": "挑战",                             "en": "Challenge"],
+    "challenge.lie":        ["zh": "谎言模式 — 一条反馈可能是假的！",   "en": "Lie Mode — one feedback may be fake!"],
 ]
 
 func L(_ key: String) -> String {
-    strings[key]?[currentLanguage] ?? strings[key]?["zh"] ?? key
+    localizedTemplate(key)
 }
 
 func L(_ key: String, _ args: CVarArg...) -> String {
-    let template = strings[key]?[currentLanguage] ?? strings[key]?["zh"] ?? key
-    return String(format: template, arguments: args)
+    String(format: localizedTemplate(key), arguments: args)
 }

@@ -177,7 +177,7 @@ struct LevelSelectView: View {
                 .onTapGesture { withAnimation(.spring(response: 0.3)) { previewLevel = nil } }
 
             VStack(spacing: 16) {
-                Text("Level \(level.id)")
+                Text(L("level.title", level.id))
                     .font(.system(size: 22, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
@@ -189,12 +189,12 @@ struct LevelSelectView: View {
                     .background(AppTheme.accent.opacity(0.15), in: Capsule())
 
                 VStack(spacing: 6) {
-                    previewRow("Code length", "\(level.codeLength)")
-                    previewRow("Colors", "\(level.colorCount)")
-                    previewRow("Max attempts", "\(level.maxAttempts)")
-                    previewRow("Allow repeats", level.allowDuplicates ? "Yes" : "No")
+                    previewRow(L("param.length"), "\(level.codeLength)")
+                    previewRow(L("param.colors"), "\(level.colorCount)")
+                    previewRow(L("param.attempts"), "\(level.maxAttempts)")
+                    previewRow(L("param.repeat"), level.allowDuplicates ? L("param.yes") : L("param.no"))
                     if level.timeLimitSeconds > 0 {
-                        previewRow("Time limit", "\(level.timeLimitSeconds)s")
+                        previewRow(L("param.timelimit"), "\(level.timeLimitSeconds)s")
                     }
                 }
                 .padding(16)
@@ -219,7 +219,7 @@ struct LevelSelectView: View {
                     previewLevel = nil
                     startGame = true
                 } label: {
-                    Text(progress.completedLevels.contains(level.id) ? "Retry" : "Start")
+                    Text(progress.completedLevels.contains(level.id) ? L("result.retry") : L("level.start"))
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.white)
                         .frame(width: 200)

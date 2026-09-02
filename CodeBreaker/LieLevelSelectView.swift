@@ -259,7 +259,7 @@ struct LieLevelSelectView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "theatermask.and.paintbrush.fill")
                         .foregroundStyle(AppTheme.danger)
-                    Text("Lie Level \(level.id)")
+                    Text(L("level.title", level.id))
                         .font(.system(size: 22, weight: .black, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                 }
@@ -272,11 +272,11 @@ struct LieLevelSelectView: View {
                     .background(AppTheme.danger.opacity(0.15), in: Capsule())
 
                 VStack(spacing: 6) {
-                    previewRow("Code length", "\(level.codeLength)")
-                    previewRow("Colors", "\(level.colorCount)")
-                    previewRow("Max attempts", "\(totalAttempts)")
-                    previewRow("Allow repeats", level.allowDuplicates ? "Yes" : "No")
-                    previewRow("Fake feedback", "1")
+                    previewRow(L("param.length"), "\(level.codeLength)")
+                    previewRow(L("param.colors"), "\(level.colorCount)")
+                    previewRow(L("param.attempts"), "\(totalAttempts)")
+                    previewRow(L("param.repeat"), level.allowDuplicates ? L("param.yes") : L("param.no"))
+                    previewRow(L("param.fake"), "1")
                 }
                 .padding(16)
                 .background(
@@ -303,7 +303,7 @@ struct LieLevelSelectView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "theatermask.and.paintbrush.fill")
                             .font(.system(size: 14))
-                        Text(progress.completedLevels.contains(level.id) ? "Retry" : "Start")
+                        Text(progress.completedLevels.contains(level.id) ? L("result.retry") : L("level.start"))
                     }
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)

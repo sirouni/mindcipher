@@ -33,7 +33,7 @@ struct LevelEditorView: View {
                 .padding(20)
             }
         }
-        .navigationTitle("Custom Level")
+        .navigationTitle(L("editor.title"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
@@ -49,7 +49,7 @@ struct LevelEditorView: View {
             Image(systemName: "slider.horizontal.3")
                 .font(.system(size: 36))
                 .foregroundStyle(AppTheme.accent)
-            Text("Build your own challenge")
+            Text(L("paywall.editor.sub"))
                 .font(.system(size: 14, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
         }
@@ -223,7 +223,7 @@ struct LevelEditorView: View {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "play.fill")
-                Text("Start Custom Challenge")
+                Text(L("editor.start"))
             }
             .font(.system(size: 17, weight: .bold, design: .rounded))
             .foregroundStyle(Color.white)

@@ -133,7 +133,7 @@ struct ChallengeGameView: View {
                             .font(.system(size: 48))
                             .foregroundStyle(AppTheme.accent)
 
-                        Text("Challenge from")
+                        Text(L("challenge.from"))
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(AppTheme.textSecondary)
 
@@ -143,7 +143,7 @@ struct ChallengeGameView: View {
 
                         VStack(spacing: 8) {
                             HStack {
-                                Text("Code length")
+                                Text(L("param.length"))
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundStyle(AppTheme.textSecondary)
                                 Spacer()
@@ -152,7 +152,7 @@ struct ChallengeGameView: View {
                                     .foregroundStyle(AppTheme.textPrimary)
                             }
                             HStack {
-                                Text("Colors")
+                                Text(L("param.colors"))
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundStyle(AppTheme.textSecondary)
                                 Spacer()
@@ -161,7 +161,7 @@ struct ChallengeGameView: View {
                                     .foregroundStyle(AppTheme.textPrimary)
                             }
                             HStack {
-                                Text("Max attempts")
+                                Text(L("param.attempts"))
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundStyle(AppTheme.textSecondary)
                                 Spacer()
@@ -174,12 +174,12 @@ struct ChallengeGameView: View {
                         .glassCard(cornerRadius: 16)
 
                         if challenge.challengeMode == .lie {
-                            Label("Lie Mode — one feedback may be fake!", systemImage: "exclamationmark.triangle.fill")
+                            Label(L("challenge.lie"), systemImage: "exclamationmark.triangle.fill")
                                 .font(.system(size: 13, weight: .bold))
                                 .foregroundStyle(AppTheme.danger)
                         }
 
-                        Text("Can you crack their code?")
+                        Text(L("challenge.prompt"))
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(AppTheme.textSecondary)
 
@@ -196,7 +196,7 @@ struct ChallengeGameView: View {
                             )
                             started = true
                         } label: {
-                            Text("Accept Challenge")
+                            Text(L("challenge.accept"))
                                 .font(.system(size: 18, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
@@ -206,7 +206,7 @@ struct ChallengeGameView: View {
                     }
                     .padding(24)
                 }
-                .navigationTitle("Challenge")
+                .navigationTitle(L("challenge.title"))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {

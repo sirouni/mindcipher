@@ -56,7 +56,7 @@ struct TutorialView: View {
                         Button {
                             withAnimation(.spring(response: 0.3)) { page -= 1 }
                         } label: {
-                            Text("Back")
+                            Text(L("tutorial.back"))
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(AppTheme.textSecondary)
                                 .frame(maxWidth: .infinity).padding(.vertical, 14)
@@ -68,7 +68,7 @@ struct TutorialView: View {
                             withAnimation(.spring(response: 0.3)) { page += 1 }
                         } else { dismiss() }
                     } label: {
-                        Text(page < totalPages - 1 ? "Next" : "Start!")
+                        Text(page < totalPages - 1 ? L("tutorial.next") : L("tutorial.go"))
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity).padding(.vertical, 14)
@@ -85,7 +85,7 @@ struct TutorialView: View {
 
     private var goalPage: some View {
         VStack(spacing: 20) {
-            Text("Crack the Code")
+            Text(L("tutorial.t1"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -103,16 +103,16 @@ struct TutorialView: View {
                 }
             }
 
-            Text("A secret color code is hidden\nGuess it within limited attempts")
+            Text(L("tutorial.d1"))
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
             // 星级示例
             HStack(spacing: 20) {
-                starsExample(3, "Speed")
-                starsExample(2, "Good")
-                starsExample(1, "Pass")
+                starsExample(3, L("tutorial.star.speed"))
+                starsExample(2, L("tutorial.star.good"))
+                starsExample(1, L("tutorial.star.pass"))
             }
             .padding(16)
             .glassCard(cornerRadius: 14)
@@ -139,7 +139,7 @@ struct TutorialView: View {
 
     private var pickPage: some View {
         VStack(spacing: 20) {
-            Text("Pick Colors")
+            Text(L("tutorial.t2"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -171,7 +171,7 @@ struct TutorialView: View {
                 }
             }
 
-            Text("Tap colors to fill slots\nSubmit when all slots are filled")
+            Text(L("tutorial.d2"))
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
@@ -183,7 +183,7 @@ struct TutorialView: View {
 
     private var feedbackPage: some View {
         VStack(spacing: 20) {
-            Text("Read the Clues")
+            Text(L("tutorial.t3"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -191,19 +191,19 @@ struct TutorialView: View {
                 feedbackExample(
                     colors: [.red, .green, .blue, .yellow],
                     exact: 1, partial: 2, empty: 1,
-                    explain: "1 right spot, 2 right color wrong spot, 1 not in code"
+                    explain: L("tutorial.ex1")
                 )
                 feedbackExample(
                     colors: [.green, .blue, .red, .yellow],
                     exact: 4, partial: 0, empty: 0,
-                    explain: "All correct! Code cracked!"
+                    explain: L("tutorial.ex2")
                 )
             }
 
             HStack(spacing: 24) {
-                tutorialDotLegend(type: .exact, label: "Right spot")
-                tutorialDotLegend(type: .partial, label: "Right color, wrong spot")
-                tutorialDotLegend(type: .miss, label: "Not in code")
+                tutorialDotLegend(type: .exact, label: L("tutorial.dot.exact"))
+                tutorialDotLegend(type: .partial, label: L("tutorial.dot.partial"))
+                tutorialDotLegend(type: .miss, label: L("tutorial.dot.miss"))
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
@@ -256,7 +256,7 @@ struct TutorialView: View {
                 .font(.system(size: 36))
                 .foregroundStyle(AppTheme.accent)
 
-            Text("Notes")
+            Text(L("tutorial.notes"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -297,15 +297,15 @@ struct TutorialView: View {
             .glassCard(cornerRadius: 12)
 
             VStack(alignment: .leading, spacing: 6) {
-                iconNoteRow("xmark", AppTheme.danger, "Tap cell: mark as eliminated")
-                iconNoteRow("checkmark", AppTheme.accent, "Tap again: mark as confirmed")
-                iconNoteRow("circle.fill", AppTheme.textMuted, "Tap color peg: toggle entire row")
-                iconNoteRow("arrow.down", AppTheme.accent, "Tap P1/P2...: toggle entire column")
+                iconNoteRow("xmark", AppTheme.danger, L("tutorial.notes.x"))
+                iconNoteRow("checkmark", AppTheme.accent, L("tutorial.notes.check"))
+                iconNoteRow("circle.fill", AppTheme.textMuted, L("tutorial.notes.row"))
+                iconNoteRow("arrow.down", AppTheme.accent, L("tutorial.notes.col"))
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
 
-            Text("Use notes to track your deductions\nEliminated colors are disabled in picker")
+            Text(L("tutorial.notes.d"))
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
@@ -345,7 +345,7 @@ struct TutorialView: View {
                 .font(.system(size: 36))
                 .foregroundStyle(AppTheme.warning)
 
-            Text("Hints")
+            Text(L("tutorial.hints"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -366,10 +366,10 @@ struct TutorialView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Hint Coins")
+                    Text(L("tutorial.hints.coins"))
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
-                    Text("Spend 1 coin for a logical deduction")
+                    Text(L("tutorial.hints.spend"))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -378,22 +378,22 @@ struct TutorialView: View {
             .glassCard(cornerRadius: 14)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("How to earn")
+                Text(L("tutorial.hints.earn"))
                     .font(.system(size: 14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
-                hintEarnRow("trophy.fill", "Win 3 games", "+1 coin")
-                hintEarnRow("calendar.badge.checkmark", "Login 2 days in a row", "+1 coin")
+                hintEarnRow("trophy.fill", L("tutorial.hints.win"), L("tutorial.hints.reward"))
+                hintEarnRow("calendar.badge.checkmark", L("tutorial.hints.login"), L("tutorial.hints.reward"))
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("What hints do")
+                Text(L("tutorial.hints.do"))
                     .font(.system(size: 14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
-                hintInfoRow("minus.circle", "Eliminate wrong colors from a position")
-                hintInfoRow("checkmark.circle", "Or confirm the correct color if few remain")
-                hintInfoRow("brain.head.profile", "Guides your logic — doesn't solve for you")
+                hintInfoRow("minus.circle", L("tutorial.hints.do1"))
+                hintInfoRow("checkmark.circle", L("tutorial.hints.do2"))
+                hintInfoRow("brain.head.profile", L("tutorial.hints.do3"))
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
@@ -433,7 +433,7 @@ struct TutorialView: View {
                 .font(.system(size: 36))
                 .foregroundStyle(AppTheme.danger)
 
-            Text("Lie Mode")
+            Text(L("lie.mode"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.danger)
 
@@ -465,10 +465,10 @@ struct TutorialView: View {
             .padding(.horizontal, 8)
 
             VStack(alignment: .leading, spacing: 6) {
-                iconRuleRow("theatermask.and.paintbrush.fill", "Exactly 1 feedback is fake")
-                iconRuleRow("magnifyingglass", "Lie differs from truth by ≤1")
-                iconRuleRow("checkmark.shield.fill", "The winning guess is always truthful")
-                iconRuleRow("brain.head.profile", "Figure out which feedback was fake")
+                iconRuleRow("theatermask.and.paintbrush.fill", L("tutorial.lie.r1"))
+                iconRuleRow("magnifyingglass", L("tutorial.lie.r2"))
+                iconRuleRow("checkmark.shield.fill", L("tutorial.lie.r3"))
+                iconRuleRow("brain.head.profile", L("tutorial.lie.r4"))
             }
             .padding(14)
             .glassCard(cornerRadius: 12)
@@ -494,13 +494,13 @@ struct TutorialView: View {
                 .font(.system(size: 36))
                 .foregroundStyle(AppTheme.warning)
 
-            Text("Tips")
+            Text(L("tutorial.tips"))
                 .font(.system(size: 24, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 10) {
-                iconTipCard("brain.head.profile", "Elimination", "Try different colors to find which ones are in the code")
-                iconTipCard("chart.bar.fill", "Compare", "Compare feedback between guesses to narrow down")
+                iconTipCard("brain.head.profile", L("tutorial.tips.elim"), L("tutorial.tips.elim.d"))
+                iconTipCard("chart.bar.fill", L("tutorial.tips.compare"), L("tutorial.tips.compare.d"))
             }
         }
         .padding(.horizontal, 28)

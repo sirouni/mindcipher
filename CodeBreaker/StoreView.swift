@@ -18,7 +18,7 @@ struct StoreView: View {
             .padding(24)
         }
         .background(AppTheme.bgGradient.ignoresSafeArea())
-        .navigationTitle("Store")
+        .navigationTitle(L("store.title"))
         .navigationBarTitleDisplayMode(.inline)
         .task {
             if store.products.isEmpty {
@@ -32,7 +32,7 @@ struct StoreView: View {
             Image(systemName: "bag.fill")
                 .font(.system(size: 40))
                 .foregroundStyle(AppTheme.accent)
-            Text("Store")
+            Text(L("store.title"))
                 .font(.system(size: 28, weight: .black, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
         }
@@ -44,7 +44,7 @@ struct StoreView: View {
                 .font(.system(size: 20))
                 .foregroundStyle(AppTheme.warning)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Hint Coins")
+                Text(L("store.hints"))
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
                 Text("\(hintCoins.coins)")
@@ -67,7 +67,7 @@ struct StoreView: View {
 
     private var proSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Unlock Full Game")
+            Text(L("store.unlock"))
                 .font(.system(size: 17, weight: .bold, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -89,7 +89,7 @@ struct StoreView: View {
                             .font(.system(size: 16))
                             .foregroundStyle(AppTheme.accent)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Pro Unlock")
+                            Text(L("paywall.unlock"))
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(AppTheme.textPrimary)
                             Text(L("store.pro.blurb"))
@@ -122,7 +122,7 @@ struct StoreView: View {
 
     private var hintSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Hint Coins")
+            Text(L("store.hints"))
                 .font(.system(size: 17, weight: .bold, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 

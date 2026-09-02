@@ -49,7 +49,7 @@ struct SettingsView: View {
                 .padding(20)
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle(L("settings.title"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .navigationDestination(isPresented: $showFeedback) {
@@ -59,14 +59,14 @@ struct SettingsView: View {
 
     private var gameSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("Game")
+            sectionHeader(L("settings.game"))
             VStack(spacing: 0) {
-                toggleRow(icon: "speaker.wave.2.fill", title: "Sound", isOn: $settings.soundEnabled)
+                toggleRow(icon: "speaker.wave.2.fill", title: L("settings.sound"), isOn: $settings.soundEnabled)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                toggleRow(icon: "iphone.radiowaves.left.and.right", title: "Haptics", isOn: $settings.hapticsEnabled)
+                toggleRow(icon: "iphone.radiowaves.left.and.right", title: L("settings.haptics"), isOn: $settings.hapticsEnabled)
                 #if DEBUG
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                toggleRow(icon: "checkmark.seal.fill", title: "Unlock Pro (Debug)", isOn: $store.isPro)
+                toggleRow(icon: "checkmark.seal.fill", title: L("settings.debug.pro"), isOn: $store.isPro)
                 #endif
             }
             .glassCard(cornerRadius: 14)
@@ -110,21 +110,21 @@ struct SettingsView: View {
 
     private var statsSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("Stats")
+            sectionHeader(L("settings.stats"))
             VStack(spacing: 0) {
-                infoRow(icon: "gamecontroller.fill", title: "Games", value: "\(stats.gamesPlayed)")
+                infoRow(icon: "gamecontroller.fill", title: L("stats.games"), value: "\(stats.gamesPlayed)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "trophy.fill", title: "Wins", value: "\(stats.gamesWon)")
+                infoRow(icon: "trophy.fill", title: L("settings.wins"), value: "\(stats.gamesWon)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "percent", title: "Win%", value: stats.gamesPlayed > 0 ? "\(Int(stats.winRate))%" : "--")
+                infoRow(icon: "percent", title: L("stats.winrate"), value: stats.gamesPlayed > 0 ? "\(Int(stats.winRate))%" : "--")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "flame.fill", title: "Best streak", value: "\(stats.bestStreak)")
+                infoRow(icon: "flame.fill", title: L("settings.beststreak"), value: "\(stats.bestStreak)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "number", title: "Avg steps", value: stats.gamesWon > 0 ? String(format: "%.1f", stats.avgAttempts) : "--")
+                infoRow(icon: "number", title: L("settings.avg"), value: stats.gamesWon > 0 ? String(format: "%.1f", stats.avgAttempts) : "--")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "star.fill", title: "Stars", value: "\(progress.totalStars)")
+                infoRow(icon: "star.fill", title: L("stats.stars"), value: "\(progress.totalStars)")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "checkmark.circle.fill", title: "Levels done", value: "\(progress.completedLevels.count + ProgressManager.lieShared.completedLevels.count)/480")
+                infoRow(icon: "checkmark.circle.fill", title: L("settings.levels"), value: "\(progress.completedLevels.count + ProgressManager.lieShared.completedLevels.count)/480")
             }
             .glassCard(cornerRadius: 14)
         }
@@ -132,7 +132,7 @@ struct SettingsView: View {
 
     private var dangerSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("Manage")
+            sectionHeader(L("settings.manage"))
             VStack(spacing: 0) {
                 Button {
                     showResetStatsAlert = true
@@ -142,20 +142,20 @@ struct SettingsView: View {
                             .font(.system(size: 15))
                             .foregroundStyle(AppTheme.warning)
                             .frame(width: 28)
-                        Text("Reset Stats")
+                        Text(L("settings.reset.stats"))
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(AppTheme.warning)
                         Spacer()
                     }
                     .padding(14)
                 }
-                .alert("Reset stats?", isPresented: $showResetStatsAlert) {
-                    Button("Cancel", role: .cancel) { }
-                    Button("Reset", role: .destructive) {
+                .alert(L("settings.reset.stats.q"), isPresented: $showResetStatsAlert) {
+                    Button(L("settings.cancel"), role: .cancel) { }
+                    Button(L("settings.reset"), role: .destructive) {
                         stats.gamesPlayed = 0; stats.gamesWon = 0
                         stats.currentStreak = 0; stats.bestStreak = 0; stats.totalAttempts = 0
                     }
-                } message: { Text("Win rate, streaks, etc. will be cleared") }
+                } message: { Text(L("settings.reset.stats.msg")) }
 
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
 
@@ -167,23 +167,23 @@ struct SettingsView: View {
                             .font(.system(size: 15))
                             .foregroundStyle(AppTheme.danger)
                             .frame(width: 28)
-                        Text("Reset All Progress")
+                        Text(L("settings.reset.all"))
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(AppTheme.danger)
                         Spacer()
                     }
                     .padding(14)
                 }
-                .alert("Reset all progress?", isPresented: $showResetAlert) {
-                    Button("Cancel", role: .cancel) { }
-                    Button("Reset", role: .destructive) {
+                .alert(L("settings.reset.all.q"), isPresented: $showResetAlert) {
+                    Button(L("settings.cancel"), role: .cancel) { }
+                    Button(L("settings.reset"), role: .destructive) {
                         progress.completedLevels = []
                         progress.starsByLevel = [:]
                         stats.gamesPlayed = 0; stats.gamesWon = 0
                         stats.currentStreak = 0; stats.bestStreak = 0; stats.totalAttempts = 0
                         UserDefaults.standard.set(false, forKey: "tutorialSeen")
                     }
-                } message: { Text("Levels, stars, and stats will be permanently cleared") }
+                } message: { Text(L("settings.reset.all.msg")) }
             }
             .glassCard(cornerRadius: 14)
         }
@@ -191,11 +191,11 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            sectionHeader("About")
+            sectionHeader(L("settings.about"))
             VStack(spacing: 0) {
-                infoRow(icon: "info.circle.fill", title: "Version", value: "1.0.0")
+                infoRow(icon: "info.circle.fill", title: L("settings.version"), value: "1.0.0")
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
-                infoRow(icon: "lock.shield.fill", title: "Code Breaker", value: "Code Breaker")
+                infoRow(icon: "lock.shield.fill", title: L("app.title"), value: L("app.title"))
             }
             .glassCard(cornerRadius: 14)
         }
@@ -269,7 +269,7 @@ struct AchievementsView: View {
                 .padding(16)
             }
         }
-        .navigationTitle("Achievements")
+        .navigationTitle(L("menu.achievements"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .onAppear { manager.checkAll() }
@@ -294,7 +294,7 @@ struct AchievementsView: View {
             .frame(height: 8)
             .padding(.horizontal, 40)
 
-            Text("Unlocked")
+            Text(L("settings.unlocked"))
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
         }
@@ -450,7 +450,7 @@ struct AchievementDetailView: View {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "square.and.arrow.up")
-                Text("Share")
+                Text(L("result.share"))
             }
             .font(.system(size: 16, weight: .semibold))
             .foregroundStyle(.white)

@@ -230,7 +230,7 @@ struct GameView: View {
                     .foregroundStyle(AppTheme.warning)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Achievement Unlocked!")
+                    Text(L("achieve.toast"))
                         .font(.system(size: 11, weight: .bold))
                         .foregroundStyle(AppTheme.warning)
                     Text(a.title)
@@ -259,7 +259,7 @@ struct GameView: View {
         ZStack {
             VStack(spacing: 2) {
                 if let level = viewModel.level {
-                    Text("Level \(level.id)")
+                    Text(L("level.title", level.id))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                     if viewModel.engine?.lieMode == true {
@@ -280,11 +280,11 @@ struct GameView: View {
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                 } else {
-                    Text("Free Play")
+                    Text(L("game.free"))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                     if viewModel.engine?.lieMode == true {
-                        Label("Lie Mode", systemImage: "exclamationmark.triangle.fill")
+                        Label(L("lie.mode"), systemImage: "exclamationmark.triangle.fill")
                             .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(AppTheme.danger)
                     }
@@ -333,7 +333,7 @@ struct GameView: View {
             Text("\(viewModel.attemptsLeft)")
                 .font(.system(size: 16, weight: .bold, design: .rounded))
                 .foregroundStyle(viewModel.attemptsLeft <= 2 ? AppTheme.danger : AppTheme.accent)
-            Text("left")
+            Text(L("game.attempts"))
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
         }
@@ -347,9 +347,9 @@ struct GameView: View {
 
     private var feedbackLegend: some View {
         VStack(alignment: .leading, spacing: 3) {
-            legendLine(type: .exact, text: "= One right color in the right position")
-            legendLine(type: .partial, text: "= One right color but in the wrong position")
-            legendLine(type: .miss, text: "= One color is not in the secret code")
+            legendLine(type: .exact, text: L("legend.exact"))
+            legendLine(type: .partial, text: L("legend.partial"))
+            legendLine(type: .miss, text: L("legend.miss"))
             if viewModel.engine?.lieMode == true {
                 HStack(spacing: 6) {
                     Image(systemName: "flag")
@@ -789,11 +789,11 @@ struct GameView: View {
             Image(systemName: "trophy.fill")
                 .font(.system(size: 14))
                 .foregroundStyle(AppTheme.warning)
-            Text("Score: \(score)")
+            Text(L("game.score", score))
                 .font(.system(size: 14, weight: .bold, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
             if GameCenterManager.shared.isAuthenticated {
-                Text("Submitted!")
+                Text(L("game.submitted"))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(AppTheme.accent)
             }
@@ -813,11 +813,11 @@ struct GameView: View {
                 .foregroundStyle(AppTheme.warning)
 
             if hintCoinManager.justEarnedCoin {
-                Text("+1 Hint Coin! (\(hintCoinManager.coins) total)")
+                Text(L("game.hint.earned", hintCoinManager.coins))
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(AppTheme.warning)
             } else {
-                Text("\(wins)/\(needed) wins to next coin")
+                Text(L("game.hint.progress", wins, needed))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
 
@@ -975,7 +975,7 @@ struct GameView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "square.and.arrow.up")
                             .font(.system(size: 14))
-                        Text("Share")
+                        Text(L("result.share"))
                             .font(.system(size: 14, weight: .bold, design: .rounded))
                     }
                     .foregroundStyle(AppTheme.accent)
@@ -1017,7 +1017,7 @@ struct GameView: View {
                                 viewModel.startGame(level: next)
                             }
                         } label: {
-                            Text("Next →")
+                            Text(L("result.next"))
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
@@ -1036,7 +1036,7 @@ struct GameView: View {
                                 viewModel.startGame(level: level)
                             }
                         } label: {
-                            Text("Retry")
+                            Text(L("result.retry"))
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
                                 .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
@@ -1051,7 +1051,7 @@ struct GameView: View {
                         let wasLie = viewModel.engine?.lieMode ?? false
                         viewModel.startFreePlay(difficulty: viewModel.lastDifficulty, lieMode: wasLie)
                     } label: {
-                        Text("Play Again")
+                        Text(L("result.again"))
                             .font(.system(size: 14, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity)
@@ -1068,7 +1068,7 @@ struct GameView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "person.badge.plus")
                             .font(.system(size: 13))
-                        Text("Challenge a Friend")
+                        Text(L("result.challenge"))
                             .font(.system(size: 13, weight: .bold, design: .rounded))
                     }
                     .foregroundStyle(AppTheme.warning)
@@ -1085,7 +1085,7 @@ struct GameView: View {
                 confettiParticles = []
                 dismiss()
             } label: {
-                Text("Back")
+                Text(L("result.back"))
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
                     .padding(.top, 4)
@@ -1475,7 +1475,7 @@ struct NotesGridView: View {
             Image(systemName: "note.text")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(AppTheme.accent)
-            Text("Notes")
+            Text(L("game.notes"))
                 .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundStyle(AppTheme.textPrimary)
 
@@ -1485,7 +1485,7 @@ struct NotesGridView: View {
                 SoundManager.shared.playTap()
                 viewModel.clearAllNotes()
             } label: {
-                Text("Clear")
+                Text(L("game.notes.clear"))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
                     .padding(.horizontal, 8)

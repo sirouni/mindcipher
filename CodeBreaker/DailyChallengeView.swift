@@ -16,8 +16,9 @@ struct DailyChallengeView: View {
 
     private var displayDate: String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US")
-        f.dateFormat = "EEEE, MMM d"
+        f.locale = .current
+        f.dateStyle = .full
+        f.timeStyle = .none
         return f.string(from: Date())
     }
 
@@ -40,7 +41,7 @@ struct DailyChallengeView: View {
         .navigationDestination(isPresented: $started) {
             GameView(viewModel: viewModel)
         }
-        .navigationTitle("Daily Challenge")
+        .navigationTitle(L("daily.title"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
     }
@@ -54,7 +55,7 @@ struct DailyChallengeView: View {
                         Text("\(currentStreak)")
                             .font(.system(size: 28, weight: .black, design: .rounded))
                             .foregroundStyle(AppTheme.warning)
-                        Text("Day Streak")
+                        Text(L("daily.streak"))
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(AppTheme.textSecondary)
                     }
@@ -63,7 +64,7 @@ struct DailyChallengeView: View {
                         Text("\(DailyStreakManager.shared.totalCompleted)")
                             .font(.system(size: 28, weight: .black, design: .rounded))
                             .foregroundStyle(AppTheme.accent)
-                        Text("Total")
+                        Text(L("daily.total"))
                             .font(.system(size: 11, weight: .medium))
                             .foregroundStyle(AppTheme.textSecondary)
                     }
@@ -80,7 +81,7 @@ struct DailyChallengeView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "trophy.fill")
                                 .font(.system(size: 14))
-                            Text("Leaderboard")
+                            Text(L("daily.leaderboard"))
                                 .font(.system(size: 14, weight: .bold, design: .rounded))
                         }
                         .foregroundStyle(AppTheme.warning)
@@ -98,10 +99,10 @@ struct DailyChallengeView: View {
                     .foregroundStyle(AppTheme.textPrimary)
 
                 VStack(spacing: 8) {
-                    ruleRow("Code length", "4")
-                    ruleRow("Colors", "6")
-                    ruleRow("Max attempts", "7")
-                    ruleRow("Allow repeats", "No")
+                    ruleRow(L("param.length"), "4")
+                    ruleRow(L("param.colors"), "6")
+                    ruleRow(L("param.attempts"), "7")
+                    ruleRow(L("param.repeat"), L("param.no"))
                 }
                 .padding(16)
                 .glassCard(cornerRadius: 14)
@@ -111,10 +112,10 @@ struct DailyChallengeView: View {
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 28))
                             .foregroundStyle(AppTheme.accent)
-                        Text("Today's challenge complete")
+                        Text(L("daily.completed"))
                             .font(.system(size: 15, weight: .bold, design: .rounded))
                             .foregroundStyle(AppTheme.accent)
-                        Text("Come back tomorrow!")
+                        Text(L("daily.tomorrow"))
                             .font(.system(size: 12, weight: .medium))
                             .foregroundStyle(AppTheme.textSecondary)
                     }
@@ -124,7 +125,7 @@ struct DailyChallengeView: View {
                     Button {
                         startDailyChallenge()
                     } label: {
-                        Text("Start")
+                        Text(L("daily.start"))
                             .font(.system(size: 18, weight: .bold, design: .rounded))
                             .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity)
@@ -133,7 +134,7 @@ struct DailyChallengeView: View {
                     }
                 } else {
                     Button { dismiss() } label: {
-                        Text("Back to Home")
+                        Text(L("daily.back"))
                             .font(.system(size: 16, weight: .bold, design: .rounded))
                             .foregroundStyle(AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)

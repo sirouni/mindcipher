@@ -121,7 +121,7 @@ struct ThemePickerView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Theme")
+            Text(L("settings.theme"))
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(AppTheme.textSecondary)
                 .textCase(.uppercase)
