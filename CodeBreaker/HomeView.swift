@@ -22,6 +22,7 @@ struct HomeView: View {
     @State private var buttonsOffset: CGFloat = 50
     @State private var radarAngle: Double = 0
     @ObservedObject var progress = ProgressManager.shared
+    @ObservedObject private var lieProgress = ProgressManager.lieShared
     @ObservedObject var stats = StatsManager.shared
     @ObservedObject var storeManager = StoreManager.shared
     @State private var paywallReason: PaywallReason?
@@ -32,11 +33,11 @@ struct HomeView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 headerSection
-                Spacer().frame(height: 12)
                 menuSection
+                    .padding(.top, 10)
                 Spacer(minLength: 8)
                 statsBar
-                    .padding(.bottom, 10)
+                    .padding(.bottom, 8)
             }
             .padding(.horizontal, 24)
             .background(
@@ -126,13 +127,13 @@ struct HomeView: View {
     }
 
     private var headerSection: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 6) {
             HStack {
                 Button { showTutorial = true } label: {
                     Image(systemName: "questionmark.circle")
-                        .font(.system(size: 24))
+                        .font(.system(size: 22))
                         .foregroundStyle(AppTheme.textSecondary)
-                        .frame(width: 44, height: 44)
+                        .frame(width: 40, height: 40)
                 }
                 if gcManager.isAuthenticated {
                     Button { showLeaderboard = true } label: {
@@ -165,34 +166,34 @@ struct HomeView: View {
                         .frame(width: 44, height: 44)
                 }
             }
-            .padding(.top, 30)
+            .padding(.top, 4)
             .zIndex(10)
 
             ZStack {
                 Circle()
                     .stroke(AppTheme.accent.opacity(0.12), lineWidth: 1)
-                    .frame(width: 70, height: 70)
+                    .frame(width: 40, height: 40)
 
                 radarSweep
-                    .frame(width: 70, height: 70)
+                    .frame(width: 40, height: 40)
 
                 Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 28))
+                    .font(.system(size: 18))
                     .foregroundStyle(AppTheme.accent)
-                    .shadow(color: AppTheme.accent.opacity(0.5), radius: 10)
+                    .shadow(color: AppTheme.accent.opacity(0.5), radius: 8)
             }
             .scaleEffect(titleScale)
             .opacity(titleOpacity)
 
-            VStack(spacing: 3) {
+            VStack(spacing: 2) {
                 Text(L("app.title"))
-                    .font(.system(size: 26, weight: .black, design: .rounded))
+                    .font(.system(size: 20, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
                 Text(L("app.subtitle"))
-                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .font(.system(size: 9, weight: .medium, design: .monospaced))
                     .foregroundStyle(AppTheme.accent)
-                    .tracking(5)
+                    .tracking(4)
             }
             .opacity(titleOpacity)
         }
@@ -277,27 +278,34 @@ struct HomeView: View {
     }
 
     private var menuSection: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) {
             menuButton(
                 title: L("menu.daily"),
                 subtitle: dailyCompleted ? L("menu.daily.done") : L("menu.daily.todo"),
                 icon: "calendar.badge.clock",
-                color: AppTheme.warning
+                color: AppTheme.warning,
+                accessibilityID: "home.daily"
             ) { showDaily = true }
 
             menuButton(
                 title: L("menu.classic"),
-                subtitle: L("menu.classic.sub"),
+                subtitle: "\(progress.completedLevels.count)/240 · \(L("menu.classic.short"))",
                 icon: "target",
                 color: AppTheme.accent
             ) { showLevels = true }
 
             menuButton(
                 title: L("menu.lie"),
-                subtitle: L("menu.lie.sub"),
+                subtitle: "\(lieProgress.completedLevels.count)/240 · \(L("menu.lie.short"))",
                 icon: "theatermask.and.paintbrush.fill",
                 color: AppTheme.danger
             ) { showLieMode = true }
+
+            Text(L("menu.more"))
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(AppTheme.textMuted)
+                .textCase(.uppercase)
+                .padding(.top, 4)
 
             menuButton(
                 title: L("menu.free"),
@@ -314,15 +322,6 @@ struct HomeView: View {
                 color: Color(red: 0.5, green: 0.5, blue: 1.0)
             ) { showDuel = true }
 
-            if FeatureFlags.onlineMatchEnabled {
-                menuButton(
-                    title: L("menu.online"),
-                    subtitle: L("menu.online.sub"),
-                    icon: "wifi",
-                    color: Color(red: 0.2, green: 0.8, blue: 0.6)
-                ) { showOnline = true }
-            }
-
             menuButton(
                 title: L("menu.editor"),
                 subtitle: L("menu.editor.sub"),
@@ -332,11 +331,20 @@ struct HomeView: View {
             ) { if storeManager.isPro { showEditor = true } else { paywallReason = .editor } }
 
             menuButton(
-                title: "Achievements",
+                title: L("menu.achievements"),
                 subtitle: "\(unlockedCount)/\(totalAchievements) unlocked",
                 icon: "trophy.fill",
                 color: AppTheme.warning
             ) { showAchievements = true }
+
+            if FeatureFlags.onlineMatchEnabled {
+                menuButton(
+                    title: L("menu.online"),
+                    subtitle: L("menu.online.sub"),
+                    icon: "wifi",
+                    color: Color(red: 0.2, green: 0.8, blue: 0.6)
+                ) { showOnline = true }
+            }
         }
         .offset(y: buttonsOffset)
         .opacity(titleOpacity)
@@ -345,6 +353,7 @@ struct HomeView: View {
     private func menuButton(
         title: String, subtitle: String, icon: String, color: Color,
         requiresPro: Bool = false,
+        accessibilityID: String? = nil,
         action: @escaping () -> Void
     ) -> some View {
         let locked = requiresPro && !storeManager.isPro
@@ -376,24 +385,21 @@ struct HomeView: View {
                     Text(subtitle)
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(locked ? AppTheme.textMuted : AppTheme.textSecondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
                 }
 
                 Spacer()
 
-                if locked {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(AppTheme.textMuted)
-                } else {
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(AppTheme.textMuted)
-                }
+                Image(systemName: locked ? "lock.fill" : "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(AppTheme.textMuted)
             }
             .padding(12)
             .glassCard()
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(accessibilityID ?? "")
     }
 
     private var statsBar: some View {
