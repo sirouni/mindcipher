@@ -34,18 +34,18 @@ enum AppSkin: String, CaseIterable {
 
     var cardFill: Color {
         switch self {
-        case .agent: return Color.white.opacity(0.72)
-        case .cyber: return Color(red: 1.0, green: 0.97, blue: 1.0).opacity(0.78)
-        case .military: return Color(red: 0.97, green: 0.98, blue: 0.90).opacity(0.80)
+        case .agent: return Color(red: 0.99, green: 0.995, blue: 1.0)
+        case .cyber: return Color(red: 1.0, green: 0.97, blue: 0.995)
+        case .military: return Color(red: 0.97, green: 0.98, blue: 0.90)
         case .dark: return Color(red: 0.16, green: 0.18, blue: 0.24)
         }
     }
 
     var cardFillStrong: Color {
         switch self {
-        case .agent: return Color.white.opacity(0.90)
-        case .cyber: return Color(red: 1.0, green: 0.97, blue: 1.0).opacity(0.92)
-        case .military: return Color(red: 0.97, green: 0.98, blue: 0.90).opacity(0.94)
+        case .agent: return Color.white
+        case .cyber: return Color(red: 1.0, green: 0.98, blue: 1.0)
+        case .military: return Color(red: 0.99, green: 0.99, blue: 0.93)
         case .dark: return Color(red: 0.20, green: 0.22, blue: 0.30)
         }
     }

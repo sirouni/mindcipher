@@ -108,43 +108,6 @@ extension View {
     }
 }
 
-struct PulseAnimation: ViewModifier {
-    @State private var isPulsing = false
-
-    func body(content: Content) -> some View {
-        content
-            .scaleEffect(isPulsing ? 1.05 : 1.0)
-            .opacity(isPulsing ? 0.8 : 1.0)
-            .animation(
-                .easeInOut(duration: 1.5).repeatForever(autoreverses: true),
-                value: isPulsing
-            )
-            .onAppear { isPulsing = true }
-    }
-}
-
-struct ScanlineEffect: View {
-    @State private var offset: CGFloat = -200
-
-    var body: some View {
-        Rectangle()
-            .fill(
-                LinearGradient(
-                    colors: [.clear, AppTheme.accent.opacity(0.08), .clear],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-            .frame(height: 100)
-            .offset(y: offset)
-            .onAppear {
-                withAnimation(.linear(duration: 4).repeatForever(autoreverses: false)) {
-                    offset = UIScreen.main.bounds.height + 200
-                }
-            }
-    }
-}
-
 struct PegView: View {
     let color: PegColor
     let size: CGFloat

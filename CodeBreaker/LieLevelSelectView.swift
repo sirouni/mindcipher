@@ -67,7 +67,6 @@ struct LieLevelSelectView: View {
             Image(systemName: "theatermask.and.paintbrush.fill")
                 .font(.system(size: 14))
                 .foregroundStyle(AppTheme.danger)
-                .symbolEffect(.pulse)
             Text(L("lie.banner"))
                 .font(.system(size: 12, weight: .medium))
                 .foregroundStyle(AppTheme.danger)

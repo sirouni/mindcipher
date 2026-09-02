@@ -202,7 +202,6 @@ struct GameView: View {
             HStack(spacing: 10) {
                 Image(systemName: "theatermask.and.paintbrush.fill")
                     .font(.system(size: 18, weight: .bold))
-                    .symbolEffect(.pulse, options: .repeating)
                 Text(L("lie.kickoff"))
                     .font(.system(size: 14, weight: .bold, design: .rounded))
             }
@@ -351,11 +350,10 @@ struct GameView: View {
             legendLine(type: .exact, text: "= One right color in the right position")
             legendLine(type: .partial, text: "= One right color but in the wrong position")
             legendLine(type: .miss, text: "= One color is not in the secret code")
-            if viewModel.engine?.lieMode == true, !showLieKickoff {
+            if viewModel.engine?.lieMode == true {
                 HStack(spacing: 6) {
-                    Image(systemName: "theatermask.and.paintbrush.fill")
-                        .font(.system(size: 12, weight: .bold))
-                        .symbolEffect(.pulse)
+                    Image(systemName: "flag")
+                        .font(.system(size: 11, weight: .bold))
                     Text(L("lie.clue"))
                         .font(.system(size: 13, weight: .bold, design: .rounded))
                 }
@@ -445,14 +443,17 @@ struct GameView: View {
                                 removal: .opacity
                             ))
                         } else {
-                            HStack {
+                            HStack(spacing: 6) {
                                 Text("\(i + 1)")
                                     .font(.system(size: 12, weight: .bold, design: .monospaced))
                                     .foregroundStyle(AppTheme.textMuted)
-                                    .frame(width: 20)
+                                    .frame(width: 16)
+                                if viewModel.engine?.lieMode == true {
+                                    Color.clear.frame(width: 12, height: 12)
+                                }
                                 Spacer()
                             }
-                            .padding(.horizontal, 12)
+                            .padding(.horizontal, 10)
                             .frame(height: rowHeight)
                         }
 
@@ -478,6 +479,13 @@ struct GameView: View {
                 .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.35 : 0.06), radius: 6, y: 2)
         )
         .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(
+                    viewModel.engine?.lieMode == true ? AppTheme.danger.opacity(0.34) : Color.clear,
+                    lineWidth: 1.5
+                )
+        )
         .padding(.horizontal, 8)
     }
 
@@ -1300,6 +1308,14 @@ struct GuessRowView: View {
                 .font(.system(size: 12, weight: .bold, design: .monospaced))
                 .foregroundStyle(AppTheme.textSecondary)
                 .frame(width: 16)
+
+            if isLieMode {
+                Image(systemName: gameOver && feedback.isLie ? "flag.fill" : "flag")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(AppTheme.danger.opacity(gameOver && !feedback.isLie ? 0 : (gameOver ? 1 : 0.45)))
+                    .frame(width: 12)
+                    .accessibilityHidden(true)
+            }
 
             HStack(spacing: pegSpacing) {
                 ForEach(0..<guess.count, id: \.self) { i in

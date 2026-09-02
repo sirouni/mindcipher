@@ -40,13 +40,7 @@ struct HomeView: View {
                     .padding(.bottom, 8)
             }
             .padding(.horizontal, 24)
-            .background(
-                ZStack {
-                    AppTheme.bgGradient
-                    ScanlineEffect().opacity(0.5)
-                }
-                .ignoresSafeArea()
-            )
+            .background(AppTheme.bgGradient.ignoresSafeArea())
             .navigationDestination(isPresented: $showLevels) {
                 LevelSelectView()
             }
@@ -462,7 +456,6 @@ struct HomeView: View {
                             Image(systemName: "flame.fill")
                                 .font(.system(size: 11))
                                 .foregroundStyle(AppTheme.danger)
-                                .modifier(PulseAnimation())
                             Text("Streak \(stats.currentStreak)!")
                                 .font(.system(size: 11, weight: .bold))
                                 .foregroundStyle(AppTheme.danger)
