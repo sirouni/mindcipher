@@ -76,7 +76,7 @@ enum AppSkin: String, CaseIterable {
         case .agent: return "lock.shield.fill"
         case .cyber: return "bolt.shield.fill"
         case .military: return "shield.checkered"
-        case .dark: return "moon.fill"
+        case .dark: return "circle.lefthalf.filled"
         }
     }
 

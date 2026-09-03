@@ -150,15 +150,15 @@ struct LevelEditorView: View {
         let label: String
         let color: Color
         switch score {
-        case 0..<30: label = "Easy"; color = AppTheme.accent
-        case 30..<50: label = "Medium"; color = Color(red: 0.2, green: 0.8, blue: 0.4)
-        case 50..<70: label = "Challenge"; color = AppTheme.warning
-        case 70..<85: label = "Hard"; color = Color(red: 1.0, green: 0.4, blue: 0.2)
-        default: label = "Hell"; color = AppTheme.danger
+        case 0..<30: label = L("diff.easy"); color = AppTheme.accent
+        case 30..<50: label = L("diff.medium"); color = Color(red: 0.2, green: 0.8, blue: 0.4)
+        case 50..<70: label = L("editor.diff.challenge"); color = AppTheme.warning
+        case 70..<85: label = L("diff.hard"); color = Color(red: 1.0, green: 0.4, blue: 0.2)
+        default: label = L("editor.diff.hell"); color = AppTheme.danger
         }
 
         return HStack(spacing: 12) {
-            Text("Difficulty")
+            Text(L("editor.difficulty"))
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(AppTheme.textSecondary)
 
@@ -176,7 +176,9 @@ struct LevelEditorView: View {
             Text(label)
                 .font(.system(size: 13, weight: .bold))
                 .foregroundStyle(color)
-                .frame(width: 36)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .frame(minWidth: 36, alignment: .trailing)
         }
         .padding(14)
         .glassCard(cornerRadius: 14)

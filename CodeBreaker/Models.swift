@@ -140,6 +140,22 @@ enum Difficulty: String, CaseIterable {
         case .master: return 5
         }
     }
+
+    var localizedName: String {
+        switch self {
+        case .beginner: return L("diff.beginner")
+        case .easy: return L("diff.easy")
+        case .medium: return L("diff.medium")
+        case .hard: return L("diff.hard")
+        case .expert: return L("diff.expert")
+        case .master: return L("diff.master")
+        }
+    }
+
+    var statsLabel: String {
+        let core = "\(codeLength)×\(colorCount)×\(maxAttempts)"
+        return allowDuplicates ? "\(core) · \(L("diff.repeats"))" : core
+    }
 }
 
 struct Level: Identifiable, Codable {
@@ -159,12 +175,12 @@ struct Level: Identifiable, Codable {
 
     var tierName: String {
         switch tier {
-        case 1: return "Junior Agent"
-        case 2: return "Agent"
-        case 3: return "Senior Agent"
-        case 4: return "Elite Agent"
-        case 5: return "Chief Agent"
-        default: return "Legend Agent"
+        case 1: return L("level.tier1")
+        case 2: return L("level.tier2")
+        case 3: return L("level.tier3")
+        case 4: return L("level.tier4")
+        case 5: return L("level.tier5")
+        default: return L("level.tier6")
         }
     }
 }
@@ -540,6 +556,9 @@ struct Achievement: Identifiable {
     let desc: String
     let category: AchievementCategory
     let check: (StatsManager, ProgressManager, ProgressManager) -> Bool
+
+    var localizedTitle: String { L("achieve.\(id).title") }
+    var localizedDesc: String { L("achieve.\(id).desc") }
 }
 
 enum AchievementCategory: String, CaseIterable {
@@ -553,6 +572,8 @@ enum AchievementCategory: String, CaseIterable {
     case mastery = "Mastery"
     case speed = "Speed"
     case elite = "Elite"
+
+    var localizedName: String { L("achieve.cat.\(self)") }
 }
 
 class AchievementManager: ObservableObject {

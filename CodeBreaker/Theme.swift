@@ -228,3 +228,10 @@ struct MorseIndicator: View {
         }
     }
 }
+
+extension View {
+    /// Pegs, slots, and notes are positional — keep P1 on the left in every language.
+    func boardLayout() -> some View {
+        environment(\.layoutDirection, .leftToRight)
+    }
+}

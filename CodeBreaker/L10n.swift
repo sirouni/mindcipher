@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 private struct Tr {
     let zh: String
@@ -22,8 +23,82 @@ private struct Tr {
     }
 }
 
-private var currentLanguage: String {
-    let candidates = Locale.preferredLanguages + Bundle.main.preferredLocalizations
+enum AppLanguage: String, CaseIterable, Identifiable {
+    case system
+    case zh
+    case zhHant = "zh-Hant"
+    case en
+    case ja
+    case ko
+    case es
+    case ar
+    case de
+    case fr
+    case he
+    case pt
+    case tr
+
+    var id: String { rawValue }
+
+    var nativeName: String {
+        switch self {
+        case .system: return ""
+        case .zh: return "简体中文"
+        case .zhHant: return "繁體中文"
+        case .en: return "English"
+        case .ja: return "日本語"
+        case .ko: return "한국어"
+        case .es: return "Español"
+        case .ar: return "العربية"
+        case .de: return "Deutsch"
+        case .fr: return "Français"
+        case .he: return "עברית"
+        case .pt: return "Português"
+        case .tr: return "Türkçe"
+        }
+    }
+
+    var isRTL: Bool { self == .ar || self == .he }
+}
+
+final class LanguageManager: ObservableObject {
+    static let shared = LanguageManager()
+    private static let defaultsKey = "settings_language"
+
+    @Published var preference: AppLanguage {
+        didSet { UserDefaults.standard.set(preference.rawValue, forKey: Self.defaultsKey) }
+    }
+
+    private init() {
+        let saved = UserDefaults.standard.string(forKey: Self.defaultsKey) ?? AppLanguage.system.rawValue
+        preference = AppLanguage(rawValue: saved) ?? .system
+    }
+
+    var resolvedCode: String {
+        if preference == .system {
+            return resolveLanguageCode(from: Locale.preferredLanguages + Bundle.main.preferredLocalizations)
+        }
+        return preference.rawValue
+    }
+
+    var resolvedLanguage: AppLanguage {
+        AppLanguage(rawValue: resolvedCode) ?? .en
+    }
+
+    var layoutDirection: LayoutDirection {
+        resolvedLanguage.isRTL ? .rightToLeft : .leftToRight
+    }
+
+    var locale: Locale {
+        switch resolvedCode {
+        case "zh": return Locale(identifier: "zh-Hans")
+        case "zh-Hant": return Locale(identifier: "zh-Hant")
+        default: return Locale(identifier: resolvedCode)
+        }
+    }
+}
+
+func resolveLanguageCode(from candidates: [String]) -> String {
     for raw in candidates {
         let id = raw.replacingOccurrences(of: "_", with: "-").lowercased()
         if id.hasPrefix("zh-hant") || id.hasPrefix("zh-tw") || id.hasPrefix("zh-hk") || id.hasPrefix("zh-mo") {
@@ -42,6 +117,10 @@ private var currentLanguage: String {
         if id.hasPrefix("en") { return "en" }
     }
     return "en"
+}
+
+private var currentLanguage: String {
+    LanguageManager.shared.resolvedCode
 }
 
 private func localizedTemplate(_ key: String) -> String {
@@ -93,13 +172,23 @@ private let strings: [String: [String: String]] = [
     "param.timelimit": Tr(zh: "时间限制", en: "Time limit", hant: "時間限制", ja: "制限時間", ko: "시간 제한", es: "Límite de tiempo", ar: "حد زمني", de: "Zeitlimit", fr: "Limite de temps", he: "מגבלת זמן", pt: "Limite de tempo", tr: "Süre sınırı").dict,
     "param.yes": Tr(zh: "是", en: "Yes", hant: "是", ja: "あり", ko: "예", es: "Sí", ar: "نعم", de: "Ja", fr: "Oui", he: "כן", pt: "Sim", tr: "Evet").dict,
     "param.no": Tr(zh: "否", en: "No", hant: "否", ja: "なし", ko: "아니요", es: "No", ar: "لا", de: "Nein", fr: "Non", he: "לא", pt: "Não", tr: "Hayır").dict,
+    "diff.beginner": Tr(zh: "入门", en: "Beginner", hant: "入門", ja: "初級", ko: "초급", es: "Principiante", ar: "مبتدئ", de: "Anfänger", fr: "Débutant", he: "מתחיל", pt: "Iniciante", tr: "Başlangıç").dict,
+    "diff.easy": Tr(zh: "简单", en: "Easy", hant: "簡單", ja: "簡単", ko: "쉬움", es: "Fácil", ar: "سهل", de: "Leicht", fr: "Facile", he: "קל", pt: "Fácil", tr: "Kolay").dict,
+    "diff.medium": Tr(zh: "中等", en: "Medium", hant: "中等", ja: "普通", ko: "보통", es: "Medio", ar: "متوسط", de: "Mittel", fr: "Moyen", he: "בינוני", pt: "Médio", tr: "Orta").dict,
+    "diff.hard": Tr(zh: "困难", en: "Hard", hant: "困難", ja: "難しい", ko: "어려움", es: "Difícil", ar: "صعب", de: "Schwer", fr: "Difficile", he: "קשה", pt: "Difícil", tr: "Zor").dict,
+    "diff.expert": Tr(zh: "专家", en: "Expert", hant: "專家", ja: "上級", ko: "전문가", es: "Experto", ar: "خبير", de: "Experte", fr: "Expert", he: "מומחה", pt: "Experto", tr: "Uzman").dict,
+    "diff.master": Tr(zh: "大师", en: "Master", hant: "大師", ja: "達人", ko: "마스터", es: "Maestro", ar: "أستاذ", de: "Meister", fr: "Maître", he: "אמן", pt: "Mestre", tr: "Usta").dict,
+    "diff.repeats": Tr(zh: "可重复", en: "Repeats", hant: "可重複", ja: "重複可", ko: "중복", es: "Repite", ar: "تكرار", de: "Wiederholt", fr: "Doublons", he: "כפילויות", pt: "Repete", tr: "Tekrar").dict,
+    "editor.difficulty": Tr(zh: "难度", en: "Difficulty", hant: "難度", ja: "難易度", ko: "난이도", es: "Dificultad", ar: "الصعوبة", de: "Schwierigkeit", fr: "Difficulté", he: "קושי", pt: "Dificuldade", tr: "Zorluk").dict,
+    "editor.diff.challenge": Tr(zh: "挑战", en: "Challenge", hant: "挑戰", ja: "挑戦", ko: "도전", es: "Reto", ar: "تحدٍ", de: "Herausforderung", fr: "Défi", he: "אתגר", pt: "Desafio", tr: "Görev").dict,
+    "editor.diff.hell": Tr(zh: "地狱", en: "Hell", hant: "地獄", ja: "地獄", ko: "지옥", es: "Infierno", ar: "جحيم", de: "Hölle", fr: "Enfer", he: "גיהנום", pt: "Inferno", tr: "Cehennem").dict,
     "result.win": Tr(zh: "密码破译成功！", en: "Code Cracked!", hant: "密碼破譯成功！", ja: "解読成功！", ko: "암호 해독 성공!", es: "¡Código descifrado!", ar: "فُك الرمز!", de: "Code geknackt!", fr: "Code cassé !", he: "הקוד פוצח!", pt: "Código decifrado!", tr: "Kod kırıldı!").dict,
     "result.win.steps": Tr(zh: "用了 %d 步完成破译", en: "Solved in %d steps", hant: "用了 %d 步完成破譯", ja: "%d手で解読", ko: "%d수 만에 해독", es: "Resuelto en %d pasos", ar: "حُلّ في %d خطوة", de: "In %d Zügen gelöst", fr: "Résolu en %d coups", he: "נפתר ב־%d מהלכים", pt: "Resolvido em %d passos", tr: "%d hamlede çözüldü").dict,
     "result.lose": Tr(zh: "破译失败", en: "Failed", hant: "破譯失敗", ja: "解読失敗", ko: "해독 실패", es: "Fallaste", ar: "فشل", de: "Gescheitert", fr: "Échec", he: "נכשל", pt: "Falhou", tr: "Başarısız").dict,
     "result.lose.desc": Tr(zh: "密码未能在限定次数内破解", en: "Code not cracked within the limit", hant: "密碼未能在限定次數內破解", ja: "制限手数内に解読できなかった", ko: "제한 횟수 안에 해독하지 못함", es: "No descifraste el código a tiempo", ar: "لم يُفك الرمز ضمن الحد", de: "Code nicht rechtzeitig geknackt", fr: "Code non cassé dans la limite", he: "הקוד לא פוצח בזמן", pt: "Código não decifrado a tempo", tr: "Kod süre içinde kırılmadı").dict,
     "result.code": Tr(zh: "密码：", en: "Code:", hant: "密碼：", ja: "コード：", ko: "암호:", es: "Código:", ar: "الرمز:", de: "Code:", fr: "Code :", he: "קוד:", pt: "Código:", tr: "Kod:").dict,
     "result.retry": Tr(zh: "重新挑战", en: "Retry", hant: "重新挑戰", ja: "再挑戦", ko: "다시 도전", es: "Reintentar", ar: "إعادة", de: "Nochmal", fr: "Réessayer", he: "נסה שוב", pt: "Tentar de novo", tr: "Tekrar dene").dict,
-    "result.next": Tr(zh: "下一关 →", en: "Next →", hant: "下一關 →", ja: "次へ →", ko: "다음 →", es: "Siguiente →", ar: "التالي ←", de: "Weiter →", fr: "Suivant →", he: "הבא ←", pt: "Seguinte →", tr: "İleri →").dict,
+    "result.next": Tr(zh: "下一关", en: "Next", hant: "下一關", ja: "次へ", ko: "다음", es: "Siguiente", ar: "التالي", de: "Weiter", fr: "Suivant", he: "הבא", pt: "Seguinte", tr: "İleri").dict,
     "result.again": Tr(zh: "再来一局", en: "Play Again", hant: "再來一局", ja: "もう一局", ko: "한 판 더", es: "Jugar de nuevo", ar: "جولة أخرى", de: "Nochmal spielen", fr: "Rejouer", he: "משחק נוסף", pt: "Jogar de novo", tr: "Bir tur daha").dict,
     "result.share": Tr(zh: "分享", en: "Share", hant: "分享", ja: "シェア", ko: "공유", es: "Compartir", ar: "مشاركة", de: "Teilen", fr: "Partager", he: "שתף", pt: "Compartilhar", tr: "Paylaş").dict,
     "result.back": Tr(zh: "返回", en: "Back", hant: "返回", ja: "戻る", ko: "뒤로", es: "Volver", ar: "رجوع", de: "Zurück", fr: "Retour", he: "חזרה", pt: "Voltar", tr: "Geri").dict,
@@ -109,7 +198,7 @@ private let strings: [String: [String: String]] = [
     "lie.banner": Tr(zh: "每关含1次虚假反馈", en: "1 fake feedback per level", hant: "每關含 1 次虛假回饋", ja: "各レベルで嘘の手がかり1回", ko: "레벨마다 가짜 단서 1회", es: "1 pista falsa por nivel", ar: "دليل مزيف واحد لكل مستوى", de: "1 falscher Hinweis pro Level", fr: "1 indice faux par niveau", he: "רמז מזויף אחד בכל שלב", pt: "1 pista falsa por nível", tr: "Seviye başına 1 sahte ipucu").dict,
     "lie.reveal": Tr(zh: "第 %d 步是谎言！", en: "Step %d was a lie!", hant: "第 %d 步是謊言！", ja: "%d手目が嘘だった！", ko: "%d번째 수가 거짓이었습니다!", es: "¡El paso %d era mentira!", ar: "الخطوة %d كانت كذبة!", de: "Zug %d war eine Lüge!", fr: "Le coup %d était un mensonge !", he: "מהלך %d היה שקר!", pt: "O passo %d era mentira!", tr: "%d. hamle yalandı!").dict,
     "lie.fake": Tr(zh: "当时显示", en: "Shown", hant: "當時顯示", ja: "当時の表示", ko: "그때 표시", es: "Mostrado", ar: "المعروض", de: "Gezeigt", fr: "Affiché", he: "הוצג", pt: "Mostrado", tr: "Gösterilen").dict,
-    "lie.real": Tr(zh: "→ 实际是", en: "→ Truth", hant: "→ 實際是", ja: "→ 本当は", ko: "→ 실제", es: "→ Verdad", ar: "← الحقيقة", de: "→ Wahrheit", fr: "→ Vérité", he: "← האמת", pt: "→ Verdade", tr: "→ Gerçek").dict,
+    "lie.real": Tr(zh: "实际是", en: "Truth", hant: "實際是", ja: "本当は", ko: "실제", es: "Verdad", ar: "الحقيقة", de: "Wahrheit", fr: "Vérité", he: "האמת", pt: "Verdade", tr: "Gerçek").dict,
     "lie.real.short": Tr(zh: "实际是", en: "Truth", hant: "實際是", ja: "本当は", ko: "실제", es: "Verdad", ar: "الحقيقة", de: "Wahrheit", fr: "Vérité", he: "אמת", pt: "Verdade", tr: "Gerçek").dict,
     "lie.feedback": Tr(zh: "%d精确 %d位置", en: "%d exact %d partial", hant: "%d 精確 %d 位置", ja: "正確%d 位置違い%d", ko: "정확 %d 위치만 %d", es: "%d exactos %d parciales", ar: "%d دقيق %d جزئي", de: "%d exakt %d teilweise", fr: "%d exacts %d partiels", he: "%d מדויק %d חלקי", pt: "%d exatos %d parciais", tr: "%d tam %d kısmi").dict,
     "lie.notrigger": Tr(zh: "本局谎言未触发（你赢得太快了！）", en: "No lie triggered (you won too fast!)", hant: "本局謊言未觸發（你贏得太快了！）", ja: "嘘は出なかった（勝ちが早すぎた！）", ko: "거짓이 나오지 않음 (너무 빨리 이김!)", es: "No hubo mentira (¡ganaste muy rápido!)", ar: "لم يظهر كذب (فزت بسرعة!)", de: "Keine Lüge (zu schnell gewonnen!)", fr: "Pas de mensonge (victoire trop rapide !)", he: "לא היה שקר (ניצחת מהר מדי!)", pt: "Sem mentira (você ganhou rápido demais!)", tr: "Yalan çıkmadı (çok çabuk kazandın!)").dict,
@@ -140,7 +229,7 @@ private let strings: [String: [String: String]] = [
     "duel.desc": Tr(zh: "一人设密码，一人来破译", en: "One sets code, one cracks it", hant: "一人設密碼，一人來破譯", ja: "一人がコードを設定し、もう一人が解読", ko: "한 명이 암호를 정하고, 한 명이 풉니다", es: "Uno pone el código, el otro lo descifra", ar: "واحد يضع الرمز، والآخر يفكه", de: "Einer legt den Code, einer knackt ihn", fr: "L’un pose le code, l’autre le casse", he: "אחד קובע קוד, השני מפצח", pt: "Um define o código, o outro decifra", tr: "Biri kodu koyar, diğeri çözer").dict,
     "duel.p1.setup": Tr(zh: "玩家 1 设置密码", en: "Player 1: Set Code", hant: "玩家 1 設定密碼", ja: "プレイヤー1：コードを設定", ko: "플레이어 1: 암호 설정", es: "Jugador 1: poner código", ar: "اللاعب 1: ضع الرمز", de: "Spieler 1: Code legen", fr: "Joueur 1 : poser le code", he: "שחקן 1: קבע קוד", pt: "Jogador 1: definir código", tr: "Oyuncu 1: kodu koy").dict,
     "duel.p2.start": Tr(zh: "玩家 2 开始破译", en: "Player 2: Start", hant: "玩家 2 開始破譯", ja: "プレイヤー2：解読開始", ko: "플레이어 2: 시작", es: "Jugador 2: empezar", ar: "اللاعب 2: ابدأ", de: "Spieler 2: Start", fr: "Joueur 2 : commencer", he: "שחקן 2: התחל", pt: "Jogador 2: começar", tr: "Oyuncu 2: başla").dict,
-    "duel.confirm": Tr(zh: "密码已设好 →", en: "Code Set →", hant: "密碼已設好 →", ja: "コード設定完了 →", ko: "암호 설정됨 →", es: "Código listo →", ar: "الرمز جاهز ←", de: "Code gesetzt →", fr: "Code prêt →", he: "הקוד נקבע ←", pt: "Código pronto →", tr: "Kod hazır →").dict,
+    "duel.confirm": Tr(zh: "密码已设好", en: "Code Set", hant: "密碼已設好", ja: "コード設定完了", ko: "암호 설정됨", es: "Código listo", ar: "الرمز جاهز", de: "Code gesetzt", fr: "Code prêt", he: "הקוד נקבע", pt: "Código pronto", tr: "Kod hazır").dict,
     "duel.handoff": Tr(zh: "请将手机交给对手", en: "Pass to Opponent", hant: "請將手機交給對手", ja: "相手に渡して", ko: "상대에게 넘기세요", es: "Pásaselo al rival", ar: "مرّر الهاتف للخصم", de: "Ans Gegenüber geben", fr: "Passe au rival", he: "העבר ליריב", pt: "Passe ao rival", tr: "Telefona rakibe ver").dict,
     "duel.handoff.desc": Tr(zh: "密码已锁定，请勿偷看！", en: "Code locked. No peeking!", hant: "密碼已鎖定，請勿偷看！", ja: "コードはロック済み。覗き見禁止！", ko: "암호가 잠겼습니다. 훔쳐보지 마세요!", es: "Código bloqueado. ¡Sin mirar!", ar: "الرمز مقفل. لا تختلس النظر!", de: "Code gesperrt. Nicht spicken!", fr: "Code verrouillé. Pas de coup d’œil !", he: "הקוד נעול. בלי להציץ!", pt: "Código travado. Sem espiar!", tr: "Kod kilitli. Bakmak yok!").dict,
     "duel.rules": Tr(zh: "对战规则", en: "Rules", hant: "對戰規則", ja: "ルール", ko: "규칙", es: "Reglas", ar: "القواعد", de: "Regeln", fr: "Règles", he: "כללים", pt: "Regras", tr: "Kurallar").dict,
@@ -232,6 +321,8 @@ private let strings: [String: [String: String]] = [
     "home.streak.fire": Tr(zh: "连胜 %d！", en: "Streak %d!", hant: "連勝 %d！", ja: "%d連勝！", ko: "%d연승!", es: "¡Racha de %d!", ar: "سلسلة %d!", de: "Serie %d!", fr: "Série de %d !", he: "רצף %d!", pt: "Sequência de %d!", tr: "%d seri!").dict,
     "home.streak.best": Tr(zh: "最佳 %d", en: "Best %d", hant: "最佳 %d", ja: "最高 %d", ko: "최고 %d", es: "Mejor %d", ar: "أفضل %d", de: "Beste %d", fr: "Meilleur %d", he: "שיא %d", pt: "Melhor %d", tr: "En iyi %d").dict,
     "home.unlocked": Tr(zh: "%d/%d 已解锁", en: "%d/%d unlocked", hant: "%d/%d 已解鎖", ja: "%d/%d 解除", ko: "%d/%d 해제", es: "%d/%d desbloqueados", ar: "%d/%d مفتوح", de: "%d/%d frei", fr: "%d/%d débloqués", he: "%d/%d נפתחו", pt: "%d/%d desbloqueados", tr: "%d/%d açık").dict,
+    "settings.language": Tr(zh: "语言", en: "Language", hant: "語言", ja: "言語", ko: "언어", es: "Idioma", ar: "اللغة", de: "Sprache", fr: "Langue", he: "שפה", pt: "Idioma", tr: "Dil").dict,
+    "settings.language.system": Tr(zh: "跟随系统", en: "Follow System", hant: "跟隨系統", ja: "システムに合わせる", ko: "시스템 설정", es: "Seguir el sistema", ar: "حسب النظام", de: "System folgen", fr: "Suivre le système", he: "לפי המערכת", pt: "Seguir o sistema", tr: "Sistemi izle").dict,
     "settings.game": Tr(zh: "游戏", en: "Game", hant: "遊戲", ja: "ゲーム", ko: "게임", es: "Juego", ar: "اللعبة", de: "Spiel", fr: "Jeu", he: "משחק", pt: "Jogo", tr: "Oyun").dict,
     "settings.theme": Tr(zh: "主题", en: "Theme", hant: "主題", ja: "テーマ", ko: "테마", es: "Tema", ar: "المظهر", de: "Design", fr: "Thème", he: "ערכת נושא", pt: "Tema", tr: "Tema").dict,
     "settings.stats": Tr(zh: "统计", en: "Stats", hant: "統計", ja: "記録", ko: "통계", es: "Estadísticas", ar: "الإحصاءات", de: "Statistik", fr: "Stats", he: "סטטיסטיקה", pt: "Estatísticas", tr: "İstatistik").dict,
@@ -282,7 +373,7 @@ private let strings: [String: [String: String]] = [
     "tutorial.hints.do2": Tr(zh: "剩余很少时，确认正确颜色", en: "Or confirm the correct color if few remain", hant: "剩餘很少時，確認正確顏色", ja: "残りが少なければ正しい色を確定", ko: "남은 색이 적으면 올바른 색을 확정", es: "O confirma el color si quedan pocos", ar: "أو أكّد اللون الصحيح إن بقي القليل", de: "Oder die richtige Farbe bestätigen, wenn wenig übrig", fr: "Ou confirme la bonne couleur s’il en reste peu", he: "או אשר את הצבע הנכון אם נשארו מעט", pt: "Ou confirma a cor certa se restam poucas", tr: "Az kaldıysa doğru rengi onayla").dict,
     "tutorial.hints.do3": Tr(zh: "帮你推理，不会直接给出答案", en: "Guides your logic — doesn't solve for you", hant: "幫你推理，不會直接給出答案", ja: "考え方を助ける。答えは教えない", ko: "추론을 도울 뿐, 답을 주지는 않습니다", es: "Guía tu lógica; no resuelve por ti", ar: "يرشد منطقك — لا يحل عنك", de: "Leitet deine Logik — löst nicht für dich", fr: "Guide ta logique — ne résout pas à ta place", he: "מדריך את ההיגיון — לא פותר במקומך", pt: "Guia sua lógica — não resolve por você", tr: "Mantığını yönlendirir — senin yerine çözmez").dict,
     "tutorial.lie.r1": Tr(zh: "恰好有 1 条反馈是假的", en: "Exactly 1 feedback is fake", hant: "恰好有 1 條回饋是假的", ja: "手がかりの嘘はちょうど1つ", ko: "가짜 단서는 정확히 1개", es: "Exactamente 1 pista es falsa", ar: "دليل واحد بالضبط مزيف", de: "Genau 1 Hinweis ist falsch", fr: "Exactement 1 indice est faux", he: "בדיוק רמז אחד מזויף", pt: "Exatamente 1 pista é falsa", tr: "Tam 1 ipucu sahte").dict,
-    "tutorial.lie.r2": Tr(zh: "假线索与真相最多差 1", en: "Lie differs from truth by ≤1", hant: "假線索與真相最多差 1", ja: "嘘と真実の差は1以内", ko: "거짓과 진실의 차이는 1 이하", es: "La mentira difiere de la verdad en ≤1", ar: "الكذبة تختلف عن الحقيقة بـ ≤1", de: "Lüge weicht von der Wahrheit um ≤1 ab", fr: "Le mensonge diffère de la vérité de ≤1", he: "השקר שונה מהאמת ב־≤1", pt: "A mentira difere da verdade em ≤1", tr: "Yalan gerçekten en fazla 1 sapar").dict,
+    "tutorial.lie.r2": Tr(zh: "假线索与真相最多差 1", en: "Lie differs from truth by at most 1", hant: "假線索與真相最多差 1", ja: "嘘と真実の差は1以内", ko: "거짓과 진실의 차이는 1 이하", es: "La mentira difiere de la verdad en 1 como máximo", ar: "الكذبة لا تبتعد عن الحقيقة بأكثر من واحد", de: "Lüge weicht von der Wahrheit höchstens um 1 ab", fr: "Le mensonge s’écarte de la vérité d’au plus 1", he: "השקר שונה מהאמת לכל היותר ב־1", pt: "A mentira difere da verdade em no máximo 1", tr: "Yalan gerçekten en fazla 1 sapar").dict,
     "tutorial.lie.r3": Tr(zh: "猜中密码的那一步一定是真的", en: "The winning guess is always truthful", hant: "猜中密碼的那一步一定是真的", ja: "正解の手の手がかりは必ず本当", ko: "정답 수의 단서는 항상 참", es: "La jugada ganadora siempre es honesta", ar: "تخمين الفوز صادق دائمًا", de: "Der Gewinnzug ist immer wahr", fr: "Le coup gagnant est toujours honnête", he: "ניחוש הניצחון תמיד אמיתי", pt: "O palpite vencedor é sempre honesto", tr: "Kazanan tahmin her zaman doğru").dict,
     "tutorial.lie.r4": Tr(zh: "找出哪一条反馈在说谎", en: "Figure out which feedback was fake", hant: "找出哪一條回饋在說謊", ja: "どの手がかりが嘘かを見抜く", ko: "어떤 단서가 거짓인지 찾아내세요", es: "Averigua qué pista mentía", ar: "اعرف أي دليل كان مزيفًا", de: "Finde heraus, welcher Hinweis gelogen hat", fr: "Trouve quel indice mentait", he: "גלה איזה רמז שיקר", pt: "Descubra qual pista mentia", tr: "Hangi ipucunun yalan olduğunu bul").dict,
     "tutorial.tips": Tr(zh: "技巧", en: "Tips", hant: "技巧", ja: "コツ", ko: "팁", es: "Consejos", ar: "نصائح", de: "Tipps", fr: "Astuces", he: "טיפים", pt: "Dicas", tr: "İpuçları").dict,
@@ -303,6 +394,129 @@ private let strings: [String: [String: String]] = [
     "challenge.accept": Tr(zh: "接受挑战", en: "Accept Challenge", hant: "接受挑戰", ja: "挑戦を受ける", ko: "도전 수락", es: "Aceptar reto", ar: "قبول التحدي", de: "Annehmen", fr: "Accepter le défi", he: "קבל אתגר", pt: "Aceitar desafio", tr: "Görevi kabul et").dict,
     "challenge.title": Tr(zh: "挑战", en: "Challenge", hant: "挑戰", ja: "挑戦", ko: "도전", es: "Reto", ar: "تحدٍ", de: "Herausforderung", fr: "Défi", he: "אתגר", pt: "Desafio", tr: "Meydan okuma").dict,
     "challenge.lie": Tr(zh: "谎言模式 — 一条反馈可能是假的！", en: "Lie Mode — one feedback may be fake!", hant: "謊言模式 — 一條回饋可能是假的！", ja: "嘘モード — 手がかりの1つが嘘かも！", ko: "거짓말 모드 — 단서 하나가 가짜일 수 있습니다!", es: "Modo Mentira — ¡una pista puede ser falsa!", ar: "وضع الكذب — قد يكون أحد الأدلة مزيفًا!", de: "Lügenmodus — ein Hinweis kann falsch sein!", fr: "Mode Mensonge — un indice peut être faux !", he: "מצב שקר — רמז אחד עלול להיות מזויף!", pt: "Modo Mentira — uma pista pode ser falsa!", tr: "Yalan modu — bir ipucu sahte olabilir!").dict,
+    "settings.locked": Tr(zh: "未解锁", en: "Locked", hant: "未解鎖", ja: "未解除", ko: "잠김", es: "Bloqueado", ar: "مقفل", de: "Gesperrt", fr: "Verrouillé", he: "נעול", pt: "Bloqueado", tr: "Kilitli").dict,
+    "achieve.cat.beginner": Tr(zh: "入门", en: "Getting Started", hant: "入門", ja: "はじめよう", ko: "시작하기", es: "Primeros pasos", ar: "البداية", de: "Einstieg", fr: "Pour commencer", he: "התחלה", pt: "Primeiros passos", tr: "Başlangıç").dict,
+    "achieve.cat.streak": Tr(zh: "连胜", en: "Streaks", hant: "連勝", ja: "連勝", ko: "연승", es: "Rachas", ar: "السلاسل", de: "Serien", fr: "Séries", he: "רצפים", pt: "Sequências", tr: "Seriler").dict,
+    "achieve.cat.daily": Tr(zh: "每日挑战", en: "Daily Challenge", hant: "每日挑戰", ja: "デイリー", ko: "일일 도전", es: "Desafío diario", ar: "التحدي اليومي", de: "Tägliche Herausforderung", fr: "Défi du jour", he: "אתגר יומי", pt: "Desafio diário", tr: "Günlük görev").dict,
+    "achieve.cat.freeplay": Tr(zh: "自由模式", en: "Free Play", hant: "自由模式", ja: "フリープレイ", ko: "자유 플레이", es: "Juego libre", ar: "لعب حر", de: "Freies Spiel", fr: "Partie libre", he: "משחק חופשי", pt: "Jogo livre", tr: "Serbest oyun").dict,
+    "achieve.cat.duel": Tr(zh: "双人对战", en: "Duel Mode", hant: "雙人對戰", ja: "対戦", ko: "대전", es: "Duelo", ar: "المبارزة", de: "Duell", fr: "Duel", he: "דו-קרב", pt: "Duelo", tr: "Düello").dict,
+    "achieve.cat.levels": Tr(zh: "关卡", en: "Levels", hant: "關卡", ja: "レベル", ko: "레벨", es: "Niveles", ar: "المستويات", de: "Level", fr: "Niveaux", he: "שלבים", pt: "Níveis", tr: "Seviyeler").dict,
+    "achieve.cat.stars": Tr(zh: "星数", en: "Stars", hant: "星數", ja: "星", ko: "별", es: "Estrellas", ar: "النجوم", de: "Sterne", fr: "Étoiles", he: "כוכבים", pt: "Estrelas", tr: "Yıldızlar").dict,
+    "achieve.cat.mastery": Tr(zh: "精通", en: "Mastery", hant: "精通", ja: "マスタリー", ko: "숙련", es: "Maestría", ar: "الإتقان", de: "Meisterschaft", fr: "Maîtrise", he: "שליטה", pt: "Maestria", tr: "Ustalık").dict,
+    "achieve.cat.speed": Tr(zh: "速度", en: "Speed", hant: "速度", ja: "スピード", ko: "속도", es: "Velocidad", ar: "السرعة", de: "Tempo", fr: "Vitesse", he: "מהירות", pt: "Velocidade", tr: "Hız").dict,
+    "achieve.cat.elite": Tr(zh: "精英", en: "Elite", hant: "精英", ja: "エリート", ko: "엘리트", es: "Élite", ar: "النخبة", de: "Elite", fr: "Élite", he: "עילית", pt: "Elite", tr: "Elit").dict,
+    "achieve.first_win.title": Tr(zh: "初次破译", en: "First Crack", hant: "初次破譯", ja: "初解読", ko: "첫 해독", es: "Primer crack", ar: "الفك الأول", de: "Erster Knack", fr: "Première brèche", he: "פיצוח ראשון", pt: "Primeira quebra", tr: "İlk kırış").dict,
+    "achieve.first_win.desc": Tr(zh: "赢得第一局", en: "Win your first game", hant: "贏得第一局", ja: "初めて勝つ", ko: "첫 승리", es: "Gana tu primera partida", ar: "اربح أول جولة", de: "Gewinne dein erstes Spiel", fr: "Gagne ta première partie", he: "נצח במשחק הראשון", pt: "Vença sua primeira partida", tr: "İlk oyununu kazan").dict,
+    "achieve.play_5.title": Tr(zh: "热身", en: "Warming Up", hant: "熱身", ja: "ウォームアップ", ko: "워밍업", es: "Calentando", ar: "إحماء", de: "Aufwärmen", fr: "Échauffement", he: "חימום", pt: "Aquecendo", tr: "Isınma").dict,
+    "achieve.play_5.desc": Tr(zh: "玩 5 局", en: "Play 5 games", hant: "玩 5 局", ja: "5プレイ", ko: "5판 플레이", es: "Juega 5 partidas", ar: "العب 5 جولات", de: "Spiele 5 Partien", fr: "Joue 5 parties", he: "שחק 5 משחקים", pt: "Jogue 5 partidas", tr: "5 oyun oyna").dict,
+    "achieve.play_10.title": Tr(zh: "上瘾", en: "Getting Hooked", hant: "上癮", ja: "ハマってきた", ko: "빠져들기", es: "Enganchado", ar: "أدمنت", de: "Süchtig", fr: "Accro", he: "נתפסת", pt: "Viciado", tr: "Alıştın").dict,
+    "achieve.play_10.desc": Tr(zh: "玩 10 局", en: "Play 10 games", hant: "玩 10 局", ja: "10プレイ", ko: "10판 플레이", es: "Juega 10 partidas", ar: "العب 10 جولات", de: "Spiele 10 Partien", fr: "Joue 10 parties", he: "שחק 10 משחקים", pt: "Jogue 10 partidas", tr: "10 oyun oyna").dict,
+    "achieve.play_50.title": Tr(zh: "执着", en: "Dedicated", hant: "執著", ja: "本気", ko: "열정", es: "Entregado", ar: "مواظب", de: "Engagiert", fr: "Assidu", he: "מסור", pt: "Dedicado", tr: "Azimli").dict,
+    "achieve.play_50.desc": Tr(zh: "玩 50 局", en: "Play 50 games", hant: "玩 50 局", ja: "50プレイ", ko: "50판 플레이", es: "Juega 50 partidas", ar: "العب 50 جولة", de: "Spiele 50 Partien", fr: "Joue 50 parties", he: "שחק 50 משחקים", pt: "Jogue 50 partidas", tr: "50 oyun oyna").dict,
+    "achieve.play_100.title": Tr(zh: "老兵", en: "Veteran", hant: "老兵", ja: "ベテラン", ko: "베테랑", es: "Veterano", ar: "مخضرم", de: "Veteran", fr: "Vétéran", he: "ותיק", pt: "Veterano", tr: "Veteran").dict,
+    "achieve.play_100.desc": Tr(zh: "玩 100 局", en: "Play 100 games", hant: "玩 100 局", ja: "100プレイ", ko: "100판 플레이", es: "Juega 100 partidas", ar: "العب 100 جولة", de: "Spiele 100 Partien", fr: "Joue 100 parties", he: "שחק 100 משחקים", pt: "Jogue 100 partidas", tr: "100 oyun oyna").dict,
+    "achieve.win_10.title": Tr(zh: "两位数", en: "Double Digits", hant: "兩位數", ja: "二桁勝利", ko: "두 자릿수", es: "Dos dígitos", ar: "خانتان", de: "Zweistellig", fr: "Deux chiffres", he: "שתי ספרות", pt: "Dois dígitos", tr: "Çift hane").dict,
+    "achieve.win_10.desc": Tr(zh: "赢 10 局", en: "Win 10 games", hant: "贏 10 局", ja: "10勝", ko: "10승", es: "Gana 10 partidas", ar: "اربح 10 جولات", de: "Gewinne 10 Spiele", fr: "Gagne 10 parties", he: "נצח ב־10 משחקים", pt: "Vença 10 partidas", tr: "10 oyun kazan").dict,
+    "achieve.win_50.title": Tr(zh: "半百", en: "Half Century", hant: "半百", ja: "50勝", ko: "50승", es: "Medio siglo", ar: "نصف قرن", de: "Halbzeit", fr: "Demi-siècle", he: "חצי מאה", pt: "Meio século", tr: "Yarım asır").dict,
+    "achieve.win_50.desc": Tr(zh: "赢 50 局", en: "Win 50 games", hant: "贏 50 局", ja: "50勝する", ko: "50승", es: "Gana 50 partidas", ar: "اربح 50 جولة", de: "Gewinne 50 Spiele", fr: "Gagne 50 parties", he: "נצח ב־50 משחקים", pt: "Vença 50 partidas", tr: "50 oyun kazan").dict,
+    "achieve.streak_3.title": Tr(zh: "着火了", en: "On Fire", hant: "著火了", ja: "燃えてる", ko: "불타오름", es: "En racha", ar: "مشتعل", de: "On Fire", fr: "En feu", he: "בוער", pt: "Em chamas", tr: "Ateş gibi").dict,
+    "achieve.streak_3.desc": Tr(zh: "连胜 3 局", en: "Win 3 in a row", hant: "連勝 3 局", ja: "3連勝", ko: "3연승", es: "Gana 3 seguidas", ar: "اربح 3 متتالية", de: "3 Siege in Folge", fr: "Gagne 3 d’affilée", he: "3 ניצחונות ברצף", pt: "Vença 3 seguidas", tr: "3 oyun üst üste kazan").dict,
+    "achieve.streak_5.title": Tr(zh: "连胜大师", en: "Streak Master", hant: "連勝大師", ja: "連勝マスター", ko: "연승 마스터", es: "Maestro de rachas", ar: "سيد السلاسل", de: "Serienmeister", fr: "Maître des séries", he: "מלך הרצף", pt: "Mestre de sequências", tr: "Seri ustası").dict,
+    "achieve.streak_5.desc": Tr(zh: "连胜 5 局", en: "Win 5 in a row", hant: "連勝 5 局", ja: "5連勝", ko: "5연승", es: "Gana 5 seguidas", ar: "اربح 5 متتالية", de: "5 Siege in Folge", fr: "Gagne 5 d’affilée", he: "5 ניצחונות ברצף", pt: "Vença 5 seguidas", tr: "5 oyun üst üste kazan").dict,
+    "achieve.streak_10.title": Tr(zh: "神射手", en: "Sharpshooter", hant: "神射手", ja: "スナイパー", ko: "명사수", es: "Francotirador", ar: "قناص", de: "Scharfschütze", fr: "Tireur d’élite", he: "קלע", pt: "Atirador", tr: "Keskin nişancı").dict,
+    "achieve.streak_10.desc": Tr(zh: "连胜 10 局", en: "Win 10 in a row", hant: "連勝 10 局", ja: "10連勝", ko: "10연승", es: "Gana 10 seguidas", ar: "اربح 10 متتالية", de: "10 Siege in Folge", fr: "Gagne 10 d’affilée", he: "10 ניצחונות ברצף", pt: "Vença 10 seguidas", tr: "10 oyun üst üste kazan").dict,
+    "achieve.streak_20.title": Tr(zh: "势不可挡", en: "Unstoppable", hant: "勢不可擋", ja: "止められない", ko: "막을 수 없음", es: "Imparable", ar: "لا يُوقف", de: "Unaufhaltsam", fr: "Inarrêtable", he: "בלתי ניתן לעצירה", pt: "Imparável", tr: "Durdurulamaz").dict,
+    "achieve.streak_20.desc": Tr(zh: "连胜 20 局", en: "Win 20 in a row", hant: "連勝 20 局", ja: "20連勝", ko: "20연승", es: "Gana 20 seguidas", ar: "اربح 20 متتالية", de: "20 Siege in Folge", fr: "Gagne 20 d’affilée", he: "20 ניצחונות ברצף", pt: "Vença 20 seguidas", tr: "20 oyun üst üste kazan").dict,
+    "achieve.winrate_80.title": Tr(zh: "稳定输出", en: "Consistent", hant: "穩定輸出", ja: "安定感", ko: "꾸준함", es: "Constante", ar: "ثابت", de: "Konstant", fr: "Régulier", he: "יציב", pt: "Constante", tr: "İstikrarlı").dict,
+    "achieve.winrate_80.desc": Tr(zh: "10 局以上保持 80%+ 胜率", en: "Maintain 80%+ win rate (10+ games)", hant: "10 局以上保持 80%+ 勝率", ja: "10戦以上で勝率80%+", ko: "10판 이상 승률 80%+", es: "Mantén 80%+ de victorias (10+ partidas)", ar: "حافظ على فوز 80%+‏ (10 جولات فأكثر)", de: "80 %+ Quote bei 10+ Spielen", fr: "Garde 80 %+ de victoires (10+ parties)", he: "שמור על 80%+ ניצחונות (10+ משחקים)", pt: "Mantenha 80%+ de vitórias (10+ partidas)", tr: "10+ oyunda %80+ galibiyet").dict,
+    "achieve.daily_1.title": Tr(zh: "每日首秀", en: "Daily Debut", hant: "每日首秀", ja: "初デイリー", ko: "일일 데뷔", es: "Debut diario", ar: "الظهور اليومي", de: "Tagesdebüt", fr: "Premier quotidien", he: "בכורה יומית", pt: "Estreia diária", tr: "Günlük ilk").dict,
+    "achieve.daily_1.desc": Tr(zh: "完成第一次每日挑战", en: "Complete your first daily challenge", hant: "完成第一次每日挑戰", ja: "初めてデイリーをクリア", ko: "첫 일일 도전 완료", es: "Completa tu primer desafío diario", ar: "أكمل أول تحدٍ يومي", de: "Schließe die erste Tageschallenge ab", fr: "Termine ton premier défi du jour", he: "השלם את האתגר היומי הראשון", pt: "Conclua seu primeiro desafio diário", tr: "İlk günlük görevi bitir").dict,
+    "achieve.daily_7.title": Tr(zh: "每周习惯", en: "Weekly Habit", hant: "每週習慣", ja: "週間習慣", ko: "주간 습관", es: "Hábito semanal", ar: "عادة أسبوعية", de: "Wochenhabit", fr: "Habitude hebdo", he: "הרגל שבועי", pt: "Hábito semanal", tr: "Haftalık alışkanlık").dict,
+    "achieve.daily_7.desc": Tr(zh: "完成 7 次每日挑战", en: "Complete 7 daily challenges", hant: "完成 7 次每日挑戰", ja: "デイリー7回", ko: "일일 도전 7회", es: "Completa 7 desafíos diarios", ar: "أكمل 7 تحديات يومية", de: "7 Tageschallenges", fr: "Termine 7 défis du jour", he: "השלם 7 אתגרים יומיים", pt: "Conclua 7 desafios diários", tr: "7 günlük görev bitir").dict,
+    "achieve.daily_30.title": Tr(zh: "月度大师", en: "Monthly Master", hant: "月度大師", ja: "月間マスター", ko: "월간 마스터", es: "Maestro mensual", ar: "سيد الشهر", de: "Monatsmeister", fr: "Maître du mois", he: "מאסטר חודשי", pt: "Mestre mensal", tr: "Aylık usta").dict,
+    "achieve.daily_30.desc": Tr(zh: "完成 30 次每日挑战", en: "Complete 30 daily challenges", hant: "完成 30 次每日挑戰", ja: "デイリー30回", ko: "일일 도전 30회", es: "Completa 30 desafíos diarios", ar: "أكمل 30 تحديًا يوميًا", de: "30 Tageschallenges", fr: "Termine 30 défis du jour", he: "השלם 30 אתגרים יומיים", pt: "Conclua 30 desafios diários", tr: "30 günlük görev bitir").dict,
+    "achieve.daily_100.title": Tr(zh: "每日信徒", en: "Daily Devotee", hant: "每日信徒", ja: "デイリー信者", ko: "일일 신봉자", es: "Devoto diario", ar: "المواظب اليومي", de: "Tagesjünger", fr: "Fidèle du quotidien", he: "חסיד יומי", pt: "Devoto diário", tr: "Günlük bağlı").dict,
+    "achieve.daily_100.desc": Tr(zh: "完成 100 次每日挑战", en: "Complete 100 daily challenges", hant: "完成 100 次每日挑戰", ja: "デイリー100回", ko: "일일 도전 100회", es: "Completa 100 desafíos diarios", ar: "أكمل 100 تحدٍ يومي", de: "100 Tageschallenges", fr: "Termine 100 défis du jour", he: "השלם 100 אתגרים יומיים", pt: "Conclua 100 desafios diários", tr: "100 günlük görev bitir").dict,
+    "achieve.free_1.title": Tr(zh: "自由灵魂", en: "Free Spirit", hant: "自由靈魂", ja: "自由人", ko: "자유혼", es: "Espíritu libre", ar: "روح حرة", de: "Freigeist", fr: "Esprit libre", he: "רוח חופשייה", pt: "Espírito livre", tr: "Özgür ruh").dict,
+    "achieve.free_1.desc": Tr(zh: "赢得第一局自由模式", en: "Win your first free play game", hant: "贏得第一局自由模式", ja: "フリー初勝利", ko: "자유 플레이 첫 승", es: "Gana tu primera partida libre", ar: "اربح أول جولة لعب حر", de: "Gewinne dein erstes Freies Spiel", fr: "Gagne ta première partie libre", he: "נצח במשחק החופשי הראשון", pt: "Vença seu primeiro jogo livre", tr: "İlk serbest oyunu kazan").dict,
+    "achieve.free_10.title": Tr(zh: "自由高手", en: "Freestyle Pro", hant: "自由高手", ja: "フリーのプロ", ko: "자유 프로", es: "Pro libre", ar: "محترف حر", de: "Freestyle-Pro", fr: "Pro libre", he: "פרו חופשי", pt: "Pró livre", tr: "Serbest pro").dict,
+    "achieve.free_10.desc": Tr(zh: "赢 10 局自由模式", en: "Win 10 free play games", hant: "贏 10 局自由模式", ja: "フリー10勝", ko: "자유 플레이 10승", es: "Gana 10 partidas libres", ar: "اربح 10 جولات لعب حر", de: "10 Freie Spiele gewinnen", fr: "Gagne 10 parties libres", he: "נצח ב־10 משחקים חופשיים", pt: "Vença 10 jogos livres", tr: "10 serbest oyun kazan").dict,
+    "achieve.free_50.title": Tr(zh: "自由传奇", en: "Free Play Legend", hant: "自由傳奇", ja: "フリーの伝説", ko: "자유 전설", es: "Leyenda libre", ar: "أسطورة الحر", de: "Freispiel-Legende", fr: "Légende libre", he: "אגדת חופשי", pt: "Lenda livre", tr: "Serbest efsane").dict,
+    "achieve.free_50.desc": Tr(zh: "赢 50 局自由模式", en: "Win 50 free play games", hant: "贏 50 局自由模式", ja: "フリー50勝", ko: "자유 플레이 50승", es: "Gana 50 partidas libres", ar: "اربح 50 جولة لعب حر", de: "50 Freie Spiele gewinnen", fr: "Gagne 50 parties libres", he: "נצח ב־50 משחקים חופשיים", pt: "Vença 50 jogos livres", tr: "50 serbest oyun kazan").dict,
+    "achieve.free_master.title": Tr(zh: "大师破解者", en: "Master Cracker", hant: "大師破解者", ja: "マスタークラッカー", ko: "마스터 해독가", es: "Cracker maestro", ar: "كاسر معلم", de: "Meisterknacker", fr: "Casseur maître", he: "מפצח מאסטר", pt: "Quebrador mestre", tr: "Usta kırıcı").dict,
+    "achieve.free_master.desc": Tr(zh: "赢一局大师难度自由模式", en: "Win a Master difficulty free play", hant: "贏一局大師難度自由模式", ja: "マスター難易度のフリーで勝つ", ko: "마스터 난이도 자유 플레이 승리", es: "Gana un juego libre en Maestro", ar: "اربح لعب حر بدرجة معلم", de: "Gewinne Freies Spiel auf Meister", fr: "Gagne une partie libre en Maître", he: "נצח במשחק חופשי ברמת מאסטר", pt: "Vença um jogo livre no Mestre", tr: "Usta zorluğunda serbest oyun kazan").dict,
+    "achieve.free_expert.title": Tr(zh: "专家破解者", en: "Expert Cracker", hant: "專家破解者", ja: "エキスパートクラッカー", ko: "전문가 해독가", es: "Cracker experto", ar: "كاسر خبير", de: "Expertenknacker", fr: "Casseur expert", he: "מפצח מומחה", pt: "Quebrador expert", tr: "Uzman kırıcı").dict,
+    "achieve.free_expert.desc": Tr(zh: "赢一局专家难度自由模式", en: "Win an Expert difficulty free play", hant: "贏一局專家難度自由模式", ja: "エキスパートのフリーで勝つ", ko: "전문가 난이도 자유 플레이 승리", es: "Gana un juego libre en Experto", ar: "اربح لعب حر بدرجة خبير", de: "Gewinne Freies Spiel auf Experte", fr: "Gagne une partie libre en Expert", he: "נצח במשחק חופשי ברמת מומחה", pt: "Vença um jogo livre no Expert", tr: "Uzman zorluğunda serbest oyun kazan").dict,
+    "achieve.duel_1.title": Tr(zh: "第一场对决", en: "First Duel", hant: "第一場對決", ja: "初対戦", ko: "첫 대전", es: "Primer duelo", ar: "المبارزة الأولى", de: "Erstes Duell", fr: "Premier duel", he: "דו-קרב ראשון", pt: "Primeiro duelo", tr: "İlk düello").dict,
+    "achieve.duel_1.desc": Tr(zh: "赢得第一场对决", en: "Win your first duel", hant: "贏得第一場對決", ja: "対戦で初勝利", ko: "첫 대전 승리", es: "Gana tu primer duelo", ar: "اربح أول مبارزة", de: "Gewinne dein erstes Duell", fr: "Gagne ton premier duel", he: "נצח בדו-קרב הראשון", pt: "Vença seu primeiro duelo", tr: "İlk düelloyu kazan").dict,
+    "achieve.duel_5.title": Tr(zh: "决斗者", en: "Duelist", hant: "決鬥者", ja: "決闘者", ko: "결투가", es: "Duelista", ar: "مبارز", de: "Duellant", fr: "Duelliste", he: "מתמודד", pt: "Duelista", tr: "Düellocu").dict,
+    "achieve.duel_5.desc": Tr(zh: "赢 5 场对决", en: "Win 5 duels", hant: "贏 5 場對決", ja: "対戦5勝", ko: "대전 5승", es: "Gana 5 duelos", ar: "اربح 5 مبارزات", de: "Gewinne 5 Duelle", fr: "Gagne 5 duels", he: "נצח ב־5 דו-קרבות", pt: "Vença 5 duelos", tr: "5 düello kazan").dict,
+    "achieve.duel_20.title": Tr(zh: "决斗冠军", en: "Duel Champion", hant: "決鬥冠軍", ja: "対戦チャンピオン", ko: "대전 챔피언", es: "Campeón de duelo", ar: "بطل المبارزة", de: "Duellchampion", fr: "Champion du duel", he: "אלוף דו-קרב", pt: "Campeão de duelo", tr: "Düello şampiyonu").dict,
+    "achieve.duel_20.desc": Tr(zh: "赢 20 场对决", en: "Win 20 duels", hant: "贏 20 場對決", ja: "対戦20勝", ko: "대전 20승", es: "Gana 20 duelos", ar: "اربح 20 مبارزة", de: "Gewinne 20 Duelle", fr: "Gagne 20 duels", he: "נצח ב־20 דו-קרבות", pt: "Vença 20 duelos", tr: "20 düello kazan").dict,
+    "achieve.tier1.title": Tr(zh: "初级毕业", en: "Junior Graduate", hant: "初級畢業", ja: "見習い卒業", ko: "초급 수료", es: "Graduado junior", ar: "خريج مبتدئ", de: "Junior-Abschluss", fr: "Diplômé junior", he: "בוגר זוטר", pt: "Formado júnior", tr: "Çaylak mezun").dict,
+    "achieve.tier1.desc": Tr(zh: "完成全部初级特工关卡", en: "Complete all Junior Agent levels", hant: "完成全部初級特工關卡", ja: "見習いレベルをすべてクリア", ko: "초급 요원 레벨 모두 완료", es: "Completa todos los niveles de Agente junior", ar: "أكمل كل مستويات العميل المبتدئ", de: "Alle Junior-Agent-Level", fr: "Termine tous les niveaux Agent junior", he: "השלם את כל שלבי הסוכן הזוטר", pt: "Conclua todos os níveis de Agente júnior", tr: "Tüm Çaylak ajan seviyelerini bitir").dict,
+    "achieve.tier2.title": Tr(zh: "特工晋升", en: "Agent Promoted", hant: "特工晉升", ja: "エージェント昇進", ko: "요원 승진", es: "Agente ascendido", ar: "ترقية عميل", de: "Agent befördert", fr: "Agent promu", he: "סוכן קודם", pt: "Agente promovido", tr: "Ajan terfi").dict,
+    "achieve.tier2.desc": Tr(zh: "完成全部中级特工关卡", en: "Complete all Agent levels", hant: "完成全部中級特工關卡", ja: "エージェントレベルをすべてクリア", ko: "요원 레벨 모두 완료", es: "Completa todos los niveles de Agente", ar: "أكمل كل مستويات العميل", de: "Alle Agent-Level", fr: "Termine tous les niveaux Agent", he: "השלם את כל שלבי הסוכן", pt: "Conclua todos os níveis de Agente", tr: "Tüm Ajan seviyelerini bitir").dict,
+    "achieve.tier3.title": Tr(zh: "高级特工", en: "Senior Agent", hant: "高級特工", ja: "上級エージェント", ko: "상급 요원", es: "Agente senior", ar: "عميل أول", de: "Senior-Agent", fr: "Agent senior", he: "סוכן בכיר", pt: "Agente sênior", tr: "Kıdemli ajan").dict,
+    "achieve.tier3.desc": Tr(zh: "完成全部高级特工关卡", en: "Complete all Senior Agent levels", hant: "完成全部高級特工關卡", ja: "上級レベルをすべてクリア", ko: "상급 요원 레벨 모두 완료", es: "Completa todos los niveles de Agente senior", ar: "أكمل كل مستويات العميل الأول", de: "Alle Senior-Agent-Level", fr: "Termine tous les niveaux Agent senior", he: "השלם את כל שלבי הסוכן הבכיר", pt: "Conclua todos os níveis de Agente sênior", tr: "Tüm Kıdemli ajan seviyelerini bitir").dict,
+    "achieve.tier4.title": Tr(zh: "精英特工", en: "Elite Agent", hant: "精英特工", ja: "エリート", ko: "엘리트 요원", es: "Agente de élite", ar: "عميل نخبة", de: "Elite-Agent", fr: "Agent d’élite", he: "סוכן עלית", pt: "Agente de elite", tr: "Elit ajan").dict,
+    "achieve.tier4.desc": Tr(zh: "完成全部精英特工关卡", en: "Complete all Elite Agent levels", hant: "完成全部精英特工關卡", ja: "エリートレベルをすべてクリア", ko: "엘리트 요원 레벨 모두 완료", es: "Completa todos los niveles de élite", ar: "أكمل كل مستويات عميل النخبة", de: "Alle Elite-Agent-Level", fr: "Termine tous les niveaux Agent d’élite", he: "השלם את כל שלבי סוכן העלית", pt: "Conclua todos os níveis de Agente de elite", tr: "Tüm Elit ajan seviyelerini bitir").dict,
+    "achieve.tier5.title": Tr(zh: "首席特工", en: "Chief Agent", hant: "首席特工", ja: "チーフ", ko: "수석 요원", es: "Agente jefe", ar: "العميل الرئيسي", de: "Chef-Agent", fr: "Agent en chef", he: "סוכן ראשי", pt: "Agente-chefe", tr: "Baş ajan").dict,
+    "achieve.tier5.desc": Tr(zh: "完成全部首席特工关卡", en: "Complete all Chief Agent levels", hant: "完成全部首席特工關卡", ja: "チーフレベルをすべてクリア", ko: "수석 요원 레벨 모두 완료", es: "Completa todos los niveles de Agente jefe", ar: "أكمل كل مستويات العميل الرئيسي", de: "Alle Chef-Agent-Level", fr: "Termine tous les niveaux Agent en chef", he: "השלם את כל שלבי הסוכן הראשי", pt: "Conclua todos os níveis de Agente-chefe", tr: "Tüm Baş ajan seviyelerini bitir").dict,
+    "achieve.tier6.title": Tr(zh: "传奇", en: "Legend", hant: "傳奇", ja: "レジェンド", ko: "전설", es: "Leyenda", ar: "أسطورة", de: "Legende", fr: "Légende", he: "אגדה", pt: "Lenda", tr: "Efsane").dict,
+    "achieve.tier6.desc": Tr(zh: "完成全部传奇特工关卡", en: "Complete all Legend Agent levels", hant: "完成全部傳奇特工關卡", ja: "レジェンドレベルをすべてクリア", ko: "전설 요원 레벨 모두 완료", es: "Completa todos los niveles de Leyenda", ar: "أكمل كل مستويات العميل الأسطوري", de: "Alle Legenden-Level", fr: "Termine tous les niveaux Agent légende", he: "השלם את כל שלבי סוכן האגדה", pt: "Conclua todos os níveis de Agente lenda", tr: "Tüm Efsane ajan seviyelerini bitir").dict,
+    "achieve.all_levels.title": Tr(zh: "宗师", en: "Grandmaster", hant: "宗師", ja: "グランドマスター", ko: "그랜드마스터", es: "Gran maestro", ar: "أستاذ كبير", de: "Großmeister", fr: "Grand maître", he: "גראנדמאסטר", pt: "Grão-mestre", tr: "Büyükusta").dict,
+    "achieve.all_levels.desc": Tr(zh: "完成全部 240 关", en: "Complete all 240 levels", hant: "完成全部 240 關", ja: "240レベルすべてクリア", ko: "240개 레벨 모두 완료", es: "Completa los 240 niveles", ar: "أكمل كل الـ 240 مستوى", de: "Alle 240 Level", fr: "Termine les 240 niveaux", he: "השלם את כל 240 השלבים", pt: "Conclua os 240 níveis", tr: "240 seviyenin hepsini bitir").dict,
+    "achieve.lie_10.title": Tr(zh: "测谎仪", en: "Lie Detector", hant: "測謊儀", ja: "嘘発見器", ko: "거짓말 탐지기", es: "Detector de mentiras", ar: "كاشف الكذب", de: "Lügendetektor", fr: "Détecteur de mensonges", he: "גלאי שקר", pt: "Detector de mentiras", tr: "Yalan makinesi").dict,
+    "achieve.lie_10.desc": Tr(zh: "完成 10 个谎言关卡", en: "Complete 10 lie mode levels", hant: "完成 10 個謊言關卡", ja: "嘘モード10クリア", ko: "거짓말 모드 10레벨 완료", es: "Completa 10 niveles Mentira", ar: "أكمل 10 مستويات كذب", de: "10 Lügen-Level", fr: "Termine 10 niveaux Mensonge", he: "השלם 10 שלבי שקר", pt: "Conclua 10 níveis Mentira", tr: "10 Yalan seviyesi bitir").dict,
+    "achieve.lie_30.title": Tr(zh: "寻真者", en: "Truth Seeker", hant: "尋真者", ja: "真実を探す", ko: "진실 탐구자", es: "Buscador de la verdad", ar: "طالب الحقيقة", de: "Wahrheitssucher", fr: "Chercheur de vérité", he: "מחפש האמת", pt: "Buscador da verdade", tr: "Gerçek arayan").dict,
+    "achieve.lie_30.desc": Tr(zh: "完成 30 个谎言关卡", en: "Complete 30 lie mode levels", hant: "完成 30 個謊言關卡", ja: "嘘モード30クリア", ko: "거짓말 모드 30레벨 완료", es: "Completa 30 niveles Mentira", ar: "أكمل 30 مستوى كذب", de: "30 Lügen-Level", fr: "Termine 30 niveaux Mensonge", he: "השלם 30 שלבי שקר", pt: "Conclua 30 níveis Mentira", tr: "30 Yalan seviyesi bitir").dict,
+    "achieve.star_first3.title": Tr(zh: "三星特工", en: "3-Star Agent", hant: "三星特工", ja: "3つ星エージェント", ko: "3성 요원", es: "Agente 3 estrellas", ar: "عميل ثلاث نجوم", de: "3-Sterne-Agent", fr: "Agent 3 étoiles", he: "סוכן 3 כוכבים", pt: "Agente 3 estrelas", tr: "3 yıldızlı ajan").dict,
+    "achieve.star_first3.desc": Tr(zh: "任意关卡拿到 3 星", en: "Get 3 stars on any level", hant: "任意關卡拿到 3 星", ja: "どれかで3つ星", ko: "아무 레벨에서 별 3개", es: "Consigue 3 estrellas en un nivel", ar: "احصل على 3 نجوم في أي مستوى", de: "3 Sterne auf einem Level", fr: "Obtiens 3 étoiles sur un niveau", he: "קבל 3 כוכבים בכל שלב", pt: "Ganhe 3 estrelas em qualquer nível", tr: "Herhangi seviyede 3 yıldız al").dict,
+    "achieve.star_10.title": Tr(zh: "集星者", en: "Star Collector", hant: "集星者", ja: "星コレクター", ko: "별 수집가", es: "Coleccionista", ar: "جامع النجوم", de: "Sternensammler", fr: "Collectionneur d’étoiles", he: "אסף כוכבים", pt: "Colecionador", tr: "Yıldız toplayıcı").dict,
+    "achieve.star_10.desc": Tr(zh: "获得 10 颗星", en: "Earn 10 stars", hant: "獲得 10 顆星", ja: "星を10個", ko: "별 10개", es: "Gana 10 estrellas", ar: "اجمع 10 نجوم", de: "Verdiene 10 Sterne", fr: "Gagne 10 étoiles", he: "השג 10 כוכבים", pt: "Ganhe 10 estrelas", tr: "10 yıldız kazan").dict,
+    "achieve.star_50.title": Tr(zh: "猎星者", en: "Star Hunter", hant: "獵星者", ja: "星ハンター", ko: "별 사냥꾼", es: "Cazador de estrellas", ar: "صياد النجوم", de: "Sternenjäger", fr: "Chasseur d’étoiles", he: "צייד כוכבים", pt: "Caçador de estrelas", tr: "Yıldız avcısı").dict,
+    "achieve.star_50.desc": Tr(zh: "获得 50 颗星", en: "Earn 50 stars", hant: "獲得 50 顆星", ja: "星を50個", ko: "별 50개", es: "Gana 50 estrellas", ar: "اجمع 50 نجمة", de: "Verdiene 50 Sterne", fr: "Gagne 50 étoiles", he: "השג 50 כוכבים", pt: "Ganhe 50 estrelas", tr: "50 yıldız kazan").dict,
+    "achieve.star_100.title": Tr(zh: "星之大师", en: "Star Master", hant: "星之大師", ja: "星マスター", ko: "별 마스터", es: "Maestro de estrellas", ar: "سيد النجوم", de: "Sternenmeister", fr: "Maître des étoiles", he: "מאסטר כוכבים", pt: "Mestre das estrelas", tr: "Yıldız ustası").dict,
+    "achieve.star_100.desc": Tr(zh: "获得 100 颗星", en: "Earn 100 stars", hant: "獲得 100 顆星", ja: "星を100個", ko: "별 100개", es: "Gana 100 estrellas", ar: "اجمع 100 نجمة", de: "Verdiene 100 Sterne", fr: "Gagne 100 étoiles", he: "השג 100 כוכבים", pt: "Ganhe 100 estrelas", tr: "100 yıldız kazan").dict,
+    "achieve.star_200.title": Tr(zh: "星之传奇", en: "Star Legend", hant: "星之傳奇", ja: "星の伝説", ko: "별 전설", es: "Leyenda estelar", ar: "أسطورة النجوم", de: "Sternenlegende", fr: "Légende des étoiles", he: "אגדת כוכבים", pt: "Lenda estelar", tr: "Yıldız efsanesi").dict,
+    "achieve.star_200.desc": Tr(zh: "获得 200 颗星", en: "Earn 200 stars", hant: "獲得 200 顆星", ja: "星を200個", ko: "별 200개", es: "Gana 200 estrellas", ar: "اجمع 200 نجمة", de: "Verdiene 200 Sterne", fr: "Gagne 200 étoiles", he: "השג 200 כוכבים", pt: "Ganhe 200 estrelas", tr: "200 yıldız kazan").dict,
+    "achieve.star_360.title": Tr(zh: "囤星者", en: "Star Hoarder", hant: "囤星者", ja: "星の守銭奴", ko: "별 囤적가", es: "Acaparador", ar: "مكتنز النجوم", de: "Sternenhort", fr: "Amasseur d’étoiles", he: "אוגר כוכבים", pt: "Acumulador", tr: "Yıldız istifçi").dict,
+    "achieve.star_360.desc": Tr(zh: "获得 360 颗星", en: "Earn 360 stars", hant: "獲得 360 顆星", ja: "星を360個", ko: "별 360개", es: "Gana 360 estrellas", ar: "اجمع 360 نجمة", de: "Verdiene 360 Sterne", fr: "Gagne 360 étoiles", he: "השג 360 כוכבים", pt: "Ganhe 360 estrelas", tr: "360 yıldız kazan").dict,
+    "achieve.star_720.title": Tr(zh: "完美全星", en: "Perfect Stars", hant: "完美全星", ja: "パーフェクトスター", ko: "퍼펙트 스타", es: "Estrellas perfectas", ar: "نجوم كاملة", de: "Perfekte Sterne", fr: "Étoiles parfaites", he: "כוכבים מושלמים", pt: "Estrelas perfeitas", tr: "Kusursuz yıldız").dict,
+    "achieve.star_720.desc": Tr(zh: "获得全部 720 颗星", en: "Earn all 720 stars", hant: "獲得全部 720 顆星", ja: "720個すべて", ko: "별 720개 전부", es: "Gana las 720 estrellas", ar: "اجمع كل الـ 720 نجمة", de: "Alle 720 Sterne", fr: "Gagne les 720 étoiles", he: "השג את כל 720 הכוכבים", pt: "Ganhe todas as 720 estrelas", tr: "720 yıldızın hepsini kazan").dict,
+    "achieve.all_3star_t1.title": Tr(zh: "完美 I", en: "Perfection I", hant: "完美 I", ja: "完璧 I", ko: "완벽 I", es: "Perfección I", ar: "كمال I", de: "Perfektion I", fr: "Perfection I", he: "שלמות I", pt: "Perfeição I", tr: "Mükemmellik I").dict,
+    "achieve.all_3star_t1.desc": Tr(zh: "初级特工关全部 3 星", en: "3-star all Junior Agent levels", hant: "初級特工關全部 3 星", ja: "見習いをすべて3つ星", ko: "초급 요원 전부 3성", es: "3 estrellas en todos los Junior", ar: "3 نجوم في كل مستويات المبتدئ", de: "3 Sterne auf allen Junior-Leveln", fr: "3 étoiles sur tous les Junior", he: "3 כוכבים בכל שלבי הזוטר", pt: "3 estrelas em todos os Júnior", tr: "Tüm Çaylak seviyelerinde 3 yıldız").dict,
+    "achieve.all_3star_t2.title": Tr(zh: "完美 II", en: "Perfection II", hant: "完美 II", ja: "完璧 II", ko: "완벽 II", es: "Perfección II", ar: "كمال II", de: "Perfektion II", fr: "Perfection II", he: "שלמות II", pt: "Perfeição II", tr: "Mükemmellik II").dict,
+    "achieve.all_3star_t2.desc": Tr(zh: "中级特工关全部 3 星", en: "3-star all Agent levels", hant: "中級特工關全部 3 星", ja: "エージェントをすべて3つ星", ko: "요원 전부 3성", es: "3 estrellas en todos los Agente", ar: "3 نجوم في كل مستويات العميل", de: "3 Sterne auf allen Agent-Leveln", fr: "3 étoiles sur tous les Agent", he: "3 כוכבים בכל שלבי הסוכן", pt: "3 estrelas em todos os Agente", tr: "Tüm Ajan seviyelerinde 3 yıldız").dict,
+    "achieve.all_3star_t3.title": Tr(zh: "完美 III", en: "Perfection III", hant: "完美 III", ja: "完璧 III", ko: "완벽 III", es: "Perfección III", ar: "كمال III", de: "Perfektion III", fr: "Perfection III", he: "שלמות III", pt: "Perfeição III", tr: "Mükemmellik III").dict,
+    "achieve.all_3star_t3.desc": Tr(zh: "高级特工关全部 3 星", en: "3-star all Senior Agent levels", hant: "高級特工關全部 3 星", ja: "上級をすべて3つ星", ko: "상급 요원 전부 3성", es: "3 estrellas en todos los Senior", ar: "3 نجوم في كل مستويات العميل الأول", de: "3 Sterne auf allen Senior-Leveln", fr: "3 étoiles sur tous les Senior", he: "3 כוכבים בכל שלבי הבכיר", pt: "3 estrelas em todos os Sênior", tr: "Tüm Kıdemli seviyelerde 3 yıldız").dict,
+    "achieve.speed_1.title": Tr(zh: "幸运一击", en: "Lucky Guess", hant: "幸運一擊", ja: "ラッキー", ko: "행운의 추측", es: "Tirada de suerte", ar: "تخمين محظوظ", de: "Glückstreffer", fr: "Coup de chance", he: "ניחוש בר מזל", pt: "Palpite de sorte", tr: "Şanslı tahmin").dict,
+    "achieve.speed_1.desc": Tr(zh: "1 步破译", en: "Crack a code in 1 attempt", hant: "1 步破譯", ja: "1手で解読", ko: "1수 만에 해독", es: "Descifra en 1 intento", ar: "فك الرمز في محاولة واحدة", de: "Code in 1 Zug knacken", fr: "Casse un code en 1 essai", he: "פצח קוד בניסיון אחד", pt: "Decifre em 1 tentativa", tr: "1 denemede kodu kır").dict,
+    "achieve.speed_2.title": Tr(zh: "速破", en: "Speed Cracker", hant: "速破", ja: "スピードクラッカー", ko: "스피드 해독가", es: "Cracker veloz", ar: "كاسر سريع", de: "Tempoknacker", fr: "Casseur rapide", he: "מפצח מהיר", pt: "Quebrador rápido", tr: "Hızlı kırıcı").dict,
+    "achieve.speed_2.desc": Tr(zh: "2 步破译", en: "Crack a code in 2 attempts", hant: "2 步破譯", ja: "2手で解読", ko: "2수 만에 해독", es: "Descifra en 2 intentos", ar: "فك الرمز في محاولتين", de: "Code in 2 Zügen knacken", fr: "Casse un code en 2 essais", he: "פצח קוד בשני ניסיונות", pt: "Decifre em 2 tentativas", tr: "2 denemede kodu kır").dict,
+    "achieve.speed_3.title": Tr(zh: "快思", en: "Quick Thinker", hant: "快思", ja: "速考", ko: "빠른 사고", es: "Mente rápida", ar: "مفكر سريع", de: "Schnelldenker", fr: "Esprit vif", he: "חשיבה מהירה", pt: "Mente rápida", tr: "Çabuk düşünen").dict,
+    "achieve.speed_3.desc": Tr(zh: "3 步破译", en: "Crack a code in 3 attempts", hant: "3 步破譯", ja: "3手で解読", ko: "3수 만에 해독", es: "Descifra en 3 intentos", ar: "فك الرمز في 3 محاولات", de: "Code in 3 Zügen knacken", fr: "Casse un code en 3 essais", he: "פצח קוד ב־3 ניסיונות", pt: "Decifre em 3 tentativas", tr: "3 denemede kodu kır").dict,
+    "achieve.elite_hard_2.title": Tr(zh: "不可能的直觉", en: "Impossible Instinct", hant: "不可能的直覺", ja: "不可能な直感", ko: "불가능한 직감", es: "Instinto imposible", ar: "حدس مستحيل", de: "Unmöglicher Instinkt", fr: "Instinct impossible", he: "אינסטינקט בלתי אפשרי", pt: "Instinto impossível", tr: "İmkansız içgüdü").dict,
+    "achieve.elite_hard_2.desc": Tr(zh: "困难难度 2 步以内破译", en: "Crack Hard difficulty in 2 attempts or fewer", hant: "困難難度 2 步以內破譯", ja: "ハードを2手以内", ko: "어려움 난이도 2수 이하", es: "Descifra Difícil en 2 intentos o menos", ar: "فك الصعب في محاولتين أو أقل", de: "Schwer in höchstens 2 Zügen", fr: "Casse Difficile en 2 essais ou moins", he: "פצח קשה בשני ניסיונות או פחות", pt: "Decifre Difícil em 2 tentativas ou menos", tr: "Zor’u en fazla 2 denemede kır").dict,
+    "achieve.elite_expert_3.title": Tr(zh: "读心者", en: "Mind Reader", hant: "讀心者", ja: "読心術", ko: "독심술", es: "Lector de mentes", ar: "قارئ أفكار", de: "Gedankenleser", fr: "Lecteur d’esprit", he: "קורא מחשבות", pt: "Leitor de mentes", tr: "Zihin okuyucu").dict,
+    "achieve.elite_expert_3.desc": Tr(zh: "专家难度 3 步以内破译", en: "Crack Expert difficulty in 3 attempts or fewer", hant: "專家難度 3 步以內破譯", ja: "エキスパートを3手以内", ko: "전문가 난이도 3수 이하", es: "Descifra Experto en 3 intentos o menos", ar: "فك الخبير في 3 محاولات أو أقل", de: "Experte in höchstens 3 Zügen", fr: "Casse Expert en 3 essais ou moins", he: "פצח מומחה ב־3 ניסיונות או פחות", pt: "Decifre Expert em 3 tentativas ou menos", tr: "Uzman’ı en fazla 3 denemede kır").dict,
+    "achieve.elite_master_4.title": Tr(zh: "通灵", en: "Psychic", hant: "通靈", ja: "超能力", ko: "초능력", es: "Psíquico", ar: "مستبصر", de: "Hellseher", fr: "Psychique", he: "טלפת", pt: "Psíquico", tr: "Medyum").dict,
+    "achieve.elite_master_4.desc": Tr(zh: "大师难度 4 步以内破译", en: "Crack Master difficulty in 4 attempts or fewer", hant: "大師難度 4 步以內破譯", ja: "マスターを4手以内", ko: "마스터 난이도 4수 이하", es: "Descifra Maestro en 4 intentos o menos", ar: "فك المعلم في 4 محاولات أو أقل", de: "Meister in höchstens 4 Zügen", fr: "Casse Maître en 4 essais ou moins", he: "פצח מאסטר ב־4 ניסיונות או פחות", pt: "Decifre Mestre em 4 tentativas ou menos", tr: "Usta’yı en fazla 4 denemede kır").dict,
+    "achieve.elite_no_hint_expert.title": Tr(zh: "不用拐杖", en: "No Crutches", hant: "不用柺杖", ja: "自力", ko: "도움 없이", es: "Sin muletas", ar: "بلا عكاز", de: "Ohne Krücken", fr: "Sans béquilles", he: "בלי קביים", pt: "Sem muleta", tr: "Desteksiz").dict,
+    "achieve.elite_no_hint_expert.desc": Tr(zh: "专家难度不用提示通关", en: "Win Expert without using hints", hant: "專家難度不用提示通關", ja: "ヒントなしでエキスパートに勝つ", ko: "힌트 없이 전문가 승리", es: "Gana Experto sin pistas", ar: "اربح خبير بدون تلميحات", de: "Experte ohne Tipps gewinnen", fr: "Gagne Expert sans indices", he: "נצח מומחה בלי רמזים", pt: "Vença Expert sem dicas", tr: "Uzman’ı ipucusuz kazan").dict,
+    "achieve.elite_no_hint_master.title": Tr(zh: "纯逻辑", en: "Pure Logic", hant: "純邏輯", ja: "純論理", ko: "순수 논리", es: "Lógica pura", ar: "منطق خالص", de: "Reine Logik", fr: "Logique pure", he: "לוגיקה טהורה", pt: "Lógica pura", tr: "Saf mantık").dict,
+    "achieve.elite_no_hint_master.desc": Tr(zh: "大师难度不用提示通关", en: "Win Master without using hints", hant: "大師難度不用提示通關", ja: "ヒントなしでマスターに勝つ", ko: "힌트 없이 마스터 승리", es: "Gana Maestro sin pistas", ar: "اربح معلم بدون تلميحات", de: "Meister ohne Tipps gewinnen", fr: "Gagne Maître sans indices", he: "נצח מאסטר בלי רמזים", pt: "Vença Mestre sem dicas", tr: "Usta’yı ipucusuz kazan").dict,
+    "achieve.elite_lie_master.title": Tr(zh: "破谎者", en: "Lie Breaker", hant: "破謊者", ja: "嘘破り", ko: "거짓말 파괴자", es: "Rompe-mentiras", ar: "كاسر الكذب", de: "Lügenbrecher", fr: "Briseur de mensonges", he: "שובר שקר", pt: "Quebra-mentira", tr: "Yalan kırıcı").dict,
+    "achieve.elite_lie_master.desc": Tr(zh: "赢一个大师谎言关", en: "Win a Master lie mode level", hant: "贏一個大師謊言關", ja: "マスターの嘘レベルに勝つ", ko: "마스터 거짓말 레벨 승리", es: "Gana un nivel Mentira Maestro", ar: "اربح مستوى كذب معلم", de: "Meister-Lügenlevel gewinnen", fr: "Gagne un niveau Mensonge Maître", he: "נצח שלב שקר ברמת מאסטר", pt: "Vença um nível Mentira Mestre", tr: "Usta Yalan seviyesini kazan").dict,
+    "achieve.elite_streak_10_hard.title": Tr(zh: "不懈", en: "Relentless", hant: "不懈", ja: "執拗", ko: "집요함", es: "Implacable", ar: "لا يلين", de: "Unermüdlich", fr: "Implacable", he: "בלתי נלאה", pt: "Implacável", tr: "Aman").dict,
+    "achieve.elite_streak_10_hard.desc": Tr(zh: "困难以上连胜 10 局", en: "Win 10 Hard+ games in a row", hant: "困難以上連勝 10 局", ja: "ハード以上10連勝", ko: "어려움 이상 10연승", es: "Gana 10 Hard+ seguidas", ar: "اربح 10 جولات صعب+ متتالية", de: "10 Hard+-Siege in Folge", fr: "Gagne 10 Hard+ d’affilée", he: "10 ניצחונות קשה+ ברצף", pt: "Vença 10 Hard+ seguidas", tr: "10 Zor+ oyunu üst üste kazan").dict,
+    "achieve.elite_all_lie.title": Tr(zh: "真相胜出", en: "Truth Prevails", hant: "真相勝出", ja: "真実は勝つ", ko: "진실이 이긴다", es: "La verdad gana", ar: "الحقيقة تنتصر", de: "Wahrheit siegt", fr: "La vérité l’emporte", he: "האמת מנצחת", pt: "A verdade vence", tr: "Gerçek galip").dict,
+    "achieve.elite_all_lie.desc": Tr(zh: "完成全部 240 个谎言关", en: "Complete all 240 lie mode levels", hant: "完成全部 240 個謊言關", ja: "嘘モード240すべて", ko: "거짓말 모드 240개 전부", es: "Completa los 240 niveles Mentira", ar: "أكمل كل الـ 240 مستوى كذب", de: "Alle 240 Lügen-Level", fr: "Termine les 240 niveaux Mensonge", he: "השלם את כל 240 שלבי השקר", pt: "Conclua os 240 níveis Mentira", tr: "240 Yalan seviyesinin hepsini bitir").dict,
+    "achieve.elite_all_3star.title": Tr(zh: "绝对完美", en: "Absolute Perfection", hant: "絕對完美", ja: "絶対完璧", ko: "절대 완벽", es: "Perfección absoluta", ar: "كمال مطلق", de: "Absolute Perfektion", fr: "Perfection absolue", he: "שלמות מוחלטת", pt: "Perfeição absoluta", tr: "Mutlak mükemmellik").dict,
+    "achieve.elite_all_3star.desc": Tr(zh: "两种模式 240 关全部 3 星", en: "3-star all 240 levels in both modes", hant: "兩種模式 240 關全部 3 星", ja: "両モード240をすべて3つ星", ko: "두 모드 240레벨 전부 3성", es: "3 estrellas en los 240 de ambos modos", ar: "3 نجوم في كل الـ 240 بكلا الوضعين", de: "3 Sterne auf allen 240 in beiden Modi", fr: "3 étoiles sur les 240 des deux modes", he: "3 כוכבים בכל 240 בשני המצבים", pt: "3 estrelas nos 240 dos dois modos", tr: "Her iki modda 240 seviyenin hepsinde 3 yıldız").dict,
+    "achieve.elite_play_500.title": Tr(zh: "走火入魔", en: "Obsessed", hant: "走火入魔", ja: "沼落ち", ko: "집착", es: "Obsesionado", ar: "مهووس", de: "Besessen", fr: "Obnubilé", he: "אובססיבי", pt: "Obsessivo", tr: "Takıntılı").dict,
+    "achieve.elite_play_500.desc": Tr(zh: "玩 500 局", en: "Play 500 games", hant: "玩 500 局", ja: "500プレイ", ko: "500판 플레이", es: "Juega 500 partidas", ar: "العب 500 جولة", de: "Spiele 500 Partien", fr: "Joue 500 parties", he: "שחק 500 משחקים", pt: "Jogue 500 partidas", tr: "500 oyun oyna").dict,
 ]
 
 func L(_ key: String) -> String {

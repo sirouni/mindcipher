@@ -72,7 +72,7 @@ struct MultiplayerView: View {
         VStack(spacing: 20) {
             HStack {
                 Button { dismiss() } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.backward")
                         .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(AppTheme.textSecondary)
                         .frame(width: 44, height: 44)
@@ -132,11 +132,11 @@ struct MultiplayerView: View {
                     withAnimation(.spring(response: 0.3)) { manager.selectedDifficulty = diff }
                 } label: {
                     HStack {
-                        Text(diff.rawValue)
+                        Text(diff.localizedName)
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(manager.selectedDifficulty == diff ? .white : AppTheme.textPrimary)
                         Spacer()
-                        Text("\(diff.codeLength)×\(diff.colorCount)")
+                        Text(diff.statsLabel)
                             .font(.system(size: 12, weight: .medium, design: .monospaced))
                             .foregroundStyle(manager.selectedDifficulty == diff ? .white.opacity(0.8) : AppTheme.textSecondary)
                     }
@@ -222,7 +222,7 @@ struct MultiplayerView: View {
                 playerAvatar(name: manager.opponentName, isLocal: false)
             }
 
-            Text(manager.selectedDifficulty.rawValue)
+            Text(manager.selectedDifficulty.localizedName)
                 .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundStyle(AppTheme.textSecondary)
                 .padding(.horizontal, 12)

@@ -233,7 +233,7 @@ struct GameView: View {
                     Text(L("achieve.toast"))
                         .font(.system(size: 11, weight: .bold))
                         .foregroundStyle(AppTheme.warning)
-                    Text(a.title)
+                    Text(a.localizedTitle)
                         .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                 }
@@ -263,11 +263,11 @@ struct GameView: View {
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
                     if viewModel.engine?.lieMode == true {
-                        Text("\(level.difficulty.rawValue) · \(L("lie.mode"))")
+                        Text("\(level.difficulty.localizedName) · \(L("lie.mode"))")
                             .font(.system(size: 11, weight: .bold, design: .rounded))
                             .foregroundStyle(AppTheme.danger)
                     } else {
-                        Text(level.difficulty.rawValue)
+                        Text(level.difficulty.localizedName)
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(AppTheme.accent)
                     }
@@ -293,7 +293,7 @@ struct GameView: View {
 
             HStack {
                 Button { dismiss() } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.backward")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundStyle(AppTheme.textSecondary)
                         .frame(width: 40, height: 40)
@@ -411,6 +411,7 @@ struct GameView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 10)
+        .boardLayout()
     }
 
     // MARK: - Guess Board
@@ -464,6 +465,7 @@ struct GameView: View {
                 }
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
+                .boardLayout()
             }
             .onChange(of: viewModel.guessHistory.count) { _, _ in
                 if let last = viewModel.guessHistory.last {
@@ -516,6 +518,7 @@ struct GameView: View {
         )
         .padding(.horizontal, 16)
         .modifier(ShakeModifier(trigger: viewModel.shakeGuessRow))
+        .boardLayout()
     }
 
     private func confirmedColor(for position: Int) -> PegColor? {
@@ -587,6 +590,7 @@ struct GameView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
         }
+        .boardLayout()
     }
 
     private func colorButton(_ color: PegColor, size: CGFloat) -> some View {
@@ -870,6 +874,7 @@ struct GameView: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
         .glassCard(cornerRadius: 10)
+        .boardLayout()
     }
 
     @ViewBuilder
@@ -900,7 +905,7 @@ struct GameView: View {
                             .opacity(lieRevealShowReal ? 0.4 : 1)
                         }
 
-                        Image(systemName: "arrow.right")
+                        Image(systemName: "arrow.forward")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(AppTheme.textMuted)
                             .padding(.top, 12)
@@ -1384,6 +1389,7 @@ struct GuessRowView: View {
         .onChange(of: gameOver) { _, over in
             if over && feedback.isLie { slamLieStamp() }
         }
+        .boardLayout()
     }
 
     private func flickerFeedback() {
@@ -1552,6 +1558,7 @@ struct NotesGridView: View {
         }
         .padding(.horizontal, 6)
         .padding(.vertical, 8)
+        .boardLayout()
     }
 
     private func noteCell(position: Int, color: PegColor) -> some View {
@@ -1677,6 +1684,7 @@ struct ShareCardView: View {
             shareAppLink
         }
         .background(bgLight)
+        .boardLayout()
     }
 
     // MARK: - Top Bar
@@ -2106,6 +2114,7 @@ struct DailyShareCardView: View {
         .background(
             LinearGradient(colors: [bgTop, bgBot], startPoint: .top, endPoint: .bottom)
         )
+        .boardLayout()
     }
 
     // MARK: - Header

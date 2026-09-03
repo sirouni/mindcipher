@@ -423,7 +423,7 @@ struct HomeView: View {
 
                 Spacer()
 
-                Image(systemName: locked ? "lock.fill" : "chevron.right")
+                Image(systemName: locked ? "lock.fill" : "chevron.forward")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(AppTheme.textMuted)
             }
@@ -595,11 +595,11 @@ struct FreePlaySetupView: View {
             withAnimation(.spring(response: 0.3)) { selectedDifficulty = diff }
         } label: {
             HStack {
-                Text(diff.rawValue)
+                Text(diff.localizedName)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(selectedDifficulty == diff ? Color.white : AppTheme.textPrimary)
                 Spacer()
-                Text("\(diff.codeLength)×\(diff.colorCount)")
+                Text(diff.statsLabel)
                     .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundStyle(selectedDifficulty == diff ? Color.white.opacity(0.8) : AppTheme.textSecondary)
             }
@@ -679,11 +679,11 @@ struct DuelSetupView: View {
                         withAnimation(.spring(response: 0.3)) { selectedDifficulty = diff }
                     } label: {
                         HStack {
-                            Text(diff.rawValue)
+                            Text(diff.localizedName)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundStyle(selectedDifficulty == diff ? .white : AppTheme.textPrimary)
                             Spacer()
-                            Text("\(diff.codeLength)×\(diff.colorCount)×\(diff.maxAttempts)")
+                            Text(diff.statsLabel)
                                 .font(.system(size: 11, weight: .medium, design: .monospaced))
                                 .foregroundStyle(selectedDifficulty == diff ? .white.opacity(0.7) : AppTheme.textSecondary)
                         }
@@ -753,7 +753,7 @@ struct DuelSetupView: View {
                 Button {
                     withAnimation(.spring(response: 0.3)) { phase = .config }
                 } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "chevron.backward")
                         .font(.system(size: 14, weight: .bold))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -762,7 +762,7 @@ struct DuelSetupView: View {
                     Text(L("duel.p1.setup"))
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
-                    Text("\(selectedDifficulty.rawValue) · \(codeLength)×\(colorCount)")
+                    Text("\(selectedDifficulty.localizedName) · \(selectedDifficulty.statsLabel)")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -793,6 +793,7 @@ struct DuelSetupView: View {
                     }
                 }
             }
+            .boardLayout()
 
             Text(L("duel.tap"))
                 .font(.system(size: 11, weight: .medium))
@@ -810,6 +811,7 @@ struct DuelSetupView: View {
             }
             .padding(14)
             .glassCard()
+            .boardLayout()
 
             Spacer()
 
@@ -880,7 +882,7 @@ struct DuelSetupView: View {
 
             if countDown <= 0 {
                 VStack(spacing: 10) {
-                    Text("\(selectedDifficulty.rawValue) · \(codeLength)×\(colorCount)×\(maxAttempts)")
+                    Text("\(selectedDifficulty.localizedName) · \(selectedDifficulty.statsLabel)")
                         .font(.system(size: 12, weight: .medium, design: .monospaced))
                         .foregroundStyle(AppTheme.textSecondary)
 

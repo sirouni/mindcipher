@@ -156,11 +156,11 @@ struct LieModeSetupView: View {
             withAnimation(.spring(response: 0.3)) { selectedDifficulty = diff }
         } label: {
             HStack {
-                Text(diff.rawValue)
+                Text(diff.localizedName)
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(selectedDifficulty == diff ? .white : AppTheme.textPrimary)
                 Spacer()
-                Text("\(diff.codeLength)×\(diff.colorCount)")
+                Text(diff.statsLabel)
                     .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundStyle(selectedDifficulty == diff ? .white.opacity(0.7) : AppTheme.textSecondary)
             }

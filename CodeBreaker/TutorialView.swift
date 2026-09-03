@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TutorialView: View {
     @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var language = LanguageManager.shared
     @State private var page = 0
     private let totalPages = 7
 
@@ -79,6 +80,8 @@ struct TutorialView: View {
                 .padding(.vertical, 12)
             }
         }
+        .environment(\.layoutDirection, language.layoutDirection)
+        .environment(\.locale, language.locale)
     }
 
     // MARK: - Page 1: 目标
@@ -159,6 +162,7 @@ struct TutorialView: View {
                     .fill(AppTheme.bgCardLight)
                     .frame(width: 44, height: 44)
             }
+            .boardLayout()
 
             Image(systemName: "arrow.up")
                 .font(.system(size: 20))
@@ -170,6 +174,7 @@ struct TutorialView: View {
                     PegView(color: color, size: 36)
                 }
             }
+            .boardLayout()
 
             Text(L("tutorial.d2"))
                 .font(.system(size: 15, weight: .medium))
@@ -232,6 +237,7 @@ struct TutorialView: View {
             }
             .padding(10)
             .glassCard(cornerRadius: 10)
+            .boardLayout()
 
             Text(explain)
                 .font(.system(size: 12, weight: .medium))
@@ -295,6 +301,7 @@ struct TutorialView: View {
             }
             .padding(10)
             .glassCard(cornerRadius: 12)
+            .boardLayout()
 
             VStack(alignment: .leading, spacing: 6) {
                 iconNoteRow("xmark", AppTheme.danger, L("tutorial.notes.x"))
@@ -463,6 +470,7 @@ struct TutorialView: View {
                 .background(RoundedRectangle(cornerRadius: 8).fill(AppTheme.danger.opacity(0.1)).overlay(RoundedRectangle(cornerRadius: 8).stroke(AppTheme.danger.opacity(0.3), lineWidth: 1)))
             }
             .padding(.horizontal, 8)
+            .boardLayout()
 
             VStack(alignment: .leading, spacing: 6) {
                 iconRuleRow("theatermask.and.paintbrush.fill", L("tutorial.lie.r1"))

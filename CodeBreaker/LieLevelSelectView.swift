@@ -14,7 +14,7 @@ struct LieLevelSelectView: View {
 
     private var tiers: [[Level]] { levelManager.tiers }
     private var currentTier: [Level] { tiers[selectedTier] }
-    private var tierDiff: String { currentTier.first?.difficulty.rawValue ?? "" }
+    private var tierDiff: String { currentTier.first?.difficulty.localizedName ?? "" }
     private var tierDone: Int { currentTier.filter { progress.completedLevels.contains($0.id) }.count }
 
     var body: some View {
@@ -85,7 +85,7 @@ struct LieLevelSelectView: View {
             Button {
                 withAnimation(.spring(response: 0.3)) { selectedTier = max(0, selectedTier - 1) }
             } label: {
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.backward")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(selectedTier > 0 ? AppTheme.danger : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
@@ -106,7 +106,7 @@ struct LieLevelSelectView: View {
             Button {
                 withAnimation(.spring(response: 0.3)) { selectedTier = min(tiers.count - 1, selectedTier + 1) }
             } label: {
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(selectedTier < tiers.count - 1 ? AppTheme.danger : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
@@ -264,7 +264,7 @@ struct LieLevelSelectView: View {
                         .foregroundStyle(AppTheme.textPrimary)
                 }
 
-                Text(level.difficulty.rawValue)
+                Text(level.difficulty.localizedName)
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(AppTheme.danger)
                     .padding(.horizontal, 12)

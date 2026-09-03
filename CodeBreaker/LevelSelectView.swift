@@ -15,7 +15,7 @@ struct LevelSelectView: View {
 
     private var tiers: [[Level]] { levelManager.tiers }
     private var currentTier: [Level] { tiers[selectedTier] }
-    private var tierDiff: String { currentTier.first?.difficulty.rawValue ?? "" }
+    private var tierDiff: String { currentTier.first?.difficulty.localizedName ?? "" }
     private var tierDone: Int { currentTier.filter { progress.completedLevels.contains($0.id) }.count }
 
     var body: some View {
@@ -69,7 +69,7 @@ struct LevelSelectView: View {
                     selectedTier = max(0, selectedTier - 1)
                 }
             } label: {
-                Image(systemName: "chevron.left")
+                Image(systemName: "chevron.backward")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(selectedTier > 0 ? color : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
@@ -94,7 +94,7 @@ struct LevelSelectView: View {
                     selectedTier = min(tiers.count - 1, selectedTier + 1)
                 }
             } label: {
-                Image(systemName: "chevron.right")
+                Image(systemName: "chevron.forward")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(selectedTier < tiers.count - 1 ? color : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
@@ -181,7 +181,7 @@ struct LevelSelectView: View {
                     .font(.system(size: 22, weight: .black, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
-                Text(level.difficulty.rawValue)
+                Text(level.difficulty.localizedName)
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(AppTheme.accent)
                     .padding(.horizontal, 12)

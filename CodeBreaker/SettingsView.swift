@@ -32,6 +32,8 @@ struct SettingsView: View {
     @State private var showResetAlert = false
     @State private var showResetStatsAlert = false
     @State private var showFeedback = false
+    @State private var showLanguage = false
+    @ObservedObject private var language = LanguageManager.shared
 
     var body: some View {
         ZStack {
@@ -55,6 +57,9 @@ struct SettingsView: View {
         .navigationDestination(isPresented: $showFeedback) {
             FeedbackView()
         }
+        .navigationDestination(isPresented: $showLanguage) {
+            LanguageSettingsView()
+        }
     }
 
     private var gameSection: some View {
@@ -64,6 +69,8 @@ struct SettingsView: View {
                 toggleRow(icon: "speaker.wave.2.fill", title: L("settings.sound"), isOn: $settings.soundEnabled)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
                 toggleRow(icon: "iphone.radiowaves.left.and.right", title: L("settings.haptics"), isOn: $settings.hapticsEnabled)
+                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                languageRow
                 #if DEBUG
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
                 toggleRow(icon: "checkmark.seal.fill", title: L("settings.debug.pro"), isOn: $store.isPro)
@@ -93,7 +100,7 @@ struct SettingsView: View {
                             .font(.system(size: 15, weight: .medium))
                             .foregroundStyle(AppTheme.textPrimary)
                         Spacer()
-                        Image(systemName: "chevron.right")
+                        Image(systemName: "chevron.forward")
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(AppTheme.textMuted)
                     }
@@ -203,6 +210,34 @@ struct SettingsView: View {
 
     // MARK: - Row Components
 
+    private var languageRow: some View {
+        Button {
+            showLanguage = true
+        } label: {
+            HStack {
+                Image(systemName: "globe")
+                    .font(.system(size: 15))
+                    .foregroundStyle(AppTheme.accent)
+                    .frame(width: 28)
+                Text(L("settings.language"))
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(AppTheme.textPrimary)
+                Spacer()
+                Text(language.preference == .system ? L("settings.language.system") : language.preference.nativeName)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(AppTheme.textSecondary)
+                    .lineLimit(1)
+                Image(systemName: "chevron.forward")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(AppTheme.textMuted)
+            }
+            .padding(14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(L("settings.language"))
+    }
+
     private func sectionHeader(_ title: String) -> some View {
         Text(title)
             .font(.system(size: 13, weight: .semibold))
@@ -246,6 +281,70 @@ struct SettingsView: View {
         .padding(14)
     }
 
+}
+
+struct LanguageSettingsView: View {
+    @ObservedObject private var language = LanguageManager.shared
+
+    var body: some View {
+        ZStack {
+            AppTheme.bgGradient.ignoresSafeArea()
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L("settings.language"))
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(AppTheme.textSecondary)
+                        .textCase(.uppercase)
+                        .padding(.leading, 4)
+                        .padding(.bottom, 2)
+
+                    VStack(spacing: 0) {
+                        ForEach(Array(AppLanguage.allCases.enumerated()), id: \.element.id) { index, lang in
+                            if index > 0 {
+                                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                            }
+                            languageRow(lang)
+                        }
+                    }
+                    .glassCard(cornerRadius: 14)
+                }
+                .padding(20)
+            }
+        }
+        .navigationTitle(L("settings.language"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
+    }
+
+    private func languageRow(_ lang: AppLanguage) -> some View {
+        let selected = language.preference == lang
+        return Button {
+            language.preference = lang
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(lang == .system ? L("settings.language.system") : lang.nativeName)
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(AppTheme.textPrimary)
+                    if lang == .system {
+                        Text(language.resolvedLanguage.nativeName)
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(AppTheme.textMuted)
+                    }
+                }
+                Spacer()
+                if selected {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(AppTheme.accent)
+                }
+            }
+            .padding(14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
 }
 
 struct AchievementsView: View {
@@ -303,7 +402,7 @@ struct AchievementsView: View {
 
     private func categorySection(_ cat: AchievementCategory, items: [Achievement]) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(cat.rawValue.uppercased())
+            Text(cat.localizedName)
                 .font(.system(size: 12, weight: .bold))
                 .foregroundStyle(AppTheme.textSecondary)
                 .padding(.leading, 4)
@@ -336,10 +435,10 @@ struct AchievementsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(a.title)
+                    Text(a.localizedTitle)
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(unlocked ? AppTheme.textPrimary : AppTheme.textMuted)
-                    Text(a.desc)
+                    Text(a.localizedDesc)
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
@@ -383,7 +482,7 @@ struct AchievementDetailView: View {
                 .padding(24)
             }
         }
-        .navigationTitle(achievement.title)
+        .navigationTitle(achievement.localizedTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
     }
@@ -406,10 +505,10 @@ struct AchievementDetailView: View {
             }
 
             VStack(spacing: 6) {
-                Text(achievement.title)
+                Text(achievement.localizedTitle)
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .foregroundStyle(unlocked ? AppTheme.textPrimary : AppTheme.textMuted)
-                Text(achievement.category.rawValue)
+                Text(achievement.category.localizedName)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(AppTheme.accent)
                     .padding(.horizontal, 10)
@@ -425,7 +524,7 @@ struct AchievementDetailView: View {
             HStack {
                 Image(systemName: "target")
                     .foregroundStyle(AppTheme.textSecondary)
-                Text(achievement.desc)
+                Text(achievement.localizedDesc)
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(AppTheme.textPrimary)
                 Spacer()
@@ -434,7 +533,7 @@ struct AchievementDetailView: View {
             HStack {
                 Image(systemName: unlocked ? "checkmark.seal.fill" : "lock.fill")
                     .foregroundStyle(unlocked ? AppTheme.accent : AppTheme.textMuted)
-                Text(unlocked ? "Unlocked" : "Locked")
+                Text(unlocked ? L("settings.unlocked") : L("settings.locked"))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(unlocked ? AppTheme.accent : AppTheme.textMuted)
                 Spacer()

@@ -5,6 +5,7 @@ import GameKit
 struct CodeBreakerApp: App {
     @State private var showSplash = true
     @ObservedObject private var themeManager = ThemeManager.shared
+    @ObservedObject private var languageManager = LanguageManager.shared
     @ObservedObject private var challengeManager = ChallengeManager.shared
 
     var body: some Scene {
@@ -22,6 +23,8 @@ struct CodeBreakerApp: App {
                         .allowsHitTesting(false)
                 }
             }
+            .environment(\.layoutDirection, languageManager.layoutDirection)
+            .environment(\.locale, languageManager.locale)
             .preferredColorScheme(themeManager.currentSkin.colorScheme)
             .id(themeManager.currentSkin.rawValue)
             .onAppear {
