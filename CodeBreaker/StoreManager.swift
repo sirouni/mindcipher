@@ -48,12 +48,12 @@ class StoreManager: ObservableObject {
     private let proKey = "store_is_pro"
     private var updateTask: Task<Void, Never>?
 
-    static let classicFreeLevelCap = 40
-    static let lieFreeLevelCap = 80
+    nonisolated static let classicFreeLevelCap = 40
+    nonisolated static let lieFreeLevelCap = 80
     /// Classic cap; prefer `freeCap(lieMode:)`.
-    static let freeLevelCap = classicFreeLevelCap
+    nonisolated static let freeLevelCap = classicFreeLevelCap
 
-    static func freeCap(lieMode: Bool) -> Int {
+    nonisolated static func freeCap(lieMode: Bool) -> Int {
         lieMode ? lieFreeLevelCap : classicFreeLevelCap
     }
 

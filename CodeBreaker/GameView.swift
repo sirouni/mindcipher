@@ -279,6 +279,22 @@ struct GameView: View {
                     Text(L("online.title"))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.textPrimary)
+                } else if viewModel.isLieTaste {
+                    Text(L("taste.title"))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.textPrimary)
+                    Text(L("taste.subtitle"))
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.danger)
+                } else if viewModel.isDailyChallenge {
+                    Text(L("daily.title"))
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.textPrimary)
+                    if viewModel.engine?.lieMode == true {
+                        Label(L("daily.lie.badge"), systemImage: "theatermask.and.paintbrush.fill")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(AppTheme.danger)
+                    }
                 } else {
                     Text(L("game.free"))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
@@ -621,6 +637,7 @@ struct GameView: View {
         }
         .disabled(viewModel.phase != .playing || isEliminated)
         .accessibilityLabel(color.displayName)
+        .accessibilityIdentifier("peg.\(color.displayName.lowercased())")
     }
 
     // MARK: - Action Bar
@@ -1112,7 +1129,7 @@ struct GameView: View {
             playerName: playerName
         )
 
-        let text = "I cracked this code — can you?\n\(url.absoluteString)"
+        let text = "\(L("share.challenge.text"))\n\(url.absoluteString)"
         let av = UIActivityViewController(activityItems: [text], applicationActivities: nil)
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let root = windowScene.windows.first?.rootViewController {
@@ -1151,7 +1168,8 @@ struct GameView: View {
                     maxAttempts: viewModel.maxAttempts,
                     won: won,
                     attempts: attempts,
-                    availableColors: viewModel.availableColors
+                    availableColors: viewModel.availableColors,
+                    isLieMode: isLie
                 )
                 .frame(width: 390)
             )
@@ -1172,7 +1190,7 @@ struct GameView: View {
                     won: won,
                     attempts: attempts,
                     levelId: viewModel.level?.id,
-                    difficultyName: viewModel.lastDifficulty.rawValue,
+                    difficultyName: viewModel.lastDifficulty.localizedName,
                     isLieMode: isLie,
                     lieStep: lieAt,
                     lieFakeFeedback: lieFake,
@@ -1704,19 +1722,19 @@ struct ShareCardView: View {
 
             VStack(spacing: 2) {
                 if let lid = levelId {
-                    Text("Level \(lid)")
+                    Text(L("level.title", lid))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(Color(white: 0.12))
                     Text(difficultyName)
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(accent)
                 } else {
-                    Text("Free Play")
+                    Text(L("game.free"))
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(Color(white: 0.12))
                 }
                 if isLieMode {
-                    Text("Lie Mode")
+                    Text(L("lie.mode"))
                         .font(.system(size: 10, weight: .bold))
                         .foregroundStyle(danger)
                 }
@@ -1728,7 +1746,7 @@ struct ShareCardView: View {
                 Text("\(maxAttempts - rows.count)")
                     .font(.system(size: 18, weight: .bold, design: .rounded))
                     .foregroundStyle(accent)
-                Text("left")
+                Text(L("game.attempts"))
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Color(white: 0.5))
             }
@@ -1747,11 +1765,11 @@ struct ShareCardView: View {
 
     private var shareFeedbackLegend: some View {
         VStack(alignment: .leading, spacing: 3) {
-            shareLegendLine(type: .exact, text: "= One right color in the right position")
-            shareLegendLine(type: .partial, text: "= One right color but in the wrong position")
-            shareLegendLine(type: .miss, text: "= One color is not in the secret code")
+            shareLegendLine(type: .exact, text: L("legend.exact"))
+            shareLegendLine(type: .partial, text: L("legend.partial"))
+            shareLegendLine(type: .miss, text: L("legend.miss"))
             if isLieMode {
-                Text("Lie Mode — one feedback may be fake!")
+                Text(L("share.lie.banner"))
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(danger)
                     .padding(.top, 2)
@@ -1949,7 +1967,7 @@ struct ShareCardView: View {
     private var shareInfoBar: some View {
         VStack(spacing: 4) {
             if isPlaying {
-                Text("In Progress — \(rows.count)/\(maxAttempts)")
+                Text(L("share.inprogress", rows.count, maxAttempts))
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(white: 0.4))
             } else if won {
@@ -1960,11 +1978,11 @@ struct ShareCardView: View {
                             .foregroundStyle(i < stars ? warning : Color(white: 0.75))
                     }
                 }
-                Text("Solved in \(attempts)/\(maxAttempts) steps")
+                Text(L("share.solved", attempts, maxAttempts))
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(accent)
             } else {
-                Text("Failed — \(rows.count)/\(maxAttempts)")
+                Text(L("share.failed", rows.count, maxAttempts))
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(danger)
             }
@@ -1974,7 +1992,7 @@ struct ShareCardView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "theatermask.and.paintbrush.fill")
                             .font(.system(size: 12))
-                        Text("Step \(step) was a lie!")
+                        Text(L("lie.reveal", step))
                             .font(.system(size: 12, weight: .bold, design: .rounded))
                     }
                     .foregroundStyle(danger)
@@ -2004,10 +2022,10 @@ struct ShareCardView: View {
                 .frame(width: 40, height: 40)
                 .clipShape(RoundedRectangle(cornerRadius: 9))
             VStack(alignment: .leading, spacing: 2) {
-                Text("Mind Cipher")
+                Text(L("app.title"))
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(white: 0.15))
-                Text("Scan to download")
+                Text(L("share.scan"))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(Color(white: 0.5))
             }
@@ -2074,6 +2092,7 @@ struct DailyShareCardView: View {
     let won: Bool
     let attempts: Int
     let availableColors: [PegColor]
+    var isLieMode: Bool = false
 
     private let accent = Color(red: 0.05, green: 0.60, blue: 0.55)
     private let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
@@ -2089,10 +2108,11 @@ struct DailyShareCardView: View {
     private var totalCompleted: Int { DailyStreakManager.shared.totalCompleted }
 
     private var displayDate: String {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US")
-        f.dateFormat = "EEEE, MMM d"
-        return f.string(from: Date())
+        let formatter = DateFormatter()
+        formatter.calendar = DailyCalendar.gregorian
+        formatter.locale = LanguageManager.shared.locale
+        formatter.dateFormat = "EEEE, MMM d"
+        return formatter.string(from: Date())
     }
 
     private var stars: Int {
@@ -2125,7 +2145,7 @@ struct DailyShareCardView: View {
                 Image(systemName: "calendar.badge.clock")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(warning)
-                Text("Daily Challenge")
+                Text(isLieMode ? L("share.daily.lie") : L("daily.title"))
                     .font(.system(size: 18, weight: .black, design: .rounded))
                     .foregroundStyle(.white)
             }
@@ -2150,11 +2170,11 @@ struct DailyShareCardView: View {
                             .foregroundStyle(i < stars ? warning : .white.opacity(0.15))
                     }
                 }
-                Text("Solved in \(attempts)/\(maxAttempts) steps")
+                Text(L("share.solved", attempts, maxAttempts))
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(accent)
             } else {
-                Text("Failed — \(rows.count)/\(maxAttempts)")
+                Text(L("share.failed", rows.count, maxAttempts))
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(danger)
             }
@@ -2181,7 +2201,7 @@ struct DailyShareCardView: View {
                 Text("\(streak)")
                     .font(.system(size: 20, weight: .black, design: .rounded))
                     .foregroundStyle(.white)
-                Text("Day Streak")
+                Text(L("daily.streak"))
                     .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.45))
             }
@@ -2226,7 +2246,7 @@ struct DailyShareCardView: View {
                 Text("\(totalCompleted)")
                     .font(.system(size: 20, weight: .black, design: .rounded))
                     .foregroundStyle(.white)
-                Text("Total")
+                Text(L("daily.total"))
                     .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.45))
             }
@@ -2246,17 +2266,16 @@ struct DailyShareCardView: View {
     // MARK: - Calendar Heatmap
 
     private var calendarHeatmap: some View {
-        let cal = Calendar.current
+        let cal = DailyCalendar.gregorian
         let today = Date()
         let comps = cal.dateComponents([.year, .month], from: today)
         let firstOfMonth = cal.date(from: comps)!
         let weekdayOfFirst = cal.component(.weekday, from: firstOfMonth)
         let daysInMonth = cal.range(of: .day, in: .month, for: firstOfMonth)!.count
 
-        let fmt = DateFormatter()
-        fmt.dateFormat = "yyyy-MM-dd"
-
         let monthFmt = DateFormatter()
+        monthFmt.calendar = cal
+        monthFmt.locale = LanguageManager.shared.locale
         monthFmt.dateFormat = "MMMM yyyy"
         let monthTitle = monthFmt.string(from: today)
 
@@ -2274,7 +2293,7 @@ struct DailyShareCardView: View {
                 .foregroundStyle(.white.opacity(0.7))
 
             HStack(spacing: 0) {
-                ForEach(Array(["S","M","T","W","T","F","S"].enumerated()), id: \.offset) { _, d in
+                ForEach(Array(DailyCalendar.weekdaySymbols(locale: LanguageManager.shared.locale).enumerated()), id: \.offset) { _, d in
                     Text(d)
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.3))
@@ -2286,7 +2305,7 @@ struct DailyShareCardView: View {
             LazyVGrid(columns: columns, spacing: 3) {
                 ForEach(0..<days.count, id: \.self) { i in
                     if let date = days[i] {
-                        heatmapCell(date: date, today: today, cal: cal, fmt: fmt)
+                        heatmapCell(date: date, today: today, cal: cal)
                     } else {
                         Color.clear.frame(width: 28, height: 28)
                     }
@@ -2304,8 +2323,8 @@ struct DailyShareCardView: View {
         )
     }
 
-    private func heatmapCell(date: Date, today: Date, cal: Calendar, fmt: DateFormatter) -> some View {
-        let key = fmt.string(from: date)
+    private func heatmapCell(date: Date, today: Date, cal: Calendar) -> some View {
+        let key = DailyCalendar.dayKey(date)
         let completed = DailyStreakManager.shared.isCompleted(key)
         let isToday = cal.isDateInToday(date)
         let isFuture = date > today
@@ -2451,10 +2470,10 @@ struct DailyShareCardView: View {
                 .frame(width: 36, height: 36)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
             VStack(alignment: .leading, spacing: 1) {
-                Text("Mind Cipher")
+                Text(L("app.title"))
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(.white.opacity(0.85))
-                Text("Scan to download")
+                Text(L("share.scan"))
                     .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(.white.opacity(0.35))
             }

@@ -13,10 +13,14 @@ struct HomeView: View {
     @State private var showAchievements = false
     @State private var showLeaderboard = false
     @State private var showTutorial = false
+    @State private var showLieTaste = false
     @State private var showStore = false
     @State private var showFeedback = false
     @ObservedObject private var gcManager = GameCenterManager.shared
+    @ObservedObject private var challengeManager = ChallengeManager.shared
+    @StateObject private var tasteModel = GameViewModel()
     @AppStorage("hasSeenTutorial") private var hasSeenTutorial = false
+    @AppStorage("hasSeenLieTaste") private var hasSeenLieTaste = false
     @State private var titleScale: CGFloat = 0.8
     @State private var titleOpacity: Double = 0
     @State private var buttonsOffset: CGFloat = 50
@@ -74,8 +78,21 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showAchievements) {
                 AchievementsView()
             }
+            .navigationDestination(isPresented: $showLieTaste) {
+                GameView(viewModel: tasteModel)
+            }
             .navigationDestination(isPresented: $showFeedback) {
                 FeedbackView()
+            }
+            .onChange(of: challengeManager.pendingDaily) { _, pending in
+                guard pending else { return }
+                showDaily = true
+                ChallengeManager.shared.pendingDaily = false
+            }
+            .onChange(of: showLieTaste) { _, presented in
+                if !presented {
+                    finishLieTasteIfNeeded()
+                }
             }
             .sheet(isPresented: $showLeaderboard) {
                 GameCenterLeaderboardView()
@@ -85,14 +102,28 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showTutorial, onDismiss: {
                 hasSeenTutorial = true
-                scheduleFeedbackTip(waitForGameCenterBanner: false)
+                if !hasSeenLieTaste && !shouldSkipOnboarding {
+                    beginLieTaste()
+                } else {
+                    scheduleFeedbackTip(waitForGameCenterBanner: false)
+                }
             }) {
                 TutorialView()
             }
             .onAppear {
                 animateEntrance()
                 AchievementManager.shared.checkAll()
-                if !hasSeenTutorial {
+                DailyStreakManager.shared.syncToAppGroup()
+                if shouldSkipOnboarding {
+                    hasSeenTutorial = true
+                    hasSeenLieTaste = true
+                    return
+                }
+                if !hasSeenTutorial && !hasSeenLieTaste {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                        beginLieTaste()
+                    }
+                } else if !hasSeenTutorial {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         showTutorial = true
                     }
@@ -114,10 +145,32 @@ struct HomeView: View {
         return UserDefaults.standard.bool(forKey: key)
     }
 
-    private var dailyDateString: String {
-        let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
-        return f.string(from: Date())
+    private var dailyDateString: String { DailyCalendar.dayKey() }
+
+    private var shouldSkipOnboarding: Bool {
+        let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("-storeScreenshots") { return true }
+        if let index = arguments.firstIndex(of: "-hasSeenTutorial"),
+           arguments.indices.contains(index + 1) {
+            let value = arguments[index + 1].lowercased()
+            return value == "yes" || value == "true" || value == "1"
+        }
+        return false
+    }
+
+    private func beginLieTaste() {
+        guard !showLieTaste else { return }
+        tasteModel.startLieTaste()
+        hasSeenLieTaste = true
+        showLieTaste = true
+    }
+
+    private func finishLieTasteIfNeeded() {
+        if !hasSeenTutorial {
+            showTutorial = true
+        } else {
+            scheduleFeedbackTip(waitForGameCenterBanner: false)
+        }
     }
 
     private var headerSection: some View {
@@ -275,9 +328,11 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 8) {
             menuButton(
                 title: L("menu.daily"),
-                subtitle: dailyCompleted ? L("menu.daily.done") : L("menu.daily.todo"),
-                icon: "calendar.badge.clock",
-                color: AppTheme.warning,
+                subtitle: dailyCompleted
+                    ? L("menu.daily.done")
+                    : (DailyCalendar.isLieDay() ? L("menu.daily.lie") : L("menu.daily.todo")),
+                icon: DailyCalendar.isLieDay() ? "theatermask.and.paintbrush.fill" : "calendar.badge.clock",
+                color: DailyCalendar.isLieDay() ? AppTheme.danger : AppTheme.warning,
                 accessibilityID: "home.daily"
             ) { showDaily = true }
 
@@ -319,7 +374,8 @@ struct HomeView: View {
                 title: L("menu.duel"),
                 subtitle: L("menu.duel.sub"),
                 icon: "person.2.fill",
-                color: AppTheme.textSecondary
+                color: AppTheme.textSecondary,
+                accessibilityID: "home.duel"
             ) { showDuel = true }
 
             menuButton(
@@ -334,7 +390,8 @@ struct HomeView: View {
                 title: L("menu.achievements"),
                 subtitle: L("home.unlocked", unlockedCount, totalAchievements),
                 icon: "trophy.fill",
-                color: AppTheme.textSecondary
+                color: AppTheme.textSecondary,
+                accessibilityID: "home.achievements"
             ) { showAchievements = true }
 
             if FeatureFlags.onlineMatchEnabled {
@@ -696,6 +753,7 @@ struct DuelSetupView: View {
                         )
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier("duel.diff.\(diff.rawValue.lowercased())")
                 }
             }
             .padding(12)

@@ -32,6 +32,13 @@
 		AA00000000000018 /* MultiplayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000018 /* MultiplayerView.swift */; };
 		AA00000000000019 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000019 /* FeedbackView.swift */; };
 		AAUI000000000001 /* CodeBreakerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBUI000000000001 /* CodeBreakerUITests.swift */; };
+		AA0000000000001A /* DailyDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000001A /* DailyDate.swift */; };
+		AAWD000000000001 /* CodeBreakerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBWD000000000001 /* CodeBreakerWidget.swift */; };
+		AAWD000000000002 /* DailyDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000001A /* DailyDate.swift */; };
+		AAWD000000000003 /* WidgetL10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBWD000000000005 /* WidgetL10n.swift */; };
+		AAWD000000000010 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBWD000000000010 /* WidgetKit.framework */; };
+		AAWD000000000011 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBWD000000000011 /* SwiftUI.framework */; };
+		AAWD000000000020 /* CodeBreakerWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CCWD000000000001 /* CodeBreakerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,7 +49,28 @@
 			remoteGlobalIDString = FF00000000000001;
 			remoteInfo = CodeBreaker;
 		};
+		PPWD000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1200000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FFWD000000000001;
+			remoteInfo = CodeBreakerWidget;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DDWD000000000004 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AAWD000000000020 /* CodeBreakerWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		30E8FA372FD3D66300640EFF /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = Products.storekit; path = CodeBreaker/Products.storekit; sourceTree = "<group>"; };
@@ -82,8 +110,16 @@
 		BB00000000000018 /* MultiplayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplayerView.swift; sourceTree = "<group>"; };
 		BB00000000000019 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		BBUI000000000001 /* CodeBreakerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerUITests.swift; sourceTree = "<group>"; };
+		BB0000000000001A /* DailyDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyDate.swift; sourceTree = "<group>"; };
+		BBWD000000000001 /* CodeBreakerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerWidget.swift; sourceTree = "<group>"; };
+		BBWD000000000002 /* CodeBreakerWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CodeBreakerWidget.entitlements; sourceTree = "<group>"; };
+		BBWD000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BBWD000000000005 /* WidgetL10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetL10n.swift; sourceTree = "<group>"; };
+		BBWD000000000010 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		BBWD000000000011 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		CC00000000000001 /* CodeBreaker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeBreaker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCUI000000000001 /* CodeBreakerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CodeBreakerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCWD000000000001 /* CodeBreakerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CodeBreakerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +137,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDWD000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAWD000000000010 /* WidgetKit.framework in Frameworks */,
+				AAWD000000000011 /* SwiftUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -109,6 +154,7 @@
 			children = (
 				30E8FA372FD3D66300640EFF /* Products.storekit */,
 				EE00000000000002 /* CodeBreaker */,
+				EEWD000000000001 /* CodeBreakerWidget */,
 				EEUI000000000001 /* CodeBreakerUITests */,
 				EE00000000000003 /* Products */,
 			);
@@ -139,6 +185,7 @@
 				BB00000000000017 /* MultiplayerManager.swift */,
 				BB00000000000018 /* MultiplayerView.swift */,
 				BB00000000000019 /* FeedbackView.swift */,
+				BB0000000000001A /* DailyDate.swift */,
 				BB00000000000012 /* Localizable.strings */,
 				BB00000000000009 /* Assets.xcassets */,
 			);
@@ -149,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				CC00000000000001 /* CodeBreaker.app */,
+				CCWD000000000001 /* CodeBreakerWidget.appex */,
 				CCUI000000000001 /* CodeBreakerUITests.xctest */,
 			);
 			name = Products;
@@ -162,6 +210,17 @@
 			path = CodeBreakerUITests;
 			sourceTree = "<group>";
 		};
+		EEWD000000000001 /* CodeBreakerWidget */ = {
+			isa = PBXGroup;
+			children = (
+				BBWD000000000001 /* CodeBreakerWidget.swift */,
+				BBWD000000000005 /* WidgetL10n.swift */,
+				BBWD000000000002 /* CodeBreakerWidget.entitlements */,
+				BBWD000000000003 /* Info.plist */,
+			);
+			path = CodeBreakerWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -172,10 +231,12 @@
 				DD00000000000001 /* Sources */,
 				DD00000000000002 /* Resources */,
 				DD00000000000003 /* Frameworks */,
+				DDWD000000000004 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DDWD000000000005 /* PBXTargetDependency */,
 			);
 			name = CodeBreaker;
 			productName = CodeBreaker;
@@ -199,6 +260,23 @@
 			productReference = CCUI000000000001 /* CodeBreakerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		FFWD000000000001 /* CodeBreakerWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 11WD000000000001 /* Build configuration list for PBXNativeTarget "CodeBreakerWidget" */;
+			buildPhases = (
+				DDWD000000000001 /* Sources */,
+				DDWD000000000002 /* Frameworks */,
+				DDWD000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CodeBreakerWidget;
+			productName = CodeBreakerWidget;
+			productReference = CCWD000000000001 /* CodeBreakerWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -215,6 +293,9 @@
 					FFUI000000000001 = {
 						CreatedOnToolsVersion = 15.4;
 						TestTargetID = FF00000000000001;
+					};
+					FFWD000000000001 = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -243,6 +324,7 @@
 			projectRoot = "";
 			targets = (
 				FF00000000000001 /* CodeBreaker */,
+				FFWD000000000001 /* CodeBreakerWidget */,
 				FFUI000000000001 /* CodeBreakerUITests */,
 			);
 		};
@@ -280,6 +362,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDWD000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -309,6 +398,7 @@
 				AA00000000000017 /* MultiplayerManager.swift in Sources */,
 				AA00000000000018 /* MultiplayerView.swift in Sources */,
 				AA00000000000019 /* FeedbackView.swift in Sources */,
+				AA0000000000001A /* DailyDate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +410,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DDWD000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAWD000000000001 /* CodeBreakerWidget.swift in Sources */,
+				AAWD000000000002 /* DailyDate.swift in Sources */,
+				AAWD000000000003 /* WidgetL10n.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -327,6 +427,11 @@
 			isa = PBXTargetDependency;
 			target = FF00000000000001 /* CodeBreaker */;
 			targetProxy = PPUI000000000001 /* PBXContainerItemProxy */;
+		};
+		DDWD000000000005 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FFWD000000000001 /* CodeBreakerWidget */;
+			targetProxy = PPWD000000000001 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -404,7 +509,7 @@
 				CODE_SIGN_ENTITLEMENTS = CodeBreaker/CodeBreaker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = JR6MLGD7C8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -418,7 +523,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -438,7 +543,7 @@
 				CODE_SIGN_ENTITLEMENTS = CodeBreaker/CodeBreaker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = JR6MLGD7C8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -452,7 +557,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -468,11 +573,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = JR6MLGD7C8;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codebreaker.app.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -487,11 +592,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = JR6MLGD7C8;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.codebreaker.app.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -499,6 +604,66 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				TEST_TARGET_NAME = CodeBreaker;
+			};
+			name = Release;
+		};
+		13WD000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = CodeBreakerWidget/CodeBreakerWidget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = JR6MLGD7C8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CodeBreakerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mind Cipher";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker.CodeBreakerWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		13WD000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = CodeBreakerWidget/CodeBreakerWidget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = JR6MLGD7C8;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CodeBreakerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mind Cipher";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker.CodeBreakerWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -528,6 +693,15 @@
 			buildConfigurations = (
 				13UI000000000001 /* Debug */,
 				13UI000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		11WD000000000001 /* Build configuration list for PBXNativeTarget "CodeBreakerWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13WD000000000001 /* Debug */,
+				13WD000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

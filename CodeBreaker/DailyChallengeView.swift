@@ -1,5 +1,6 @@
 import SwiftUI
 import GameKit
+import WidgetKit
 
 struct DailyChallengeView: View {
     @StateObject private var viewModel = GameViewModel()
@@ -8,18 +9,16 @@ struct DailyChallengeView: View {
     @State private var showLeaderboard = false
     @Environment(\.dismiss) private var dismiss
 
-    private var dateString: String {
-        let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
-        return f.string(from: Date())
-    }
+    private var dateString: String { DailyCalendar.dayKey() }
+    private var isLieDaily: Bool { DailyCalendar.isLieDay(dateString) }
 
     private var displayDate: String {
-        let f = DateFormatter()
-        f.locale = .current
-        f.dateStyle = .full
-        f.timeStyle = .none
-        return f.string(from: Date())
+        let formatter = DateFormatter()
+        formatter.calendar = DailyCalendar.gregorian
+        formatter.locale = LanguageManager.shared.locale
+        formatter.dateStyle = .full
+        formatter.timeStyle = .none
+        return formatter.string(from: Date())
     }
 
     private var isCompleted: Bool {
@@ -98,11 +97,27 @@ struct DailyChallengeView: View {
                     .font(.system(size: 17, weight: .bold, design: .rounded))
                     .foregroundStyle(AppTheme.textPrimary)
 
+                if isLieDaily {
+                    HStack(spacing: 6) {
+                        Image(systemName: "theatermask.and.paintbrush.fill")
+                        Text(L("daily.lie.badge"))
+                    }
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(AppTheme.danger)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(AppTheme.danger.opacity(0.12), in: Capsule())
+                    .accessibilityIdentifier("daily.lie.badge")
+                }
+
                 VStack(spacing: 8) {
                     ruleRow(L("param.length"), "4")
                     ruleRow(L("param.colors"), "6")
-                    ruleRow(L("param.attempts"), "7")
+                    ruleRow(L("param.attempts"), isLieDaily ? "8" : "7")
                     ruleRow(L("param.repeat"), L("param.no"))
+                    if isLieDaily {
+                        ruleRow(L("lie.toggle"), L("daily.lie.rule"))
+                    }
                 }
                 .padding(16)
                 .glassCard(cornerRadius: 14)
@@ -160,18 +175,15 @@ struct DailyChallengeView: View {
     }
 
     private func startDailyChallenge() {
-        let seed = dateString.hashValue
-        var rng = SeededRNG(seed: UInt64(bitPattern: Int64(seed)))
-
-        let colors = Array(PegColor.allCases.prefix(6))
-        var pool = colors
-        var code: [PegColor] = []
-        for _ in 0..<4 {
-            let idx = Int(rng.next() % UInt64(pool.count))
-            code.append(pool.remove(at: idx))
-        }
-
-        viewModel.startDuel(secretCode: code, colorCount: 6, maxAttempts: 7)
+        let seed = DailyCalendar.stableSeed(dateString)
+        viewModel.startChallenge(
+            seed: seed,
+            codeLength: 4,
+            colorCount: 6,
+            allowDuplicates: false,
+            maxAttempts: isLieDaily ? 8 : 7,
+            lieMode: isLieDaily
+        )
         viewModel.mode = .freePlay
         viewModel.isDailyChallenge = true
         UserDefaults.standard.set(true, forKey: "ach_daily_active")
@@ -189,7 +201,7 @@ struct DailyChallengeView: View {
 
 class DailyStreakManager {
     static let shared = DailyStreakManager()
-    private let completedDatesKey = "daily_completed_dates"
+    private let completedDatesKey = DailyCalendar.completedDatesKey
 
     var completedDates: Set<String> {
         Set(UserDefaults.standard.stringArray(forKey: completedDatesKey) ?? [])
@@ -198,21 +210,19 @@ class DailyStreakManager {
     var totalCompleted: Int { completedDates.count }
 
     var currentStreak: Int {
-        let cal = Calendar.current
+        let cal = DailyCalendar.gregorian
         var streak = 0
         var date = Date()
-        let fmt = DateFormatter()
-        fmt.dateFormat = "yyyy-MM-dd"
 
         while true {
-            let key = fmt.string(from: date)
+            let key = DailyCalendar.dayKey(date)
             if completedDates.contains(key) {
                 streak += 1
             } else if streak > 0 {
                 break
             } else {
                 // Today not done yet, check yesterday
-                if date == cal.startOfDay(for: Date()) {
+                if cal.isDateInToday(date) {
                     date = cal.date(byAdding: .day, value: -1, to: date)!
                     continue
                 }
@@ -229,6 +239,14 @@ class DailyStreakManager {
             dates.append(date)
             UserDefaults.standard.set(dates, forKey: completedDatesKey)
         }
+        syncToAppGroup()
+        WidgetCenter.shared.reloadTimelines(ofKind: "CodeBreakerWidget")
+    }
+
+    func syncToAppGroup() {
+        let dates = UserDefaults.standard.stringArray(forKey: completedDatesKey) ?? []
+        DailyCalendar.appGroupDefaults.set(dates, forKey: completedDatesKey)
+        DailyCalendar.appGroupDefaults.set(DailyCalendar.isLieDay(), forKey: "daily_is_lie_today")
     }
 
     func isCompleted(_ date: String) -> Bool {
@@ -239,13 +257,8 @@ class DailyStreakManager {
 // MARK: - Calendar View
 
 struct DailyCalendarView: View {
-    private let calendar = Calendar.current
+    private let calendar = DailyCalendar.gregorian
     private let today = Date()
-    private let formatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
 
     private var monthDays: [Date?] {
         let comps = calendar.dateComponents([.year, .month], from: today)
@@ -264,9 +277,11 @@ struct DailyCalendarView: View {
     }
 
     private var monthTitle: String {
-        let f = DateFormatter()
-        f.dateFormat = "MMMM yyyy"
-        return f.string(from: today)
+        let formatter = DateFormatter()
+        formatter.calendar = calendar
+        formatter.locale = LanguageManager.shared.locale
+        formatter.dateFormat = "MMMM yyyy"
+        return formatter.string(from: today)
     }
 
     var body: some View {
@@ -277,8 +292,8 @@ struct DailyCalendarView: View {
 
             // Weekday headers
             HStack(spacing: 0) {
-                ForEach(Array(["S","M","T","W","T","F","S"].enumerated()), id: \.offset) { _, d in
-                    Text(d)
+                ForEach(Array(DailyCalendar.weekdaySymbols(locale: LanguageManager.shared.locale).enumerated()), id: \.offset) { _, symbol in
+                    Text(symbol)
                         .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(AppTheme.textMuted)
                         .frame(maxWidth: .infinity)
@@ -302,20 +317,26 @@ struct DailyCalendarView: View {
     }
 
     private func dayCell(_ date: Date) -> some View {
-        let key = formatter.string(from: date)
+        let key = DailyCalendar.dayKey(date)
         let completed = DailyStreakManager.shared.isCompleted(key)
         let isToday = calendar.isDateInToday(date)
         let isFuture = date > today
+        let isLie = DailyCalendar.isLieDay(key)
         let dayNum = calendar.component(.day, from: date)
+        let todayColor = isLie ? AppTheme.danger : AppTheme.warning
 
         return ZStack {
             if completed {
                 Circle()
-                    .fill(AppTheme.accent.opacity(0.85))
+                    .fill((isLie ? AppTheme.danger : AppTheme.accent).opacity(0.85))
                     .frame(width: 30, height: 30)
             } else if isToday {
                 Circle()
-                    .stroke(AppTheme.warning, lineWidth: 2)
+                    .stroke(todayColor, lineWidth: 2)
+                    .frame(width: 30, height: 30)
+            } else if isLie && !isFuture {
+                Circle()
+                    .stroke(AppTheme.danger.opacity(0.35), lineWidth: 1)
                     .frame(width: 30, height: 30)
             }
 
@@ -323,7 +344,7 @@ struct DailyCalendarView: View {
                 .font(.system(size: 12, weight: completed ? .bold : .medium, design: .rounded))
                 .foregroundStyle(
                     completed ? .white :
-                    isToday ? AppTheme.warning :
+                    isToday ? todayColor :
                     isFuture ? AppTheme.textMuted.opacity(0.4) :
                     AppTheme.textSecondary
                 )

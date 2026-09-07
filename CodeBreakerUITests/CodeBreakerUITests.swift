@@ -49,7 +49,10 @@ final class CodeBreakerUITests: XCTestCase {
         let freshApp = XCUIApplication()
         freshApp.launchArguments += ["-hasSeenTutorial", "NO"]
         freshApp.launch()
-        XCTAssertTrue(freshApp.staticTexts["Crack the Code"].waitForExistence(timeout: 5))
+        XCTAssertTrue(
+            freshApp.staticTexts["Your First Lie"].waitForExistence(timeout: 8)
+            || freshApp.staticTexts["The first clue is fake"].waitForExistence(timeout: 3)
+        )
     }
 
     func testTutorialNavigation() {

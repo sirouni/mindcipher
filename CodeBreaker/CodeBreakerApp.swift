@@ -28,10 +28,21 @@ struct CodeBreakerApp: App {
             .preferredColorScheme(themeManager.currentSkin.colorScheme)
             .id(themeManager.currentSkin.rawValue)
             .onAppear {
+                #if DEBUG
+                let storeScreenshots = ProcessInfo.processInfo.arguments.contains("-storeScreenshots")
+                if storeScreenshots { seedStoreScreenshotDefaults() }
+                DispatchQueue.main.asyncAfter(deadline: .now() + (storeScreenshots ? 0.15 : 2.2)) {
+                    showSplash = false
+                }
+                if !storeScreenshots {
+                    GameCenterManager.shared.authenticate()
+                }
+                #else
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
                     showSplash = false
                 }
                 GameCenterManager.shared.authenticate()
+                #endif
             }
             .onOpenURL { url in
                 ChallengeManager.shared.handleURL(url)
@@ -62,8 +73,13 @@ struct Challenge: Identifiable {
 class ChallengeManager: ObservableObject {
     static let shared = ChallengeManager()
     @Published var pendingChallenge: Challenge?
+    @Published var pendingDaily = false
 
     func handleURL(_ url: URL) {
+        if url.scheme == "codebreaker" && url.host == "daily" {
+            DispatchQueue.main.async { self.pendingDaily = true }
+            return
+        }
         let isCustomScheme = url.scheme == "codebreaker" && url.host == "challenge"
         let isUniversalLink = url.host == "sirouni.github.io" && url.path.hasPrefix("/challenge")
         guard isCustomScheme || isUniversalLink,
@@ -319,6 +335,22 @@ class GameCenterManager: NSObject, ObservableObject, GKLocalPlayerListener {
         viewController.present(gcVC, animated: true)
     }
 }
+
+#if DEBUG
+private func seedStoreScreenshotDefaults() {
+    let defaults = UserDefaults.standard
+    defaults.set(true, forKey: "hasSeenTutorial")
+    defaults.set(true, forKey: "hasSeenLieTaste")
+    defaults.set(Array(1...160), forKey: "completedLevels")
+    defaults.set(Array(1...160), forKey: "lie_completedLevels")
+    defaults.set(15, forKey: "stats_gamesPlayed")
+    defaults.set(12, forKey: "stats_gamesWon")
+    defaults.set(4, forKey: "stats_currentStreak")
+    defaults.set(6, forKey: "stats_bestStreak")
+    defaults.set(40, forKey: "stats_totalAttempts")
+    defaults.set(["first_win", "play_5", "play_10", "win_10"], forKey: "achievements_unlocked")
+}
+#endif
 
 class GameCenterDismissHandler: NSObject, GKGameCenterControllerDelegate {
     static let shared = GameCenterDismissHandler()

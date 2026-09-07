@@ -90,6 +90,7 @@ struct LieLevelSelectView: View {
                     .foregroundStyle(selectedTier > 0 ? AppTheme.danger : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
             }
+            .accessibilityLabel("Previous tier")
             .disabled(selectedTier == 0)
 
             Spacer()
@@ -111,6 +112,7 @@ struct LieLevelSelectView: View {
                     .foregroundStyle(selectedTier < tiers.count - 1 ? AppTheme.danger : AppTheme.textMuted)
                     .frame(width: 44, height: 44)
             }
+            .accessibilityLabel("Next tier")
             .disabled(selectedTier >= tiers.count - 1)
         }
         .padding(.horizontal, 12)

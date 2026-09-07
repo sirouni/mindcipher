@@ -197,7 +197,7 @@ class GameEngine {
     private var guessCount: Int = 0
     private let lieAttemptNumber: Int?
 
-    init(codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false) {
+    init(codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false, forcedLieAttempt: Int? = nil) {
         let seed = UInt64.random(in: 1...UInt64.max)
         self.seed = seed
         self.codeLength = codeLength
@@ -206,19 +206,7 @@ class GameEngine {
         self.availableColors = Array(PegColor.allCases.prefix(colorCount))
 
         var rng = SeededRNG(seed: seed)
-
-        if lieMode {
-            let optimalSteps: Int
-            switch codeLength {
-            case 3: optimalSteps = 4
-            case 4: optimalSteps = 6
-            case 5: optimalSteps = 8
-            default: optimalSteps = 8
-            }
-            self.lieAttemptNumber = Int(rng.next() % UInt64(max(1, optimalSteps - 1))) + 1
-        } else {
-            self.lieAttemptNumber = nil
-        }
+        self.lieAttemptNumber = Self.resolvedLieAttempt(rng: &rng, codeLength: codeLength, lieMode: lieMode, forced: forcedLieAttempt)
 
         if allowDuplicates {
             self.secretCode = (0..<codeLength).map { _ in
@@ -235,7 +223,7 @@ class GameEngine {
         }
     }
 
-    init(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false) {
+    init(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false, forcedLieAttempt: Int? = nil) {
         self.seed = seed
         self.codeLength = codeLength
         self.maxAttempts = maxAttempts
@@ -243,19 +231,7 @@ class GameEngine {
         self.availableColors = Array(PegColor.allCases.prefix(colorCount))
 
         var rng = SeededRNG(seed: seed)
-
-        if lieMode {
-            let optimalSteps: Int
-            switch codeLength {
-            case 3: optimalSteps = 4
-            case 4: optimalSteps = 6
-            case 5: optimalSteps = 8
-            default: optimalSteps = 8
-            }
-            self.lieAttemptNumber = Int(rng.next() % UInt64(max(1, optimalSteps - 1))) + 1
-        } else {
-            self.lieAttemptNumber = nil
-        }
+        self.lieAttemptNumber = Self.resolvedLieAttempt(rng: &rng, codeLength: codeLength, lieMode: lieMode, forced: forcedLieAttempt)
 
         if allowDuplicates {
             self.secretCode = (0..<codeLength).map { _ in
@@ -280,6 +256,19 @@ class GameEngine {
         self.lieMode = false
         self.lieAttemptNumber = nil
         self.seed = 0
+    }
+
+    private static func resolvedLieAttempt(rng: inout SeededRNG, codeLength: Int, lieMode: Bool, forced: Int?) -> Int? {
+        guard lieMode else { return nil }
+        if let forced { return max(1, forced) }
+        let optimalSteps: Int
+        switch codeLength {
+        case 3: optimalSteps = 4
+        case 4: optimalSteps = 6
+        case 5: optimalSteps = 8
+        default: optimalSteps = 8
+        }
+        return Int(rng.next() % UInt64(max(1, optimalSteps - 1))) + 1
     }
 
     func evaluate(guess: [PegColor]) -> Feedback {

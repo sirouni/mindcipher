@@ -35,6 +35,13 @@ struct SettingsView: View {
     @State private var showLanguage = false
     @ObservedObject private var language = LanguageManager.shared
 
+    private var appVersionLabel: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.2"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+        if let build, !build.isEmpty { return "\(version) (\(build))" }
+        return version
+    }
+
     var body: some View {
         ZStack {
             AppTheme.bgGradient.ignoresSafeArea()
@@ -200,7 +207,7 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 4) {
             sectionHeader(L("settings.about"))
             VStack(spacing: 0) {
-                infoRow(icon: "info.circle.fill", title: L("settings.version"), value: "1.0.0")
+                infoRow(icon: "info.circle.fill", title: L("settings.version"), value: appVersionLabel)
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
                 infoRow(icon: "lock.shield.fill", title: L("app.title"), value: L("app.title"))
             }
@@ -457,8 +464,12 @@ struct AchievementsView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
+            .contentShape(Rectangle())
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("achieve.\(a.id)")
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("achieve.\(a.id)")
     }
 }
 
@@ -571,7 +582,7 @@ struct AchievementDetailView: View {
         renderer.scale = UIScreen.main.scale
         guard let image = renderer.uiImage else { return }
 
-        let text = "I unlocked \"\(achievement.title)\" in Mind Cipher! \(achievement.desc)"
+        let text = L("share.achievement.text", achievement.localizedTitle, achievement.localizedDesc)
 
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let root = scene.windows.first?.rootViewController else { return }
@@ -593,7 +604,7 @@ struct AchievementShareCard: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Text("ACHIEVEMENT UNLOCKED")
+            Text(L("share.achievement.header"))
                 .font(.system(size: 11, weight: .bold, design: .rounded))
                 .foregroundStyle(accent)
                 .tracking(1.5)
@@ -612,14 +623,14 @@ struct AchievementShareCard: View {
             }
 
             VStack(spacing: 6) {
-                Text(achievement.title)
+                Text(achievement.localizedTitle)
                     .font(.system(size: 22, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(white: 0.12))
-                Text(achievement.desc)
+                Text(achievement.localizedDesc)
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(Color(white: 0.4))
                     .multilineTextAlignment(.center)
-                Text(achievement.category.rawValue)
+                Text(achievement.category.localizedName)
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(accent)
                     .padding(.horizontal, 8)
@@ -635,10 +646,10 @@ struct AchievementShareCard: View {
                     .frame(width: 36, height: 36)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Mind Cipher")
+                    Text(L("app.title"))
                         .font(.system(size: 13, weight: .bold, design: .rounded))
                         .foregroundStyle(Color(white: 0.2))
-                    Text("Scan to download")
+                    Text(L("share.scan"))
                         .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(Color(white: 0.5))
                 }

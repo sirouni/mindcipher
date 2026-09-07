@@ -1,0 +1,220 @@
+{
+  "order": [
+    "01_gameplay",
+    "02_lie",
+    "03_notes",
+    "04_duel",
+    "05_campaign",
+    "06_challenge",
+    "07_daily",
+    "08_achievements"
+  ],
+  "locales": {
+    "en": {
+      "asc": "en-US",
+      "medium": "Medium",
+      "start": "Start",
+      "submit": "Submit",
+      "firstCrack": "First Crack",
+      "banners": {
+        "01_gameplay": ["Mastermind", "Deduce the secret color code"],
+        "02_lie": ["One Clue Lies", "Mastermind with a fake report"],
+        "03_notes": ["Smart Notes", "Track your deductions"],
+        "04_duel": ["Duel Mode", "Challenge a friend"],
+        "05_campaign": ["480 Levels", "From beginner to master"],
+        "06_challenge": ["Challenge a Friend", "Share custom puzzles"],
+        "07_daily": ["Daily Challenge", "A new puzzle every day"],
+        "08_achievements": ["Share with Friends", "Show off your achievements"]
+      }
+    },
+    "zh": {
+      "asc": "zh-Hans",
+      "medium": "中等",
+      "start": "开始",
+      "submit": "提交",
+      "firstCrack": "初次破译",
+      "banners": {
+        "01_gameplay": ["珠玑妙算", "根据线索推理颜色密码"],
+        "02_lie": ["一条线索是假的", "珠玑妙算，还要交叉验证"],
+        "03_notes": ["智能笔记", "在棋盘上记下推理"],
+        "04_duel": ["双人对战", "一人设密码，一人来破译"],
+        "05_campaign": ["480 关", "从入门到大师"],
+        "06_challenge": ["挑战好友", "用链接分享自定义谜题"],
+        "07_daily": ["每日挑战", "每天一题"],
+        "08_achievements": ["分享成就", "把战绩发给朋友"]
+      }
+    },
+    "zh-Hant": {
+      "asc": "zh-Hant",
+      "medium": "中等",
+      "start": "開始",
+      "submit": "提交",
+      "firstCrack": "初次破譯",
+      "banners": {
+        "01_gameplay": ["珠璣妙算", "根據線索推理顏色密碼"],
+        "02_lie": ["一條線索是假的", "珠璣妙算，還要交叉驗證"],
+        "03_notes": ["智慧筆記", "在棋盤上記下推理"],
+        "04_duel": ["雙人對戰", "一人設密碼，一人來破譯"],
+        "05_campaign": ["480 關", "從入門到大師"],
+        "06_challenge": ["挑戰好友", "用連結分享自訂謎題"],
+        "07_daily": ["每日挑戰", "每天一題"],
+        "08_achievements": ["分享成就", "把戰績傳給朋友"]
+      }
+    },
+    "ja": {
+      "asc": "ja",
+      "medium": "普通",
+      "start": "始める",
+      "submit": "送信",
+      "firstCrack": "初解読",
+      "banners": {
+        "01_gameplay": ["ヒットアンドブロー", "手がかりから色の暗号を推理"],
+        "02_lie": ["手がかりの1つは嘘", "マスターマインドに嘘が1つ"],
+        "03_notes": ["スマートメモ", "盤面に推理を残す"],
+        "04_duel": ["対戦モード", "一人が暗号、もう一人が解読"],
+        "05_campaign": ["480レベル", "初級から達人まで"],
+        "06_challenge": ["友だちに挑戦", "リンクで謎を送る"],
+        "07_daily": ["デイリー", "毎日新しいパズル"],
+        "08_achievements": ["実績をシェア", "成果を友だちに見せる"]
+      }
+    },
+    "ko": {
+      "asc": "ko",
+      "medium": "보통",
+      "start": "시작",
+      "submit": "제출",
+      "firstCrack": "첫 해독",
+      "banners": {
+        "01_gameplay": ["마스터마인드", "단서로 숨은 색 암호를 추론"],
+        "02_lie": ["단서 하나가 거짓", "마스터마인드에 가짜 단서 하나"],
+        "03_notes": ["스마트 노트", "보드에 추론을 남기세요"],
+        "04_duel": ["대전 모드", "한 명이 암호, 한 명이 해독"],
+        "05_campaign": ["480레벨", "초급부터 마스터까지"],
+        "06_challenge": ["친구에게 도전", "링크로 퍼즐을 보내세요"],
+        "07_daily": ["일일 도전", "매일 새 퍼즐"],
+        "08_achievements": ["업적 공유", "성과를 친구에게 보여 주세요"]
+      }
+    },
+    "es": {
+      "asc": "es-ES",
+      "medium": "Medio",
+      "start": "Empezar",
+      "submit": "Enviar",
+      "firstCrack": "Primer crack",
+      "banners": {
+        "01_gameplay": ["Mastermind", "Deduce el código de colores"],
+        "02_lie": ["Una pista miente", "Mastermind con un informe falso"],
+        "03_notes": ["Notas inteligentes", "Anota tus deducciones"],
+        "04_duel": ["Modo duelo", "Reta a un amigo"],
+        "05_campaign": ["480 niveles", "De principiante a maestro"],
+        "06_challenge": ["Reta a un amigo", "Comparte puzzles a medida"],
+        "07_daily": ["Desafío diario", "Un puzzle nuevo cada día"],
+        "08_achievements": ["Comparte logros", "Presume tus éxitos"]
+      }
+    },
+    "ar": {
+      "asc": "ar-SA",
+      "medium": "متوسط",
+      "start": "ابدأ",
+      "submit": "إرسال",
+      "firstCrack": "الفك الأول",
+      "rtl": true,
+      "banners": {
+        "01_gameplay": ["ماسترميند", "استنتج رمز الألوان السري"],
+        "02_lie": ["دليل يكذب", "ماسترميند مع تقرير مزيف"],
+        "03_notes": ["ملاحظات ذكية", "سجّل استدلالك على اللوحة"],
+        "04_duel": ["وضع المبارزة", "تحدَّ صديقا"],
+        "05_campaign": ["480 مستوى", "من مبتدئ إلى أستاذ"],
+        "06_challenge": ["تحدَّ صديقا", "شارك ألغازا مخصصة"],
+        "07_daily": ["التحدي اليومي", "لغز جديد كل يوم"],
+        "08_achievements": ["شارك الإنجازات", "اعرض نجاحاتك"]
+      }
+    },
+    "de": {
+      "asc": "de-DE",
+      "medium": "Mittel",
+      "start": "Start",
+      "submit": "Senden",
+      "firstCrack": "Erster Knack",
+      "banners": {
+        "01_gameplay": ["Mastermind", "Knacke den geheimen Farbcode"],
+        "02_lie": ["Ein Hinweis lügt", "Mastermind mit einem falschen Report"],
+        "03_notes": ["Smarte Notizen", "Halte deine Schlüsse fest"],
+        "04_duel": ["Duellmodus", "Fordere einen Freund"],
+        "05_campaign": ["480 Level", "Vom Anfänger zum Meister"],
+        "06_challenge": ["Freund fordern", "Teile eigene Rätsel"],
+        "07_daily": ["Tägliche Challenge", "Jeden Tag ein neues Puzzle"],
+        "08_achievements": ["Erfolge teilen", "Zeig deine Trophäen"]
+      }
+    },
+    "fr": {
+      "asc": "fr-FR",
+      "medium": "Moyen",
+      "start": "Commencer",
+      "submit": "Valider",
+      "firstCrack": "Première brèche",
+      "banners": {
+        "01_gameplay": ["Mastermind", "Déduis le code couleur secret"],
+        "02_lie": ["Un indice ment", "Mastermind avec un rapport faux"],
+        "03_notes": ["Notes intelligentes", "Garde tes déductions"],
+        "04_duel": ["Mode duel", "Défie un ami"],
+        "05_campaign": ["480 niveaux", "Du débutant au maître"],
+        "06_challenge": ["Défie un ami", "Partage des puzzles custom"],
+        "07_daily": ["Défi du jour", "Un puzzle nouveau chaque jour"],
+        "08_achievements": ["Partage tes succès", "Montre tes trophées"]
+      }
+    },
+    "he": {
+      "asc": "he",
+      "medium": "בינוני",
+      "start": "התחל",
+      "submit": "שלח",
+      "firstCrack": "פיצוח ראשון",
+      "rtl": true,
+      "banners": {
+        "01_gameplay": ["מאסטרמיינד", "הסק את קוד הצבעים הסודי"],
+        "02_lie": ["רמז אחד משקר", "מאסטרמיינד עם דיווח מזויף"],
+        "03_notes": ["פתקים חכמים", "רשום היסקים על הלוח"],
+        "04_duel": ["מצב דו-קרב", "אתגר חבר"],
+        "05_campaign": ["480 שלבים", "ממתחיל עד אמן"],
+        "06_challenge": ["אתגר חבר", "שתף חידות מותאמות"],
+        "07_daily": ["אתגר יומי", "חידה חדשה כל יום"],
+        "08_achievements": ["שתף הישגים", "הראה את ההצלחות"]
+      }
+    },
+    "pt": {
+      "asc": "pt-BR",
+      "medium": "Médio",
+      "start": "Começar",
+      "submit": "Enviar",
+      "firstCrack": "Primeira quebra",
+      "banners": {
+        "01_gameplay": ["Mastermind", "Deduz o código de cores secreto"],
+        "02_lie": ["Uma pista mente", "Mastermind com um relatório falso"],
+        "03_notes": ["Notas inteligentes", "Anote suas deduções"],
+        "04_duel": ["Modo duelo", "Desafie um amigo"],
+        "05_campaign": ["480 níveis", "Do iniciante ao mestre"],
+        "06_challenge": ["Desafie um amigo", "Compartilhe puzzles custom"],
+        "07_daily": ["Desafio diário", "Um puzzle novo todo dia"],
+        "08_achievements": ["Compartilhe conquistas", "Mostre seus troféus"]
+      }
+    },
+    "tr": {
+      "asc": "tr",
+      "medium": "Orta",
+      "start": "Başla",
+      "submit": "Gönder",
+      "firstCrack": "İlk kırış",
+      "banners": {
+        "01_gameplay": ["Mastermind", "Gizli renk kodunu çıkar"],
+        "02_lie": ["Bir ipucu yalan", "Mastermind, sahte bir raporla"],
+        "03_notes": ["Akıllı notlar", "Çıkarımlarını tahtaya yaz"],
+        "04_duel": ["Düello modu", "Bir arkadaşa meydan oku"],
+        "05_campaign": ["480 seviye", "Başlangıçtan ustaya"],
+        "06_challenge": ["Arkadaşa meydan oku", "Özel bulmaca paylaş"],
+        "07_daily": ["Günlük görev", "Her gün yeni bir bulmaca"],
+        "08_achievements": ["Başarımları paylaş", "Kazanımlarını göster"]
+      }
+    }
+  }
+}

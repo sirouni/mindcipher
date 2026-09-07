@@ -66,12 +66,16 @@ final class LanguageManager: ObservableObject {
     private static let defaultsKey = "settings_language"
 
     @Published var preference: AppLanguage {
-        didSet { UserDefaults.standard.set(preference.rawValue, forKey: Self.defaultsKey) }
+        didSet {
+            UserDefaults.standard.set(preference.rawValue, forKey: Self.defaultsKey)
+            DailyCalendar.appGroupDefaults.set(preference.rawValue, forKey: Self.defaultsKey)
+        }
     }
 
     private init() {
         let saved = UserDefaults.standard.string(forKey: Self.defaultsKey) ?? AppLanguage.system.rawValue
         preference = AppLanguage(rawValue: saved) ?? .system
+        DailyCalendar.appGroupDefaults.set(preference.rawValue, forKey: Self.defaultsKey)
     }
 
     var resolvedCode: String {
@@ -517,6 +521,23 @@ private let strings: [String: [String: String]] = [
     "achieve.elite_all_3star.desc": Tr(zh: "两种模式 240 关全部 3 星", en: "3-star all 240 levels in both modes", hant: "兩種模式 240 關全部 3 星", ja: "両モード240をすべて3つ星", ko: "두 모드 240레벨 전부 3성", es: "3 estrellas en los 240 de ambos modos", ar: "3 نجوم في كل الـ 240 بكلا الوضعين", de: "3 Sterne auf allen 240 in beiden Modi", fr: "3 étoiles sur les 240 des deux modes", he: "3 כוכבים בכל 240 בשני המצבים", pt: "3 estrelas nos 240 dos dois modos", tr: "Her iki modda 240 seviyenin hepsinde 3 yıldız").dict,
     "achieve.elite_play_500.title": Tr(zh: "走火入魔", en: "Obsessed", hant: "走火入魔", ja: "沼落ち", ko: "집착", es: "Obsesionado", ar: "مهووس", de: "Besessen", fr: "Obnubilé", he: "אובססיבי", pt: "Obsessivo", tr: "Takıntılı").dict,
     "achieve.elite_play_500.desc": Tr(zh: "玩 500 局", en: "Play 500 games", hant: "玩 500 局", ja: "500プレイ", ko: "500판 플레이", es: "Juega 500 partidas", ar: "العب 500 جولة", de: "Spiele 500 Partien", fr: "Joue 500 parties", he: "שחק 500 משחקים", pt: "Jogue 500 partidas", tr: "500 oyun oyna").dict,
+    "taste.title": Tr(zh: "第一口谎言", en: "Your First Lie", hant: "第一口謊言", ja: "最初の嘘", ko: "첫 거짓말", es: "Tu primera mentira", ar: "كذبتك الأولى", de: "Deine erste Lüge", fr: "Ton premier mensonge", he: "השקר הראשון", pt: "Sua primeira mentira", tr: "İlk yalanın").dict,
+    "taste.subtitle": Tr(zh: "第一条线索是假的", en: "The first clue is fake", hant: "第一條線索是假的", ja: "最初の手がかりは嘘", ko: "첫 단서가 가짜입니다", es: "La primera pista es falsa", ar: "الدليل الأول مزيف", de: "Der erste Hinweis ist falsch", fr: "Le premier indice est faux", he: "הרמז הראשון מזויף", pt: "A primeira pista é falsa", tr: "İlk ipucu sahte").dict,
+    "menu.daily.lie": Tr(zh: "今日谎言 · 一条线索是假的", en: "Today's Lie · one clue is fake", hant: "今日謊言 · 一條線索是假的", ja: "今日の嘘 · 手がかりが1つ嘘", ko: "오늘의 거짓말 · 단서 하나가 가짜", es: "Mentira de hoy · una pista es falsa", ar: "كذبة اليوم · دليل واحد مزيف", de: "Heutige Lüge · ein Hinweis ist falsch", fr: "Mensonge du jour · un indice est faux", he: "השקר של היום · רמז אחד מזויף", pt: "Mentira de hoje · uma pista é falsa", tr: "Bugünün yalanı · bir ipucu sahte").dict,
+    "daily.lie.badge": Tr(zh: "今日谎言", en: "Today's Lie", hant: "今日謊言", ja: "今日の嘘", ko: "오늘의 거짓말", es: "Mentira de hoy", ar: "كذبة اليوم", de: "Heutige Lüge", fr: "Mensonge du jour", he: "השקר של היום", pt: "Mentira de hoje", tr: "Bugünün yalanı").dict,
+    "daily.lie.rule": Tr(zh: "一条线索说谎", en: "One clue lies", hant: "一條線索說謊", ja: "手がかり1つが嘘", ko: "단서 하나가 거짓말", es: "Una pista miente", ar: "دليل واحد يكذب", de: "Ein Hinweis lügt", fr: "Un indice ment", he: "רמז אחד משקר", pt: "Uma pista mente", tr: "Bir ipucu yalan söyler").dict,
+    "share.achievement.header": Tr(zh: "解锁成就", en: "ACHIEVEMENT UNLOCKED", hant: "解鎖成就", ja: "実績解除", ko: "업적 해제", es: "LOGRO DESBLOQUEADO", ar: "تم فتح الإنجاز", de: "ERFOLG FREIGESCHALTET", fr: "SUCCÈS DÉBLOQUÉ", he: "הישג נפתח", pt: "CONQUISTA DESBLOQUEADA", tr: "BAŞARIM AÇILDI").dict,
+    "share.achievement.text": Tr(zh: "我在 Mind Cipher 解锁了「%@」！%@", en: "I unlocked \"%@\" in Mind Cipher! %@", hant: "我在 Mind Cipher 解鎖了「%@」！%@", ja: "Mind Cipher で「%@」を解除！%@", ko: "Mind Cipher에서 \"%@\" 해제! %@", es: "¡Desbloqueé \"%@\" en Mind Cipher! %@", ar: "فتحت \"%@\" في Mind Cipher! %@", de: "Ich habe „%@“ in Mind Cipher freigeschaltet! %@", fr: "J’ai débloqué « %@ » dans Mind Cipher ! %@", he: "פתחתי את \"%@\" ב-Mind Cipher! %@", pt: "Desbloqueei \"%@\" no Mind Cipher! %@", tr: "Mind Cipher’da \"%@\" açtım! %@").dict,
+    "share.scan": Tr(zh: "扫码下载", en: "Scan to download", hant: "掃碼下載", ja: "スキャンして入手", ko: "스캔해서 받기", es: "Escanea para descargar", ar: "امسح للتنزيل", de: "Scannen und laden", fr: "Scanne pour télécharger", he: "סרוק להורדה", pt: "Escaneie para baixar", tr: "İndirmek için tara").dict,
+    "share.inprogress": Tr(zh: "进行中 — %d/%d", en: "In Progress — %d/%d", hant: "進行中 — %d/%d", ja: "進行中 — %d/%d", ko: "진행 중 — %d/%d", es: "En curso — %d/%d", ar: "جارٍ — %d/%d", de: "Läuft — %d/%d", fr: "En cours — %d/%d", he: "בתהליך — %d/%d", pt: "Em andamento — %d/%d", tr: "Devam ediyor — %d/%d").dict,
+    "share.solved": Tr(zh: "用 %d/%d 步破译", en: "Solved in %d/%d steps", hant: "用 %d/%d 步破譯", ja: "%d/%d手で解読", ko: "%d/%d수 만에 해독", es: "Resuelto en %d/%d pasos", ar: "حُلّ في %d/%d خطوة", de: "In %d/%d Zügen gelöst", fr: "Résolu en %d/%d coups", he: "נפתר ב־%d/%d מהלכים", pt: "Resolvido em %d/%d passos", tr: "%d/%d hamlede çözüldü").dict,
+    "share.failed": Tr(zh: "失败 — %d/%d", en: "Failed — %d/%d", hant: "失敗 — %d/%d", ja: "失敗 — %d/%d", ko: "실패 — %d/%d", es: "Fallaste — %d/%d", ar: "فشل — %d/%d", de: "Gescheitert — %d/%d", fr: "Échec — %d/%d", he: "נכשל — %d/%d", pt: "Falhou — %d/%d", tr: "Başarısız — %d/%d").dict,
+    "share.lie.banner": Tr(zh: "谎言模式 — 有一条反馈可能是假的！", en: "Lie Mode — one feedback may be fake!", hant: "謊言模式 — 有一條回饋可能是假的！", ja: "嘘モード — 手がかりの1つが嘘かも！", ko: "거짓말 모드 — 단서 하나가 가짜일 수 있음!", es: "Modo Mentira — ¡una pista puede ser falsa!", ar: "وضع الكذب — قد يكون أحد الأدلة مزيفًا!", de: "Lügenmodus — ein Hinweis kann falsch sein!", fr: "Mode Mensonge — un indice peut être faux !", he: "מצב שקר — רמז אחד עשוי להיות מזויף!", pt: "Modo Mentira — uma pista pode ser falsa!", tr: "Yalan modu — bir ipucu sahte olabilir!").dict,
+    "share.daily": Tr(zh: "每日挑战", en: "Daily Challenge", hant: "每日挑戰", ja: "デイリーチャレンジ", ko: "일일 도전", es: "Desafío diario", ar: "التحدي اليومي", de: "Tägliche Herausforderung", fr: "Défi du jour", he: "אתגר יומי", pt: "Desafio diário", tr: "Günlük görev").dict,
+    "share.daily.lie": Tr(zh: "今日谎言", en: "Today's Lie", hant: "今日謊言", ja: "今日の嘘", ko: "오늘의 거짓말", es: "Mentira de hoy", ar: "كذبة اليوم", de: "Heutige Lüge", fr: "Mensonge du jour", he: "השקר של היום", pt: "Mentira de hoje", tr: "Bugünün yalanı").dict,
+    "share.freeplay": Tr(zh: "Mind Cipher 自由模式", en: "Mind Cipher Free Play", hant: "Mind Cipher 自由模式", ja: "Mind Cipher フリー", ko: "Mind Cipher 자유 플레이", es: "Mind Cipher juego libre", ar: "Mind Cipher لعب حر", de: "Mind Cipher Freies Spiel", fr: "Mind Cipher partie libre", he: "Mind Cipher משחק חופשי", pt: "Mind Cipher jogo livre", tr: "Mind Cipher serbest oyun").dict,
+    "share.cta": Tr(zh: "🔐 你能破译吗？", en: "🔐 Can you crack it?", hant: "🔐 你能破譯嗎？", ja: "🔐 解読できる？", ko: "🔐 풀 수 있겠어?", es: "🔐 ¿Puedes descifrarlo?", ar: "🔐 هل تستطيع فكه؟", de: "🔐 Kannst du ihn knacken?", fr: "🔐 Tu peux le casser ?", he: "🔐 תוכל לפצח?", pt: "🔐 Consegue decifrar?", tr: "🔐 Kırabilir misin?").dict,
+    "share.challenge.text": Tr(zh: "我破译了这组密码 — 你呢？", en: "I cracked this code — can you?", hant: "我破譯了這組密碼 — 你呢？", ja: "このコードを解読した — 君は？", ko: "이 암호를 풀었어 — 너는?", es: "Descifré este código — ¿y tú?", ar: "فككت هذا الرمز — هل تستطيع؟", de: "Ich habe den Code geknackt — schaffst du’s?", fr: "J’ai cassé ce code — et toi ?", he: "פיצחתי את הקוד — תוכל?", pt: "Decifrei este código — e você?", tr: "Bu kodu kırdım — sen?").dict,
 ]
 
 func L(_ key: String) -> String {

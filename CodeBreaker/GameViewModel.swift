@@ -41,6 +41,7 @@ class GameViewModel: ObservableObject {
     var level: Level?
     var lastDifficulty: Difficulty = .easy
     var isDailyChallenge: Bool = false
+    var isLieTaste: Bool = false
     var gameStartTime: Date?
     private var timer: Timer?
 
@@ -107,6 +108,8 @@ class GameViewModel: ObservableObject {
     func startGame(level: Level) {
         self.level = level
         self.mode = .campaign(level: level.id)
+        isLieTaste = false
+        isDailyChallenge = false
         engine = GameEngine(
             codeLength: level.codeLength,
             colorCount: level.colorCount,
@@ -123,6 +126,8 @@ class GameViewModel: ObservableObject {
     func startLieGame(level: Level, totalAttempts: Int) {
         self.level = level
         self.mode = .campaign(level: level.id)
+        isLieTaste = false
+        isDailyChallenge = false
         engine = GameEngine(
             codeLength: level.codeLength,
             colorCount: level.colorCount,
@@ -137,6 +142,8 @@ class GameViewModel: ObservableObject {
         self.level = nil
         self.mode = .freePlay
         self.lastDifficulty = difficulty
+        isLieTaste = false
+        isDailyChallenge = false
         let extraAttempts: Int
         if !lieMode {
             extraAttempts = 0
@@ -164,6 +171,8 @@ class GameViewModel: ObservableObject {
     func startDuel(secretCode: [PegColor], colorCount: Int, maxAttempts: Int) {
         self.level = nil
         self.mode = .duel
+        isLieTaste = false
+        isDailyChallenge = false
         engine = GameEngine(
             secretCode: secretCode,
             colorCount: colorCount,
@@ -175,6 +184,8 @@ class GameViewModel: ObservableObject {
     func startChallenge(seed: UInt64, codeLength: Int, colorCount: Int, allowDuplicates: Bool, maxAttempts: Int, lieMode: Bool = false) {
         self.level = nil
         self.mode = .duel
+        isLieTaste = false
+        isDailyChallenge = false
         engine = GameEngine(
             seed: seed,
             codeLength: codeLength,
@@ -186,9 +197,28 @@ class GameViewModel: ObservableObject {
         resetState()
     }
 
+    func startLieTaste() {
+        level = nil
+        mode = .freePlay
+        lastDifficulty = .easy
+        isLieTaste = true
+        isDailyChallenge = false
+        engine = GameEngine(
+            codeLength: 4,
+            colorCount: 6,
+            allowDuplicates: false,
+            maxAttempts: 7,
+            lieMode: true,
+            forcedLieAttempt: 1
+        )
+        resetState()
+    }
+
     func startOnlineGame(seed: UInt64, codeLength: Int, colorCount: Int, maxAttempts: Int, allowDuplicates: Bool) {
         self.level = nil
         self.mode = .online
+        isLieTaste = false
+        isDailyChallenge = false
         engine = GameEngine(
             seed: seed,
             codeLength: codeLength,
@@ -345,6 +375,7 @@ class GameViewModel: ObservableObject {
                 phase = .won(attempts: attempts)
                 showSecret = true
             }
+            if isLieTaste { return }
             StatsManager.shared.recordWin(attempts: attempts)
             HintCoinManager.shared.recordWin()
             if isDailyChallenge {
@@ -380,8 +411,10 @@ class GameViewModel: ObservableObject {
             }
         } else if guessHistory.count >= maxAttempts {
             stopTimer()
-            StatsManager.shared.recordLoss()
-            UserDefaults.standard.set(0, forKey: "ach_elite_hard_streak")
+            if !isLieTaste {
+                StatsManager.shared.recordLoss()
+                UserDefaults.standard.set(0, forKey: "ach_elite_hard_streak")
+            }
             withAnimation(.spring(response: 0.5)) {
                 phase = .lost
                 showSecret = true
@@ -423,26 +456,30 @@ class GameViewModel: ObservableObject {
     }
 
     private func dailyScoreDateKey() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: gameStartTime ?? Date())
+        DailyCalendar.dayKey(gameStartTime ?? Date())
     }
 
     func generateShareText() -> String {
         guard phase != .playing else { return "" }
         let won = phase != .lost
         let title: String
-        if let level = level {
-            title = "Code Breaker Level \(level.id)"
+        if isDailyChallenge {
+            title = DailyCalendar.isLieDay() ? L("share.daily.lie") : L("share.daily")
+        } else if isLieTaste {
+            title = L("taste.title")
+        } else if let level {
+            title = L("level.title", level.id)
+        } else if engine?.lieMode == true {
+            title = L("lie.mode")
         } else {
-            title = "Code Breaker Free Play"
+            title = L("share.freeplay")
         }
 
         var lines = [title]
-        if won, case .won(let a) = phase {
-            lines.append("Solved in \(a)/\(maxAttempts)")
+        if won, case .won(let attempts) = phase {
+            lines.append(L("share.solved", attempts, maxAttempts))
         } else {
-            lines.append("❌ Failed")
+            lines.append(L("share.failed", guessHistory.count, maxAttempts))
         }
         lines.append("")
 
@@ -460,7 +497,7 @@ class GameViewModel: ObservableObject {
             lines.append(row)
         }
         lines.append("")
-        lines.append("🔐 Can you crack it?")
+        lines.append(L("share.cta"))
         return lines.joined(separator: "\n")
     }
 }
