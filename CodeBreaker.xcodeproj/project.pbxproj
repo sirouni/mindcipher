@@ -33,6 +33,7 @@
 		AA00000000000019 /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000019 /* FeedbackView.swift */; };
 		AAUI000000000001 /* CodeBreakerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBUI000000000001 /* CodeBreakerUITests.swift */; };
 		AA0000000000001A /* DailyDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000001A /* DailyDate.swift */; };
+		AA0000000000001B /* SharedGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000001B /* SharedGame.swift */; };
 		AAWD000000000001 /* CodeBreakerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBWD000000000001 /* CodeBreakerWidget.swift */; };
 		AAWD000000000002 /* DailyDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000001A /* DailyDate.swift */; };
 		AAWD000000000003 /* WidgetL10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBWD000000000005 /* WidgetL10n.swift */; };
@@ -111,6 +112,7 @@
 		BB00000000000019 /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
 		BBUI000000000001 /* CodeBreakerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerUITests.swift; sourceTree = "<group>"; };
 		BB0000000000001A /* DailyDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyDate.swift; sourceTree = "<group>"; };
+		BB0000000000001B /* SharedGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedGame.swift; sourceTree = "<group>"; };
 		BBWD000000000001 /* CodeBreakerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBreakerWidget.swift; sourceTree = "<group>"; };
 		BBWD000000000002 /* CodeBreakerWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CodeBreakerWidget.entitlements; sourceTree = "<group>"; };
 		BBWD000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				BB00000000000018 /* MultiplayerView.swift */,
 				BB00000000000019 /* FeedbackView.swift */,
 				BB0000000000001A /* DailyDate.swift */,
+				BB0000000000001B /* SharedGame.swift */,
 				BB00000000000012 /* Localizable.strings */,
 				BB00000000000009 /* Assets.xcassets */,
 			);
@@ -399,6 +402,7 @@
 				AA00000000000018 /* MultiplayerView.swift in Sources */,
 				AA00000000000019 /* FeedbackView.swift in Sources */,
 				AA0000000000001A /* DailyDate.swift in Sources */,
+				AA0000000000001B /* SharedGame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,7 +630,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker.CodeBreakerWidget";
+				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker.widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -656,7 +660,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker.CodeBreakerWidget";
+				PRODUCT_BUNDLE_IDENTIFIER = "Jason-Wang.CodeBreaker.widget";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

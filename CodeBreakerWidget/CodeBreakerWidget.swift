@@ -55,11 +55,11 @@ struct DailyProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (DailyEntry) -> Void) {
-        completion(DailyEntry(date: .now, data: .load()))
+        completion(DailyEntry(date: .now, data: DailyWidgetData.load()))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<DailyEntry>) -> Void) {
-        let entry = DailyEntry(date: .now, data: .load())
+        let entry = DailyEntry(date: .now, data: DailyWidgetData.load())
         let calendar = DailyCalendar.gregorian
         let tomorrow = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: .now)!)
         completion(Timeline(entries: [entry], policy: .after(tomorrow)))
@@ -139,9 +139,7 @@ struct SmallWidgetView: View {
                 .font(.system(size: 10, weight: .medium))
                 .foregroundStyle(.white.opacity(0.5))
         }
-        .padding(12)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(darkBg)
     }
 }
 
@@ -227,21 +225,23 @@ struct MediumWidgetView: View {
                     }
                 }
 
-                let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
-                LazyVGrid(columns: columns, spacing: 1) {
-                    ForEach(0..<monthDays.count, id: \.self) { index in
-                        if let date = monthDays[index] {
-                            miniDayCell(date)
-                        } else {
-                            Color.clear.frame(width: 12, height: 12)
+                let weeks = stride(from: 0, to: monthDays.count, by: 7).map { start in
+                    Array(monthDays[start..<min(start + 7, monthDays.count)])
+                }
+                ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
+                    HStack(spacing: 1) {
+                        ForEach(0..<7, id: \.self) { column in
+                            if column < week.count, let date = week[column] {
+                                miniDayCell(date)
+                            } else {
+                                Color.clear.frame(width: 12, height: 12)
+                            }
                         }
                     }
                 }
             }
         }
-        .padding(12)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(darkBg)
     }
 
     private func miniDayCell(_ date: Date) -> some View {
@@ -319,7 +319,7 @@ struct CodeBreakerWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: DailyProvider()) { entry in
             CodeBreakerWidgetEntryView(entry: entry)
-                .containerBackground(.clear, for: .widget)
+                .containerBackground(Color(red: 0.10, green: 0.14, blue: 0.22), for: .widget)
                 .widgetURL(URL(string: "codebreaker://daily"))
         }
         .configurationDisplayName(W("widget.display"))

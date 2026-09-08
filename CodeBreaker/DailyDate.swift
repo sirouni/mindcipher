@@ -12,12 +12,8 @@ enum DailyCalendar {
     }
 
     static func dayKey(_ date: Date = Date()) -> String {
-        let formatter = DateFormatter()
-        formatter.calendar = gregorian
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = .current
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
+        let parts = gregorian.dateComponents([.year, .month, .day], from: date)
+        return String(format: "%04d-%02d-%02d", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
     }
 
     static func stableSeed(_ key: String) -> UInt64 {
