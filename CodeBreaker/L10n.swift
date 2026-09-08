@@ -352,6 +352,7 @@ private let strings: [String: [String: String]] = [
     "daily.attendance": Tr(zh: "连续出勤", en: "Attendance streak", hant: "連續出勤", ja: "連続出勤", ko: "연속 출근", es: "Racha de asistencia", ar: "أيام حضور متتالية", de: "Anwesenheitsserie", fr: "Série de présence", he: "רצף נוכחות", pt: "Sequência de presença", tr: "Devam serisi").dict,
     "home.today": Tr(zh: "今日案件", en: "Today's case", hant: "今日案件", ja: "本日の事件", ko: "오늘의 사건", es: "Caso de hoy", ar: "قضية اليوم", de: "Fall des Tages", fr: "Affaire du jour", he: "התיק של היום", pt: "Caso de hoje", tr: "Günün dosyası").dict,
     "home.volume": Tr(zh: "卷宗", en: "Volume", hant: "卷宗", ja: "巻", ko: "권", es: "Volumen", ar: "المجلد", de: "Band", fr: "Volume", he: "כרך", pt: "Volume", tr: "Cilt").dict,
+    "tutorial.manual": Tr(zh: "手册", en: "Manual", hant: "手冊", ja: "手引き", ko: "매뉴얼", es: "Manual", ar: "الدليل", de: "Handbuch", fr: "Manuel", he: "מדריך", pt: "Manual", tr: "Kılavuz").dict,
     "home.caption": Tr(zh: "卷宗索引", en: "Case files", hant: "卷宗索引", ja: "事件ファイル", ko: "사건 파일", es: "Expedientes", ar: "ملفات القضايا", de: "Fallakten", fr: "Dossiers", he: "תיקי חקירה", pt: "Dossiês", tr: "Dosyalar").dict,
     "home.index": Tr(zh: "索引", en: "Index", hant: "索引", ja: "索引", ko: "색인", es: "Índice", ar: "الفهرس", de: "Register", fr: "Index", he: "אינדקס", pt: "Índice", tr: "Dizin").dict,
     "home.ledger": Tr(zh: "账本", en: "Ledger", hant: "帳本", ja: "台帳", ko: "장부", es: "Libro", ar: "السجل", de: "Kontobuch", fr: "Registre", he: "פנקס", pt: "Livro", tr: "Defter").dict,

@@ -167,7 +167,7 @@ struct ChallengeGameView: View {
                                     .foregroundStyle(AppTheme.textSecondary)
                                 Spacer()
                                 Text("\(challenge.codeLength)")
-                                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                    .font(AppFont.mono(14, weight: .bold))
                                     .foregroundStyle(AppTheme.textPrimary)
                             }
                             HStack {
@@ -176,7 +176,7 @@ struct ChallengeGameView: View {
                                     .foregroundStyle(AppTheme.textSecondary)
                                 Spacer()
                                 Text("\(challenge.colorCount)")
-                                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                    .font(AppFont.mono(14, weight: .bold))
                                     .foregroundStyle(AppTheme.textPrimary)
                             }
                             HStack {
@@ -185,7 +185,7 @@ struct ChallengeGameView: View {
                                     .foregroundStyle(AppTheme.textSecondary)
                                 Spacer()
                                 Text("\(challenge.maxAttempts)")
-                                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                    .font(AppFont.mono(14, weight: .bold))
                                     .foregroundStyle(AppTheme.textPrimary)
                             }
                         }
@@ -217,10 +217,10 @@ struct ChallengeGameView: View {
                         } label: {
                             Text(L("challenge.accept"))
                                 .font(AppFont.display(18, weight: .bold))
-                                .foregroundStyle(Color.white)
+                                .foregroundStyle(AppTheme.paper)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
+                                .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
                         }
                     }
                     .padding(24)

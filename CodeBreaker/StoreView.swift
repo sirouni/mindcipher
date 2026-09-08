@@ -28,37 +28,30 @@ struct StoreView: View {
     }
 
     private var header: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "bag.fill")
-                .font(.system(size: 40))
-                .foregroundStyle(AppTheme.accent)
-            Text(L("store.title"))
-                .font(AppFont.display(28, weight: .black))
+        VStack(alignment: .leading, spacing: 3) {
+            DossierCaption(text: L("store.title"))
+            Text(L("store.clearance"))
+                .font(AppFont.display(26, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
+            Rectangle().fill(AppTheme.ink).frame(height: 1.5).padding(.top, 6)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var currentBalance: some View {
         HStack(spacing: 12) {
-            Image(systemName: "lightbulb.fill")
+            Image(systemName: "person.fill.questionmark")
                 .font(.system(size: 20))
                 .foregroundStyle(AppTheme.warning)
             VStack(alignment: .leading, spacing: 2) {
-                Text(L("store.hints"))
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(AppTheme.textSecondary)
+                DossierCaption(text: L("store.informant"))
                 Text("\(hintCoins.coins)")
-                    .font(AppFont.display(24, weight: .black))
+                    .font(AppFont.display(24, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
             }
             Spacer()
             if store.isPro {
-                Label("Pro", systemImage: "checkmark.seal.fill")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(AppTheme.accent)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(AppTheme.accent.opacity(0.1), in: Capsule())
+                StampView(text: L("store.clearance"), tone: .red, size: 9, rotation: -8)
             }
         }
         .padding(16)
@@ -66,160 +59,119 @@ struct StoreView: View {
     }
 
     private var proSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(L("store.unlock"))
-                .font(AppFont.display(17, weight: .bold))
-                .foregroundStyle(AppTheme.textPrimary)
+        VStack(alignment: .leading, spacing: 8) {
+            DossierCaption(text: L("store.unlock"))
+                .padding(.leading, 2)
 
             if store.isPro {
                 HStack(spacing: 8) {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image(systemName: "checkmark.seal")
                         .foregroundStyle(AppTheme.accent)
                     Text(L("store.pro.done"))
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundStyle(AppTheme.accent)
+                        .font(AppFont.body(14, weight: .medium))
+                        .foregroundStyle(AppTheme.textPrimary)
                 }
                 .padding(14)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .paperCard()
             } else {
-                VStack(spacing: 8) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "lock.open.fill")
-                            .font(.system(size: 16))
-                            .foregroundStyle(AppTheme.accent)
-                        VStack(alignment: .leading, spacing: 2) {
+                let proProduct = store.products.first(where: { $0.id == StoreProduct.proUnlock.rawValue })
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text(L("paywall.unlock"))
-                                .font(.system(size: 15, weight: .bold))
+                                .font(AppFont.display(17, weight: .bold))
                                 .foregroundStyle(AppTheme.textPrimary)
                             Text(L("store.pro.blurb"))
-                                .font(.system(size: 12, weight: .medium))
+                                .font(AppFont.body(12))
                                 .foregroundStyle(AppTheme.textSecondary)
                         }
                         Spacer()
+                        StampView(text: proProduct?.displayPrice ?? "$2.99", tone: .red, size: 13, rotation: -8)
+                            .padding(.top, 4)
                     }
 
-                    let proProduct = store.products.first(where: { $0.id == StoreProduct.proUnlock.rawValue })
                     Button {
                         if let product = proProduct {
                             Task { await store.purchase(product) }
                         }
-                    } label: {
-                        Text(proProduct?.displayPrice ?? "$2.99")
-                            .font(AppFont.display(16, weight: .bold))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
-                    }
+                    } label: { Text(L("paywall.unlock")) }
+                    .buttonStyle(InkButtonStyle())
                     .disabled(store.purchaseInProgress || proProduct == nil)
                 }
                 .padding(14)
-                .paperCard()
+                .paperCard(fill: AppTheme.bgCardLight)
             }
         }
     }
 
     private var hintSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(L("store.hints"))
-                .font(AppFont.display(17, weight: .bold))
-                .foregroundStyle(AppTheme.textPrimary)
+        VStack(alignment: .leading, spacing: 8) {
+            DossierCaption(text: L("store.informant"))
+                .padding(.leading, 2)
 
             let hintProducts = store.products.filter { p in
                 [StoreProduct.hintPack5.rawValue, StoreProduct.hintPack15.rawValue, StoreProduct.hintPack50.rawValue].contains(p.id)
             }
 
-            if hintProducts.isEmpty {
-                ForEach([StoreProduct.hintPack5, .hintPack15, .hintPack50], id: \.rawValue) { sp in
-                    hintFallbackRow(sp)
-                }
-            } else {
-                ForEach(hintProducts, id: \.id) { product in
-                    hintProductRow(product)
+            VStack(spacing: 0) {
+                if hintProducts.isEmpty {
+                    let fallbacks: [StoreProduct] = [.hintPack5, .hintPack15, .hintPack50]
+                    ForEach(Array(fallbacks.enumerated()), id: \.element.rawValue) { i, sp in
+                        hintRow(index: i + 1, title: sp.displayName, detail: sp.description, price: fallbackPrice(sp), last: i == fallbacks.count - 1, action: nil)
+                    }
+                } else {
+                    ForEach(Array(hintProducts.enumerated()), id: \.element.id) { i, product in
+                        let sp = StoreProduct(rawValue: product.id)
+                        hintRow(index: i + 1, title: sp?.displayName ?? product.displayName, detail: sp?.description ?? "", price: product.displayPrice, last: i == hintProducts.count - 1) {
+                            Task { await store.purchase(product) }
+                        }
+                    }
                 }
             }
+            .paperCard()
         }
     }
 
-    private func hintFallbackRow(_ sp: StoreProduct) -> some View {
-        let price: String = {
-            switch sp {
-            case .hintPack5: return "$0.99"
-            case .hintPack15: return "$1.99"
-            case .hintPack50: return "$4.99"
-            default: return ""
-            }
-        }()
-        return HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(AppTheme.warning.opacity(0.1))
-                    .frame(width: 44, height: 44)
-                Image(systemName: "lightbulb.fill")
-                    .font(.system(size: 18))
-                    .foregroundStyle(AppTheme.warning)
-            }
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(sp.displayName)
-                    .font(.system(size: 15, weight: .bold))
-                    .foregroundStyle(AppTheme.textPrimary)
-                Text(sp.description)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(AppTheme.textSecondary)
-            }
-
-            Spacer()
-
-            Text(price)
-                .font(AppFont.display(14, weight: .bold))
-                .foregroundStyle(.white)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(AppTheme.warning, in: Capsule())
+    private func fallbackPrice(_ sp: StoreProduct) -> String {
+        switch sp {
+        case .hintPack5: return "$0.99"
+        case .hintPack15: return "$1.99"
+        case .hintPack50: return "$4.99"
+        default: return ""
         }
-        .padding(12)
-        .paperCard()
     }
 
-    private func hintProductRow(_ product: Product) -> some View {
-        let storeProduct = StoreProduct(rawValue: product.id)
-        return HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(AppTheme.warning.opacity(0.1))
-                    .frame(width: 44, height: 44)
-                Image(systemName: "lightbulb.fill")
-                    .font(.system(size: 18))
-                    .foregroundStyle(AppTheme.warning)
-            }
-
+    private func hintRow(index: Int, title: String, detail: String, price: String, last: Bool, action: (() -> Void)?) -> some View {
+        HStack(spacing: 10) {
+            Text(romanNumeral(index))
+                .font(AppFont.label(11, weight: .regular))
+                .foregroundStyle(AppTheme.textSecondary)
+                .frame(width: 26, alignment: .leading)
             VStack(alignment: .leading, spacing: 2) {
-                Text(storeProduct?.displayName ?? product.displayName)
-                    .font(.system(size: 15, weight: .bold))
-                    .foregroundStyle(AppTheme.textPrimary)
-                Text(storeProduct?.description ?? "")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(AppTheme.textSecondary)
-            }
-
-            Spacer()
-
-            Button {
-                Task { await store.purchase(product) }
-            } label: {
-                Text(product.displayPrice)
+                Text(title)
                     .font(AppFont.display(14, weight: .bold))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 8)
-                    .background(AppTheme.warning, in: Capsule())
+                    .foregroundStyle(AppTheme.textPrimary)
+                Text(detail)
+                    .font(AppFont.body(11))
+                    .foregroundStyle(AppTheme.textSecondary)
             }
-            .disabled(store.purchaseInProgress)
+            Spacer()
+            Button {
+                action?()
+            } label: {
+                Text(price)
+                    .font(AppFont.label(12, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .overlay(RoundedRectangle(cornerRadius: 2).stroke(AppTheme.ink, lineWidth: 1))
+            }
+            .disabled(action == nil || store.purchaseInProgress)
         }
-        .padding(12)
-        .paperCard()
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .overlay(alignment: .bottom) { if !last { TypewriterRule().padding(.horizontal, 14) } }
     }
 
     private var restoreButton: some View {
@@ -227,7 +179,7 @@ struct StoreView: View {
             Task { await store.restorePurchases() }
         } label: {
             Text(L("paywall.restore"))
-                .font(.system(size: 14, weight: .medium))
+                .font(AppFont.label(12, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
         }
         .padding(.top, 8)
@@ -284,22 +236,20 @@ struct PaywallView: View {
     var body: some View {
         VStack(spacing: 20) {
             Capsule()
-                .fill(Color.black.opacity(0.12))
+                .fill(AppTheme.rule)
                 .frame(width: 36, height: 4)
                 .padding(.top, 10)
 
-            Image(systemName: reason.isLie ? "theatermask.and.paintbrush.fill" : "lock.open.fill")
-                .font(.system(size: 36, weight: .bold))
-                .foregroundStyle(accent)
-                .symbolEffect(.pulse, options: .nonRepeating)
+            StampView(text: L("store.clearance"), tone: .red, size: 14, rotation: -6)
+                .padding(.top, 8)
 
             VStack(spacing: 8) {
                 Text(reason.title)
-                    .font(AppFont.display(24, weight: .black))
+                    .font(AppFont.display(24, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                     .multilineTextAlignment(.center)
                 Text(reason.subtitle)
-                    .font(.system(size: 15, weight: .medium))
+                    .font(AppFont.body(15))
                     .foregroundStyle(AppTheme.textSecondary)
                     .multilineTextAlignment(.center)
             }
@@ -309,7 +259,7 @@ struct PaywallView: View {
                 benefit("theatermask.and.paintbrush.fill", L("paywall.benefit.lie"), AppTheme.danger)
                 benefit("target", L("paywall.benefit.classic"), AppTheme.accent)
                 benefit("infinity", L("paywall.benefit.free"), AppTheme.warning)
-                benefit("slider.horizontal.3", L("paywall.benefit.editor"), Color(red: 0.9, green: 0.4, blue: 0.6))
+                benefit("slider.horizontal.3", L("paywall.benefit.editor"), AppTheme.textSecondary)
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -329,13 +279,13 @@ struct PaywallView: View {
                     Text(proProduct?.displayPrice ?? "$2.99")
                         .font(AppFont.display(18, weight: .bold))
                     Text(L("paywall.price"))
-                        .font(.system(size: 12, weight: .medium))
+                        .font(AppFont.label(11, weight: .regular))
                         .opacity(0.9)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(AppTheme.paper)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(accent, in: RoundedRectangle(cornerRadius: 14))
+                .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
             }
             .disabled(store.purchaseInProgress)
 

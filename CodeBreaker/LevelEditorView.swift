@@ -45,27 +45,29 @@ struct LevelEditorView: View {
     }
 
     private var header: some View {
-        VStack(spacing: 4) {
-            Image(systemName: "slider.horizontal.3")
-                .font(.system(size: 36))
-                .foregroundStyle(AppTheme.accent)
+        VStack(alignment: .leading, spacing: 3) {
+            DossierCaption(text: L("menu.editor"))
+            Text(L("editor.title"))
+                .font(AppFont.display(24, weight: .bold))
+                .foregroundStyle(AppTheme.textPrimary)
             Text(L("paywall.editor.sub"))
-                .font(.system(size: 14, weight: .medium))
+                .font(AppFont.body(13))
                 .foregroundStyle(AppTheme.textSecondary)
+            Rectangle().fill(AppTheme.ink).frame(height: 1.5).padding(.top, 6)
         }
-        .padding(.bottom, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func paramSection(_ title: String, value: Binding<Int>, range: ClosedRange<Int>, format: (Int) -> String) -> some View {
         VStack(spacing: 8) {
             HStack {
                 Text(title)
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                 Spacer()
                 Text(format(value.wrappedValue))
-                    .font(.system(size: 15, weight: .bold, design: .monospaced))
-                    .foregroundStyle(AppTheme.accent)
+                    .font(AppFont.mono(15, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
             }
 
             HStack(spacing: 8) {
@@ -75,12 +77,12 @@ struct LevelEditorView: View {
                     } label: {
                         Text("\(n)")
                             .font(AppFont.display(14, weight: .bold))
-                            .foregroundStyle(value.wrappedValue == n ? Color.white : AppTheme.textSecondary)
+                            .foregroundStyle(value.wrappedValue == n ? AppTheme.paper : AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
                             .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(value.wrappedValue == n ? AppTheme.accent : AppTheme.bgCardLight)
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(value.wrappedValue == n ? AppTheme.ink : AppTheme.bgCardLight)
                             )
                     }
                     .buttonStyle(.plain)
@@ -95,7 +97,7 @@ struct LevelEditorView: View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Allow repeat colors")
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                 Text("Same color can appear multiple times")
                     .font(.system(size: 11, weight: .medium))
@@ -114,11 +116,11 @@ struct LevelEditorView: View {
         VStack(spacing: 8) {
             HStack {
                 Text("Time limit")
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                 Spacer()
                 Text(timeLimit == 0 ? "Off" : "\(timeLimit)s")
-                    .font(.system(size: 15, weight: .bold, design: .monospaced))
+                    .font(AppFont.mono(15, weight: .bold))
                     .foregroundStyle(timeLimit > 0 ? AppTheme.warning : AppTheme.textSecondary)
             }
 
@@ -129,12 +131,12 @@ struct LevelEditorView: View {
                     } label: {
                         Text(t == 0 ? "Off" : "\(t)s")
                             .font(AppFont.display(12, weight: .bold))
-                            .foregroundStyle(timeLimit == t ? Color.white : AppTheme.textSecondary)
+                            .foregroundStyle(timeLimit == t ? AppTheme.paper : AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
                             .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(timeLimit == t ? (t > 0 ? AppTheme.warning : AppTheme.accent) : AppTheme.bgCardLight)
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(timeLimit == t ? AppTheme.ink : AppTheme.bgCardLight)
                             )
                     }
                     .buttonStyle(.plain)
@@ -150,10 +152,10 @@ struct LevelEditorView: View {
         let label: String
         let color: Color
         switch score {
-        case 0..<30: label = L("diff.easy"); color = AppTheme.accent
-        case 30..<50: label = L("diff.medium"); color = Color(red: 0.2, green: 0.8, blue: 0.4)
+        case 0..<30: label = L("diff.easy"); color = AppTheme.textSecondary
+        case 30..<50: label = L("diff.medium"); color = AppTheme.ink
         case 50..<70: label = L("editor.diff.challenge"); color = AppTheme.warning
-        case 70..<85: label = L("diff.hard"); color = Color(red: 1.0, green: 0.4, blue: 0.2)
+        case 70..<85: label = L("diff.hard"); color = AppTheme.warning
         default: label = L("editor.diff.hell"); color = AppTheme.danger
         }
 
@@ -228,10 +230,10 @@ struct LevelEditorView: View {
                 Text(L("editor.start"))
             }
             .font(AppFont.display(17, weight: .bold))
-            .foregroundStyle(Color.white)
+            .foregroundStyle(AppTheme.paper)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
-            .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
+            .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
         }
     }
 

@@ -46,22 +46,24 @@ struct FeedbackView: View {
     }
 
     private var header: some View {
-        VStack(spacing: 10) {
-            Image(systemName: "envelope.open.fill")
-                .font(.system(size: 36))
-                .foregroundStyle(AppTheme.accent)
+        VStack(alignment: .leading, spacing: 3) {
+            DossierCaption(text: L("feedback.section"))
+            Text(L("feedback.title"))
+                .font(AppFont.display(24, weight: .bold))
+                .foregroundStyle(AppTheme.textPrimary)
             Text(L("feedback.lead"))
-                .font(.system(size: 15, weight: .medium))
+                .font(AppFont.body(14))
                 .foregroundStyle(AppTheme.textSecondary)
-                .multilineTextAlignment(.center)
+                .padding(.top, 4)
+            Rectangle().fill(AppTheme.ink).frame(height: 1.5).padding(.top, 6)
         }
-        .padding(.top, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var howItWorks: some View {
         VStack(alignment: .leading, spacing: 12) {
             noteRow(icon: "checkmark.seal.fill", text: L("feedback.pro"))
-            Divider().overlay(AppTheme.textMuted.opacity(0.2))
+            TypewriterRule()
             noteRow(icon: "globe", text: L("feedback.public"))
         }
         .padding(16)
@@ -88,15 +90,15 @@ struct FeedbackView: View {
             } label: {
                 VStack(spacing: 4) {
                     Text(L("feedback.github"))
-                        .font(.system(size: 16, weight: .bold))
+                        .font(AppFont.label(14, weight: .bold))
                     Text(L("feedback.github.sub"))
                         .font(.system(size: 12, weight: .medium))
                         .opacity(0.85)
                 }
-                .foregroundStyle(.white)
+                .foregroundStyle(AppTheme.paper)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
+                .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
             }
             .accessibilityLabel(L("feedback.github"))
             .accessibilityIdentifier("feedback.github")
@@ -106,7 +108,7 @@ struct FeedbackView: View {
             } label: {
                 VStack(spacing: 4) {
                     Text(L("feedback.email"))
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(AppFont.label(14, weight: .bold))
                     Text(L("feedback.email.sub"))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AppTheme.textSecondary)

@@ -20,9 +20,12 @@ struct TutorialView: View {
                             .paperCard()
                     }
                     Spacer()
-                    Text("\(page + 1)/\(totalPages)")
-                        .font(.system(size: 13, weight: .bold, design: .monospaced))
-                        .foregroundStyle(AppTheme.textMuted)
+                    HStack(spacing: 6) {
+                        DossierCaption(text: L("tutorial.manual"))
+                        Text("\(romanNumeral(page + 1)) / \(romanNumeral(totalPages))")
+                            .font(AppFont.label(11, weight: .bold))
+                            .foregroundStyle(AppTheme.textPrimary)
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
@@ -45,9 +48,9 @@ struct TutorialView: View {
 
                 HStack(spacing: 6) {
                     ForEach(0..<totalPages, id: \.self) { i in
-                        Circle()
-                            .fill(i == page ? AppTheme.accent : AppTheme.textMuted.opacity(0.3))
-                            .frame(width: 8, height: 8)
+                        RoundedRectangle(cornerRadius: 1)
+                            .fill(i == page ? AppTheme.ink : AppTheme.rule)
+                            .frame(width: i == page ? 16 : 8, height: 3)
                             .animation(.easeInOut(duration: 0.2), value: page)
                     }
                 }
@@ -71,9 +74,9 @@ struct TutorialView: View {
                     } label: {
                         Text(page < totalPages - 1 ? L("tutorial.next") : L("tutorial.go"))
                             .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(AppTheme.paper)
                             .frame(maxWidth: .infinity).padding(.vertical, 14)
-                            .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
+                            .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
                     }
                 }
                 .padding(.horizontal, 28)
@@ -95,8 +98,8 @@ struct TutorialView: View {
             // 模拟密码栏
             HStack(spacing: 8) {
                 ForEach(0..<4, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(AppTheme.bgCardLight)
+                    RoundedRectangle(cornerRadius: 3)
+                        .stroke(AppTheme.rule, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
                         .frame(width: 44, height: 44)
                         .overlay(
                             Image(systemName: "questionmark")
@@ -150,7 +153,7 @@ struct TutorialView: View {
             HStack(spacing: 8) {
                 PegView(color: .red, size: 40)
                 PegView(color: .green, size: 40)
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 4)
                     .fill(AppTheme.bgCardLight)
                     .frame(width: 44, height: 44)
                     .overlay(
@@ -158,7 +161,7 @@ struct TutorialView: View {
                             .stroke(AppTheme.accent.opacity(0.5), style: StrokeStyle(lineWidth: 2, dash: [4,4]))
                             .frame(width: 30, height: 30)
                     )
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: 4)
                     .fill(AppTheme.bgCardLight)
                     .frame(width: 44, height: 44)
             }
@@ -272,7 +275,7 @@ struct TutorialView: View {
                     Color.clear.frame(width: 36, height: 22)
                     ForEach(1...4, id: \.self) { i in
                         Text("P\(i)")
-                            .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            .font(AppFont.mono(11, weight: .bold))
                             .foregroundStyle(AppTheme.accent)
                             .frame(width: 36, height: 22)
                     }
@@ -323,7 +326,7 @@ struct TutorialView: View {
     private func noteDemoCell(_ marker: NoteMarker?) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 5)
-                .fill(marker == .eliminated ? AppTheme.danger.opacity(0.1) : marker == .confirmed ? AppTheme.accent.opacity(0.12) : Color(white: 0.94))
+                .fill(marker == .eliminated ? AppTheme.danger.opacity(0.1) : marker == .confirmed ? AppTheme.accent.opacity(0.12) : AppTheme.paperFolder)
                 .frame(width: 32, height: 32)
             if marker == .eliminated {
                 Image(systemName: "xmark").font(.system(size: 12, weight: .bold)).foregroundStyle(AppTheme.danger)
@@ -366,7 +369,7 @@ struct TutorialView: View {
                         .paperCard()
                     Text("3")
                         .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AppTheme.paper)
                         .frame(width: 20, height: 20)
                         .background(AppTheme.warning, in: Circle())
                         .offset(x: 4, y: -4)
@@ -436,17 +439,15 @@ struct TutorialView: View {
 
     private var liePage: some View {
         VStack(spacing: 20) {
-            Image(systemName: "theatermask.and.paintbrush.fill")
-                .font(.system(size: 36))
-                .foregroundStyle(AppTheme.danger)
+            StampView(text: "Top Secret", tone: .red, size: 12, rotation: -8)
 
             Text(L("lie.mode"))
                 .font(AppFont.display(24, weight: .black))
-                .foregroundStyle(AppTheme.danger)
+                .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 10) {
                 HStack(spacing: 6) {
-                    Text("3").font(.system(size: 11, weight: .bold, design: .monospaced)).foregroundStyle(AppTheme.textMuted).frame(width: 16)
+                    Text("III").font(AppFont.label(10, weight: .regular)).foregroundStyle(AppTheme.textSecondary).frame(width: 22, alignment: .leading)
                     PegView(color: .blue, size: 26); PegView(color: .red, size: 26); PegView(color: .yellow, size: 26); PegView(color: .green, size: 26)
                     Spacer()
                     FeedbackDotView(type: .exact, size: 16)
@@ -458,7 +459,7 @@ struct TutorialView: View {
                 .paperCard()
 
                 HStack(spacing: 6) {
-                    Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10)).foregroundStyle(AppTheme.danger)
+                    Text("IV").font(AppFont.label(10, weight: .bold)).foregroundStyle(AppTheme.danger).frame(width: 22, alignment: .leading)
                     PegView(color: .red, size: 26); PegView(color: .green, size: 26); PegView(color: .blue, size: 26); PegView(color: .yellow, size: 26)
                     Spacer()
                     FeedbackDotView(type: .partial, size: 16)
@@ -467,7 +468,10 @@ struct TutorialView: View {
                     FeedbackDotView(type: .miss, size: 16)
                 }
                 .padding(8)
-                .background(RoundedRectangle(cornerRadius: 8).fill(AppTheme.danger.opacity(0.1)).overlay(RoundedRectangle(cornerRadius: 8).stroke(AppTheme.danger.opacity(0.3), lineWidth: 1)))
+                .overlay(alignment: .trailing) {
+                    StampView(text: L("lie.suspect"), tone: .red, size: 7, rotation: -8).padding(.trailing, 6).offset(y: -14)
+                }
+                .background(RoundedRectangle(cornerRadius: 3).fill(AppTheme.danger.opacity(0.07)).overlay(RoundedRectangle(cornerRadius: 3).stroke(AppTheme.danger, style: StrokeStyle(lineWidth: 1, dash: [4, 3]))))
             }
             .padding(.horizontal, 8)
             .boardLayout()

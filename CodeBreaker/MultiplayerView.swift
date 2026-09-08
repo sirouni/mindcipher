@@ -14,8 +14,6 @@ struct MultiplayerView: View {
     @State private var showComparison = false
     @State private var gameRound = 0
 
-    private let accent = Color(red: 0.2, green: 0.8, blue: 0.6)
-
     var body: some View {
         ZStack {
             AppTheme.paper.ignoresSafeArea()
@@ -82,10 +80,10 @@ struct MultiplayerView: View {
 
             VStack(spacing: 8) {
                 ZStack {
-                    Circle().fill(accent.opacity(0.12)).frame(width: 80, height: 80)
+                    Circle().fill(AppTheme.ink.opacity(0.12)).frame(width: 80, height: 80)
                     Image(systemName: "wifi")
                         .font(.system(size: 36))
-                        .foregroundStyle(accent)
+                        .foregroundStyle(AppTheme.ink)
                 }
                 Text(L("online.title"))
                     .font(AppFont.display(24, weight: .black))
@@ -107,12 +105,12 @@ struct MultiplayerView: View {
                     Text(L("online.find"))
                 }
                 .font(AppFont.display(17, weight: .bold))
-                .foregroundStyle(.white)
+                .foregroundStyle(AppTheme.paper)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
                 .background(
-                    GameCenterManager.shared.isAuthenticated ? accent : accent.opacity(0.5),
-                    in: RoundedRectangle(cornerRadius: 14)
+                    GameCenterManager.shared.isAuthenticated ? AppTheme.ink : AppTheme.ink.opacity(0.5),
+                    in: RoundedRectangle(cornerRadius: 4)
                 )
             }
 
@@ -134,18 +132,18 @@ struct MultiplayerView: View {
                     HStack {
                         Text(diff.localizedName)
                             .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(manager.selectedDifficulty == diff ? .white : AppTheme.textPrimary)
+                            .foregroundStyle(manager.selectedDifficulty == diff ? AppTheme.paper : AppTheme.textPrimary)
                         Spacer()
                         Text(diff.statsLabel)
-                            .font(.system(size: 12, weight: .medium, design: .monospaced))
-                            .foregroundStyle(manager.selectedDifficulty == diff ? .white.opacity(0.8) : AppTheme.textSecondary)
+                            .font(AppFont.mono(12, weight: .medium))
+                            .foregroundStyle(manager.selectedDifficulty == diff ? AppTheme.paper.opacity(0.8) : AppTheme.textSecondary)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
                     .contentShape(Rectangle())
                     .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(manager.selectedDifficulty == diff ? accent : .clear)
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(manager.selectedDifficulty == diff ? AppTheme.ink : .clear)
                     )
                 }
                 .buttonStyle(.plain)
@@ -158,7 +156,7 @@ struct MultiplayerView: View {
     private var rulesCard: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
-                Image(systemName: "info.circle.fill").foregroundStyle(accent)
+                Image(systemName: "info.circle.fill").foregroundStyle(AppTheme.ink)
                 Text(L("online.rules.title"))
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
@@ -184,10 +182,10 @@ struct MultiplayerView: View {
     private func statusView(icon: String, title: String, subtitle: String? = nil, showCancel: Bool) -> some View {
         VStack(spacing: 20) {
             Spacer()
-            ProgressView().scaleEffect(1.5).tint(accent)
+            ProgressView().scaleEffect(1.5).tint(AppTheme.ink)
             Image(systemName: icon)
                 .font(.system(size: 32))
-                .foregroundStyle(accent)
+                .foregroundStyle(AppTheme.ink)
             Text(title)
                 .font(AppFont.display(17, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
@@ -223,7 +221,7 @@ struct MultiplayerView: View {
             }
 
             Text(manager.selectedDifficulty.localizedName)
-                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                .font(AppFont.mono(14, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
@@ -235,12 +233,12 @@ struct MultiplayerView: View {
                     .frame(width: 100, height: 100)
                 Circle()
                     .trim(from: 0, to: CGFloat(count) / 3.0)
-                    .stroke(accent, style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                    .stroke(AppTheme.ink, style: StrokeStyle(lineWidth: 6, lineCap: .round))
                     .frame(width: 100, height: 100)
                     .rotationEffect(.degrees(-90))
                 Text("\(count)")
                     .font(AppFont.display(48, weight: .black))
-                    .foregroundStyle(accent)
+                    .foregroundStyle(AppTheme.ink)
             }
 
             Spacer()
@@ -251,11 +249,11 @@ struct MultiplayerView: View {
         VStack(spacing: 8) {
             ZStack {
                 Circle()
-                    .fill((isLocal ? accent : AppTheme.warning).opacity(0.15))
+                    .fill((isLocal ? AppTheme.ink : AppTheme.warning).opacity(0.15))
                     .frame(width: 50, height: 50)
                 Image(systemName: "person.fill")
                     .font(.system(size: 22))
-                    .foregroundStyle(isLocal ? accent : AppTheme.warning)
+                    .foregroundStyle(isLocal ? AppTheme.ink : AppTheme.warning)
             }
             Text(name)
                 .font(.system(size: 13, weight: .semibold))
@@ -293,11 +291,11 @@ struct MultiplayerView: View {
         HStack(spacing: 8) {
             Image(systemName: "person.fill")
                 .font(.system(size: 11))
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(AppTheme.paper.opacity(0.8))
 
             Text(manager.opponentName)
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(AppTheme.paper)
                 .lineLimit(1)
 
             Spacer()
@@ -312,8 +310,7 @@ struct MultiplayerView: View {
         .padding(.vertical, 8)
         .background(
             Capsule()
-                .fill(Color.black.opacity(0.55))
-                .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+                .fill(AppTheme.ink.opacity(0.9))
         )
     }
 
@@ -323,32 +320,32 @@ struct MultiplayerView: View {
             HStack(spacing: 3) {
                 Image(systemName: "checkmark.circle.fill").font(.system(size: 11))
                 Text("\(manager.opponentAttempts) \(L("online.steps"))")
-                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                    .font(AppFont.mono(11, weight: .bold))
             }
-            .foregroundStyle(Color(red: 0.3, green: 1.0, blue: 0.5))
+            .foregroundStyle(AppTheme.paper)
         } else {
             HStack(spacing: 3) {
                 Image(systemName: "xmark.circle.fill").font(.system(size: 11))
                 Text(L("result.lose"))
                     .font(.system(size: 11, weight: .bold))
             }
-            .foregroundStyle(Color(red: 1.0, green: 0.5, blue: 0.5))
+            .foregroundStyle(AppTheme.accent)
         }
     }
 
     private var opponentProgressBadge: some View {
         HStack(spacing: 4) {
             Text("\(manager.opponentGuessCount)/\(manager.gameMaxAttempts)")
-                .font(.system(size: 11, weight: .bold, design: .monospaced))
-                .foregroundStyle(.white.opacity(0.9))
+                .font(AppFont.mono(11, weight: .bold))
+                .foregroundStyle(AppTheme.paper.opacity(0.9))
 
             if manager.opponentGuessCount > 0 {
                 HStack(spacing: 2) {
                     ForEach(0..<manager.opponentLastExact, id: \.self) { _ in
-                        Circle().fill(accent).frame(width: 6, height: 6)
+                        Circle().fill(AppTheme.paper).frame(width: 6, height: 6)
                     }
                     ForEach(0..<manager.opponentLastPartial, id: \.self) { _ in
-                        FeedbackTriangle().fill(AppTheme.warning).frame(width: 6, height: 6)
+                        Circle().stroke(AppTheme.paper, lineWidth: 1.5).frame(width: 6, height: 6)
                     }
                 }
             }
@@ -359,7 +356,7 @@ struct MultiplayerView: View {
 
     private var comparisonOverlay: some View {
         ZStack {
-            Color.black.opacity(0.5).ignoresSafeArea()
+            AppTheme.ink.opacity(0.45).ignoresSafeArea()
                 .onTapGesture {}
 
             VStack(spacing: 20) {
@@ -411,10 +408,10 @@ struct MultiplayerView: View {
                                 Text(L("online.rematch"))
                             }
                             .font(AppFont.display(17, weight: .bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(AppTheme.paper)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .background(accent, in: RoundedRectangle(cornerRadius: 14))
+                            .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
                         }
                     }
 
@@ -430,9 +427,8 @@ struct MultiplayerView: View {
             }
             .padding(28)
             .background(
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(Color.white.opacity(0.95))
-                    .shadow(color: .black.opacity(0.15), radius: 20)
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(AppTheme.bgCardLight)
             )
             .padding(24)
         }
@@ -442,11 +438,11 @@ struct MultiplayerView: View {
         VStack(spacing: 10) {
             ZStack {
                 Circle()
-                    .fill((isWinner ? accent : AppTheme.textMuted).opacity(0.15))
+                    .fill((isWinner ? AppTheme.ink : AppTheme.textMuted).opacity(0.15))
                     .frame(width: 48, height: 48)
                 Image(systemName: won ? "checkmark.circle.fill" : "xmark.circle.fill")
                     .font(.system(size: 24))
-                    .foregroundStyle(won ? accent : AppTheme.danger)
+                    .foregroundStyle(won ? AppTheme.ink : AppTheme.danger)
             }
 
             Text(name)
@@ -457,8 +453,8 @@ struct MultiplayerView: View {
 
             if won {
                 Text("\(attempts) \(L("online.steps"))")
-                    .font(.system(size: 15, weight: .black, design: .monospaced))
-                    .foregroundStyle(accent)
+                    .font(AppFont.mono(15, weight: .black))
+                    .foregroundStyle(AppTheme.ink)
             } else {
                 Text(L("result.lose"))
                     .font(.system(size: 15, weight: .bold))
@@ -466,7 +462,7 @@ struct MultiplayerView: View {
             }
 
             Text("\(elapsed)s")
-                .font(.system(size: 12, weight: .medium, design: .monospaced))
+                .font(AppFont.mono(12, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
 
             if isWinner {
@@ -495,10 +491,10 @@ struct MultiplayerView: View {
             } label: {
                 Text(L("result.back"))
                     .font(AppFont.display(17, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(AppTheme.paper)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(accent, in: RoundedRectangle(cornerRadius: 14))
+                    .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
             }
         }
         .padding(24)
@@ -572,6 +568,6 @@ struct MultiplayerView: View {
 
     private var resultColor: Color {
         if isDraw { return AppTheme.warning }
-        return iWon ? accent : AppTheme.danger
+        return iWon ? AppTheme.ink : AppTheme.danger
     }
 }

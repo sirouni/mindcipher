@@ -581,10 +581,10 @@ struct AchievementDetailView: View {
                 Text(L("result.share"))
             }
             .font(.system(size: 16, weight: .semibold))
-            .foregroundStyle(.white)
+            .foregroundStyle(AppTheme.paper)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(unlocked ? AppTheme.accent : AppTheme.textMuted, in: RoundedRectangle(cornerRadius: 12))
+            .background(unlocked ? AppTheme.ink : AppTheme.textMuted, in: RoundedRectangle(cornerRadius: 3))
         }
         .disabled(!unlocked)
         .opacity(unlocked ? 1 : 0.6)
@@ -616,60 +616,55 @@ struct AchievementShareCard: View {
     let achievement: Achievement
     let appStoreURL: String
 
-    private let bgLight = Color(red: 0.92, green: 0.95, blue: 0.98)
-    private let accent = Color(red: 0.05, green: 0.60, blue: 0.55)
-    private let gold = Color(red: 0.90, green: 0.52, blue: 0.05)
+    private let skin = AppSkin.dossier
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text(L("share.achievement.header"))
-                .font(AppFont.display(11, weight: .bold))
-                .foregroundStyle(accent)
-                .tracking(1.5)
-                .padding(.top, 24)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(L("share.achievement.header").uppercased())
+                        .font(AppFont.label(10, weight: .semibold))
+                        .tracking(1.8)
+                        .foregroundStyle(skin.inkFaded)
+                    Text(achievement.localizedTitle)
+                        .font(AppFont.display(22, weight: .bold))
+                        .foregroundStyle(skin.ink)
+                    Text(achievement.category.localizedName)
+                        .font(AppFont.label(11, weight: .regular))
+                        .foregroundStyle(skin.inkFaded)
+                }
+                Spacer()
+                StampView(text: L("achieve.toast"), tone: .red, size: 10, rotation: -10)
+                    .padding(.top, 6)
+            }
+            Rectangle().fill(skin.ink).frame(height: 1.5)
 
-            ZStack {
-                Circle()
-                    .fill(gold.opacity(0.15))
-                    .frame(width: 90, height: 90)
-                Circle()
-                    .stroke(gold.opacity(0.4), lineWidth: 2.5)
-                    .frame(width: 100, height: 100)
+            HStack(spacing: 14) {
                 Image(systemName: achievement.icon)
-                    .font(.system(size: 38))
-                    .foregroundStyle(gold)
-            }
-
-            VStack(spacing: 6) {
-                Text(achievement.localizedTitle)
-                    .font(AppFont.display(22, weight: .bold))
-                    .foregroundStyle(Color(white: 0.12))
+                    .font(.system(size: 30))
+                    .foregroundStyle(skin.ink)
+                    .frame(width: 60, height: 60)
+                    .overlay(RoundedRectangle(cornerRadius: 3).stroke(skin.rule, lineWidth: 1))
                 Text(achievement.localizedDesc)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(Color(white: 0.4))
-                    .multilineTextAlignment(.center)
-                Text(achievement.category.localizedName)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(accent)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(accent.opacity(0.1), in: Capsule())
+                    .font(AppFont.body(14))
+                    .foregroundStyle(skin.inkFaded)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            Divider().padding(.horizontal, 30)
+            TypewriterRule(color: skin.rule)
 
             HStack(spacing: 10) {
                 Image("AppLogo")
                     .resizable()
                     .frame(width: 36, height: 36)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
                 VStack(alignment: .leading, spacing: 2) {
                     Text(L("app.title"))
                         .font(AppFont.display(13, weight: .bold))
-                        .foregroundStyle(Color(white: 0.2))
+                        .foregroundStyle(skin.ink)
                     Text(L("share.scan"))
-                        .font(.system(size: 10, weight: .medium))
-                        .foregroundStyle(Color(white: 0.5))
+                        .font(AppFont.body(10))
+                        .foregroundStyle(skin.inkFaded)
                 }
                 Spacer()
                 if let qr = generateQRCode(from: appStoreURL) {
@@ -677,13 +672,12 @@ struct AchievementShareCard: View {
                         .interpolation(.none)
                         .resizable()
                         .frame(width: 50, height: 50)
-                        .cornerRadius(4)
+                        .cornerRadius(2)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
         }
-        .background(bgLight)
+        .padding(20)
+        .background(skin.paper)
     }
 
     private func generateQRCode(from string: String) -> UIImage? {

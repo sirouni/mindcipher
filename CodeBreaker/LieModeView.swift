@@ -32,10 +32,10 @@ struct LieModeSetupView: View {
                         Text("Start Lie Challenge")
                     }
                     .font(AppFont.display(18, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(AppTheme.paper)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(AppTheme.danger, in: RoundedRectangle(cornerRadius: 14))
+                    .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
                 }
             }
             .padding(24)
@@ -87,7 +87,7 @@ struct LieModeSetupView: View {
 
     private func infoChip(_ text: String) -> some View {
         Text(text)
-            .font(.system(size: 12, weight: .bold, design: .monospaced))
+            .font(AppFont.mono(12, weight: .bold))
             .foregroundStyle(AppTheme.textPrimary)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
@@ -113,10 +113,10 @@ struct LieModeSetupView: View {
         }
         .padding(14)
         .background(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 4)
                 .fill(AppTheme.danger.opacity(0.06))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 14)
+                    RoundedRectangle(cornerRadius: 4)
                         .stroke(AppTheme.danger.opacity(0.15), lineWidth: 1)
                 )
         )
@@ -158,18 +158,18 @@ struct LieModeSetupView: View {
             HStack {
                 Text(diff.localizedName)
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(selectedDifficulty == diff ? .white : AppTheme.textPrimary)
+                    .foregroundStyle(selectedDifficulty == diff ? AppTheme.paper : AppTheme.textPrimary)
                 Spacer()
                 Text(diff.statsLabel)
-                    .font(.system(size: 12, weight: .medium, design: .monospaced))
-                    .foregroundStyle(selectedDifficulty == diff ? .white.opacity(0.7) : AppTheme.textSecondary)
+                    .font(AppFont.mono(12, weight: .medium))
+                    .foregroundStyle(selectedDifficulty == diff ? AppTheme.paper.opacity(0.7) : AppTheme.textSecondary)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .contentShape(Rectangle())
             .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(selectedDifficulty == diff ? AppTheme.danger : Color.clear)
+                RoundedRectangle(cornerRadius: 4)
+                    .fill(selectedDifficulty == diff ? AppTheme.ink : Color.clear)
             )
         }
         .buttonStyle(.plain)
@@ -182,7 +182,7 @@ struct LieModeSetupView: View {
                 .foregroundStyle(AppTheme.textSecondary)
             Spacer()
             Text(value)
-                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .font(AppFont.mono(14, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
         }
     }
