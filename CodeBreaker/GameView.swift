@@ -719,6 +719,7 @@ struct GameView: View {
             AppTheme.ink.opacity(0.45).ignoresSafeArea()
                 .onTapGesture { }
 
+            GeometryReader { geo in
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     reportHeader
@@ -760,7 +761,10 @@ struct GameView: View {
                         .animation(.spring(response: 0.35, dampingFraction: 0.55).delay(0.25), value: showResult)
                 }
                 .padding(.horizontal, 24)
-                .padding(.vertical, 40)
+                .padding(.vertical, 24)
+                // Center the report in the viewport; taller reports still scroll.
+                .frame(minHeight: geo.size.height)
+            }
             }
             .transition(.scale(scale: 0.92).combined(with: .opacity))
         }
