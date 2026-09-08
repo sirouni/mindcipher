@@ -74,12 +74,12 @@ struct SettingsView: View {
             sectionHeader(L("settings.game"))
             VStack(spacing: 0) {
                 toggleRow(icon: "speaker.wave.2.fill", title: L("settings.sound"), isOn: $settings.soundEnabled)
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 toggleRow(icon: "iphone.radiowaves.left.and.right", title: L("settings.haptics"), isOn: $settings.hapticsEnabled)
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 languageRow
                 #if DEBUG
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 toggleRow(icon: "checkmark.seal.fill", title: L("settings.debug.pro"), isOn: $store.isPro)
                 #endif
             }
@@ -88,7 +88,28 @@ struct SettingsView: View {
     }
 
     private var themeSection: some View {
-        ThemePickerView()
+        VStack(alignment: .leading, spacing: 16) {
+            ThemePickerView()
+            VStack(alignment: .leading, spacing: 4) {
+                sectionHeader(L("settings.colorblind"))
+                VStack(spacing: 0) {
+                    toggleRow(icon: "hexagon", title: L("settings.shapes"), isOn: $settings.colorBlindMode)
+                    Text(L("settings.shapes.desc"))
+                        .font(AppFont.body(12))
+                        .foregroundStyle(AppTheme.textSecondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 14)
+                    HStack(spacing: 8) {
+                        ForEach(PegColor.allCases) { peg in
+                            PegView(color: peg, size: 30)
+                        }
+                    }
+                    .padding(14)
+                    .boardLayout()
+                }
+                .paperCard()
+            }
+        }
     }
 
     private var supportSection: some View {
@@ -127,17 +148,17 @@ struct SettingsView: View {
             sectionHeader(L("settings.stats"))
             VStack(spacing: 0) {
                 infoRow(icon: "gamecontroller.fill", title: L("stats.games"), value: "\(stats.gamesPlayed)")
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 infoRow(icon: "trophy.fill", title: L("settings.wins"), value: "\(stats.gamesWon)")
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 infoRow(icon: "percent", title: L("stats.winrate"), value: stats.gamesPlayed > 0 ? "\(Int(stats.winRate))%" : "--")
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 infoRow(icon: "flame.fill", title: L("settings.beststreak"), value: "\(stats.bestStreak)")
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 infoRow(icon: "number", title: L("settings.avg"), value: stats.gamesWon > 0 ? String(format: "%.1f", stats.avgAttempts) : "--")
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 infoRow(icon: "star.fill", title: L("stats.stars"), value: "\(progress.totalStars)")
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 infoRow(icon: "checkmark.circle.fill", title: L("settings.levels"), value: "\(progress.completedLevels.count + ProgressManager.lieShared.completedLevels.count)/480")
             }
             .paperCard()
@@ -171,7 +192,7 @@ struct SettingsView: View {
                     }
                 } message: { Text(L("settings.reset.stats.msg")) }
 
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
 
                 Button {
                     showResetAlert = true
@@ -208,7 +229,7 @@ struct SettingsView: View {
             sectionHeader(L("settings.about"))
             VStack(spacing: 0) {
                 infoRow(icon: "info.circle.fill", title: L("settings.version"), value: appVersionLabel)
-                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                TypewriterRule().padding(.horizontal, 14)
                 infoRow(icon: "lock.shield.fill", title: L("app.title"), value: L("app.title"))
             }
             .paperCard()
@@ -246,10 +267,7 @@ struct SettingsView: View {
     }
 
     private func sectionHeader(_ title: String) -> some View {
-        Text(title)
-            .font(.system(size: 13, weight: .semibold))
-            .foregroundStyle(AppTheme.textSecondary)
-            .textCase(.uppercase)
+        DossierCaption(text: title)
             .padding(.leading, 4)
             .padding(.bottom, 2)
     }
@@ -282,7 +300,7 @@ struct SettingsView: View {
                 .foregroundStyle(AppTheme.textPrimary)
             Spacer()
             Text(value)
-                .font(.system(size: 15, weight: .bold, design: .monospaced))
+                .font(AppFont.mono(15, weight: .bold))
                 .foregroundStyle(AppTheme.textSecondary)
         }
         .padding(14)
@@ -309,7 +327,7 @@ struct LanguageSettingsView: View {
                     VStack(spacing: 0) {
                         ForEach(Array(AppLanguage.allCases.enumerated()), id: \.element.id) { index, lang in
                             if index > 0 {
-                                Divider().overlay(AppTheme.textMuted.opacity(0.2))
+                                TypewriterRule().padding(.horizontal, 14)
                             }
                             languageRow(lang)
                         }

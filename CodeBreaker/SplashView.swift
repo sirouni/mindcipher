@@ -1,87 +1,85 @@
 import SwiftUI
 
+/// Dossier cover: paper, a typewriter title, one red stamp slammed in.
 struct SplashView: View {
-    @State private var phase = 0
-    @State private var logoScale: CGFloat = 0.3
-    @State private var logoOpacity: Double = 0
-    @State private var ringScale: CGFloat = 0.5
-    @State private var ringOpacity: Double = 0
-    @State private var titleOffset: CGFloat = 30
+    @State private var coverOpacity: Double = 0
+    @State private var titleOffset: CGFloat = 16
     @State private var titleOpacity: Double = 0
-    @State private var scanAngle: Double = 0
+    @State private var stampScale: CGFloat = 1.8
+    @State private var stampOpacity: Double = 0
+    @State private var ruleWidth: CGFloat = 0
     @State private var finished = false
 
     var body: some View {
         ZStack {
             AppTheme.paper.ignoresSafeArea()
 
-            VStack(spacing: 20) {
-                ZStack {
-                    Circle()
-                        .stroke(AppTheme.accent.opacity(0.1), lineWidth: 1)
-                        .frame(width: 180, height: 180)
-                        .scaleEffect(ringScale)
-                        .opacity(ringOpacity)
+            VStack(spacing: 0) {
+                Spacer()
 
-                    Circle()
-                        .trim(from: 0, to: 0.25)
-                        .stroke(
-                            AngularGradient(
-                                colors: [AppTheme.accent.opacity(0.4), .clear],
-                                center: .center
-                            ),
-                            lineWidth: 60
-                        )
-                        .frame(width: 160, height: 160)
-                        .rotationEffect(.degrees(scanAngle))
-                        .opacity(ringOpacity)
+                VStack(alignment: .leading, spacing: 14) {
+                    DossierCaption(text: L("app.subtitle"))
+                        .opacity(titleOpacity)
 
-                    Image(systemName: "lock.shield.fill")
-                        .font(.system(size: 64))
-                        .foregroundStyle(AppTheme.accent)
-                        .shadow(color: AppTheme.accent.opacity(0.6), radius: 25)
-                        .scaleEffect(logoScale)
-                        .opacity(logoOpacity)
-                }
-
-                VStack(spacing: 6) {
-                    Text("Code Breaker")
-                        .font(AppFont.display(30, weight: .black))
+                    Text(L("app.title").uppercased())
+                        .font(AppFont.display(38, weight: .bold))
+                        .tracking(2)
                         .foregroundStyle(AppTheme.textPrimary)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.6)
+                        .offset(y: titleOffset)
+                        .opacity(titleOpacity)
 
-                    Text("CODE BREAKER")
-                        .font(.system(size: 12, weight: .medium, design: .monospaced))
-                        .foregroundStyle(AppTheme.accent)
-                        .tracking(6)
+                    Rectangle()
+                        .fill(AppTheme.ink)
+                        .frame(width: ruleWidth, height: 2)
+
+                    HStack(alignment: .firstTextBaseline, spacing: 6) {
+                        Text("FILE")
+                            .font(AppFont.label(11, weight: .regular))
+                            .tracking(2)
+                            .foregroundStyle(AppTheme.textSecondary)
+                        Text(String(format: "No. %04d", DailyCalendar.dayNumber()))
+                            .font(AppFont.label(11, weight: .bold))
+                            .tracking(1)
+                            .foregroundStyle(AppTheme.textPrimary)
+                    }
+                    .opacity(titleOpacity)
                 }
-                .offset(y: titleOffset)
-                .opacity(titleOpacity)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 36)
+                .overlay(alignment: .topTrailing) {
+                    StampView(text: "Top Secret", tone: .red, size: 14, rotation: -14)
+                        .scaleEffect(stampScale)
+                        .opacity(stampOpacity)
+                        .padding(.trailing, 30)
+                        .offset(y: -28)
+                }
+
+                Spacer()
+                Spacer()
             }
+            .opacity(coverOpacity)
         }
         .opacity(finished ? 0 : 1)
         .onAppear { runAnimation() }
     }
 
     private func runAnimation() {
-        withAnimation(.spring(response: 0.6, dampingFraction: 0.65)) {
-            logoScale = 1.0
-            logoOpacity = 1.0
+        withAnimation(.easeOut(duration: 0.25)) {
+            coverOpacity = 1
         }
-
-        withAnimation(.easeOut(duration: 0.5).delay(0.2)) {
-            ringScale = 1.0
-            ringOpacity = 1.0
-        }
-
-        withAnimation(.linear(duration: 2).delay(0.3)) {
-            scanAngle = 360
-        }
-
-        withAnimation(.spring(response: 0.5, dampingFraction: 0.7).delay(0.4)) {
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.8).delay(0.15)) {
             titleOffset = 0
-            titleOpacity = 1.0
+            titleOpacity = 1
         }
-
+        withAnimation(.easeOut(duration: 0.45).delay(0.35)) {
+            ruleWidth = 120
+        }
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.5).delay(0.75)) {
+            stampScale = 1
+            stampOpacity = 0.9
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
             withAnimation(.easeIn(duration: 0.3)) {
                 finished = true

@@ -47,131 +47,134 @@ struct DailyChallengeView: View {
 
     private var preStartView: some View {
         ScrollView {
-            VStack(spacing: 20) {
-
-                HStack(spacing: 16) {
-                    VStack(spacing: 2) {
-                        Text("\(currentStreak)")
-                            .font(AppFont.display(28, weight: .black))
-                            .foregroundStyle(AppTheme.warning)
-                        Text(L("daily.streak"))
-                            .font(.system(size: 11, weight: .medium))
+            VStack(alignment: .leading, spacing: 18) {
+                // Case header
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        DossierCaption(text: L("home.today"), color: isLieDaily ? AppTheme.danger : AppTheme.textSecondary)
+                        Text(L("case.no", DailyCalendar.dayNumber()))
+                            .font(AppFont.display(26, weight: .bold))
+                            .foregroundStyle(AppTheme.textPrimary)
+                        Text(displayDate)
+                            .font(AppFont.label(11, weight: .regular))
                             .foregroundStyle(AppTheme.textSecondary)
                     }
-
-                    VStack(spacing: 2) {
-                        Text("\(DailyStreakManager.shared.totalCompleted)")
-                            .font(AppFont.display(28, weight: .black))
-                            .foregroundStyle(AppTheme.accent)
-                        Text(L("daily.total"))
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(AppTheme.textSecondary)
+                    Spacer()
+                    if isCompleted {
+                        StampView(text: L("case.closed"), tone: .red, size: 12, rotation: -10)
+                            .padding(.top, 6)
+                    } else if isLieDaily {
+                        StampView(text: "Top Secret", tone: .red, size: 12, rotation: -10)
+                            .padding(.top, 6)
+                            .accessibilityIdentifier("daily.lie.badge")
                     }
                 }
-                .padding(.top, 12)
+                Rectangle().fill(AppTheme.ink).frame(height: 1.5)
+
+                // Attendance ledger
+                HStack(spacing: 0) {
+                    ledgerStat(value: currentStreak, label: L("daily.attendance"))
+                    Rectangle().fill(AppTheme.rule).frame(width: 1, height: 30)
+                    ledgerStat(value: DailyStreakManager.shared.totalCompleted, label: L("daily.total"))
+                    if gcManager.isAuthenticated {
+                        Rectangle().fill(AppTheme.rule).frame(width: 1, height: 30)
+                        Button { showLeaderboard = true } label: {
+                            VStack(spacing: 2) {
+                                Image(systemName: "list.number")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(AppTheme.textPrimary)
+                                Text(L("daily.leaderboard").uppercased())
+                                    .font(AppFont.label(8, weight: .regular))
+                                    .tracking(0.8)
+                                    .foregroundStyle(AppTheme.textSecondary)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                        .sheet(isPresented: $showLeaderboard) {
+                            GameCenterLeaderboardView()
+                        }
+                    }
+                }
+                .padding(.vertical, 10)
+                .paperCard()
 
                 DailyCalendarView()
-                    .padding(.horizontal, 4)
-
-                if gcManager.isAuthenticated {
-                    Button {
-                        showLeaderboard = true
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: "trophy.fill")
-                                .font(.system(size: 14))
-                            Text(L("daily.leaderboard"))
-                                .font(AppFont.display(14, weight: .bold))
-                        }
-                        .foregroundStyle(AppTheme.warning)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .paperCard()
-                    }
-                    .sheet(isPresented: $showLeaderboard) {
-                        GameCenterLeaderboardView()
-                    }
-                }
-
-                Text(displayDate)
-                    .font(AppFont.display(17, weight: .bold))
-                    .foregroundStyle(AppTheme.textPrimary)
 
                 if isLieDaily {
-                    HStack(spacing: 6) {
-                        Image(systemName: "theatermask.and.paintbrush.fill")
-                        Text(L("daily.lie.badge"))
-                    }
-                    .font(AppFont.display(13, weight: .bold))
-                    .foregroundStyle(AppTheme.danger)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(AppTheme.danger.opacity(0.12), in: Capsule())
-                    .accessibilityIdentifier("daily.lie.badge")
+                    Text(L("daily.lie.rule"))
+                        .font(AppFont.body(13))
+                        .foregroundStyle(AppTheme.danger)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 3)
+                                .stroke(AppTheme.danger, style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+                        )
                 }
 
-                VStack(spacing: 8) {
+                VStack(spacing: 0) {
                     ruleRow(L("param.length"), "4")
                     ruleRow(L("param.colors"), "6")
                     ruleRow(L("param.attempts"), isLieDaily ? "8" : "7")
-                    ruleRow(L("param.repeat"), L("param.no"))
-                    if isLieDaily {
-                        ruleRow(L("lie.toggle"), L("daily.lie.rule"))
-                    }
+                    ruleRow(L("param.repeat"), L("param.no"), last: true)
                 }
-                .padding(16)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 4)
                 .paperCard()
 
                 if isCompleted {
-                    VStack(spacing: 6) {
-                        Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 28))
-                            .foregroundStyle(AppTheme.accent)
+                    VStack(alignment: .leading, spacing: 4) {
                         Text(L("daily.completed"))
                             .font(AppFont.display(15, weight: .bold))
-                            .foregroundStyle(AppTheme.accent)
+                            .foregroundStyle(AppTheme.textPrimary)
                         Text(L("daily.tomorrow"))
-                            .font(.system(size: 12, weight: .medium))
+                            .font(AppFont.body(12))
                             .foregroundStyle(AppTheme.textSecondary)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
                 if !isCompleted {
-                    Button {
-                        startDailyChallenge()
-                    } label: {
-                        Text(L("daily.start"))
-                            .font(AppFont.display(18, weight: .bold))
-                            .foregroundStyle(Color.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(AppTheme.warning, in: RoundedRectangle(cornerRadius: 14))
-                    }
+                    Button { startDailyChallenge() } label: { Text(L("daily.start")) }
+                        .buttonStyle(InkButtonStyle())
                 } else {
-                    Button { dismiss() } label: {
-                        Text(L("daily.back"))
-                            .font(AppFont.display(16, weight: .bold))
-                            .foregroundStyle(AppTheme.textSecondary)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .paperCard()
-                    }
+                    Button { dismiss() } label: { Text(L("daily.back")) }
+                        .buttonStyle(InkButtonStyle(prominent: false))
                 }
             }
-            .padding(24)
+            .padding(20)
         }
     }
 
-    private func ruleRow(_ label: String, _ value: String) -> some View {
+    private func ledgerStat(value: Int, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text("\(value)")
+                .font(AppFont.display(20, weight: .bold))
+                .foregroundStyle(AppTheme.textPrimary)
+            Text(label.uppercased())
+                .font(AppFont.label(8, weight: .regular))
+                .tracking(0.8)
+                .foregroundStyle(AppTheme.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(maxWidth: .infinity)
+    }
+
+    private func ruleRow(_ label: String, _ value: String, last: Bool = false) -> some View {
         HStack {
             Text(label)
-                .font(.system(size: 14, weight: .medium))
+                .font(AppFont.label(11, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
             Spacer()
             Text(value)
-                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .font(AppFont.mono(13, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
         }
+        .padding(.vertical, 9)
+        .overlay(alignment: .bottom) { if !last { TypewriterRule() } }
     }
 
     private func startDailyChallenge() {
@@ -286,28 +289,35 @@ struct DailyCalendarView: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(monthTitle)
-                .font(AppFont.display(14, weight: .bold))
-                .foregroundStyle(AppTheme.textPrimary)
+            HStack {
+                DossierCaption(text: monthTitle, color: AppTheme.textPrimary)
+                Spacer()
+                HStack(spacing: 4) {
+                    Circle().stroke(AppTheme.accent, lineWidth: 1.5).frame(width: 10, height: 10)
+                    Text(L("case.closed"))
+                        .font(AppFont.label(9, weight: .regular))
+                        .foregroundStyle(AppTheme.textSecondary)
+                }
+            }
 
             // Weekday headers
             HStack(spacing: 0) {
                 ForEach(Array(DailyCalendar.weekdaySymbols(locale: LanguageManager.shared.locale).enumerated()), id: \.offset) { _, symbol in
                     Text(symbol)
-                        .font(.system(size: 10, weight: .medium))
+                        .font(AppFont.label(9, weight: .regular))
                         .foregroundStyle(AppTheme.textMuted)
                         .frame(maxWidth: .infinity)
                 }
             }
 
-            // Day grid
+            // Day grid: every day is a box; done days get a red stamp ring
             let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
             LazyVGrid(columns: columns, spacing: 4) {
                 ForEach(0..<monthDays.count, id: \.self) { i in
                     if let date = monthDays[i] {
                         dayCell(date)
                     } else {
-                        Color.clear.frame(height: 32)
+                        Color.clear.frame(height: 34)
                     }
                 }
             }
@@ -323,33 +333,32 @@ struct DailyCalendarView: View {
         let isFuture = date > today
         let isLie = DailyCalendar.isLieDay(key)
         let dayNum = calendar.component(.day, from: date)
-        let todayColor = isLie ? AppTheme.danger : AppTheme.warning
 
         return ZStack {
-            if completed {
-                Circle()
-                    .fill((isLie ? AppTheme.danger : AppTheme.accent).opacity(0.85))
-                    .frame(width: 30, height: 30)
-            } else if isToday {
-                Circle()
-                    .stroke(todayColor, lineWidth: 2)
-                    .frame(width: 30, height: 30)
-            } else if isLie && !isFuture {
-                Circle()
-                    .stroke(AppTheme.danger.opacity(0.35), lineWidth: 1)
-                    .frame(width: 30, height: 30)
-            }
+            RoundedRectangle(cornerRadius: 2)
+                .stroke(isToday ? AppTheme.ink : AppTheme.rule, lineWidth: isToday ? 1.5 : 1)
+                .background(
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(isLie && !isFuture ? AppTheme.danger.opacity(0.07) : .clear)
+                )
 
             Text("\(dayNum)")
-                .font(AppFont.display(12, weight: completed ? .bold : .medium))
+                .font(AppFont.label(11, weight: isToday ? .bold : .regular))
                 .foregroundStyle(
-                    completed ? .white :
-                    isToday ? todayColor :
-                    isFuture ? AppTheme.textMuted.opacity(0.4) :
-                    AppTheme.textSecondary
+                    isFuture ? AppTheme.textMuted.opacity(0.5) :
+                    isToday ? AppTheme.textPrimary : AppTheme.textSecondary
                 )
+
+            if completed {
+                Circle()
+                    .stroke(AppTheme.accent, lineWidth: 1.5)
+                    .frame(width: 24, height: 24)
+                    .rotationEffect(.degrees(-8))
+                    .opacity(0.9)
+            }
         }
-        .frame(height: 32)
+        .frame(height: 34)
+        .accessibilityLabel("\(dayNum)\(completed ? ", \(L("case.closed"))" : "")")
     }
 }
 

@@ -173,77 +173,62 @@ struct HomeView: View {
         }
     }
 
+    // MARK: - Header (file cover)
+
     private var headerSection: some View {
-        VStack(spacing: 6) {
-            HStack {
-                Button { showTutorial = true } label: {
-                    Image(systemName: "questionmark.circle")
-                        .font(.system(size: 22))
-                        .foregroundStyle(AppTheme.textSecondary)
-                        .frame(width: 40, height: 40)
-                }
+        VStack(spacing: 10) {
+            HStack(spacing: 2) {
+                toolbarIcon("questionmark.circle", label: "Help") { showTutorial = true }
                 if gcManager.isAuthenticated {
-                    Button { showLeaderboard = true } label: {
-                        Image(systemName: "chart.bar.fill")
-                            .font(.system(size: 20))
-                            .foregroundStyle(Color(red: 0.3, green: 0.7, blue: 0.9))
-                            .frame(width: 44, height: 44)
-                    }
+                    toolbarIcon("list.number", label: "Leaderboard") { showLeaderboard = true }
                 }
                 Spacer()
                 feedbackHeaderButton
                     .overlay(alignment: .top) {
                         if showFeedbackTip {
                             feedbackTipBubble
-                                .offset(y: 48)
+                                .offset(y: 44)
                                 .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .top)))
                         }
                     }
                     .zIndex(10)
-                Button { showStore = true } label: {
-                    Image(systemName: "bag.fill")
-                        .font(.system(size: 20))
-                        .foregroundStyle(AppTheme.warning)
-                        .frame(width: 44, height: 44)
-                }
-                Button { showSettings = true } label: {
-                    Image(systemName: "gearshape.fill")
-                        .font(.system(size: 24))
-                        .foregroundStyle(AppTheme.textSecondary)
-                        .frame(width: 44, height: 44)
-                }
+                toolbarIcon("seal", label: L("store.title")) { showStore = true }
+                toolbarIcon("gearshape", label: L("settings.title")) { showSettings = true }
             }
             .padding(.top, 4)
             .zIndex(10)
 
-            ZStack {
-                Circle()
-                    .stroke(AppTheme.accent.opacity(0.12), lineWidth: 1)
-                    .frame(width: 40, height: 40)
-
-                radarSweep
-                    .frame(width: 40, height: 40)
-
-                Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 18))
-                    .foregroundStyle(AppTheme.accent)
-                    .shadow(color: AppTheme.accent.opacity(0.5), radius: 8)
+            HStack(alignment: .bottom) {
+                VStack(alignment: .leading, spacing: 2) {
+                    DossierCaption(text: L("home.caption"))
+                    Text(L("app.title"))
+                        .font(AppFont.display(28, weight: .bold))
+                        .foregroundStyle(AppTheme.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                Spacer()
+                if storeManager.isPro {
+                    StampView(text: L("store.clearance"), tone: .red, size: 8, rotation: -8)
+                }
             }
-            .scaleEffect(titleScale)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 2)
             .opacity(titleOpacity)
 
-            VStack(spacing: 2) {
-                Text(L("app.title"))
-                    .font(AppFont.display(20, weight: .black))
-                    .foregroundStyle(AppTheme.textPrimary)
-
-                Text(L("app.subtitle"))
-                    .font(.system(size: 9, weight: .medium, design: .monospaced))
-                    .foregroundStyle(AppTheme.accent)
-                    .tracking(4)
-            }
-            .opacity(titleOpacity)
+            Rectangle().fill(AppTheme.ink).frame(height: 1.5)
+                .opacity(titleOpacity)
         }
+    }
+
+    private func toolbarIcon(_ name: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: name)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(AppTheme.textPrimary)
+                .frame(width: 40, height: 40)
+        }
+        .accessibilityLabel(label)
     }
 
     private var feedbackHeaderButton: some View {
@@ -251,10 +236,10 @@ struct HomeView: View {
             showFeedbackTip = false
             showFeedback = true
         } label: {
-            Image(systemName: "text.bubble.fill")
-                .font(.system(size: 20))
-                .foregroundStyle(AppTheme.textSecondary)
-                .frame(width: 44, height: 44)
+            Image(systemName: "text.bubble")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(AppTheme.textPrimary)
+                .frame(width: 40, height: 40)
         }
         .accessibilityLabel(L("menu.feedback"))
         .accessibilityIdentifier("home.feedback")
@@ -263,17 +248,16 @@ struct HomeView: View {
     private var feedbackTipBubble: some View {
         VStack(spacing: 0) {
             FeedbackTipCaret()
-                .fill(Color(white: 0.16))
+                .fill(AppTheme.ink)
                 .frame(width: 12, height: 6)
             Text(L("home.feedback.tip"))
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(.white)
+                .font(AppFont.label(11, weight: .semibold))
+                .foregroundStyle(AppTheme.paper)
                 .fixedSize()
                 .padding(.horizontal, 10)
                 .padding(.vertical, 7)
-                .background(Color(white: 0.16), in: RoundedRectangle(cornerRadius: 8))
+                .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
         }
-        .shadow(color: .black.opacity(0.14), radius: 8, y: 3)
         .onTapGesture {
             showFeedbackTip = false
             showFeedback = true
@@ -306,130 +290,152 @@ struct HomeView: View {
         }
     }
 
-    private var radarSweep: some View {
-        Circle()
-            .trim(from: 0, to: 0.25)
-            .stroke(
-                AngularGradient(
-                    colors: [AppTheme.accent.opacity(0.3), .clear],
-                    center: .center
-                ),
-                lineWidth: 60
-            )
-            .rotationEffect(.degrees(radarAngle))
-            .onAppear {
-                withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
-                    radarAngle = 360
-                }
-            }
-    }
+    // MARK: - Index page
 
     private var menuSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            menuButton(
-                title: L("menu.daily"),
-                subtitle: dailyCompleted
-                    ? L("menu.daily.done")
-                    : (DailyCalendar.isLieDay() ? L("menu.daily.lie") : L("menu.daily.todo")),
-                icon: DailyCalendar.isLieDay() ? "theatermask.and.paintbrush.fill" : "calendar.badge.clock",
-                color: DailyCalendar.isLieDay() ? AppTheme.danger : AppTheme.warning,
-                accessibilityID: "home.daily"
-            ) { showDaily = true }
+        VStack(alignment: .leading, spacing: 10) {
+            todayCaseCard
 
-            HStack(spacing: 8) {
-                campaignCard(
+            HStack(spacing: 10) {
+                volumeCard(
+                    caption: L("case.classic"),
                     title: L("menu.classic"),
                     done: progress.completedLevels.count,
                     total: 240,
-                    icon: "target",
-                    color: AppTheme.accent,
+                    lie: false,
                     accessibilityID: "home.classic"
                 ) { showLevels = true }
 
-                campaignCard(
+                volumeCard(
+                    caption: L("case.lie"),
                     title: L("menu.lie"),
                     done: lieProgress.completedLevels.count,
                     total: 240,
-                    icon: "theatermask.and.paintbrush.fill",
-                    color: AppTheme.danger,
+                    lie: true,
                     accessibilityID: "home.lie"
                 ) { showLieMode = true }
             }
 
-            Text(L("menu.more"))
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(AppTheme.textMuted)
-                .textCase(.uppercase)
-                .padding(.top, 4)
+            DossierCaption(text: L("home.index"))
+                .padding(.top, 6)
+                .padding(.leading, 2)
 
-            menuButton(
-                title: L("menu.free"),
-                subtitle: L("menu.free.sub"),
-                icon: "infinity",
-                color: AppTheme.textSecondary,
-                requiresPro: true
-            ) { if storeManager.isPro { showFreePlay = true } else { paywallReason = .freePlay } }
-
-            menuButton(
-                title: L("menu.duel"),
-                subtitle: L("menu.duel.sub"),
-                icon: "person.2.fill",
-                color: AppTheme.textSecondary,
-                accessibilityID: "home.duel"
-            ) { showDuel = true }
-
-            menuButton(
-                title: L("menu.editor"),
-                subtitle: L("menu.editor.sub"),
-                icon: "slider.horizontal.3",
-                color: AppTheme.textSecondary,
-                requiresPro: true
-            ) { if storeManager.isPro { showEditor = true } else { paywallReason = .editor } }
-
-            menuButton(
-                title: L("menu.achievements"),
-                subtitle: L("home.unlocked", unlockedCount, totalAchievements),
-                icon: "trophy.fill",
-                color: AppTheme.textSecondary,
-                accessibilityID: "home.achievements"
-            ) { showAchievements = true }
-
-            if FeatureFlags.onlineMatchEnabled {
-                menuButton(
-                    title: L("menu.online"),
-                    subtitle: L("menu.online.sub"),
-                    icon: "wifi",
-                    color: AppTheme.textSecondary
-                ) { showOnline = true }
+            VStack(spacing: 0) {
+                indexRow(
+                    numeral: 1, title: L("menu.free"), detail: L("menu.free.sub"),
+                    requiresPro: true
+                ) { if storeManager.isPro { showFreePlay = true } else { paywallReason = .freePlay } }
+                indexRow(
+                    numeral: 2, title: L("menu.duel"), detail: L("menu.duel.sub"),
+                    accessibilityID: "home.duel"
+                ) { showDuel = true }
+                indexRow(
+                    numeral: 3, title: L("menu.editor"), detail: L("menu.editor.sub"),
+                    requiresPro: true
+                ) { if storeManager.isPro { showEditor = true } else { paywallReason = .editor } }
+                indexRow(
+                    numeral: 4, title: L("menu.achievements"),
+                    detail: L("home.unlocked", unlockedCount, totalAchievements),
+                    accessibilityID: "home.achievements", last: !FeatureFlags.onlineMatchEnabled
+                ) { showAchievements = true }
+                if FeatureFlags.onlineMatchEnabled {
+                    indexRow(numeral: 5, title: L("menu.online"), detail: L("menu.online.sub"), last: true) { showOnline = true }
+                }
             }
+            .paperCard()
         }
         .offset(y: buttonsOffset)
         .opacity(titleOpacity)
     }
 
-    private func campaignCard(
-        title: String, done: Int, total: Int, icon: String, color: Color,
+    private var todayCaseCard: some View {
+        let isLie = DailyCalendar.isLieDay()
+        return Button { showDaily = true } label: {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    DossierCaption(text: L("home.today"), color: isLie ? AppTheme.danger : AppTheme.textSecondary)
+                    Text(L("case.no", DailyCalendar.dayNumber()))
+                        .font(AppFont.display(24, weight: .bold))
+                        .foregroundStyle(AppTheme.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                    Text(dailyCompleted
+                         ? L("menu.daily.done")
+                         : (isLie ? L("menu.daily.lie") : L("menu.daily.todo")))
+                        .font(AppFont.body(12))
+                        .foregroundStyle(AppTheme.textSecondary)
+                        .lineLimit(2)
+                }
+                Spacer(minLength: 8)
+                VStack(alignment: .trailing, spacing: 8) {
+                    if dailyCompleted {
+                        StampView(text: L("case.closed"), tone: .red, size: 10, rotation: -10)
+                    } else if isLie {
+                        StampView(text: "Top Secret", tone: .red, size: 10, rotation: -10)
+                    } else {
+                        Image(systemName: "arrow.forward")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(AppTheme.textPrimary)
+                            .frame(width: 32, height: 32)
+                            .overlay(RoundedRectangle(cornerRadius: 3).stroke(AppTheme.ink, lineWidth: 1))
+                    }
+                    if DailyStreakManager.shared.currentStreak > 0 {
+                        HStack(alignment: .firstTextBaseline, spacing: 3) {
+                            Text("\(DailyStreakManager.shared.currentStreak)")
+                                .font(AppFont.display(14, weight: .bold))
+                                .foregroundStyle(AppTheme.textPrimary)
+                            Text(L("daily.attendance"))
+                                .font(AppFont.label(9, weight: .regular))
+                                .foregroundStyle(AppTheme.textSecondary)
+                        }
+                    }
+                }
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .paperCard(fill: AppTheme.bgCardLight)
+            .overlay(alignment: .leading) {
+                Rectangle().fill(isLie ? AppTheme.danger : AppTheme.ink).frame(width: 3)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 4))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("home.daily")
+    }
+
+    private func volumeCard(
+        caption: String, title: String, done: Int, total: Int, lie: Bool,
         accessibilityID: String,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 6) {
-                Image(systemName: icon)
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(color)
-
+                HStack {
+                    DossierCaption(text: caption, color: lie ? AppTheme.danger : AppTheme.textSecondary)
+                    Spacer()
+                    Text("\(L("home.volume")) I–VI")
+                        .font(AppFont.label(9, weight: .regular))
+                        .foregroundStyle(AppTheme.textMuted)
+                }
                 Text(title)
-                    .font(AppFont.display(15, weight: .bold))
+                    .font(AppFont.display(16, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
+                    .padding(.bottom, 6)
 
-                Text("\(done)/\(total)")
-                    .font(AppFont.display(13, weight: .bold))
-                    .foregroundStyle(color)
+                Text(L("levels.solved", done, total))
+                    .font(AppFont.label(11, weight: .regular))
+                    .foregroundStyle(AppTheme.textSecondary)
 
-                ProgressView(value: Double(done), total: Double(total))
-                    .tint(color)
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Rectangle().fill(AppTheme.rule).frame(height: 2)
+                        Rectangle().fill(lie ? AppTheme.danger : AppTheme.ink)
+                            .frame(width: geo.size.width * CGFloat(min(1, Double(done) / Double(max(total, 1)))), height: 2)
+                    }
+                }
+                .frame(height: 2)
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -439,121 +445,105 @@ struct HomeView: View {
         .accessibilityIdentifier(accessibilityID)
     }
 
-    private func menuButton(
-        title: String, subtitle: String, icon: String, color: Color,
+    private func indexRow(
+        numeral: Int, title: String, detail: String,
         requiresPro: Bool = false,
         accessibilityID: String? = nil,
+        last: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
         let locked = requiresPro && !storeManager.isPro
         return Button(action: action) {
-            HStack(spacing: 12) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(color.opacity(locked ? 0.08 : 0.15))
-                        .frame(width: 40, height: 40)
-                    Image(systemName: icon)
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(locked ? color.opacity(0.4) : color)
+            HStack(spacing: 10) {
+                Text(romanNumeral(numeral))
+                    .font(AppFont.label(11, weight: .regular))
+                    .foregroundStyle(AppTheme.textSecondary)
+                    .frame(width: 26, alignment: .leading)
+                Text(title)
+                    .font(AppFont.display(14, weight: .bold))
+                    .foregroundStyle(locked ? AppTheme.textSecondary : AppTheme.textPrimary)
+                    .lineLimit(1)
+                if locked {
+                    Text("PRO")
+                        .font(AppFont.label(8, weight: .bold))
+                        .tracking(1)
+                        .foregroundStyle(AppTheme.accent)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 1)
+                        .overlay(RoundedRectangle(cornerRadius: 2).stroke(AppTheme.accent, lineWidth: 1))
                 }
-
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 5) {
-                        Text(title)
-                            .font(AppFont.display(15, weight: .bold))
-                            .foregroundStyle(locked ? AppTheme.textMuted : AppTheme.textPrimary)
-                        if locked {
-                            Text("PRO")
-                                .font(AppFont.display(9, weight: .black))
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, 5)
-                                .padding(.vertical, 2)
-                                .background(AppTheme.warning, in: Capsule())
-                        }
-                    }
-                    Text(subtitle)
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(locked ? AppTheme.textMuted : AppTheme.textSecondary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.85)
-                }
-
-                Spacer()
-
-                Image(systemName: locked ? "lock.fill" : "chevron.forward")
-                    .font(.system(size: 12, weight: .semibold))
+                Spacer(minLength: 6)
+                Text(detail)
+                    .font(AppFont.body(11))
+                    .foregroundStyle(AppTheme.textMuted)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Image(systemName: locked ? "lock" : "arrow.forward")
+                    .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(AppTheme.textMuted)
             }
-            .padding(12)
-            .paperCard()
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
+            .overlay(alignment: .bottom) {
+                if !last { TypewriterRule().padding(.horizontal, 14) }
+            }
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier(accessibilityID ?? "")
     }
 
-    private var statsBar: some View {
-        VStack(spacing: 12) {
-            HStack(spacing: 20) {
-                statItem(value: "\(stats.gamesPlayed)", label: L("stats.games"))
-                Divider().frame(height: 30).overlay(AppTheme.textMuted)
-                statItem(
-                    value: stats.gamesPlayed == 0 ? "--" : "\(Int(stats.winRate))%",
-                    label: L("stats.winrate")
-                )
-                Divider().frame(height: 30).overlay(AppTheme.textMuted)
-                statItem(value: "\(stats.currentStreak)", label: L("stats.streak"))
-                Divider().frame(height: 30).overlay(AppTheme.textMuted)
-                statItem(value: "\(progress.totalStars)", label: L("stats.stars"))
-            }
+    // MARK: - Ledger line
 
-            if stats.currentStreak > 0 || stats.bestStreak > 0 {
-                HStack(spacing: 12) {
-                    if stats.currentStreak >= 3 {
-                        HStack(spacing: 3) {
-                            Image(systemName: "flame.fill")
-                                .font(.system(size: 11))
-                                .foregroundStyle(AppTheme.danger)
-                            Text(L("home.streak.fire", stats.currentStreak))
-                                .font(.system(size: 11, weight: .bold))
-                                .foregroundStyle(AppTheme.danger)
-                        }
-                    }
-                    if stats.bestStreak > 0 {
-                        HStack(spacing: 3) {
-                            Image(systemName: "trophy.fill")
-                                .font(.system(size: 10))
-                                .foregroundStyle(AppTheme.warning)
-                            Text(L("home.streak.best", stats.bestStreak))
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundStyle(AppTheme.textSecondary)
-                        }
-                    }
-                }
-            }
+    private var statsBar: some View {
+        HStack(spacing: 0) {
+            statItem(value: "\(stats.gamesPlayed)", label: L("stats.games"))
+            ledgerDivider
+            statItem(
+                value: stats.gamesPlayed == 0 ? "--" : "\(Int(stats.winRate))%",
+                label: L("stats.winrate")
+            )
+            ledgerDivider
+            statItem(value: "\(stats.currentStreak)", label: L("stats.streak"))
+            ledgerDivider
+            statItem(value: "\(progress.totalStars)", label: L("stats.stars"))
+            ledgerDivider
+            statItem(value: "\(stats.bestStreak)", label: L("stats.best"))
         }
-        .padding(.vertical, 14)
-        .padding(.horizontal, 20)
-        .paperCard()
+        .padding(.vertical, 10)
+        .padding(.horizontal, 6)
+        .overlay(alignment: .top) { Rectangle().fill(AppTheme.ink).frame(height: 1) }
+        .overlay(alignment: .bottom) { TypewriterRule() }
         .opacity(titleOpacity)
     }
 
+    private var ledgerDivider: some View {
+        Rectangle().fill(AppTheme.rule).frame(width: 1, height: 26)
+    }
+
     private func statItem(value: String, label: String) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 2) {
             Text(value)
-                .font(AppFont.display(20, weight: .bold))
-                .foregroundStyle(AppTheme.accent)
-            Text(label)
-                .font(.system(size: 11, weight: .medium))
+                .font(AppFont.display(16, weight: .bold))
+                .foregroundStyle(AppTheme.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(label.uppercased())
+                .font(AppFont.label(8, weight: .regular))
+                .tracking(0.8)
                 .foregroundStyle(AppTheme.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
         }
+        .frame(maxWidth: .infinity)
     }
 
     private func animateEntrance() {
-        withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.1)) {
+        withAnimation(.easeOut(duration: 0.5).delay(0.05)) {
             titleScale = 1.0
             titleOpacity = 1.0
         }
-        withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.3)) {
+        withAnimation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.15)) {
             buttonsOffset = 0
         }
     }
@@ -632,10 +622,10 @@ struct FreePlaySetupView: View {
                 } label: {
                     Text(lieMode ? L("lie.start") : L("game.start"))
                         .font(AppFont.display(18, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AppTheme.paper)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(lieMode ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 14))
+                        .background(lieMode ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 3))
                 }
             }
             .padding(24)
@@ -654,18 +644,18 @@ struct FreePlaySetupView: View {
             HStack {
                 Text(diff.localizedName)
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(selectedDifficulty == diff ? Color.white : AppTheme.textPrimary)
+                    .foregroundStyle(selectedDifficulty == diff ? AppTheme.paper : AppTheme.textPrimary)
                 Spacer()
                 Text(diff.statsLabel)
-                    .font(.system(size: 12, weight: .medium, design: .monospaced))
-                    .foregroundStyle(selectedDifficulty == diff ? Color.white.opacity(0.8) : AppTheme.textSecondary)
+                    .font(AppFont.mono(12))
+                    .foregroundStyle(selectedDifficulty == diff ? AppTheme.paper.opacity(0.8) : AppTheme.textSecondary)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .contentShape(Rectangle())
             .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(selectedDifficulty == diff ? AppTheme.accent : Color.clear)
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(selectedDifficulty == diff ? AppTheme.ink : Color.clear)
             )
         }
         .buttonStyle(.plain)
@@ -678,7 +668,7 @@ struct FreePlaySetupView: View {
                 .foregroundStyle(AppTheme.textSecondary)
             Spacer()
             Text(value)
-                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                .font(AppFont.mono(14, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
         }
     }
@@ -721,7 +711,7 @@ struct DuelSetupView: View {
             VStack(spacing: 6) {
                 Image(systemName: "person.2.fill")
                     .font(.system(size: 36))
-                    .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
+                    .foregroundStyle(AppTheme.ink)
                 Text(L("duel.title"))
                     .font(AppFont.display(24, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
@@ -738,18 +728,18 @@ struct DuelSetupView: View {
                         HStack {
                             Text(diff.localizedName)
                                 .font(.system(size: 15, weight: .semibold))
-                                .foregroundStyle(selectedDifficulty == diff ? .white : AppTheme.textPrimary)
+                                .foregroundStyle(selectedDifficulty == diff ? AppTheme.paper : AppTheme.textPrimary)
                             Spacer()
                             Text(diff.statsLabel)
-                                .font(.system(size: 11, weight: .medium, design: .monospaced))
-                                .foregroundStyle(selectedDifficulty == diff ? .white.opacity(0.7) : AppTheme.textSecondary)
+                                .font(AppFont.mono(11))
+                                .foregroundStyle(selectedDifficulty == diff ? AppTheme.paper.opacity(0.7) : AppTheme.textSecondary)
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .contentShape(Rectangle())
                         .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(selectedDifficulty == diff ? Color(red: 0.5, green: 0.5, blue: 1.0) : Color.clear)
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(selectedDifficulty == diff ? AppTheme.ink : Color.clear)
                         )
                     }
                     .buttonStyle(.plain)
@@ -762,7 +752,7 @@ struct DuelSetupView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 6) {
                     Image(systemName: "info.circle.fill")
-                        .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
+                        .foregroundStyle(AppTheme.ink)
                     Text(L("duel.rules"))
                         .font(.system(size: 13, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
@@ -788,10 +778,10 @@ struct DuelSetupView: View {
                     Text(L("duel.p1.setup"))
                 }
                 .font(AppFont.display(17, weight: .bold))
-                .foregroundStyle(.white)
+                .foregroundStyle(AppTheme.paper)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
-                .background(Color(red: 0.5, green: 0.5, blue: 1.0), in: RoundedRectangle(cornerRadius: 14))
+                .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
             }
         }
         .padding(24)
@@ -831,14 +821,14 @@ struct DuelSetupView: View {
             HStack(spacing: 10) {
                 ForEach(0..<codeLength, id: \.self) { i in
                     ZStack {
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: 3)
                             .fill(AppTheme.bgCardLight)
                             .frame(height: 52)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 3)
                                     .stroke(
                                         i == min(secretCode.count, codeLength - 1) ?
-                                            Color(red: 0.5, green: 0.5, blue: 1.0) : Color.clear,
+                                            AppTheme.ink : Color.clear,
                                         lineWidth: 2
                                     )
                             )
@@ -880,10 +870,10 @@ struct DuelSetupView: View {
                 } label: {
                     Text(L("duel.confirm"))
                         .font(AppFont.display(17, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AppTheme.paper)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Color(red: 0.5, green: 0.5, blue: 1.0), in: RoundedRectangle(cornerRadius: 14))
+                        .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
@@ -921,14 +911,14 @@ struct DuelSetupView: View {
                     .frame(width: 90, height: 90)
                 Circle()
                     .trim(from: 0, to: CGFloat(max(0, countDown)) / 3.0)
-                    .stroke(Color(red: 0.5, green: 0.5, blue: 1.0),
+                    .stroke(AppTheme.ink,
                             style: StrokeStyle(lineWidth: 6, lineCap: .round))
                     .frame(width: 90, height: 90)
                     .rotationEffect(.degrees(-90))
                 if countDown > 0 {
                     Text("\(countDown)")
                         .font(AppFont.display(40, weight: .black))
-                        .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
+                        .foregroundStyle(AppTheme.ink)
                 } else {
                     Image(systemName: "checkmark")
                         .font(.system(size: 32, weight: .bold))
@@ -941,7 +931,7 @@ struct DuelSetupView: View {
             if countDown <= 0 {
                 VStack(spacing: 10) {
                     Text("\(selectedDifficulty.localizedName) · \(selectedDifficulty.statsLabel)")
-                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .font(AppFont.mono(12))
                         .foregroundStyle(AppTheme.textSecondary)
 
                     Button {
@@ -953,10 +943,10 @@ struct DuelSetupView: View {
                             Text(L("duel.p2.start"))
                         }
                         .font(AppFont.display(17, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AppTheme.paper)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Color(red: 0.5, green: 0.5, blue: 1.0), in: RoundedRectangle(cornerRadius: 14))
+                        .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
                     }
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))

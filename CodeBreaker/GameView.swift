@@ -34,8 +34,9 @@ struct GameView: View {
 
             VStack(spacing: 0) {
                 topBar
-                feedbackLegend
-                Divider().overlay(AppTheme.textMuted.opacity(0.3)).padding(.horizontal)
+                if viewModel.guessHistory.isEmpty || viewModel.engine?.lieMode == true {
+                    feedbackLegend
+                }
 
                 ZStack(alignment: .top) {
                     guessBoard
@@ -53,13 +54,13 @@ struct GameView: View {
                     colorPicker
                     actionBar
                 }
-                .padding(.top, 6)
+                .padding(.top, 8)
                 .background(
-                    AppTheme.bgCard
+                    AppTheme.paperFolder
                         .ignoresSafeArea(edges: .bottom)
                 )
                 .overlay(alignment: .top) {
-                    Divider().overlay(AppTheme.cardStroke)
+                    Rectangle().fill(AppTheme.ink).frame(height: 1.5)
                 }
             }
 
@@ -95,10 +96,7 @@ struct GameView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
-                    .background(
-                        Capsule().fill(AppTheme.bgCardLight)
-                            .shadow(color: .black.opacity(0.1), radius: 8, y: 2)
-                    )
+                    .paperCard(fill: AppTheme.bgCardLight)
                     .padding(.bottom, 160)
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -199,20 +197,16 @@ struct GameView: View {
 
     private var lieKickoffBanner: some View {
         VStack {
-            HStack(spacing: 10) {
-                Image(systemName: "theatermask.and.paintbrush.fill")
-                    .font(.system(size: 18, weight: .bold))
+            VStack(spacing: 8) {
+                StampView(text: "Top Secret", tone: .red, size: 12, rotation: -4)
                 Text(L("lie.kickoff"))
                     .font(AppFont.display(14, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                    .multilineTextAlignment(.center)
             }
-            .foregroundStyle(AppTheme.danger)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(AppTheme.bgCardLight)
-                    .shadow(color: AppTheme.danger.opacity(0.35), radius: 16, y: 6)
-            )
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
+            .paperCard(fill: AppTheme.bgCardLight)
             .padding(.top, 100)
             Spacer()
         }
@@ -230,9 +224,7 @@ struct GameView: View {
                     .foregroundStyle(AppTheme.warning)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(L("achieve.toast"))
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(AppTheme.warning)
+                    DossierCaption(text: L("achieve.toast"), color: AppTheme.warning)
                     Text(a.localizedTitle)
                         .font(AppFont.display(15, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
@@ -241,11 +233,7 @@ struct GameView: View {
                 Spacer()
             }
             .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(AppTheme.bgCardLight)
-                    .shadow(color: AppTheme.warning.opacity(0.3), radius: 12, y: 4)
-            )
+            .paperCard(fill: AppTheme.bgCardLight)
             .padding(.horizontal, 20)
             .padding(.top, 50)
 
@@ -255,137 +243,120 @@ struct GameView: View {
 
     // MARK: - Top Bar
 
+    /// Case-file header: caption line, case number, subtitle, attempts on the right.
+    private var caseCaption: String {
+        if viewModel.level != nil { return viewModel.engine?.lieMode == true ? L("case.lie") : L("case.classic") }
+        if viewModel.mode == .duel { return L("game.duel") }
+        if viewModel.mode == .online { return L("online.title") }
+        if viewModel.isLieTaste { return L("taste.title") }
+        if viewModel.isDailyChallenge { return L("daily.title") }
+        return L("game.free")
+    }
+
+    private var caseTitle: String {
+        if let level = viewModel.level { return L("case.no", level.id) }
+        if viewModel.isDailyChallenge { return L("case.no", DailyCalendar.dayNumber()) }
+        if viewModel.isLieTaste { return L("taste.subtitle") }
+        return String(format: "No. %04d", Int((viewModel.engine?.seed ?? 0) % 10000))
+    }
+
+    private var caseSubtitle: String? {
+        if let level = viewModel.level { return level.difficulty.localizedName }
+        if viewModel.isLieTaste { return nil }
+        if viewModel.engine?.lieMode == true { return L("lie.mode") }
+        return nil
+    }
+
     private var topBar: some View {
-        ZStack {
-            VStack(spacing: 2) {
-                if let level = viewModel.level {
-                    Text(L("level.title", level.id))
-                        .font(AppFont.display(20, weight: .bold))
-                        .foregroundStyle(AppTheme.textPrimary)
-                    if viewModel.engine?.lieMode == true {
-                        Text("\(level.difficulty.localizedName) · \(L("lie.mode"))")
-                            .font(AppFont.display(11, weight: .bold))
-                            .foregroundStyle(AppTheme.danger)
-                    } else {
-                        Text(level.difficulty.localizedName)
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundStyle(AppTheme.accent)
-                    }
-                } else if viewModel.mode == .duel {
-                    Text(L("game.duel"))
-                        .font(AppFont.display(20, weight: .bold))
-                        .foregroundStyle(AppTheme.textPrimary)
-                } else if viewModel.mode == .online {
-                    Text(L("online.title"))
-                        .font(AppFont.display(20, weight: .bold))
-                        .foregroundStyle(AppTheme.textPrimary)
-                } else if viewModel.isLieTaste {
-                    Text(L("taste.title"))
-                        .font(AppFont.display(20, weight: .bold))
-                        .foregroundStyle(AppTheme.textPrimary)
-                    Text(L("taste.subtitle"))
-                        .font(AppFont.display(11, weight: .bold))
-                        .foregroundStyle(AppTheme.danger)
-                } else if viewModel.isDailyChallenge {
-                    Text(L("daily.title"))
-                        .font(AppFont.display(20, weight: .bold))
-                        .foregroundStyle(AppTheme.textPrimary)
-                    if viewModel.engine?.lieMode == true {
-                        Label(L("daily.lie.badge"), systemImage: "theatermask.and.paintbrush.fill")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(AppTheme.danger)
-                    }
-                } else {
-                    Text(L("game.free"))
-                        .font(AppFont.display(20, weight: .bold))
-                        .foregroundStyle(AppTheme.textPrimary)
-                    if viewModel.engine?.lieMode == true {
-                        Label(L("lie.mode"), systemImage: "exclamationmark.triangle.fill")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(AppTheme.danger)
-                    }
+        HStack(alignment: .top, spacing: 12) {
+            Button { dismiss() } label: {
+                Image(systemName: "chevron.backward")
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                    .frame(width: 40, height: 40)
+                    .paperCard()
+            }
+            .accessibilityLabel("Back")
+
+            VStack(alignment: .leading, spacing: 1) {
+                DossierCaption(text: caseCaption)
+                Text(caseTitle)
+                    .font(AppFont.display(22, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                if let sub = caseSubtitle {
+                    Text(sub)
+                        .font(AppFont.label(11, weight: .regular))
+                        .foregroundStyle(viewModel.engine?.lieMode == true ? AppTheme.danger : AppTheme.textSecondary)
                 }
             }
 
-            HStack {
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.backward")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(AppTheme.textSecondary)
-                        .frame(width: 40, height: 40)
-                        .paperCard()
+            Spacer(minLength: 4)
+
+            VStack(alignment: .trailing, spacing: 6) {
+                attemptsBadge
+                if viewModel.timeRemaining > 0 {
+                    Text("\(viewModel.timeRemaining)s")
+                        .font(AppFont.mono(12, weight: .bold))
+                        .foregroundStyle(viewModel.timeRemaining <= 15 ? AppTheme.danger : AppTheme.textSecondary)
                 }
-                .accessibilityLabel("Back")
-
-                Spacer()
-
-                HStack(spacing: 8) {
-                    if viewModel.timeRemaining > 0 {
-                        timerBadge
-                    }
-                    attemptsBadge
+                if viewModel.engine?.lieMode == true {
+                    StampView(text: "Top Secret", tone: .red, size: 8, rotation: -6)
                 }
             }
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-    }
-
-    private var timerBadge: some View {
-        HStack(spacing: 4) {
-            Image(systemName: "timer")
-                .font(.system(size: 11))
-            Text("\(viewModel.timeRemaining)s")
-                .font(.system(size: 13, weight: .bold, design: .monospaced))
+        .padding(.top, 6)
+        .padding(.bottom, 8)
+        .overlay(alignment: .bottom) {
+            Rectangle().fill(AppTheme.ink).frame(height: 1.5).padding(.horizontal, 16)
         }
-        .foregroundStyle(viewModel.timeRemaining <= 15 ? AppTheme.danger : AppTheme.warning)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .paperCard()
     }
 
     private var attemptsBadge: some View {
-        HStack(spacing: 3) {
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text("\(viewModel.attemptsLeft)")
-                .font(AppFont.display(16, weight: .bold))
-                .foregroundStyle(viewModel.attemptsLeft <= 2 ? AppTheme.danger : AppTheme.accent)
+                .font(AppFont.display(18, weight: .bold))
+                .foregroundStyle(viewModel.attemptsLeft <= 2 ? AppTheme.danger : AppTheme.textPrimary)
             Text(L("game.attempts"))
-                .font(.system(size: 12, weight: .medium))
+                .font(AppFont.label(10, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
         }
-        .padding(.horizontal, 8)
+        .padding(.horizontal, 10)
         .padding(.vertical, 5)
         .paperCard()
         .fixedSize()
+        .accessibilityLabel("\(viewModel.attemptsLeft) \(L("game.attempts"))")
     }
 
-    // MARK: - Feedback Legend
+    // MARK: - Feedback Legend (one line, only before the first guess / in lie mode)
 
     private var feedbackLegend: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            legendLine(type: .exact, text: L("legend.exact"))
-            legendLine(type: .partial, text: L("legend.partial"))
-            legendLine(type: .miss, text: L("legend.miss"))
-            if viewModel.engine?.lieMode == true {
-                HStack(spacing: 6) {
-                    Image(systemName: "flag")
-                        .font(.system(size: 11, weight: .bold))
-                    Text(L("lie.clue"))
-                        .font(AppFont.display(13, weight: .bold))
+        VStack(alignment: .leading, spacing: 4) {
+            if viewModel.guessHistory.isEmpty {
+                HStack(spacing: 12) {
+                    legendItem(type: .exact, text: L("legend.exact.short"))
+                    legendItem(type: .partial, text: L("legend.partial.short"))
+                    legendItem(type: .miss, text: L("legend.miss.short"))
                 }
-                .foregroundStyle(AppTheme.danger)
-                .padding(.top, 2)
+            }
+            if viewModel.engine?.lieMode == true {
+                Text(L("lie.clue"))
+                    .font(AppFont.label(11, weight: .regular))
+                    .foregroundStyle(AppTheme.danger)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 4)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 6)
     }
 
-    private func legendLine(type: FeedbackType, text: String) -> some View {
-        HStack(spacing: 6) {
-            FeedbackDotView(type: type, size: 18)
+    private func legendItem(type: FeedbackType, text: String) -> some View {
+        HStack(spacing: 4) {
+            FeedbackDotView(type: type, size: 14)
             Text(text)
-                .font(.system(size: 13, weight: .medium))
+                .font(AppFont.label(11, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
         }
     }
@@ -460,23 +431,19 @@ struct GameView: View {
                                 removal: .opacity
                             ))
                         } else {
-                            HStack(spacing: 6) {
-                                Text("\(i + 1)")
-                                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                            HStack(spacing: 10) {
+                                Text(romanNumeral(i + 1))
+                                    .font(AppFont.label(11, weight: .regular))
                                     .foregroundStyle(AppTheme.textMuted)
-                                    .frame(width: 16)
-                                if viewModel.engine?.lieMode == true {
-                                    Color.clear.frame(width: 12, height: 12)
-                                }
+                                    .frame(width: 26, alignment: .leading)
                                 Spacer()
                             }
                             .padding(.horizontal, 10)
                             .frame(height: rowHeight)
                         }
 
-                        Divider()
-                            .overlay(AppTheme.cardStroke)
-                            .padding(.leading, 40)
+                        TypewriterRule()
+                            .padding(.leading, 44)
                     }
                 }
                 .padding(.horizontal, 10)
@@ -491,20 +458,10 @@ struct GameView: View {
                 }
             }
         }
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(AppTheme.bgCardLight)
-                .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.35 : 0.06), radius: 6, y: 2)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(
-                    viewModel.engine?.lieMode == true ? AppTheme.danger.opacity(0.34) : Color.clear,
-                    lineWidth: 1.5
-                )
-        )
-        .padding(.horizontal, 8)
+        .paperCard()
+        .clipShape(RoundedRectangle(cornerRadius: 4))
+        .padding(.horizontal, 12)
+        .padding(.top, 8)
     }
 
     
@@ -519,19 +476,27 @@ struct GameView: View {
         viewModel.codeLength <= 4 ? 34 : viewModel.codeLength <= 5 ? 30 : 26
     }
 
+    /// Evidence tray: the row being assembled.
     private var currentGuessRow: some View {
-        HStack(spacing: viewModel.codeLength <= 4 ? 10 : 6) {
-            ForEach(0..<viewModel.codeLength, id: \.self) { i in
-                currentSlot(index: i)
+        VStack(spacing: 6) {
+            HStack {
+                DossierCaption(text: L("case.tray"))
+                Spacer()
+                Text(romanNumeral(viewModel.guessHistory.count + 1))
+                    .font(AppFont.label(11, weight: .bold))
+                    .foregroundStyle(AppTheme.accent)
             }
+            .padding(.horizontal, 4)
+            HStack(spacing: viewModel.codeLength <= 4 ? 10 : 6) {
+                ForEach(0..<viewModel.codeLength, id: \.self) { i in
+                    currentSlot(index: i)
+                }
+            }
+            .frame(maxWidth: .infinity)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .paperCard()
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(AppTheme.accent.opacity(0.15), lineWidth: 1)
-        )
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .paperCard(fill: AppTheme.bgCardLight)
         .padding(.horizontal, 16)
         .modifier(ShakeModifier(trigger: viewModel.shakeGuessRow))
         .boardLayout()
@@ -547,17 +512,16 @@ struct GameView: View {
         let isSelected = index == viewModel.selectedSlot && viewModel.phase == .playing
         let hintColor = confirmedColor(for: index)
         return ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(isSelected ? AppTheme.bgCardLight : AppTheme.bgCard)
+            RoundedRectangle(cornerRadius: 3)
+                .fill(isSelected ? AppTheme.bgCardLight : AppTheme.paperFolder)
                 .frame(width: slotSize, height: slotSize)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 3)
                         .stroke(
-                            isSelected ? AppTheme.accent : AppTheme.cardStroke,
-                            lineWidth: isSelected ? 2 : 1
+                            isSelected ? AppTheme.accent : AppTheme.rule,
+                            style: StrokeStyle(lineWidth: isSelected ? 2 : 1, dash: isSelected ? [] : [3, 3])
                         )
                 )
-                .shadow(color: isSelected ? AppTheme.accent.opacity(0.15) : .clear, radius: 6)
 
             if let color = viewModel.currentGuess[index] {
                 PegView(color: color, size: pegSize)
@@ -565,10 +529,10 @@ struct GameView: View {
             } else if let hint = hintColor {
                 PegView(color: hint, size: pegSize)
                     .opacity(0.35)
-            } else if isSelected {
-                Circle()
-                    .stroke(AppTheme.accent.opacity(0.4), style: StrokeStyle(lineWidth: 2, dash: [4, 4]))
-                    .frame(width: pegSize, height: pegSize)
+            } else {
+                Text("\(index + 1)")
+                    .font(AppFont.label(11, weight: .regular))
+                    .foregroundStyle(isSelected ? AppTheme.accent : AppTheme.textMuted)
             }
 
             if isSelected {
@@ -617,23 +581,21 @@ struct GameView: View {
             viewModel.selectColor(color)
         } label: {
             PegView(color: color, size: size)
-                .overlay(
-                    Circle()
-                        .stroke(AppTheme.cardStroke, lineWidth: 1)
-                )
                 .overlay {
                     if isEliminated {
                         Circle()
-                            .fill(Color.white.opacity(0.6))
-                        Image(systemName: "xmark")
-                            .font(.system(size: size * 0.35, weight: .bold))
-                            .foregroundStyle(AppTheme.danger.opacity(0.8))
+                            .fill(AppTheme.paper.opacity(0.7))
+                        Rectangle()
+                            .fill(AppTheme.ink)
+                            .frame(width: size * 0.9, height: 2)
+                            .rotationEffect(.degrees(-30))
                     } else if marker == .confirmed {
                         Circle()
-                            .stroke(AppTheme.accent, lineWidth: 2.5)
-                            .frame(width: size + 4, height: size + 4)
+                            .stroke(AppTheme.accent, lineWidth: 2)
+                            .frame(width: size + 6, height: size + 6)
                     }
                 }
+                .padding(3)
         }
         .disabled(viewModel.phase != .playing || isEliminated)
         .accessibilityLabel(color.displayName)
@@ -642,65 +604,55 @@ struct GameView: View {
 
     // MARK: - Action Bar
 
+    private func toolButton(_ systemName: String, active: Bool = false, tint: Color? = nil, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemName)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(tint ?? (active ? AppTheme.accent : AppTheme.textPrimary))
+                .frame(width: 44, height: 48)
+                .paperCard(fill: active ? AppTheme.bgCardLight : nil)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(active ? AppTheme.accent : .clear, lineWidth: 1.5)
+                )
+        }
+    }
+
     private var actionBar: some View {
         HStack(spacing: 6) {
-            Button {
+            toolButton("arrow.counterclockwise") {
                 SoundManager.shared.playTap()
                 for i in 0..<viewModel.codeLength {
                     viewModel.clearSlot(i)
                 }
                 viewModel.selectedSlot = 0
-            } label: {
-                Image(systemName: "arrow.counterclockwise")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .frame(width: 44, height: 50)
-                    .paperCard()
             }
             .disabled(viewModel.phase != .playing)
+            .accessibilityLabel("Clear")
 
-            Button {
+            toolButton("list.bullet.rectangle", active: viewModel.showNotes) {
                 SoundManager.shared.playTap()
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     viewModel.showNotes.toggle()
                 }
-            } label: {
-                Image(systemName: viewModel.showNotes ? "note.text" : "note.text.badge.plus")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(viewModel.showNotes ? AppTheme.accent : AppTheme.textSecondary)
-                    .frame(width: 44, height: 50)
-                    .paperCard()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(viewModel.showNotes ? AppTheme.accent.opacity(0.4) : .clear, lineWidth: 1.5)
-                    )
             }
             .accessibilityLabel("Notes")
 
-            Button {
-                SoundManager.shared.playTap()
-                viewModel.useHint()
-            } label: {
-                ZStack(alignment: .topTrailing) {
-                    Image(systemName: "lightbulb.max.fill")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(viewModel.canUseHint ? AppTheme.warning : AppTheme.textMuted)
-                        .frame(width: 44, height: 50)
-                        .paperCard()
-
-                    Text("\(hintCoinManager.coins)")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundStyle(.white)
-                        .frame(width: 16, height: 16)
-                        .background(
-                            hintCoinManager.coins > 0 ? AppTheme.warning : Color(white: 0.7),
-                            in: Circle()
-                        )
-                        .offset(x: 2, y: -2)
+            ZStack(alignment: .topTrailing) {
+                toolButton("person.fill.questionmark", tint: viewModel.canUseHint ? AppTheme.warning : AppTheme.textMuted) {
+                    SoundManager.shared.playTap()
+                    viewModel.useHint()
                 }
+                .disabled(!viewModel.canUseHint)
+                .accessibilityLabel("Hint")
+
+                Text("\(hintCoinManager.coins)")
+                    .font(AppFont.label(9, weight: .bold))
+                    .foregroundStyle(AppTheme.paper)
+                    .frame(width: 16, height: 16)
+                    .background(hintCoinManager.coins > 0 ? AppTheme.warning : AppTheme.textMuted, in: Circle())
+                    .offset(x: 4, y: -4)
             }
-            .disabled(!viewModel.canUseHint)
-            .accessibilityLabel("Hint")
 
             Button {
                 if viewModel.engine?.lieMode == true {
@@ -710,188 +662,201 @@ struct GameView: View {
                 }
                 viewModel.submitGuess()
             } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "paperplane.fill")
-                        .font(.system(size: 15))
-                    Text(L("game.submit"))
-                        .font(AppFont.display(16, weight: .bold))
-                }
-                .foregroundStyle(viewModel.canSubmit ? Color.white : AppTheme.textMuted)
-                .frame(maxWidth: .infinity)
-                .frame(height: 50)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(viewModel.canSubmit ? AppTheme.accent : AppTheme.cardStroke)
-                )
+                Text(L("game.submit"))
+                    .font(AppFont.label(14, weight: .bold))
+                    .tracking(1.5)
+                    .textCase(.uppercase)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .foregroundStyle(viewModel.canSubmit ? AppTheme.paper : AppTheme.textMuted)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(viewModel.canSubmit ? AppTheme.ink : AppTheme.paperFolder)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 3)
+                            .stroke(viewModel.canSubmit ? .clear : AppTheme.rule, lineWidth: 1)
+                    )
             }
             .disabled(!viewModel.canSubmit)
 
-            Button { shareImage() } label: {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(AppTheme.textSecondary)
-                    .frame(width: 44, height: 50)
-                    .paperCard()
-            }
-            .accessibilityLabel("Share")
+            toolButton("square.and.arrow.up") { shareImage() }
+                .accessibilityLabel("Share")
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
     }
 
-    // MARK: - Result Overlay
+    // MARK: - Result Overlay (case report)
+
+    private var isWon: Bool {
+        if case .won = viewModel.phase { return true }
+        return false
+    }
 
     private var resultOverlay: some View {
         ZStack {
-            Color.black.opacity(0.35).ignoresSafeArea()
+            AppTheme.ink.opacity(0.45).ignoresSafeArea()
                 .onTapGesture { }
 
-            VStack(spacing: 20) {
-                if case .won(let attempts) = viewModel.phase {
-                    winContent(attempts: attempts)
-                } else {
-                    loseContent
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    reportHeader
+                    Rectangle().fill(AppTheme.ink).frame(height: 1.5)
+                        .padding(.top, 10)
+                        .padding(.bottom, 12)
+
+                    VStack(spacing: 12) {
+                        if case .won(let attempts) = viewModel.phase {
+                            reportLine(L("report.result"), value: L("result.win"))
+                            reportLine(L("report.attempts"), value: L("result.win.steps", attempts))
+                            if viewModel.isDailyChallenge { dailyScoreLine(attempts: attempts) }
+                            starsLine(attempts: attempts)
+                            hintCoinProgress
+                        } else {
+                            reportLine(L("report.result"), value: L("result.lose"))
+                            Text(L("result.lose.desc"))
+                                .font(AppFont.body(13))
+                                .foregroundStyle(AppTheme.textSecondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+
+                        revealedCodeRow
+                        lieRevealSection
+                    }
+
+                    TypewriterRule().padding(.vertical, 14)
+
+                    resultButtons
                 }
+                .padding(22)
+                .paperCard(fill: AppTheme.bgCardLight)
+                .overlay(alignment: .topTrailing) {
+                    StampView(text: isWon ? "Case Closed" : "Unsolved", tone: .red, size: 15, rotation: -12)
+                        .padding(.top, 14)
+                        .padding(.trailing, 14)
+                        .opacity(showResult ? 1 : 0)
+                        .scaleEffect(showResult ? 1 : 1.6)
+                        .animation(.spring(response: 0.35, dampingFraction: 0.55).delay(0.25), value: showResult)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 40)
             }
-            .padding(32)
-            .background(
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(AppTheme.bgCardLight)
-                    .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.45 : 0.12), radius: 20, y: 4)
-            )
-            .padding(.horizontal, 32)
-            .transition(.scale(scale: 0.8).combined(with: .opacity))
+            .transition(.scale(scale: 0.92).combined(with: .opacity))
         }
     }
 
-    private func winContent(attempts: Int) -> some View {
-        VStack(spacing: 16) {
-            ZStack {
-                Circle()
-                    .fill(AppTheme.accent.opacity(0.1))
-                    .frame(width: 100, height: 100)
-                Circle()
-                    .fill(AppTheme.accent.opacity(0.05))
-                    .frame(width: 130, height: 130)
-                Image(systemName: "checkmark.shield.fill")
-                    .font(.system(size: 56))
-                    .foregroundStyle(AppTheme.accent)
-                    .shadow(color: AppTheme.accent.opacity(0.5), radius: 20)
-            }
-
-            Text(L("result.win"))
-                .font(AppFont.display(24, weight: .black))
+    private var reportHeader: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            DossierCaption(text: L("report.title"))
+            Text(caseTitle)
+                .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
-
-            Text(L("result.win.steps", attempts))
-                .font(.system(size: 15, weight: .medium))
+            Text(caseCaption + (caseSubtitle.map { " · \($0)" } ?? ""))
+                .font(AppFont.label(11, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.trailing, 110)
+    }
 
-            starsDisplay(attempts: attempts)
-
-            if viewModel.isDailyChallenge {
-                dailyScoreBadge(attempts: attempts)
-            }
-
-            hintCoinProgress
-
-            revealedCodeRow
-
-            lieRevealSection
-
-            resultButtons
+    private func reportLine(_ label: String, value: String) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(label)
+                .font(AppFont.label(11, weight: .regular))
+                .foregroundStyle(AppTheme.textSecondary)
+            Spacer()
+            Text(value)
+                .font(AppFont.display(15, weight: .bold))
+                .foregroundStyle(AppTheme.textPrimary)
+                .multilineTextAlignment(.trailing)
         }
     }
 
-    private func dailyScoreBadge(attempts: Int) -> some View {
+    private func dailyScoreLine(attempts: Int) -> some View {
         let elapsed = Int(Date().timeIntervalSince(viewModel.gameStartTime ?? Date()))
         let score = (viewModel.maxAttempts - attempts) * 10000 + max(0, 10000 - elapsed)
-        return HStack(spacing: 8) {
-            Image(systemName: "trophy.fill")
-                .font(.system(size: 14))
-                .foregroundStyle(AppTheme.warning)
-            Text(L("game.score", score))
-                .font(AppFont.display(14, weight: .bold))
+        return HStack(alignment: .firstTextBaseline) {
+            Text(L("report.score"))
+                .font(AppFont.label(11, weight: .regular))
+                .foregroundStyle(AppTheme.textSecondary)
+            Spacer()
+            Text("\(score)")
+                .font(AppFont.mono(15, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
             if GameCenterManager.shared.isAuthenticated {
                 Text(L("game.submitted"))
-                    .font(.system(size: 11, weight: .medium))
+                    .font(AppFont.label(10, weight: .regular))
                     .foregroundStyle(AppTheme.accent)
             }
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 8)
-        .paperCard()
+    }
+
+    private func starsLine(attempts: Int) -> some View {
+        let ratio = Double(attempts) / Double(viewModel.maxAttempts)
+        let stars = ratio <= 0.3 ? 3 : ratio <= 0.6 ? 2 : 1
+        return HStack {
+            Text(L("report.rating"))
+                .font(AppFont.label(11, weight: .regular))
+                .foregroundStyle(AppTheme.textSecondary)
+            Spacer()
+            HStack(spacing: 6) {
+                ForEach(0..<3, id: \.self) { i in
+                    Image(systemName: i < stars ? "star.fill" : "star")
+                        .font(.system(size: 16))
+                        .foregroundStyle(i < stars ? AppTheme.accent : AppTheme.textMuted)
+                }
+            }
+        }
     }
 
     private var hintCoinProgress: some View {
         let wins = hintCoinManager.winsTowardsCoin
         let needed = HintCoinManager.winsPerCoin
 
-        return HStack(spacing: 8) {
-            Image(systemName: "lightbulb.fill")
-                .font(.system(size: 13))
-                .foregroundStyle(AppTheme.warning)
-
+        return HStack {
+            Text(L("store.hints"))
+                .font(AppFont.label(11, weight: .regular))
+                .foregroundStyle(AppTheme.textSecondary)
+            Spacer()
             if hintCoinManager.justEarnedCoin {
                 Text(L("game.hint.earned", hintCoinManager.coins))
                     .font(AppFont.display(13, weight: .bold))
                     .foregroundStyle(AppTheme.warning)
             } else {
                 Text(L("game.hint.progress", wins, needed))
-                    .font(.system(size: 12, weight: .medium))
+                    .font(AppFont.body(12))
                     .foregroundStyle(AppTheme.textSecondary)
-
                 HStack(spacing: 3) {
                     ForEach(0..<needed, id: \.self) { i in
                         Circle()
-                            .fill(i < wins ? AppTheme.warning : AppTheme.textMuted.opacity(0.3))
+                            .fill(i < wins ? AppTheme.warning : .clear)
+                            .overlay(Circle().stroke(AppTheme.rule, lineWidth: 1))
                             .frame(width: 8, height: 8)
                     }
                 }
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .paperCard()
-    }
-
-    private var loseContent: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "xmark.shield.fill")
-                .font(.system(size: 56))
-                .foregroundStyle(AppTheme.danger)
-                .shadow(color: AppTheme.danger.opacity(0.5), radius: 20)
-
-            Text(L("result.lose"))
-                .font(AppFont.display(24, weight: .black))
-                .foregroundStyle(AppTheme.textPrimary)
-
-            Text(L("result.lose.desc"))
-                .font(.system(size: 15, weight: .medium))
-                .foregroundStyle(AppTheme.textSecondary)
-
-            revealedCodeRow
-
-            lieRevealSection
-
-            resultButtons
-        }
     }
 
     private var revealedCodeRow: some View {
-        HStack(spacing: 8) {
+        HStack {
             Text(L("result.code"))
-                .font(.system(size: 14, weight: .medium))
+                .font(AppFont.label(11, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
-            ForEach(0..<viewModel.secretCode.count, id: \.self) { i in
-                PegView(color: viewModel.secretCode[i], size: 28)
+            Spacer()
+            HStack(spacing: 6) {
+                ForEach(0..<viewModel.secretCode.count, id: \.self) { i in
+                    PegView(color: viewModel.secretCode[i], size: 28)
+                }
             }
+            .boardLayout()
         }
         .padding(.vertical, 8)
-        .padding(.horizontal, 16)
-        .paperCard()
-        .boardLayout()
+        .padding(.horizontal, 12)
+        .background(AppTheme.paperFolder, in: RoundedRectangle(cornerRadius: 3))
     }
 
     @ViewBuilder
@@ -900,26 +865,19 @@ struct GameView: View {
             if let lieGuess = viewModel.engine?.lieAtGuess, lieGuess <= viewModel.guessHistory.count {
                 let record = viewModel.guessHistory[lieGuess - 1]
                 let realFeedback = viewModel.engine!.computeRealFeedback(guess: record.guess)
-                VStack(spacing: 8) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "theatermask.and.paintbrush.fill")
-                            .font(.system(size: 14, weight: .bold))
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        StampView(text: L("lie.stamp"), tone: .red, size: 9, rotation: 0)
                         Text(L("lie.reveal", lieGuess))
-                            .font(AppFont.display(14, weight: .bold))
+                            .font(AppFont.display(13, weight: .bold))
+                            .foregroundStyle(AppTheme.danger)
                     }
-                    .foregroundStyle(AppTheme.danger)
 
                     HStack(spacing: 10) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(L("lie.fake"))
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(AppTheme.textMuted)
-                            FeedbackDotsRow(
-                                feedback: record.feedback,
-                                codeLength: viewModel.codeLength,
-                                size: 16
-                            )
-                            .opacity(lieRevealShowReal ? 0.4 : 1)
+                            DossierCaption(text: L("lie.fake"), color: AppTheme.textMuted)
+                            FeedbackDotsRow(feedback: record.feedback, codeLength: viewModel.codeLength, size: 16)
+                                .opacity(lieRevealShowReal ? 0.4 : 1)
                         }
 
                         Image(systemName: "arrow.forward")
@@ -929,106 +887,45 @@ struct GameView: View {
                             .opacity(lieRevealShowReal ? 1 : 0.25)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(L("lie.real.short"))
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(AppTheme.textMuted)
-                            FeedbackDotsRow(
-                                feedback: realFeedback,
-                                codeLength: viewModel.codeLength,
-                                size: 16
-                            )
-                            .scaleEffect(lieRevealShowReal ? 1 : 0.7)
-                            .opacity(lieRevealShowReal ? 1 : 0)
+                            DossierCaption(text: L("lie.real.short"), color: AppTheme.textMuted)
+                            FeedbackDotsRow(feedback: realFeedback, codeLength: viewModel.codeLength, size: 16)
+                                .scaleEffect(lieRevealShowReal ? 1 : 0.7)
+                                .opacity(lieRevealShowReal ? 1 : 0)
                         }
                     }
                 }
                 .padding(.vertical, 10)
-                .padding(.horizontal, 14)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(AppTheme.danger.opacity(0.08))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(AppTheme.danger.opacity(0.3), lineWidth: 1)
-                        )
+                .padding(.horizontal, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 3)
+                        .stroke(AppTheme.danger, style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
                 )
             } else {
-                HStack(spacing: 6) {
-                    Image(systemName: "theatermask.and.paintbrush.fill")
-                        .font(.system(size: 13))
-                        .foregroundStyle(AppTheme.accent)
-                    Text(L("lie.notrigger"))
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(AppTheme.accent)
-                }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 14)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(AppTheme.accent.opacity(0.08))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(AppTheme.accent.opacity(0.2), lineWidth: 1)
-                        )
-                )
-            }
-        }
-    }
-
-    private func starsDisplay(attempts: Int) -> some View {
-        let ratio = Double(attempts) / Double(viewModel.maxAttempts)
-        let stars = ratio <= 0.3 ? 3 : ratio <= 0.6 ? 2 : 1
-        return HStack(spacing: 8) {
-            ForEach(0..<3, id: \.self) { i in
-                Image(systemName: i < stars ? "star.fill" : "star")
-                    .font(.system(size: 28))
-                    .foregroundStyle(i < stars ? AppTheme.warning : AppTheme.textMuted)
-                    .scaleEffect(i < stars ? 1.0 : 0.85)
+                Text(L("lie.notrigger"))
+                    .font(AppFont.body(12))
+                    .foregroundStyle(AppTheme.textSecondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }
 
     private var resultButtons: some View {
         VStack(spacing: 10) {
-            HStack(spacing: 10) {
-                Button {
-                    shareImage()
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "square.and.arrow.up")
-                            .font(.system(size: 14))
-                        Text(L("result.share"))
-                            .font(AppFont.display(14, weight: .bold))
-                    }
-                    .foregroundStyle(AppTheme.accent)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(AppTheme.accent, lineWidth: 1.5)
-                    )
-                }
-
-                if let level = viewModel.level {
-                    if case .won = viewModel.phase,
-                       let next = LevelManager.shared.level(for: level.id + 1) {
-                        let lie = viewModel.engine?.lieMode == true
-                        if storeManager.isLevelLocked(next.id, lieMode: lie) {
-                            Button {
-                                paywallReason = lie ? .finishedLieFree : .finishedClassicFree
-                                if level.id != StoreManager.freeCap(lieMode: lie) {
-                                    paywallReason = lie ? .lieLevels : .classicLevels
-                                }
-                                showPaywall = true
-                            } label: {
-                                Text(L("paywall.unlock"))
-                                    .font(AppFont.display(14, weight: .bold))
-                                    .foregroundStyle(Color.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 14)
-                                    .background(lie ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
+            if let level = viewModel.level {
+                if case .won = viewModel.phase,
+                   let next = LevelManager.shared.level(for: level.id + 1) {
+                    let lie = viewModel.engine?.lieMode == true
+                    if storeManager.isLevelLocked(next.id, lieMode: lie) {
+                        Button {
+                            paywallReason = lie ? .finishedLieFree : .finishedClassicFree
+                            if level.id != StoreManager.freeCap(lieMode: lie) {
+                                paywallReason = lie ? .lieLevels : .classicLevels
                             }
-                        } else {
+                            showPaywall = true
+                        } label: { Text(L("paywall.unlock")) }
+                        .buttonStyle(InkButtonStyle())
+                    } else {
                         Button {
                             showResult = false
                             confettiParticles = []
@@ -1038,68 +935,43 @@ struct GameView: View {
                             } else {
                                 viewModel.startGame(level: next)
                             }
-                        } label: {
-                            Text(L("result.next"))
-                                .font(AppFont.display(14, weight: .bold))
-                                .foregroundStyle(Color.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
-                        }
-                        }
-                    } else {
-                        Button {
-                            showResult = false
-                            confettiParticles = []
-                            if viewModel.engine?.lieMode == true {
-                                let extra = level.difficulty.lieExtraAttempts
-                                viewModel.startLieGame(level: level, totalAttempts: level.maxAttempts + extra)
-                            } else {
-                                viewModel.startGame(level: level)
-                            }
-                        } label: {
-                            Text(L("result.retry"))
-                                .font(AppFont.display(14, weight: .bold))
-                                .foregroundStyle(Color.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
-                        }
+                        } label: { Text(L("result.next")) }
+                        .buttonStyle(InkButtonStyle())
                     }
                 } else {
                     Button {
                         showResult = false
                         confettiParticles = []
-                        let wasLie = viewModel.engine?.lieMode ?? false
-                        viewModel.startFreePlay(difficulty: viewModel.lastDifficulty, lieMode: wasLie)
-                    } label: {
-                        Text(L("result.again"))
-                            .font(AppFont.display(14, weight: .bold))
-                            .foregroundStyle(Color.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(AppTheme.accent, in: RoundedRectangle(cornerRadius: 12))
-                    }
+                        if viewModel.engine?.lieMode == true {
+                            let extra = level.difficulty.lieExtraAttempts
+                            viewModel.startLieGame(level: level, totalAttempts: level.maxAttempts + extra)
+                        } else {
+                            viewModel.startGame(level: level)
+                        }
+                    } label: { Text(L("result.retry")) }
+                    .buttonStyle(InkButtonStyle())
                 }
+            } else {
+                Button {
+                    showResult = false
+                    confettiParticles = []
+                    let wasLie = viewModel.engine?.lieMode ?? false
+                    viewModel.startFreePlay(difficulty: viewModel.lastDifficulty, lieMode: wasLie)
+                } label: { Text(L("result.again")) }
+                .buttonStyle(InkButtonStyle())
             }
 
-            if case .won = viewModel.phase {
-                Button {
-                    shareChallengeLink()
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "person.badge.plus")
-                            .font(.system(size: 13))
-                        Text(L("result.challenge"))
-                            .font(AppFont.display(13, weight: .bold))
+            HStack(spacing: 10) {
+                Button { shareImage() } label: {
+                    Label(L("result.share"), systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(InkButtonStyle(prominent: false))
+
+                if case .won = viewModel.phase {
+                    Button { shareChallengeLink() } label: {
+                        Label(L("result.challenge"), systemImage: "person.badge.plus")
                     }
-                    .foregroundStyle(AppTheme.warning)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(AppTheme.warning, lineWidth: 1.5)
-                    )
+                    .buttonStyle(InkButtonStyle(prominent: false))
                 }
             }
 
@@ -1108,7 +980,7 @@ struct GameView: View {
                 dismiss()
             } label: {
                 Text(L("result.back"))
-                    .font(.system(size: 14, weight: .medium))
+                    .font(AppFont.label(12, weight: .regular))
                     .foregroundStyle(AppTheme.textSecondary)
                     .padding(.top, 4)
             }
@@ -1235,7 +1107,7 @@ struct GameView: View {
     }
 
     private func spawnConfetti() {
-        let colors: [Color] = [.red, .green, .blue, .yellow, .purple, .orange, .cyan, .pink]
+        let colors: [Color] = [AppTheme.accent, AppTheme.ink, AppTheme.paperFolder, AppTheme.accent, AppTheme.warning]
         var particles: [ConfettiParticle] = []
         for _ in 0..<40 {
             particles.append(ConfettiParticle(
@@ -1325,20 +1197,14 @@ struct GuessRowView: View {
         codeLength <= 4 ? 18 : 14
     }
 
-    var body: some View {
-        HStack(spacing: 6) {
-            Text("\(index)")
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundStyle(AppTheme.textSecondary)
-                .frame(width: 16)
+    private var isSuspect: Bool { gameOver && feedback.isLie }
 
-            if isLieMode {
-                Image(systemName: gameOver && feedback.isLie ? "flag.fill" : "flag")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(AppTheme.danger.opacity(gameOver && !feedback.isLie ? 0 : (gameOver ? 1 : 0.45)))
-                    .frame(width: 12)
-                    .accessibilityHidden(true)
-            }
+    var body: some View {
+        HStack(spacing: 10) {
+            Text(romanNumeral(index))
+                .font(AppFont.label(11, weight: isSuspect ? .bold : .regular))
+                .foregroundStyle(isSuspect ? AppTheme.danger : AppTheme.textSecondary)
+                .frame(width: 26, alignment: .leading)
 
             HStack(spacing: pegSpacing) {
                 ForEach(0..<guess.count, id: \.self) { i in
@@ -1355,41 +1221,23 @@ struct GuessRowView: View {
 
             Spacer(minLength: 4)
 
+            if isSuspect {
+                StampView(text: L("lie.suspect"), tone: .red, size: 8, rotation: -8)
+                    .scaleEffect(stampIn ? 1 : 1.7)
+                    .opacity(stampIn ? 1 : 0)
+            }
+
             feedbackDots
                 .opacity(revealed ? (glitch ? 0.2 : 1.0) : 0)
                 .offset(x: glitch ? 1.5 : 0)
                 .animation(.easeOut(duration: 0.3).delay(0.4), value: revealed)
                 .animation(.easeInOut(duration: 0.06), value: glitch)
-
-            if gameOver && feedback.isLie {
-                Text(L("lie.stamp"))
-                    .font(AppFont.display(9, weight: .black))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 2)
-                    .background(AppTheme.danger, in: Capsule())
-                    .rotationEffect(.degrees(-9))
-                    .scaleEffect(stampIn ? 1 : 1.7)
-                    .opacity(stampIn ? 1 : 0)
-            }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
         .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(gameOver && feedback.isLie ? AppTheme.danger.opacity(0.08) : AppTheme.bgCardLight)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(
-                            gameOver && feedback.isLie ? AppTheme.danger.opacity(stampIn ? 0.85 : 0.35) : AppTheme.cardStroke,
-                            lineWidth: gameOver && feedback.isLie ? 2 : 1
-                        )
-                )
-                .shadow(
-                    color: gameOver && feedback.isLie && stampIn ? AppTheme.danger.opacity(0.22) : .black.opacity(0.03),
-                    radius: gameOver && feedback.isLie ? 6 : 2,
-                    y: 1
-                )
+            RoundedRectangle(cornerRadius: 3)
+                .fill(isSuspect ? AppTheme.danger.opacity(0.07) : .clear)
         )
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Row \(index) \(guess.map { $0.displayName }.joined(separator: " ")) feedback \(feedbackLabel)")
@@ -1400,7 +1248,7 @@ struct GuessRowView: View {
             if isLieMode {
                 flickerFeedback()
             }
-            if gameOver && feedback.isLie {
+            if isSuspect {
                 slamLieStamp()
             }
         }
@@ -1432,16 +1280,26 @@ struct GuessRowView: View {
     }
 
     private var feedbackDots: some View {
+        FeedbackMarks(feedback: feedback, codeLength: codeLength, size: feedbackDotSize)
+    }
+}
+
+/// Feedback marks laid out in one row (≤4 pegs) or two rows (longer codes).
+struct FeedbackMarks: View {
+    let feedback: Feedback
+    let codeLength: Int
+    let size: CGFloat
+
+    var body: some View {
         let exact = feedback.exact
         let partial = feedback.partial
-        let empty = codeLength - exact - partial
-        let size = feedbackDotSize
+        let empty = max(0, codeLength - exact - partial)
         let allTypes: [FeedbackType] =
             Array(repeating: .exact, count: exact) +
             Array(repeating: .partial, count: partial) +
             Array(repeating: .miss, count: empty)
 
-        return Group {
+        Group {
             if codeLength <= 4 {
                 HStack(spacing: 3) {
                     ForEach(0..<allTypes.count, id: \.self) { i in
@@ -1483,25 +1341,16 @@ struct NotesGridView: View {
     var body: some View {
         VStack(spacing: 0) {
             header
-            Divider().padding(.horizontal, 12)
+            Rectangle().fill(AppTheme.ink).frame(height: 1).padding(.horizontal, 12)
             gridContent
         }
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(AppTheme.bgCardLight)
-                .shadow(color: .black.opacity(ThemeManager.shared.currentSkin.isDark ? 0.4 : 0.08), radius: 8, y: 2)
-        )
+        .paperCard(fill: AppTheme.bgCardLight)
         .padding(.horizontal, 12)
     }
 
     private var header: some View {
         HStack {
-            Image(systemName: "note.text")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(AppTheme.accent)
-            Text(L("game.notes"))
-                .font(AppFont.display(15, weight: .bold))
-                .foregroundStyle(AppTheme.textPrimary)
+            DossierCaption(text: L("game.notes"), color: AppTheme.textPrimary)
 
             Spacer()
 
@@ -1510,11 +1359,11 @@ struct NotesGridView: View {
                 viewModel.clearAllNotes()
             } label: {
                 Text(L("game.notes.clear"))
-                    .font(.system(size: 12, weight: .medium))
+                    .font(AppFont.label(11, weight: .regular))
                     .foregroundStyle(AppTheme.textSecondary)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
-                    .background(Color(white: 0.94), in: Capsule())
+                    .overlay(RoundedRectangle(cornerRadius: 2).stroke(AppTheme.rule, lineWidth: 1))
             }
 
             Button {
@@ -1524,9 +1373,8 @@ struct NotesGridView: View {
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(AppTheme.textMuted)
+                    .foregroundStyle(AppTheme.textPrimary)
                     .frame(width: 28, height: 28)
-                    .background(Color(white: 0.94), in: Circle())
             }
         }
         .padding(.horizontal, 14)
@@ -1545,8 +1393,8 @@ struct NotesGridView: View {
                         }
                     } label: {
                         Text("P\(pos + 1)")
-                            .font(.system(size: 13, weight: .bold, design: .monospaced))
-                            .foregroundStyle(AppTheme.accent)
+                            .font(AppFont.label(12, weight: .bold))
+                            .foregroundStyle(AppTheme.textPrimary)
                             .frame(width: cellSize, height: 28)
                             .contentShape(Rectangle())
                     }
@@ -1562,7 +1410,7 @@ struct NotesGridView: View {
                             viewModel.toggleRow(color: color)
                         }
                     } label: {
-                        PegView(color: color, size: cellSize - 6)
+                        PegView(color: color, size: cellSize - 10)
                             .frame(width: cellSize, height: cellSize)
                             .contentShape(Rectangle())
                     }
@@ -1588,9 +1436,12 @@ struct NotesGridView: View {
             }
         } label: {
             ZStack {
-                RoundedRectangle(cornerRadius: 7)
-                    .fill(cellBackground(marker))
-                    .frame(width: cellSize - 4, height: cellSize - 4)
+                RoundedRectangle(cornerRadius: 2)
+                    .stroke(AppTheme.rule, lineWidth: 1)
+                    .background(
+                        RoundedRectangle(cornerRadius: 2).fill(cellBackground(marker))
+                    )
+                    .frame(width: cellSize - 6, height: cellSize - 6)
 
                 switch marker {
                 case .eliminated:
@@ -1600,7 +1451,7 @@ struct NotesGridView: View {
                 case .confirmed:
                     Image(systemName: "checkmark")
                         .font(.system(size: cellSize * 0.38, weight: .bold))
-                        .foregroundStyle(AppTheme.accent)
+                        .foregroundStyle(AppTheme.ink)
                 case nil:
                     EmptyView()
                 }
@@ -1612,9 +1463,9 @@ struct NotesGridView: View {
 
     private func cellBackground(_ marker: NoteMarker?) -> Color {
         switch marker {
-        case .eliminated: return AppTheme.danger.opacity(0.1)
-        case .confirmed: return AppTheme.accent.opacity(0.12)
-        case nil: return Color(white: 0.96)
+        case .eliminated: return AppTheme.danger.opacity(0.08)
+        case .confirmed: return AppTheme.ink.opacity(0.08)
+        case nil: return .clear
         }
     }
 }
@@ -1662,6 +1513,95 @@ struct ShareRowData: Identifiable {
     let isLie: Bool
 }
 
+private let shareAppStoreURL = "https://apps.apple.com/app/mind-cipher/id6777428188"
+
+private func shareQRCode(from string: String) -> UIImage? {
+    let data = string.data(using: .utf8)
+    guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
+    filter.setValue(data, forKey: "inputMessage")
+    filter.setValue("M", forKey: "inputCorrectionLevel")
+    guard let ciImage = filter.outputImage else { return nil }
+    let scale = 256.0 / ciImage.extent.width
+    let transformed = ciImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
+    let context = CIContext()
+    guard let cgImage = context.createCGImage(transformed, from: transformed.extent) else { return nil }
+    return UIImage(cgImage: cgImage)
+}
+
+/// Shared footer: app mark + QR on paper.
+private struct ShareFooter: View {
+    let skin: AppSkin
+    var body: some View {
+        HStack(spacing: 10) {
+            Image("AppLogo")
+                .resizable()
+                .frame(width: 36, height: 36)
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L("app.title"))
+                    .font(AppFont.display(13, weight: .bold))
+                    .foregroundStyle(skin.ink)
+                Text(L("share.scan"))
+                    .font(AppFont.body(10))
+                    .foregroundStyle(skin.inkFaded)
+            }
+            Spacer()
+            if let qrImage = shareQRCode(from: shareAppStoreURL) {
+                Image(uiImage: qrImage)
+                    .interpolation(.none)
+                    .resizable()
+                    .frame(width: 52, height: 52)
+                    .cornerRadius(2)
+            }
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 12)
+    }
+}
+
+/// Ledger of guesses used by both share cards.
+private struct ShareLedger: View {
+    let rows: [ShareRowData]
+    let codeLength: Int
+    let skin: AppSkin
+
+    private var pegSize: CGFloat { codeLength <= 4 ? 28 : codeLength <= 5 ? 24 : 20 }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ForEach(rows) { row in
+                HStack(spacing: 10) {
+                    Text(romanNumeral(row.id))
+                        .font(AppFont.label(11, weight: row.isLie ? .bold : .regular))
+                        .foregroundStyle(row.isLie ? skin.stamp : skin.inkFaded)
+                        .frame(width: 26, alignment: .leading)
+                    HStack(spacing: codeLength <= 4 ? 6 : 4) {
+                        ForEach(Array(row.guess.enumerated()), id: \.offset) { _, peg in
+                            PegView(color: peg, size: pegSize)
+                        }
+                    }
+                    Spacer(minLength: 4)
+                    if row.isLie {
+                        StampView(text: L("lie.suspect"), tone: .red, size: 7, rotation: -8)
+                    }
+                    FeedbackMarks(feedback: row.feedback, codeLength: codeLength, size: codeLength <= 4 ? 16 : 12)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 7)
+                .background(row.isLie ? skin.stamp.opacity(0.07) : .clear)
+                TypewriterRule(color: skin.rule).padding(.leading, 44)
+            }
+        }
+        .padding(.vertical, 4)
+        .background(
+            RoundedRectangle(cornerRadius: 4)
+                .fill(skin.paperCard)
+                .overlay(RoundedRectangle(cornerRadius: 4).stroke(skin.rule, lineWidth: 1))
+        )
+        .boardLayout()
+    }
+}
+
 struct ShareCardView: View {
     let rows: [ShareRowData]
     let codeLength: Int
@@ -1678,10 +1618,7 @@ struct ShareCardView: View {
     let isPlaying: Bool
     let availableColors: [PegColor]
 
-    private let accent = Color(red: 0.05, green: 0.60, blue: 0.55)
-    private let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
-    private let danger = Color(red: 0.85, green: 0.20, blue: 0.20)
-    private let bgLight = Color(red: 0.92, green: 0.95, blue: 0.98)
+    private let skin = AppSkin.dossier
 
     private var stars: Int {
         guard won else { return 0 }
@@ -1689,397 +1626,115 @@ struct ShareCardView: View {
         return ratio <= 0.3 ? 3 : ratio <= 0.6 ? 2 : 1
     }
 
-    private let appStoreURL = "https://apps.apple.com/app/mind-cipher/id6777428188"
+    private var caseTitle: String {
+        if let lid = levelId { return L("case.no", lid) }
+        return L("game.free")
+    }
 
     var body: some View {
         VStack(spacing: 0) {
-            shareTopBar
-            shareFeedbackLegend
-            Divider().overlay(Color(white: 0.82)).padding(.horizontal)
-            shareGuessBoard
-            shareColorInfo
-            shareInfoBar
-            shareAppLink
+            header
+            Rectangle().fill(skin.ink).frame(height: 1.5).padding(.horizontal, 18)
+
+            ShareLedger(rows: rows, codeLength: codeLength, skin: skin)
+                .padding(.horizontal, 18)
+                .padding(.top, 14)
+
+            statusBlock
+                .padding(.horizontal, 18)
+                .padding(.top, 12)
+
+            TypewriterRule(color: skin.rule).padding(.horizontal, 18).padding(.top, 12)
+            ShareFooter(skin: skin)
         }
-        .background(bgLight)
+        .background(skin.paper)
         .boardLayout()
     }
 
-    // MARK: - Top Bar
-
-    private var shareTopBar: some View {
-        HStack {
-            Image(systemName: "chevron.left")
-                .font(.system(size: 16, weight: .bold))
-                .foregroundStyle(Color(white: 0.55))
-                .frame(width: 40, height: 40)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.white.opacity(0.55))
-                )
-
+    private var header: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text((isLieMode ? L("case.lie") : L("case.classic")).uppercased())
+                    .font(AppFont.label(10, weight: .semibold))
+                    .tracking(1.8)
+                    .foregroundStyle(skin.inkFaded)
+                Text(caseTitle)
+                    .font(AppFont.display(24, weight: .bold))
+                    .foregroundStyle(skin.ink)
+                Text("\(difficultyName) · \(codeLength)×\(colorCount) · \(rows.count)/\(maxAttempts)")
+                    .font(AppFont.label(11, weight: .regular))
+                    .foregroundStyle(skin.inkFaded)
+            }
             Spacer()
-
-            VStack(spacing: 2) {
-                if let lid = levelId {
-                    Text(L("level.title", lid))
-                        .font(AppFont.display(20, weight: .bold))
-                        .foregroundStyle(Color(white: 0.12))
-                    Text(difficultyName)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(accent)
-                } else {
-                    Text(L("game.free"))
-                        .font(AppFont.display(20, weight: .bold))
-                        .foregroundStyle(Color(white: 0.12))
-                }
-                if isLieMode {
-                    Text(L("lie.mode"))
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(danger)
-                }
-            }
-
-            Spacer()
-
-            HStack(spacing: 4) {
-                Text("\(maxAttempts - rows.count)")
-                    .font(AppFont.display(18, weight: .bold))
-                    .foregroundStyle(accent)
-                Text(L("game.attempts"))
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(Color(white: 0.5))
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.white.opacity(0.55))
-            )
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
-    }
-
-    // MARK: - Legend
-
-    private var shareFeedbackLegend: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            shareLegendLine(type: .exact, text: L("legend.exact"))
-            shareLegendLine(type: .partial, text: L("legend.partial"))
-            shareLegendLine(type: .miss, text: L("legend.miss"))
-            if isLieMode {
-                Text(L("share.lie.banner"))
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundStyle(danger)
-                    .padding(.top, 2)
+            if !isPlaying {
+                StampView(text: won ? "Case Closed" : "Unsolved", tone: .red, size: 12, rotation: -10)
+                    .padding(.top, 6)
+            } else if isLieMode {
+                StampView(text: "Top Secret", tone: .red, size: 10, rotation: -10)
+                    .padding(.top, 6)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 4)
+        .padding(.horizontal, 18)
+        .padding(.top, 18)
+        .padding(.bottom, 10)
     }
 
-    private func shareLegendLine(type: FeedbackType, text: String) -> some View {
-        HStack(spacing: 6) {
-            FeedbackDotView(type: type, size: 18)
-            Text(text)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(Color(white: 0.4))
-        }
-    }
-
-    // MARK: - Guess Board (only filled rows)
-
-    private var shareGuessBoard: some View {
-        VStack(spacing: 0) {
-            ForEach(rows) { row in
-                shareGuessRow(row)
-                Divider().padding(.leading, 40)
-            }
-        }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 4)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.white.opacity(0.75))
-                .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-    }
-
-    private var sharePegSize: CGFloat {
-        codeLength <= 4 ? 32 : codeLength <= 5 ? 28 : 24
-    }
-
-    private func shareGuessRow(_ row: ShareRowData) -> some View {
-        HStack(spacing: 6) {
-            Text("\(row.id)")
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundStyle(Color(white: 0.4))
-                .frame(width: 16)
-
-            HStack(spacing: codeLength <= 4 ? 6 : 4) {
-                ForEach(Array(row.guess.enumerated()), id: \.offset) { _, peg in
-                    Circle()
-                        .fill(pegGrad(peg))
-                        .frame(width: sharePegSize, height: sharePegSize)
-                        .shadow(color: pegCol(peg).opacity(0.2), radius: 2, y: 1)
-                        .overlay(
-                            Text("\(pegNumber(peg))")
-                                .font(AppFont.display(sharePegSize * 0.45, weight: .bold))
-                                .foregroundStyle(AppTheme.pegInk(for: peg))
-                                .shadow(
-                                    color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.28) : .clear,
-                                    radius: 1, y: 1
-                                )
-                        )
-                }
-            }
-
-            Spacer(minLength: 4)
-
-            feedbackDots(row.feedback)
-
-            if row.isLie {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 12))
-                    .foregroundStyle(danger)
-            }
-        }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(row.isLie ? danger.opacity(0.06) : Color.white.opacity(0.9))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(row.isLie ? danger.opacity(0.5) : Color.black.opacity(0.06), lineWidth: 1)
-                )
-        )
-    }
-
-    private func feedbackDots(_ fb: Feedback) -> some View {
-        let dotSize: CGFloat = codeLength <= 4 ? 18 : 14
-        let types: [FeedbackType] =
-            Array(repeating: .exact, count: fb.exact) +
-            Array(repeating: .partial, count: fb.partial) +
-            Array(repeating: .miss, count: max(0, codeLength - fb.exact - fb.partial))
-
-        return Group {
-            if codeLength <= 4 {
-                HStack(spacing: 3) {
-                    ForEach(Array(types.enumerated()), id: \.offset) { _, t in
-                        FeedbackDotView(type: t, size: dotSize)
-                    }
-                }
-            } else {
-                let columns = Int(ceil(Double(codeLength) / 2.0))
-                VStack(spacing: 2) {
-                    HStack(spacing: 2) {
-                        ForEach(0..<columns, id: \.self) { i in
-                            FeedbackDotView(type: types[i], size: dotSize)
-                        }
-                    }
-                    HStack(spacing: 2) {
-                        ForEach(columns..<types.count, id: \.self) { i in
-                            FeedbackDotView(type: types[i], size: dotSize)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: - Input Area (mirrors game bottom)
-
-    private var shareColorInfo: some View {
-        let slotSize: CGFloat = codeLength <= 4 ? 52 : codeLength <= 5 ? 46 : 40
-        let slotSpacing: CGFloat = codeLength <= 4 ? 10 : 6
-        let colorSize: CGFloat = availableColors.count <= 6 ? 42 : 36
-
-        return VStack(spacing: 8) {
-            shareSlotsRow(slotSize: slotSize, spacing: slotSpacing)
-            shareColorsRow(colorSize: colorSize)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.white.opacity(0.4))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.black.opacity(0.06), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-    }
-
-    private func shareSlotsRow(slotSize: CGFloat, spacing: CGFloat) -> some View {
-        HStack(spacing: spacing) {
-            ForEach(0..<codeLength, id: \.self) { _ in
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.white.opacity(0.7))
-                    .frame(width: slotSize, height: slotSize)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.black.opacity(0.08), lineWidth: 1)
-                    )
-            }
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.white.opacity(0.55))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(Color.black.opacity(0.06), lineWidth: 1)
-                )
-        )
-    }
-
-    private func shareColorsRow(colorSize: CGFloat) -> some View {
-        HStack(spacing: 8) {
-            ForEach(Array(availableColors.enumerated()), id: \.offset) { idx, peg in
-                Circle()
-                    .fill(pegGrad(peg))
-                    .frame(width: colorSize, height: colorSize)
-                    .overlay(Circle().stroke(Color.black.opacity(0.08), lineWidth: 1))
-                    .overlay(
-                        Text("\(idx + 1)")
-                            .font(AppFont.display(colorSize * 0.4, weight: .bold))
-                            .foregroundStyle(AppTheme.pegInk(for: peg))
-                            .shadow(
-                                color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.28) : .clear,
-                                radius: 1, y: 1
-                            )
-                    )
-            }
-        }
-        .padding(.vertical, 6)
-    }
-
-    // MARK: - Info Bar (result + lie reveal)
-
-    private var shareInfoBar: some View {
-        VStack(spacing: 4) {
+    @ViewBuilder
+    private var statusBlock: some View {
+        VStack(alignment: .leading, spacing: 8) {
             if isPlaying {
                 Text(L("share.inprogress", rows.count, maxAttempts))
                     .font(AppFont.display(14, weight: .bold))
-                    .foregroundStyle(Color(white: 0.4))
+                    .foregroundStyle(skin.ink)
             } else if won {
-                HStack(spacing: 6) {
-                    ForEach(0..<3, id: \.self) { i in
-                        Image(systemName: i < stars ? "star.fill" : "star")
-                            .font(.system(size: 18))
-                            .foregroundStyle(i < stars ? warning : Color(white: 0.75))
+                HStack(spacing: 8) {
+                    HStack(spacing: 4) {
+                        ForEach(0..<3, id: \.self) { i in
+                            Image(systemName: i < stars ? "star.fill" : "star")
+                                .font(.system(size: 14))
+                                .foregroundStyle(i < stars ? skin.stamp : skin.inkMuted)
+                        }
                     }
+                    Text(L("share.solved", attempts, maxAttempts))
+                        .font(AppFont.display(14, weight: .bold))
+                        .foregroundStyle(skin.ink)
                 }
-                Text(L("share.solved", attempts, maxAttempts))
-                    .font(AppFont.display(14, weight: .bold))
-                    .foregroundStyle(accent)
             } else {
                 Text(L("share.failed", rows.count, maxAttempts))
                     .font(AppFont.display(14, weight: .bold))
-                    .foregroundStyle(danger)
+                    .foregroundStyle(skin.stamp)
             }
 
             if isLieMode, let step = lieStep, let fakeFb = lieFakeFeedback, let realFb = lieRealFeedback {
-                VStack(spacing: 6) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "theatermask.and.paintbrush.fill")
-                            .font(.system(size: 12))
-                        Text(L("lie.reveal", step))
-                            .font(AppFont.display(12, weight: .bold))
-                    }
-                    .foregroundStyle(danger)
-
-                    HStack(spacing: 8) {
-                        FeedbackDotsRow(feedback: fakeFb, codeLength: codeLength, size: 14)
-                            .opacity(0.45)
-                        Image(systemName: "arrow.right")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(Color(white: 0.55))
-                        FeedbackDotsRow(feedback: realFb, codeLength: codeLength, size: 14)
-                    }
+                HStack(spacing: 10) {
+                    Text(L("lie.reveal", step))
+                        .font(AppFont.label(11, weight: .bold))
+                        .foregroundStyle(skin.stamp)
+                    FeedbackDotsRow(feedback: fakeFb, codeLength: codeLength, size: 13)
+                        .opacity(0.45)
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(skin.inkFaded)
+                    FeedbackDotsRow(feedback: realFb, codeLength: codeLength, size: 13)
                 }
-                .padding(.top, 2)
+            } else if isLieMode {
+                Text(L("share.lie.banner"))
+                    .font(AppFont.label(11, weight: .regular))
+                    .foregroundStyle(skin.stamp)
             }
-        }
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity)
-    }
 
-    // MARK: - App Store QR Code
-
-    private var shareAppLink: some View {
-        HStack(spacing: 10) {
-            Image("AppLogo")
-                .resizable()
-                .frame(width: 40, height: 40)
-                .clipShape(RoundedRectangle(cornerRadius: 9))
-            VStack(alignment: .leading, spacing: 2) {
-                Text(L("app.title"))
-                    .font(AppFont.display(14, weight: .bold))
-                    .foregroundStyle(Color(white: 0.15))
-                Text(L("share.scan"))
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(Color(white: 0.5))
+            HStack(spacing: 6) {
+                ForEach(availableColors) { peg in
+                    PegView(color: peg, size: 20)
+                }
+                Spacer()
+                Text(L("share.cta"))
+                    .font(AppFont.body(11, weight: .medium))
+                    .foregroundStyle(skin.inkFaded)
             }
-            Spacer()
-            if let qrImage = generateQRCode(from: appStoreURL) {
-                Image(uiImage: qrImage)
-                    .interpolation(.none)
-                    .resizable()
-                    .frame(width: 56, height: 56)
-                    .cornerRadius(4)
-            }
+            .padding(.top, 2)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-    }
-
-    private func generateQRCode(from string: String) -> UIImage? {
-        let data = string.data(using: .utf8)
-        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
-        filter.setValue(data, forKey: "inputMessage")
-        filter.setValue("M", forKey: "inputCorrectionLevel")
-        guard let ciImage = filter.outputImage else { return nil }
-        let scale = 256.0 / ciImage.extent.width
-        let transformed = ciImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-        let context = CIContext()
-        guard let cgImage = context.createCGImage(transformed, from: transformed.extent) else { return nil }
-        return UIImage(cgImage: cgImage)
-    }
-
-    private func pegNumber(_ peg: PegColor) -> Int {
-        if let idx = availableColors.firstIndex(of: peg) {
-            return idx + 1
-        }
-        return peg.rawValue + 1
-    }
-
-    // MARK: - Peg Colors
-
-    private func pegCol(_ peg: PegColor) -> Color {
-        switch peg {
-        case .red: return Color(red: 0.95, green: 0.25, blue: 0.25)
-        case .green: return Color(red: 0.2, green: 0.85, blue: 0.35)
-        case .blue: return Color(red: 0.25, green: 0.45, blue: 0.95)
-        case .yellow: return Color(red: 0.95, green: 0.85, blue: 0.15)
-        case .purple: return Color(red: 0.65, green: 0.3, blue: 0.9)
-        case .orange: return Color(red: 1.0, green: 0.55, blue: 0.1)
-        case .cyan: return Color(red: 0.1, green: 0.85, blue: 0.9)
-        case .pink: return Color(red: 0.95, green: 0.4, blue: 0.65)
-        }
-    }
-
-    private func pegGrad(_ peg: PegColor) -> LinearGradient {
-        let c = pegCol(peg)
-        return LinearGradient(colors: [c.opacity(0.85), c, c.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -2094,15 +1749,7 @@ struct DailyShareCardView: View {
     let availableColors: [PegColor]
     var isLieMode: Bool = false
 
-    private let accent = Color(red: 0.05, green: 0.60, blue: 0.55)
-    private let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
-    private let danger = Color(red: 0.85, green: 0.20, blue: 0.20)
-    private let bgTop = Color(red: 0.10, green: 0.15, blue: 0.25)
-    private let bgBot = Color(red: 0.14, green: 0.20, blue: 0.32)
-    private let cardBg = Color(red: 0.16, green: 0.22, blue: 0.34)
-    private let subtleBg = Color.white.opacity(0.06)
-
-    private let appStoreURL = "https://apps.apple.com/app/mind-cipher/id6777428188"
+    private let skin = AppSkin.dossier
 
     private var streak: Int { DailyStreakManager.shared.currentStreak }
     private var totalCompleted: Int { DailyStreakManager.shared.totalCompleted }
@@ -2123,149 +1770,90 @@ struct DailyShareCardView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            headerSection
-            resultSection
-            calendarHeatmap
-                .padding(.horizontal, 16)
-                .padding(.top, 14)
-            guessBoardSection
-            appLinkSection
+            header
+            Rectangle().fill(skin.ink).frame(height: 1.5).padding(.horizontal, 18)
+
+            resultLine
+                .padding(.horizontal, 18)
+                .padding(.top, 12)
+
+            ShareLedger(rows: rows, codeLength: codeLength, skin: skin)
+                .padding(.horizontal, 18)
+                .padding(.top, 12)
+
+            calendarSheet
+                .padding(.horizontal, 18)
+                .padding(.top, 12)
+
+            TypewriterRule(color: skin.rule).padding(.horizontal, 18).padding(.top, 12)
+            ShareFooter(skin: skin)
         }
-        .background(
-            LinearGradient(colors: [bgTop, bgBot], startPoint: .top, endPoint: .bottom)
-        )
+        .background(skin.paper)
         .boardLayout()
     }
 
-    // MARK: - Header
-
-    private var headerSection: some View {
-        VStack(spacing: 6) {
-            HStack(spacing: 8) {
-                Image(systemName: "calendar.badge.clock")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(warning)
-                Text(isLieMode ? L("share.daily.lie") : L("daily.title"))
-                    .font(AppFont.display(18, weight: .black))
-                    .foregroundStyle(.white)
+    private var header: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text((isLieMode ? L("share.daily.lie") : L("daily.title")).uppercased())
+                    .font(AppFont.label(10, weight: .semibold))
+                    .tracking(1.8)
+                    .foregroundStyle(skin.inkFaded)
+                Text(L("case.no", DailyCalendar.dayNumber()))
+                    .font(AppFont.display(24, weight: .bold))
+                    .foregroundStyle(skin.ink)
+                Text(displayDate)
+                    .font(AppFont.label(11, weight: .regular))
+                    .foregroundStyle(skin.inkFaded)
             }
-            Text(displayDate)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(.white.opacity(0.5))
+            Spacer()
+            StampView(text: won ? "Case Closed" : "Unsolved", tone: .red, size: 12, rotation: -10)
+                .padding(.top, 6)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
-        .background(subtleBg)
+        .padding(.horizontal, 18)
+        .padding(.top, 18)
+        .padding(.bottom, 10)
     }
 
-    // MARK: - Result + Streak Badges
-
-    private var resultSection: some View {
-        VStack(spacing: 12) {
+    private var resultLine: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 14) {
             if won {
-                HStack(spacing: 6) {
+                HStack(spacing: 4) {
                     ForEach(0..<3, id: \.self) { i in
                         Image(systemName: i < stars ? "star.fill" : "star")
-                            .font(.system(size: 22))
-                            .foregroundStyle(i < stars ? warning : .white.opacity(0.15))
+                            .font(.system(size: 14))
+                            .foregroundStyle(i < stars ? skin.stamp : skin.inkMuted)
                     }
                 }
                 Text(L("share.solved", attempts, maxAttempts))
-                    .font(AppFont.display(15, weight: .bold))
-                    .foregroundStyle(accent)
+                    .font(AppFont.display(14, weight: .bold))
+                    .foregroundStyle(skin.ink)
             } else {
                 Text(L("share.failed", rows.count, maxAttempts))
-                    .font(AppFont.display(15, weight: .bold))
-                    .foregroundStyle(danger)
+                    .font(AppFont.display(14, weight: .bold))
+                    .foregroundStyle(skin.stamp)
             }
-
-            HStack(spacing: 12) {
-                streakBadge
-                totalBadge
-            }
+            Spacer()
+            statBadge(value: streak, label: L("daily.streak"))
+            statBadge(value: totalCompleted, label: L("daily.total"))
         }
-        .padding(.top, 14)
     }
 
-    private var streakBadge: some View {
-        HStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .fill(streakBadgeColor.opacity(0.2))
-                    .frame(width: 32, height: 32)
-                Image(systemName: streakIcon)
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(streakBadgeColor)
-            }
-            VStack(alignment: .leading, spacing: 1) {
-                Text("\(streak)")
-                    .font(AppFont.display(20, weight: .black))
-                    .foregroundStyle(.white)
-                Text(L("daily.streak"))
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.45))
-            }
+    private func statBadge(value: Int, label: String) -> some View {
+        VStack(alignment: .trailing, spacing: 0) {
+            Text("\(value)")
+                .font(AppFont.display(18, weight: .bold))
+                .foregroundStyle(skin.ink)
+            Text(label.uppercased())
+                .font(AppFont.label(8, weight: .regular))
+                .tracking(1)
+                .foregroundStyle(skin.inkFaded)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(subtleBg)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(streakBadgeColor.opacity(0.3), lineWidth: 1)
-                )
-        )
     }
 
-    private var streakIcon: String {
-        if streak >= 30 { return "flame.circle.fill" }
-        if streak >= 7 { return "flame.fill" }
-        if streak >= 3 { return "flame" }
-        return "bolt.fill"
-    }
+    // MARK: - Calendar (stamped grid)
 
-    private var streakBadgeColor: Color {
-        if streak >= 30 { return Color(red: 1.0, green: 0.3, blue: 0.1) }
-        if streak >= 7 { return warning }
-        if streak >= 3 { return Color(red: 1.0, green: 0.65, blue: 0.2) }
-        return accent
-    }
-
-    private var totalBadge: some View {
-        HStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .fill(accent.opacity(0.2))
-                    .frame(width: 32, height: 32)
-                Image(systemName: "checkmark.seal.fill")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(accent)
-            }
-            VStack(alignment: .leading, spacing: 1) {
-                Text("\(totalCompleted)")
-                    .font(AppFont.display(20, weight: .black))
-                    .foregroundStyle(.white)
-                Text(L("daily.total"))
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.45))
-            }
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(subtleBg)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(accent.opacity(0.2), lineWidth: 1)
-                )
-        )
-    }
-
-    // MARK: - Calendar Heatmap
-
-    private var calendarHeatmap: some View {
+    private var calendarSheet: some View {
         let cal = DailyCalendar.gregorian
         let today = Date()
         let comps = cal.dateComponents([.year, .month], from: today)
@@ -2288,15 +1876,19 @@ struct DailyShareCardView: View {
         while days.count % 7 != 0 { days.append(nil) }
 
         return VStack(spacing: 6) {
-            Text(monthTitle)
-                .font(AppFont.display(12, weight: .bold))
-                .foregroundStyle(.white.opacity(0.7))
+            HStack {
+                Text(monthTitle.uppercased())
+                    .font(AppFont.label(10, weight: .semibold))
+                    .tracking(1.5)
+                    .foregroundStyle(skin.inkFaded)
+                Spacer()
+            }
 
             HStack(spacing: 0) {
                 ForEach(Array(DailyCalendar.weekdaySymbols(locale: LanguageManager.shared.locale).enumerated()), id: \.offset) { _, d in
                     Text(d)
-                        .font(.system(size: 9, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.3))
+                        .font(AppFont.label(8, weight: .regular))
+                        .foregroundStyle(skin.inkMuted)
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -2305,25 +1897,22 @@ struct DailyShareCardView: View {
             LazyVGrid(columns: columns, spacing: 3) {
                 ForEach(0..<days.count, id: \.self) { i in
                     if let date = days[i] {
-                        heatmapCell(date: date, today: today, cal: cal)
+                        dayCell(date: date, today: today, cal: cal)
                     } else {
-                        Color.clear.frame(width: 28, height: 28)
+                        Color.clear.frame(height: 26)
                     }
                 }
             }
         }
         .padding(12)
         .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(subtleBg)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(.white.opacity(0.06), lineWidth: 1)
-                )
+            RoundedRectangle(cornerRadius: 4)
+                .fill(skin.paperCard)
+                .overlay(RoundedRectangle(cornerRadius: 4).stroke(skin.rule, lineWidth: 1))
         )
     }
 
-    private func heatmapCell(date: Date, today: Date, cal: Calendar) -> some View {
+    private func dayCell(date: Date, today: Date, cal: Calendar) -> some View {
         let key = DailyCalendar.dayKey(date)
         let completed = DailyStreakManager.shared.isCompleted(key)
         let isToday = cal.isDateInToday(date)
@@ -2331,201 +1920,19 @@ struct DailyShareCardView: View {
         let dayNum = cal.component(.day, from: date)
 
         return ZStack {
-            RoundedRectangle(cornerRadius: 5)
-                .fill(heatmapCellColor(completed: completed, isToday: isToday, isFuture: isFuture))
-                .frame(width: 28, height: 28)
-
-            if isToday && !completed {
-                RoundedRectangle(cornerRadius: 5)
-                    .stroke(warning, lineWidth: 1.5)
-                    .frame(width: 28, height: 28)
-            }
-
+            RoundedRectangle(cornerRadius: 2)
+                .stroke(isToday ? skin.ink : skin.rule, lineWidth: isToday ? 1.5 : 1)
             Text("\(dayNum)")
-                .font(AppFont.display(10, weight: completed ? .bold : .medium))
-                .foregroundStyle(
-                    completed ? .white :
-                    isToday ? warning :
-                    isFuture ? .white.opacity(0.15) :
-                    .white.opacity(0.35)
-                )
-        }
-    }
-
-    private func heatmapCellColor(completed: Bool, isToday: Bool, isFuture: Bool) -> Color {
-        if completed { return accent.opacity(0.85) }
-        if isFuture { return .white.opacity(0.03) }
-        return .white.opacity(0.06)
-    }
-
-    // MARK: - Guess Board
-
-    private var guessBoardSection: some View {
-        VStack(spacing: 0) {
-            ForEach(rows) { row in
-                dailyGuessRow(row)
-                if row.id < rows.count {
-                    Rectangle().fill(.white.opacity(0.04)).frame(height: 1)
-                        .padding(.leading, 32)
-                }
+                .font(AppFont.label(10, weight: .regular))
+                .foregroundStyle(isFuture ? skin.inkMuted.opacity(0.5) : skin.inkFaded)
+            if completed {
+                Circle()
+                    .stroke(skin.stamp, lineWidth: 1.5)
+                    .frame(width: 18, height: 18)
+                    .rotationEffect(.degrees(-8))
+                    .opacity(0.9)
             }
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(subtleBg)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(.white.opacity(0.06), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal, 16)
-        .padding(.top, 12)
-    }
-
-    private var dailyPegSize: CGFloat {
-        codeLength <= 4 ? 28 : codeLength <= 5 ? 24 : 20
-    }
-
-    private func dailyGuessRow(_ row: ShareRowData) -> some View {
-        HStack(spacing: 5) {
-            Text("\(row.id)")
-                .font(.system(size: 10, weight: .bold, design: .monospaced))
-                .foregroundStyle(.white.opacity(0.3))
-                .frame(width: 14)
-
-            HStack(spacing: codeLength <= 4 ? 5 : 3) {
-                ForEach(Array(row.guess.enumerated()), id: \.offset) { _, peg in
-                    Circle()
-                        .fill(dailyPegGrad(peg))
-                        .frame(width: dailyPegSize, height: dailyPegSize)
-                        .overlay(
-                            Text("\(dailyPegNumber(peg))")
-                                .font(AppFont.display(dailyPegSize * 0.42, weight: .bold))
-                                .foregroundStyle(AppTheme.pegInk(for: peg))
-                                .shadow(
-                                    color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.4) : .clear,
-                                    radius: 1, y: 1
-                                )
-                        )
-                }
-            }
-
-            Spacer(minLength: 4)
-
-            dailyFeedbackDots(row.feedback)
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 5)
-    }
-
-    private func dailyFeedbackDots(_ fb: Feedback) -> some View {
-        let dotSize: CGFloat = codeLength <= 4 ? 14 : 11
-        let types: [FeedbackType] =
-            Array(repeating: .exact, count: fb.exact) +
-            Array(repeating: .partial, count: fb.partial) +
-            Array(repeating: .miss, count: max(0, codeLength - fb.exact - fb.partial))
-
-        return HStack(spacing: 2) {
-            ForEach(Array(types.enumerated()), id: \.offset) { _, t in
-                dailyFeedbackDot(type: t, size: dotSize)
-            }
-        }
-    }
-
-    private func dailyFeedbackDot(type: FeedbackType, size: CGFloat) -> some View {
-        ZStack {
-            Circle()
-                .fill(dailyFeedbackBgColor(type))
-                .frame(width: size, height: size)
-
-            switch type {
-            case .exact:
-                Circle().fill(AppTheme.markExact).frame(width: size * 0.8, height: size * 0.8)
-            case .partial:
-                FeedbackTriangle().fill(AppTheme.markPartial).frame(width: size * 0.8, height: size * 0.8)
-            case .miss:
-                Image(systemName: "xmark")
-                    .font(.system(size: size * 0.85, weight: .black))
-                    .foregroundStyle(.white.opacity(0.2))
-            }
-        }
-    }
-
-    private func dailyFeedbackBgColor(_ type: FeedbackType) -> Color {
-        switch type {
-        case .exact: return AppTheme.markExact.opacity(0.2)
-        case .partial: return AppTheme.markPartial.opacity(0.2)
-        case .miss: return .white.opacity(0.06)
-        }
-    }
-
-    // MARK: - App Link
-
-    private var appLinkSection: some View {
-        HStack(spacing: 10) {
-            Image("AppLogo")
-                .resizable()
-                .frame(width: 36, height: 36)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-            VStack(alignment: .leading, spacing: 1) {
-                Text(L("app.title"))
-                    .font(AppFont.display(13, weight: .bold))
-                    .foregroundStyle(.white.opacity(0.85))
-                Text(L("share.scan"))
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.35))
-            }
-            Spacer()
-            if let qrImage = generateDailyQRCode(from: appStoreURL) {
-                Image(uiImage: qrImage)
-                    .interpolation(.none)
-                    .resizable()
-                    .frame(width: 48, height: 48)
-                    .cornerRadius(4)
-                    .colorInvert()
-            }
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-    }
-
-    private func generateDailyQRCode(from string: String) -> UIImage? {
-        let data = string.data(using: .utf8)
-        guard let filter = CIFilter(name: "CIQRCodeGenerator") else { return nil }
-        filter.setValue(data, forKey: "inputMessage")
-        filter.setValue("M", forKey: "inputCorrectionLevel")
-        guard let ciImage = filter.outputImage else { return nil }
-        let scale = 256.0 / ciImage.extent.width
-        let transformed = ciImage.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
-        let context = CIContext()
-        guard let cgImage = context.createCGImage(transformed, from: transformed.extent) else { return nil }
-        return UIImage(cgImage: cgImage)
-    }
-
-    private func dailyPegNumber(_ peg: PegColor) -> Int {
-        if let idx = availableColors.firstIndex(of: peg) {
-            return idx + 1
-        }
-        return peg.rawValue + 1
-    }
-
-    private func dailyPegCol(_ peg: PegColor) -> Color {
-        switch peg {
-        case .red: return Color(red: 0.95, green: 0.25, blue: 0.25)
-        case .green: return Color(red: 0.2, green: 0.85, blue: 0.35)
-        case .blue: return Color(red: 0.25, green: 0.45, blue: 0.95)
-        case .yellow: return Color(red: 0.95, green: 0.85, blue: 0.15)
-        case .purple: return Color(red: 0.65, green: 0.3, blue: 0.9)
-        case .orange: return Color(red: 1.0, green: 0.55, blue: 0.1)
-        case .cyan: return Color(red: 0.1, green: 0.85, blue: 0.9)
-        case .pink: return Color(red: 0.95, green: 0.4, blue: 0.65)
-        }
-    }
-
-    private func dailyPegGrad(_ peg: PegColor) -> LinearGradient {
-        let c = dailyPegCol(peg)
-        return LinearGradient(colors: [c.opacity(0.85), c, c.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
+        .frame(height: 26)
     }
 }
