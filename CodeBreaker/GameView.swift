@@ -7,6 +7,10 @@ struct GameView: View {
     @ObservedObject var viewModel: GameViewModel
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    /// Accessibility text sizes: stack the legend and give the submit button its own row.
+    private var isAX: Bool { dynamicTypeSize.isAccessibilitySize }
     
     @State private var showResult = false
     @State private var confettiParticles: [ConfettiParticle] = []
@@ -280,17 +284,21 @@ struct GameView: View {
 
             VStack(alignment: .leading, spacing: 1) {
                 DossierCaption(text: caseCaption)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.7)
                 Text(caseTitle)
                     .font(AppFont.display(22, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.6)
                 if let sub = caseSubtitle {
                     Text(sub)
                         .font(AppFont.label(11, weight: .regular))
                         .foregroundStyle(viewModel.engine?.lieMode == true ? AppTheme.danger : AppTheme.textSecondary)
                 }
             }
+            .fixedSize(horizontal: false, vertical: true)
+            .layoutPriority(1)
 
             Spacer(minLength: 4)
 
@@ -335,7 +343,7 @@ struct GameView: View {
     private var feedbackLegend: some View {
         VStack(alignment: .leading, spacing: 4) {
             if viewModel.guessHistory.isEmpty {
-                HStack(spacing: 12) {
+                AnyLayout(isAX ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4)) : AnyLayout(HStackLayout(spacing: 12))) {
                     legendItem(type: .exact, text: L("legend.exact.short"))
                     legendItem(type: .partial, text: L("legend.partial.short"))
                     legendItem(type: .miss, text: L("legend.miss.short"))
@@ -358,6 +366,8 @@ struct GameView: View {
             Text(text)
                 .font(AppFont.label(11, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
     }
 
@@ -433,7 +443,7 @@ struct GameView: View {
                         } else {
                             HStack(spacing: 10) {
                                 Text(romanNumeral(i + 1))
-                                    .font(AppFont.label(11, weight: .regular))
+                                    .font(AppFont.graphic(11, weight: .regular))
                                     .foregroundStyle(AppTheme.textMuted)
                                     .frame(width: 26, alignment: .leading)
                                 Spacer()
@@ -483,7 +493,7 @@ struct GameView: View {
                 DossierCaption(text: L("case.tray"))
                 Spacer()
                 Text(romanNumeral(viewModel.guessHistory.count + 1))
-                    .font(AppFont.label(11, weight: .bold))
+                    .font(AppFont.graphic(11, weight: .bold))
                     .foregroundStyle(AppTheme.accent)
             }
             .padding(.horizontal, 4)
@@ -618,7 +628,39 @@ struct GameView: View {
         }
     }
 
+    private var submitButton: some View {
+        Button {
+            if viewModel.engine?.lieMode == true {
+                SoundManager.shared.playLieSubmit()
+            } else {
+                SoundManager.shared.playSubmit()
+            }
+            viewModel.submitGuess()
+        } label: {
+            Text(L("game.analyze"))
+                .font(AppFont.label(14, weight: .bold))
+                .tracking(isAX ? 0 : 1.5)
+                .textCase(.uppercase)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .foregroundStyle(viewModel.canSubmit ? AppTheme.paper : AppTheme.textMuted)
+                .frame(maxWidth: .infinity)
+                .frame(height: 48)
+                .background(
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(viewModel.canSubmit ? AppTheme.ink : AppTheme.paperFolder)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 3)
+                        .stroke(viewModel.canSubmit ? .clear : AppTheme.rule, lineWidth: 1)
+                )
+        }
+        .disabled(!viewModel.canSubmit)
+    }
+
     private var actionBar: some View {
+        VStack(spacing: 6) {
+            if isAX { submitButton }
         HStack(spacing: 6) {
             toolButton("arrow.counterclockwise") {
                 SoundManager.shared.playTap()
@@ -654,36 +696,11 @@ struct GameView: View {
                     .offset(x: 4, y: -4)
             }
 
-            Button {
-                if viewModel.engine?.lieMode == true {
-                    SoundManager.shared.playLieSubmit()
-                } else {
-                    SoundManager.shared.playSubmit()
-                }
-                viewModel.submitGuess()
-            } label: {
-                Text(L("game.analyze"))
-                    .font(AppFont.label(14, weight: .bold))
-                    .tracking(1.5)
-                    .textCase(.uppercase)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                    .foregroundStyle(viewModel.canSubmit ? AppTheme.paper : AppTheme.textMuted)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .background(
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(viewModel.canSubmit ? AppTheme.ink : AppTheme.paperFolder)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 3)
-                            .stroke(viewModel.canSubmit ? .clear : AppTheme.rule, lineWidth: 1)
-                    )
-            }
-            .disabled(!viewModel.canSubmit)
+            if isAX { Spacer(minLength: 0) } else { submitButton }
 
             toolButton("square.and.arrow.up") { shareImage() }
                 .accessibilityLabel("Share")
+        }
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
@@ -1202,7 +1219,7 @@ struct GuessRowView: View {
     var body: some View {
         HStack(spacing: 10) {
             Text(romanNumeral(index))
-                .font(AppFont.label(11, weight: isSuspect ? .bold : .regular))
+                .font(AppFont.graphic(11, weight: isSuspect ? .bold : .regular))
                 .foregroundStyle(isSuspect ? AppTheme.danger : AppTheme.textSecondary)
                 .frame(width: 26, alignment: .leading)
 
@@ -1572,7 +1589,7 @@ private struct ShareLedger: View {
             ForEach(rows) { row in
                 HStack(spacing: 10) {
                     Text(romanNumeral(row.id))
-                        .font(AppFont.label(11, weight: row.isLie ? .bold : .regular))
+                        .font(AppFont.graphic(11, weight: row.isLie ? .bold : .regular))
                         .foregroundStyle(row.isLie ? skin.stamp : skin.inkFaded)
                         .frame(width: 26, alignment: .leading)
                     HStack(spacing: codeLength <= 4 ? 6 : 4) {

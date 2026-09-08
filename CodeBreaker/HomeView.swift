@@ -32,15 +32,25 @@ struct HomeView: View {
     @State private var paywallReason: PaywallReason?
     @State private var showFeedbackTip = false
     @State private var didOfferFeedbackTip = false
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    /// Accessibility text sizes: stack cards vertically and drop secondary copy.
+    private var isAX: Bool { dynamicTypeSize.isAccessibilitySize }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                headerSection
-                menuSection
-                    .padding(.top, 10)
-                Spacer(minLength: 8)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        headerSection
+                        menuSection
+                            .padding(.top, 10)
+                    }
+                    .padding(.bottom, 12)
+                }
+                .scrollBounceBehavior(.basedOnSize)
                 statsBar
+                    .padding(.top, 8)
                     .padding(.bottom, 8)
             }
             .padding(.horizontal, 24)
@@ -204,8 +214,8 @@ struct HomeView: View {
                     Text(L("app.title"))
                         .font(AppFont.display(28, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                        .lineLimit(isAX ? 2 : 1)
+                        .minimumScaleFactor(0.6)
                 }
                 Spacer()
                 if storeManager.isPro {
@@ -296,7 +306,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 10) {
             todayCaseCard
 
-            HStack(spacing: 10) {
+            AnyLayout(isAX ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 10))) {
                 volumeCard(
                     caption: L("case.classic"),
                     title: L("menu.classic"),
@@ -357,7 +367,7 @@ struct HomeView: View {
                     Text(L("case.no", DailyCalendar.dayNumber()))
                         .font(AppFont.display(24, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
-                        .lineLimit(1)
+                        .lineLimit(2)
                         .minimumScaleFactor(0.7)
                     Text(dailyCompleted
                          ? L("menu.daily.done")
@@ -420,7 +430,7 @@ struct HomeView: View {
                 Text(title)
                     .font(AppFont.display(16, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
-                    .lineLimit(1)
+                    .lineLimit(2)
                     .minimumScaleFactor(0.8)
                     .padding(.bottom, 6)
 
@@ -462,7 +472,7 @@ struct HomeView: View {
                 Text(title)
                     .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(locked ? AppTheme.textSecondary : AppTheme.textPrimary)
-                    .lineLimit(1)
+                    .lineLimit(isAX ? 2 : 1)
                 if locked {
                     Text("PRO")
                         .font(AppFont.label(8, weight: .bold))
@@ -473,11 +483,13 @@ struct HomeView: View {
                         .overlay(RoundedRectangle(cornerRadius: 2).stroke(AppTheme.accent, lineWidth: 1))
                 }
                 Spacer(minLength: 6)
-                Text(detail)
-                    .font(AppFont.body(11))
-                    .foregroundStyle(AppTheme.textMuted)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                if !isAX {
+                    Text(detail)
+                        .font(AppFont.body(11))
+                        .foregroundStyle(AppTheme.textMuted)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
                 Image(systemName: locked ? "lock" : "arrow.forward")
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(AppTheme.textMuted)

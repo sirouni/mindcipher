@@ -85,11 +85,15 @@ struct FilingCabinetView: View {
                 Text(lieMode ? L("case.lie") : L("case.classic"))
                     .font(AppFont.display(20, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.6)
             }
-            Spacer()
+            Spacer(minLength: 8)
             Text(L("levels.solved", progress.completedLevels.count, 240))
                 .font(AppFont.label(11, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
+                .lineLimit(2)
+                .multilineTextAlignment(.trailing)
         }
         .padding(.horizontal, 20)
         .padding(.top, 8)
@@ -97,6 +101,7 @@ struct FilingCabinetView: View {
     }
 
     private var drawerTabs: some View {
+        VStack(spacing: 8) {
         HStack(spacing: 4) {
             ForEach(0..<tiers.count, id: \.self) { i in
                 let selected = i == selectedTier
@@ -129,20 +134,20 @@ struct FilingCabinetView: View {
         }
         .padding(.horizontal, 20)
 
-        .overlay(alignment: .bottom) {
             HStack {
                 Text("\(L("levels.drawer", romanNumeral(selectedTier + 1))) · \(tierDiff)")
                     .font(AppFont.label(11, weight: .regular))
                     .foregroundStyle(AppTheme.textSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                 Spacer()
                 Text("\(tierDone)/\(currentTier.count)")
                     .font(AppFont.mono(11, weight: .bold))
                     .foregroundStyle(AppTheme.textSecondary)
             }
             .padding(.horizontal, 20)
-            .offset(y: 24)
         }
-        .padding(.bottom, 30)
+        .padding(.bottom, 6)
     }
 
     // MARK: - Folder grid

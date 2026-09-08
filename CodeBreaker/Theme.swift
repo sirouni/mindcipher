@@ -82,14 +82,26 @@ enum AppFont {
         .custom(typewriterName(weight), size: size, relativeTo: .body)
     }
 
+    /// Typewriter text that is part of a drawing (peg numerals, stamps, ledger indices).
+    /// Fixed size: it must fit the shape it sits in regardless of Dynamic Type.
+    static func graphic(_ size: CGFloat, weight: Font.Weight = .bold) -> Font {
+        .custom(typewriterName(weight), fixedSize: size)
+    }
+
+    /// System fonts don't follow Dynamic Type when given a point size; scale by hand so
+    /// body/mono keep pace with the typewriter faces.
+    private static func scaled(_ size: CGFloat) -> CGFloat {
+        UIFontMetrics(forTextStyle: .body).scaledValue(for: size)
+    }
+
     /// Running text.
     static func body(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight)
+        .system(size: scaled(size), weight: weight)
     }
 
     /// Case numbers, counters, seeds.
     static func mono(_ size: CGFloat, weight: Font.Weight = .medium) -> Font {
-        .system(size: size, weight: weight, design: .monospaced)
+        .system(size: scaled(size), weight: weight, design: .monospaced)
     }
 }
 
@@ -151,7 +163,7 @@ struct StampView: View {
 
     var body: some View {
         Text(text.uppercased())
-            .font(AppFont.label(size, weight: .bold))
+            .font(AppFont.graphic(size, weight: .bold))
             .tracking(size * 0.18)
             .foregroundStyle(color)
             .padding(.horizontal, size * 0.6)
@@ -193,7 +205,7 @@ struct LedgerRow<Content: View, Trailing: View>: View {
     var body: some View {
         HStack(spacing: 10) {
             Text(romanNumeral(index))
-                .font(AppFont.label(11, weight: highlighted ? .bold : .regular))
+                .font(AppFont.graphic(11, weight: highlighted ? .bold : .regular))
                 .foregroundStyle(highlighted ? AppTheme.accent : AppTheme.textSecondary)
                 .frame(width: 26, alignment: .leading)
             content()
@@ -292,7 +304,7 @@ struct PegView: View {
             }
 
             Text(color.symbol)
-                .font(AppFont.display(size * 0.5, weight: .bold))
+                .font(AppFont.graphic(size * 0.5, weight: .bold))
                 .foregroundStyle(AppTheme.pegInk(for: color))
         }
         .accessibilityLabel(color.displayName)
