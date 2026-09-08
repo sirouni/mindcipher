@@ -29,7 +29,7 @@ struct FeedbackView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -65,7 +65,7 @@ struct FeedbackView: View {
             noteRow(icon: "globe", text: L("feedback.public"))
         }
         .padding(16)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private func noteRow(icon: String, text: String) -> some View {
@@ -115,7 +115,7 @@ struct FeedbackView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
             }
-            .glassCard(cornerRadius: 12)
+            .paperCard()
             .accessibilityLabel(L("feedback.email"))
             .accessibilityIdentifier("feedback.email")
         }

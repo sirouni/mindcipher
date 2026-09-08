@@ -11,7 +11,7 @@ struct LevelEditorView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -74,7 +74,7 @@ struct LevelEditorView: View {
                         withAnimation(.spring(response: 0.2)) { value.wrappedValue = n }
                     } label: {
                         Text("\(n)")
-                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .font(AppFont.display(14, weight: .bold))
                             .foregroundStyle(value.wrappedValue == n ? Color.white : AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
@@ -88,7 +88,7 @@ struct LevelEditorView: View {
             }
         }
         .padding(14)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private var toggleSection: some View {
@@ -107,7 +107,7 @@ struct LevelEditorView: View {
                 .labelsHidden()
         }
         .padding(14)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private var timeLimitSection: some View {
@@ -128,7 +128,7 @@ struct LevelEditorView: View {
                         withAnimation(.spring(response: 0.2)) { timeLimit = t }
                     } label: {
                         Text(t == 0 ? "Off" : "\(t)s")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .font(AppFont.display(12, weight: .bold))
                             .foregroundStyle(timeLimit == t ? Color.white : AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
@@ -142,7 +142,7 @@ struct LevelEditorView: View {
             }
         }
         .padding(14)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private var difficultyMeter: some View {
@@ -181,7 +181,7 @@ struct LevelEditorView: View {
                 .frame(minWidth: 36, alignment: .trailing)
         }
         .padding(14)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private var previewColors: some View {
@@ -195,7 +195,7 @@ struct LevelEditorView: View {
             }
         }
         .padding(14)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private var startButton: some View {
@@ -227,7 +227,7 @@ struct LevelEditorView: View {
                 Image(systemName: "play.fill")
                 Text(L("editor.start"))
             }
-            .font(.system(size: 17, weight: .bold, design: .rounded))
+            .font(AppFont.display(17, weight: .bold))
             .foregroundStyle(Color.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)

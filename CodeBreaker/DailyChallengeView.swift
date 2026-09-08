@@ -31,7 +31,7 @@ struct DailyChallengeView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             if !started {
                 preStartView
@@ -52,7 +52,7 @@ struct DailyChallengeView: View {
                 HStack(spacing: 16) {
                     VStack(spacing: 2) {
                         Text("\(currentStreak)")
-                            .font(.system(size: 28, weight: .black, design: .rounded))
+                            .font(AppFont.display(28, weight: .black))
                             .foregroundStyle(AppTheme.warning)
                         Text(L("daily.streak"))
                             .font(.system(size: 11, weight: .medium))
@@ -61,7 +61,7 @@ struct DailyChallengeView: View {
 
                     VStack(spacing: 2) {
                         Text("\(DailyStreakManager.shared.totalCompleted)")
-                            .font(.system(size: 28, weight: .black, design: .rounded))
+                            .font(AppFont.display(28, weight: .black))
                             .foregroundStyle(AppTheme.accent)
                         Text(L("daily.total"))
                             .font(.system(size: 11, weight: .medium))
@@ -81,12 +81,12 @@ struct DailyChallengeView: View {
                             Image(systemName: "trophy.fill")
                                 .font(.system(size: 14))
                             Text(L("daily.leaderboard"))
-                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                                .font(AppFont.display(14, weight: .bold))
                         }
                         .foregroundStyle(AppTheme.warning)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
-                        .glassCard(cornerRadius: 10)
+                        .paperCard()
                     }
                     .sheet(isPresented: $showLeaderboard) {
                         GameCenterLeaderboardView()
@@ -94,7 +94,7 @@ struct DailyChallengeView: View {
                 }
 
                 Text(displayDate)
-                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                    .font(AppFont.display(17, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
 
                 if isLieDaily {
@@ -102,7 +102,7 @@ struct DailyChallengeView: View {
                         Image(systemName: "theatermask.and.paintbrush.fill")
                         Text(L("daily.lie.badge"))
                     }
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(AppFont.display(13, weight: .bold))
                     .foregroundStyle(AppTheme.danger)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
@@ -120,7 +120,7 @@ struct DailyChallengeView: View {
                     }
                 }
                 .padding(16)
-                .glassCard(cornerRadius: 14)
+                .paperCard()
 
                 if isCompleted {
                     VStack(spacing: 6) {
@@ -128,7 +128,7 @@ struct DailyChallengeView: View {
                             .font(.system(size: 28))
                             .foregroundStyle(AppTheme.accent)
                         Text(L("daily.completed"))
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .font(AppFont.display(15, weight: .bold))
                             .foregroundStyle(AppTheme.accent)
                         Text(L("daily.tomorrow"))
                             .font(.system(size: 12, weight: .medium))
@@ -141,7 +141,7 @@ struct DailyChallengeView: View {
                         startDailyChallenge()
                     } label: {
                         Text(L("daily.start"))
-                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .font(AppFont.display(18, weight: .bold))
                             .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
@@ -150,11 +150,11 @@ struct DailyChallengeView: View {
                 } else {
                     Button { dismiss() } label: {
                         Text(L("daily.back"))
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .font(AppFont.display(16, weight: .bold))
                             .foregroundStyle(AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .glassCard(cornerRadius: 14)
+                            .paperCard()
                     }
                 }
             }
@@ -287,7 +287,7 @@ struct DailyCalendarView: View {
     var body: some View {
         VStack(spacing: 8) {
             Text(monthTitle)
-                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .font(AppFont.display(14, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
             // Weekday headers
@@ -313,7 +313,7 @@ struct DailyCalendarView: View {
             }
         }
         .padding(12)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private func dayCell(_ date: Date) -> some View {
@@ -341,7 +341,7 @@ struct DailyCalendarView: View {
             }
 
             Text("\(dayNum)")
-                .font(.system(size: 12, weight: completed ? .bold : .medium, design: .rounded))
+                .font(AppFont.display(12, weight: completed ? .bold : .medium))
                 .foregroundStyle(
                     completed ? .white :
                     isToday ? todayColor :

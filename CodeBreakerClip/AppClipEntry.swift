@@ -36,7 +36,7 @@ struct CodeBreakerClipApp: App {
 
     private var welcomeView: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
             VStack(spacing: 20) {
                 Spacer()
                 Image(systemName: "lock.shield.fill")
@@ -44,7 +44,7 @@ struct CodeBreakerClipApp: App {
                     .foregroundStyle(AppTheme.accent)
 
                 Text("Mind Cipher")
-                    .font(.system(size: 28, weight: .black, design: .rounded))
+                    .font(AppFont.display(28, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
 
                 Text("Open a challenge link to play!")
@@ -61,7 +61,7 @@ struct CodeBreakerClipApp: App {
 
     private func challengePreview(_ challenge: Challenge) -> some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
             VStack(spacing: 20) {
                 Spacer()
 
@@ -74,7 +74,7 @@ struct CodeBreakerClipApp: App {
                     .foregroundStyle(AppTheme.textSecondary)
 
                 Text(challenge.fromName)
-                    .font(.system(size: 24, weight: .black, design: .rounded))
+                    .font(AppFont.display(24, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
 
                 VStack(spacing: 8) {
@@ -108,7 +108,7 @@ struct CodeBreakerClipApp: App {
                     gameStarted = true
                 } label: {
                     Text("Accept Challenge")
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .font(AppFont.display(18, weight: .bold))
                         .foregroundStyle(Color.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
@@ -143,7 +143,7 @@ struct CodeBreakerClipApp: App {
                 Image(systemName: "arrow.down.app.fill")
                     .font(.system(size: 14))
                 Text("Get Full App")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(AppFont.display(14, weight: .bold))
             }
             .foregroundStyle(AppTheme.warning)
             .frame(maxWidth: .infinity)

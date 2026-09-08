@@ -20,7 +20,7 @@ struct LevelSelectView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 tierSwitcher(color: AppTheme.accent)
@@ -80,7 +80,7 @@ struct LevelSelectView: View {
 
             VStack(spacing: 4) {
                 Text(tierDiff)
-                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .font(AppFont.display(22, weight: .black))
                     .foregroundStyle(color)
                 Text("\(tierDone)/\(currentTier.count)")
                     .font(.system(size: 13, weight: .bold, design: .monospaced))
@@ -178,7 +178,7 @@ struct LevelSelectView: View {
 
             VStack(spacing: 16) {
                 Text(L("level.title", level.id))
-                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .font(AppFont.display(22, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
 
                 Text(level.difficulty.localizedName)
@@ -220,7 +220,7 @@ struct LevelSelectView: View {
                     startGame = true
                 } label: {
                     Text(progress.completedLevels.contains(level.id) ? L("result.retry") : L("level.start"))
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(AppFont.display(16, weight: .bold))
                         .foregroundStyle(Color.white)
                         .frame(width: 200)
                         .padding(.vertical, 14)
@@ -285,7 +285,7 @@ struct LevelSelectView: View {
 
                 VStack(spacing: 3) {
                     Text("\(level.id)")
-                        .font(.system(size: 18, weight: .black, design: .rounded))
+                        .font(AppFont.display(18, weight: .black))
                         .foregroundStyle(isCompleted ? AppTheme.accent : isProLocked ? AppTheme.textMuted : AppTheme.textPrimary)
                     if isCompleted {
                         HStack(spacing: 2) {
@@ -297,7 +297,7 @@ struct LevelSelectView: View {
                         }
                     } else if isProLocked {
                         Text("PRO")
-                            .font(.system(size: 9, weight: .black, design: .rounded))
+                            .font(AppFont.display(9, weight: .black))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 5)
                             .padding(.vertical, 2)

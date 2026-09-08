@@ -13,7 +13,7 @@ struct SplashView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             VStack(spacing: 20) {
                 ZStack {
@@ -46,7 +46,7 @@ struct SplashView: View {
 
                 VStack(spacing: 6) {
                     Text("Code Breaker")
-                        .font(.system(size: 30, weight: .black, design: .rounded))
+                        .font(AppFont.display(30, weight: .black))
                         .foregroundStyle(AppTheme.textPrimary)
 
                     Text("CODE BREAKER")

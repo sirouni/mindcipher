@@ -30,7 +30,7 @@ struct GameView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 topBar
@@ -90,7 +90,7 @@ struct GameView: View {
                             .font(.system(size: 14))
                             .foregroundStyle(AppTheme.warning)
                         Text(hint)
-                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .font(AppFont.display(14, weight: .semibold))
                             .foregroundStyle(AppTheme.textPrimary)
                     }
                     .padding(.horizontal, 16)
@@ -203,7 +203,7 @@ struct GameView: View {
                 Image(systemName: "theatermask.and.paintbrush.fill")
                     .font(.system(size: 18, weight: .bold))
                 Text(L("lie.kickoff"))
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(AppFont.display(14, weight: .bold))
             }
             .foregroundStyle(AppTheme.danger)
             .padding(.horizontal, 16)
@@ -234,7 +234,7 @@ struct GameView: View {
                         .font(.system(size: 11, weight: .bold))
                         .foregroundStyle(AppTheme.warning)
                     Text(a.localizedTitle)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(AppFont.display(15, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                 }
 
@@ -260,11 +260,11 @@ struct GameView: View {
             VStack(spacing: 2) {
                 if let level = viewModel.level {
                     Text(L("level.title", level.id))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(AppFont.display(20, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                     if viewModel.engine?.lieMode == true {
                         Text("\(level.difficulty.localizedName) · \(L("lie.mode"))")
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .font(AppFont.display(11, weight: .bold))
                             .foregroundStyle(AppTheme.danger)
                     } else {
                         Text(level.difficulty.localizedName)
@@ -273,22 +273,22 @@ struct GameView: View {
                     }
                 } else if viewModel.mode == .duel {
                     Text(L("game.duel"))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(AppFont.display(20, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                 } else if viewModel.mode == .online {
                     Text(L("online.title"))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(AppFont.display(20, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                 } else if viewModel.isLieTaste {
                     Text(L("taste.title"))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(AppFont.display(20, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                     Text(L("taste.subtitle"))
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .font(AppFont.display(11, weight: .bold))
                         .foregroundStyle(AppTheme.danger)
                 } else if viewModel.isDailyChallenge {
                     Text(L("daily.title"))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(AppFont.display(20, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                     if viewModel.engine?.lieMode == true {
                         Label(L("daily.lie.badge"), systemImage: "theatermask.and.paintbrush.fill")
@@ -297,7 +297,7 @@ struct GameView: View {
                     }
                 } else {
                     Text(L("game.free"))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(AppFont.display(20, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                     if viewModel.engine?.lieMode == true {
                         Label(L("lie.mode"), systemImage: "exclamationmark.triangle.fill")
@@ -313,7 +313,7 @@ struct GameView: View {
                         .font(.system(size: 16, weight: .bold))
                         .foregroundStyle(AppTheme.textSecondary)
                         .frame(width: 40, height: 40)
-                        .glassCard(cornerRadius: 10)
+                        .paperCard()
                 }
                 .accessibilityLabel("Back")
 
@@ -341,13 +341,13 @@ struct GameView: View {
         .foregroundStyle(viewModel.timeRemaining <= 15 ? AppTheme.danger : AppTheme.warning)
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
-        .glassCard(cornerRadius: 8)
+        .paperCard()
     }
 
     private var attemptsBadge: some View {
         HStack(spacing: 3) {
             Text("\(viewModel.attemptsLeft)")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .font(AppFont.display(16, weight: .bold))
                 .foregroundStyle(viewModel.attemptsLeft <= 2 ? AppTheme.danger : AppTheme.accent)
             Text(L("game.attempts"))
                 .font(.system(size: 12, weight: .medium))
@@ -355,7 +355,7 @@ struct GameView: View {
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 5)
-        .glassCard(cornerRadius: 8)
+        .paperCard()
         .fixedSize()
     }
 
@@ -371,7 +371,7 @@ struct GameView: View {
                     Image(systemName: "flag")
                         .font(.system(size: 11, weight: .bold))
                     Text(L("lie.clue"))
-                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .font(AppFont.display(13, weight: .bold))
                 }
                 .foregroundStyle(AppTheme.danger)
                 .padding(.top, 2)
@@ -527,7 +527,7 @@ struct GameView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
         .overlay(
             RoundedRectangle(cornerRadius: 14)
                 .stroke(AppTheme.accent.opacity(0.15), lineWidth: 1)
@@ -655,7 +655,7 @@ struct GameView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(AppTheme.textSecondary)
                     .frame(width: 44, height: 50)
-                    .glassCard(cornerRadius: 12)
+                    .paperCard()
             }
             .disabled(viewModel.phase != .playing)
 
@@ -669,7 +669,7 @@ struct GameView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(viewModel.showNotes ? AppTheme.accent : AppTheme.textSecondary)
                     .frame(width: 44, height: 50)
-                    .glassCard(cornerRadius: 12)
+                    .paperCard()
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(viewModel.showNotes ? AppTheme.accent.opacity(0.4) : .clear, lineWidth: 1.5)
@@ -686,7 +686,7 @@ struct GameView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(viewModel.canUseHint ? AppTheme.warning : AppTheme.textMuted)
                         .frame(width: 44, height: 50)
-                        .glassCard(cornerRadius: 12)
+                        .paperCard()
 
                     Text("\(hintCoinManager.coins)")
                         .font(.system(size: 9, weight: .bold))
@@ -714,7 +714,7 @@ struct GameView: View {
                     Image(systemName: "paperplane.fill")
                         .font(.system(size: 15))
                     Text(L("game.submit"))
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(AppFont.display(16, weight: .bold))
                 }
                 .foregroundStyle(viewModel.canSubmit ? Color.white : AppTheme.textMuted)
                 .frame(maxWidth: .infinity)
@@ -731,7 +731,7 @@ struct GameView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(AppTheme.textSecondary)
                     .frame(width: 44, height: 50)
-                    .glassCard(cornerRadius: 12)
+                    .paperCard()
             }
             .accessibilityLabel("Share")
         }
@@ -780,7 +780,7 @@ struct GameView: View {
             }
 
             Text(L("result.win"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
 
             Text(L("result.win.steps", attempts))
@@ -811,7 +811,7 @@ struct GameView: View {
                 .font(.system(size: 14))
                 .foregroundStyle(AppTheme.warning)
             Text(L("game.score", score))
-                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .font(AppFont.display(14, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
             if GameCenterManager.shared.isAuthenticated {
                 Text(L("game.submitted"))
@@ -821,7 +821,7 @@ struct GameView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-        .glassCard(cornerRadius: 10)
+        .paperCard()
     }
 
     private var hintCoinProgress: some View {
@@ -835,7 +835,7 @@ struct GameView: View {
 
             if hintCoinManager.justEarnedCoin {
                 Text(L("game.hint.earned", hintCoinManager.coins))
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(AppFont.display(13, weight: .bold))
                     .foregroundStyle(AppTheme.warning)
             } else {
                 Text(L("game.hint.progress", wins, needed))
@@ -853,7 +853,7 @@ struct GameView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .glassCard(cornerRadius: 10)
+        .paperCard()
     }
 
     private var loseContent: some View {
@@ -864,7 +864,7 @@ struct GameView: View {
                 .shadow(color: AppTheme.danger.opacity(0.5), radius: 20)
 
             Text(L("result.lose"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
 
             Text(L("result.lose.desc"))
@@ -890,7 +890,7 @@ struct GameView: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 16)
-        .glassCard(cornerRadius: 10)
+        .paperCard()
         .boardLayout()
     }
 
@@ -905,7 +905,7 @@ struct GameView: View {
                         Image(systemName: "theatermask.and.paintbrush.fill")
                             .font(.system(size: 14, weight: .bold))
                         Text(L("lie.reveal", lieGuess))
-                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .font(AppFont.display(14, weight: .bold))
                     }
                     .foregroundStyle(AppTheme.danger)
 
@@ -998,7 +998,7 @@ struct GameView: View {
                         Image(systemName: "square.and.arrow.up")
                             .font(.system(size: 14))
                         Text(L("result.share"))
-                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .font(AppFont.display(14, weight: .bold))
                     }
                     .foregroundStyle(AppTheme.accent)
                     .frame(maxWidth: .infinity)
@@ -1022,7 +1022,7 @@ struct GameView: View {
                                 showPaywall = true
                             } label: {
                                 Text(L("paywall.unlock"))
-                                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                                    .font(AppFont.display(14, weight: .bold))
                                     .foregroundStyle(Color.white)
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 14)
@@ -1040,7 +1040,7 @@ struct GameView: View {
                             }
                         } label: {
                             Text(L("result.next"))
-                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                                .font(AppFont.display(14, weight: .bold))
                                 .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
@@ -1059,7 +1059,7 @@ struct GameView: View {
                             }
                         } label: {
                             Text(L("result.retry"))
-                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                                .font(AppFont.display(14, weight: .bold))
                                 .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
@@ -1074,7 +1074,7 @@ struct GameView: View {
                         viewModel.startFreePlay(difficulty: viewModel.lastDifficulty, lieMode: wasLie)
                     } label: {
                         Text(L("result.again"))
-                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .font(AppFont.display(14, weight: .bold))
                             .foregroundStyle(Color.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
@@ -1091,7 +1091,7 @@ struct GameView: View {
                         Image(systemName: "person.badge.plus")
                             .font(.system(size: 13))
                         Text(L("result.challenge"))
-                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .font(AppFont.display(13, weight: .bold))
                     }
                     .foregroundStyle(AppTheme.warning)
                     .frame(maxWidth: .infinity)
@@ -1363,7 +1363,7 @@ struct GuessRowView: View {
 
             if gameOver && feedback.isLie {
                 Text(L("lie.stamp"))
-                    .font(.system(size: 9, weight: .black, design: .rounded))
+                    .font(AppFont.display(9, weight: .black))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 5)
                     .padding(.vertical, 2)
@@ -1500,7 +1500,7 @@ struct NotesGridView: View {
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(AppTheme.accent)
             Text(L("game.notes"))
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .font(AppFont.display(15, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
             Spacer()
@@ -1723,14 +1723,14 @@ struct ShareCardView: View {
             VStack(spacing: 2) {
                 if let lid = levelId {
                     Text(L("level.title", lid))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(AppFont.display(20, weight: .bold))
                         .foregroundStyle(Color(white: 0.12))
                     Text(difficultyName)
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(accent)
                 } else {
                     Text(L("game.free"))
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                        .font(AppFont.display(20, weight: .bold))
                         .foregroundStyle(Color(white: 0.12))
                 }
                 if isLieMode {
@@ -1744,7 +1744,7 @@ struct ShareCardView: View {
 
             HStack(spacing: 4) {
                 Text("\(maxAttempts - rows.count)")
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .font(AppFont.display(18, weight: .bold))
                     .foregroundStyle(accent)
                 Text(L("game.attempts"))
                     .font(.system(size: 13, weight: .medium))
@@ -1828,7 +1828,7 @@ struct ShareCardView: View {
                         .shadow(color: pegCol(peg).opacity(0.2), radius: 2, y: 1)
                         .overlay(
                             Text("\(pegNumber(peg))")
-                                .font(.system(size: sharePegSize * 0.45, weight: .bold, design: .rounded))
+                                .font(AppFont.display(sharePegSize * 0.45, weight: .bold))
                                 .foregroundStyle(AppTheme.pegInk(for: peg))
                                 .shadow(
                                     color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.28) : .clear,
@@ -1950,7 +1950,7 @@ struct ShareCardView: View {
                     .overlay(Circle().stroke(Color.black.opacity(0.08), lineWidth: 1))
                     .overlay(
                         Text("\(idx + 1)")
-                            .font(.system(size: colorSize * 0.4, weight: .bold, design: .rounded))
+                            .font(AppFont.display(colorSize * 0.4, weight: .bold))
                             .foregroundStyle(AppTheme.pegInk(for: peg))
                             .shadow(
                                 color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.28) : .clear,
@@ -1968,7 +1968,7 @@ struct ShareCardView: View {
         VStack(spacing: 4) {
             if isPlaying {
                 Text(L("share.inprogress", rows.count, maxAttempts))
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(Color(white: 0.4))
             } else if won {
                 HStack(spacing: 6) {
@@ -1979,11 +1979,11 @@ struct ShareCardView: View {
                     }
                 }
                 Text(L("share.solved", attempts, maxAttempts))
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(accent)
             } else {
                 Text(L("share.failed", rows.count, maxAttempts))
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(danger)
             }
 
@@ -1993,7 +1993,7 @@ struct ShareCardView: View {
                         Image(systemName: "theatermask.and.paintbrush.fill")
                             .font(.system(size: 12))
                         Text(L("lie.reveal", step))
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .font(AppFont.display(12, weight: .bold))
                     }
                     .foregroundStyle(danger)
 
@@ -2023,7 +2023,7 @@ struct ShareCardView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 9))
             VStack(alignment: .leading, spacing: 2) {
                 Text(L("app.title"))
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(Color(white: 0.15))
                 Text(L("share.scan"))
                     .font(.system(size: 11, weight: .medium))
@@ -2146,7 +2146,7 @@ struct DailyShareCardView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(warning)
                 Text(isLieMode ? L("share.daily.lie") : L("daily.title"))
-                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .font(AppFont.display(18, weight: .black))
                     .foregroundStyle(.white)
             }
             Text(displayDate)
@@ -2171,11 +2171,11 @@ struct DailyShareCardView: View {
                     }
                 }
                 Text(L("share.solved", attempts, maxAttempts))
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(AppFont.display(15, weight: .bold))
                     .foregroundStyle(accent)
             } else {
                 Text(L("share.failed", rows.count, maxAttempts))
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(AppFont.display(15, weight: .bold))
                     .foregroundStyle(danger)
             }
 
@@ -2199,7 +2199,7 @@ struct DailyShareCardView: View {
             }
             VStack(alignment: .leading, spacing: 1) {
                 Text("\(streak)")
-                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .font(AppFont.display(20, weight: .black))
                     .foregroundStyle(.white)
                 Text(L("daily.streak"))
                     .font(.system(size: 10, weight: .medium))
@@ -2244,7 +2244,7 @@ struct DailyShareCardView: View {
             }
             VStack(alignment: .leading, spacing: 1) {
                 Text("\(totalCompleted)")
-                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .font(AppFont.display(20, weight: .black))
                     .foregroundStyle(.white)
                 Text(L("daily.total"))
                     .font(.system(size: 10, weight: .medium))
@@ -2289,7 +2289,7 @@ struct DailyShareCardView: View {
 
         return VStack(spacing: 6) {
             Text(monthTitle)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(AppFont.display(12, weight: .bold))
                 .foregroundStyle(.white.opacity(0.7))
 
             HStack(spacing: 0) {
@@ -2342,7 +2342,7 @@ struct DailyShareCardView: View {
             }
 
             Text("\(dayNum)")
-                .font(.system(size: 10, weight: completed ? .bold : .medium, design: .rounded))
+                .font(AppFont.display(10, weight: completed ? .bold : .medium))
                 .foregroundStyle(
                     completed ? .white :
                     isToday ? warning :
@@ -2402,7 +2402,7 @@ struct DailyShareCardView: View {
                         .frame(width: dailyPegSize, height: dailyPegSize)
                         .overlay(
                             Text("\(dailyPegNumber(peg))")
-                                .font(.system(size: dailyPegSize * 0.42, weight: .bold, design: .rounded))
+                                .font(AppFont.display(dailyPegSize * 0.42, weight: .bold))
                                 .foregroundStyle(AppTheme.pegInk(for: peg))
                                 .shadow(
                                     color: AppTheme.pegInkNeedsHalo(peg) ? .black.opacity(0.4) : .clear,
@@ -2471,7 +2471,7 @@ struct DailyShareCardView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
             VStack(alignment: .leading, spacing: 1) {
                 Text(L("app.title"))
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(AppFont.display(13, weight: .bold))
                     .foregroundStyle(.white.opacity(0.85))
                 Text(L("share.scan"))
                     .font(.system(size: 10, weight: .medium))

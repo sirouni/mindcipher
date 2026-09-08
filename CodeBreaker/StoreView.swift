@@ -17,7 +17,7 @@ struct StoreView: View {
             }
             .padding(24)
         }
-        .background(AppTheme.bgGradient.ignoresSafeArea())
+        .background(AppTheme.paper.ignoresSafeArea())
         .navigationTitle(L("store.title"))
         .navigationBarTitleDisplayMode(.inline)
         .task {
@@ -33,7 +33,7 @@ struct StoreView: View {
                 .font(.system(size: 40))
                 .foregroundStyle(AppTheme.accent)
             Text(L("store.title"))
-                .font(.system(size: 28, weight: .black, design: .rounded))
+                .font(AppFont.display(28, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
         }
     }
@@ -48,7 +48,7 @@ struct StoreView: View {
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
                 Text("\(hintCoins.coins)")
-                    .font(.system(size: 24, weight: .black, design: .rounded))
+                    .font(AppFont.display(24, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
             }
             Spacer()
@@ -62,13 +62,13 @@ struct StoreView: View {
             }
         }
         .padding(16)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private var proSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(L("store.unlock"))
-                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .font(AppFont.display(17, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
             if store.isPro {
@@ -81,7 +81,7 @@ struct StoreView: View {
                 }
                 .padding(14)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .glassCard(cornerRadius: 12)
+                .paperCard()
             } else {
                 VStack(spacing: 8) {
                     HStack(spacing: 8) {
@@ -106,7 +106,7 @@ struct StoreView: View {
                         }
                     } label: {
                         Text(proProduct?.displayPrice ?? "$2.99")
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .font(AppFont.display(16, weight: .bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
@@ -115,7 +115,7 @@ struct StoreView: View {
                     .disabled(store.purchaseInProgress || proProduct == nil)
                 }
                 .padding(14)
-                .glassCard(cornerRadius: 12)
+                .paperCard()
             }
         }
     }
@@ -123,7 +123,7 @@ struct StoreView: View {
     private var hintSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(L("store.hints"))
-                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .font(AppFont.display(17, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
             let hintProducts = store.products.filter { p in
@@ -173,14 +173,14 @@ struct StoreView: View {
             Spacer()
 
             Text(price)
-                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .font(AppFont.display(14, weight: .bold))
                 .foregroundStyle(.white)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 8)
                 .background(AppTheme.warning, in: Capsule())
         }
         .padding(12)
-        .glassCard(cornerRadius: 12)
+        .paperCard()
     }
 
     private func hintProductRow(_ product: Product) -> some View {
@@ -210,7 +210,7 @@ struct StoreView: View {
                 Task { await store.purchase(product) }
             } label: {
                 Text(product.displayPrice)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
@@ -219,7 +219,7 @@ struct StoreView: View {
             .disabled(store.purchaseInProgress)
         }
         .padding(12)
-        .glassCard(cornerRadius: 12)
+        .paperCard()
     }
 
     private var restoreButton: some View {
@@ -295,7 +295,7 @@ struct PaywallView: View {
 
             VStack(spacing: 8) {
                 Text(reason.title)
-                    .font(.system(size: 24, weight: .black, design: .rounded))
+                    .font(AppFont.display(24, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
                     .multilineTextAlignment(.center)
                 Text(reason.subtitle)
@@ -313,7 +313,7 @@ struct PaywallView: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .glassCard(cornerRadius: 14)
+            .paperCard()
 
             let proProduct = store.products.first(where: { $0.id == StoreProduct.proUnlock.rawValue })
             Button {
@@ -327,7 +327,7 @@ struct PaywallView: View {
             } label: {
                 VStack(spacing: 2) {
                     Text(proProduct?.displayPrice ?? "$2.99")
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .font(AppFont.display(18, weight: .bold))
                     Text(L("paywall.price"))
                         .font(.system(size: 12, weight: .medium))
                         .opacity(0.9)
@@ -350,7 +350,7 @@ struct PaywallView: View {
             Spacer(minLength: 8)
         }
         .padding(.horizontal, 24)
-        .background(AppTheme.bgGradient.ignoresSafeArea())
+        .background(AppTheme.paper.ignoresSafeArea())
         .presentationDragIndicator(.visible)
         .task {
             if store.products.isEmpty {

@@ -8,7 +8,7 @@ struct TutorialView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 HStack {
@@ -17,7 +17,7 @@ struct TutorialView: View {
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(AppTheme.textSecondary)
                             .frame(width: 36, height: 36)
-                            .glassCard(cornerRadius: 10)
+                            .paperCard()
                     }
                     Spacer()
                     Text("\(page + 1)/\(totalPages)")
@@ -61,7 +61,7 @@ struct TutorialView: View {
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundStyle(AppTheme.textSecondary)
                                 .frame(maxWidth: .infinity).padding(.vertical, 14)
-                                .glassCard(cornerRadius: 12)
+                                .paperCard()
                         }
                     }
                     Button {
@@ -89,7 +89,7 @@ struct TutorialView: View {
     private var goalPage: some View {
         VStack(spacing: 20) {
             Text(L("tutorial.t1"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
 
             // 模拟密码栏
@@ -118,7 +118,7 @@ struct TutorialView: View {
                 starsExample(1, L("tutorial.star.pass"))
             }
             .padding(16)
-            .glassCard(cornerRadius: 14)
+            .paperCard()
         }
         .padding(.horizontal, 28)
     }
@@ -143,7 +143,7 @@ struct TutorialView: View {
     private var pickPage: some View {
         VStack(spacing: 20) {
             Text(L("tutorial.t2"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
 
             // 模拟猜测行
@@ -189,7 +189,7 @@ struct TutorialView: View {
     private var feedbackPage: some View {
         VStack(spacing: 20) {
             Text(L("tutorial.t3"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 12) {
@@ -211,7 +211,7 @@ struct TutorialView: View {
                 tutorialDotLegend(type: .miss, label: L("tutorial.dot.miss"))
             }
             .padding(14)
-            .glassCard(cornerRadius: 12)
+            .paperCard()
         }
         .padding(.horizontal, 20)
     }
@@ -236,7 +236,7 @@ struct TutorialView: View {
                 }
             }
             .padding(10)
-            .glassCard(cornerRadius: 10)
+            .paperCard()
             .boardLayout()
 
             Text(explain)
@@ -263,7 +263,7 @@ struct TutorialView: View {
                 .foregroundStyle(AppTheme.accent)
 
             Text(L("tutorial.notes"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
 
             // 模拟笔记网格
@@ -300,7 +300,7 @@ struct TutorialView: View {
                 }
             }
             .padding(10)
-            .glassCard(cornerRadius: 12)
+            .paperCard()
             .boardLayout()
 
             VStack(alignment: .leading, spacing: 6) {
@@ -310,7 +310,7 @@ struct TutorialView: View {
                 iconNoteRow("arrow.down", AppTheme.accent, L("tutorial.notes.col"))
             }
             .padding(14)
-            .glassCard(cornerRadius: 12)
+            .paperCard()
 
             Text(L("tutorial.notes.d"))
                 .font(.system(size: 13, weight: .medium))
@@ -353,7 +353,7 @@ struct TutorialView: View {
                 .foregroundStyle(AppTheme.warning)
 
             Text(L("tutorial.hints"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
 
             // 提示币示例
@@ -363,7 +363,7 @@ struct TutorialView: View {
                         .font(.system(size: 28))
                         .foregroundStyle(AppTheme.warning)
                         .frame(width: 56, height: 56)
-                        .glassCard(cornerRadius: 14)
+                        .paperCard()
                     Text("3")
                         .font(.system(size: 11, weight: .bold))
                         .foregroundStyle(.white)
@@ -374,7 +374,7 @@ struct TutorialView: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(L("tutorial.hints.coins"))
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(AppFont.display(16, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                     Text(L("tutorial.hints.spend"))
                         .font(.system(size: 12, weight: .medium))
@@ -382,7 +382,7 @@ struct TutorialView: View {
                 }
             }
             .padding(14)
-            .glassCard(cornerRadius: 14)
+            .paperCard()
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(L("tutorial.hints.earn"))
@@ -392,7 +392,7 @@ struct TutorialView: View {
                 hintEarnRow("calendar.badge.checkmark", L("tutorial.hints.login"), L("tutorial.hints.reward"))
             }
             .padding(14)
-            .glassCard(cornerRadius: 12)
+            .paperCard()
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(L("tutorial.hints.do"))
@@ -403,7 +403,7 @@ struct TutorialView: View {
                 hintInfoRow("brain.head.profile", L("tutorial.hints.do3"))
             }
             .padding(14)
-            .glassCard(cornerRadius: 12)
+            .paperCard()
         }
         .padding(.horizontal, 28)
     }
@@ -417,7 +417,7 @@ struct TutorialView: View {
             Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
             Spacer()
             Text(reward)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(AppFont.display(12, weight: .bold))
                 .foregroundStyle(AppTheme.warning)
         }
     }
@@ -441,7 +441,7 @@ struct TutorialView: View {
                 .foregroundStyle(AppTheme.danger)
 
             Text(L("lie.mode"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.danger)
 
             VStack(spacing: 10) {
@@ -455,7 +455,7 @@ struct TutorialView: View {
                     FeedbackDotView(type: .miss, size: 16)
                 }
                 .padding(8)
-                .glassCard(cornerRadius: 8)
+                .paperCard()
 
                 HStack(spacing: 6) {
                     Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 10)).foregroundStyle(AppTheme.danger)
@@ -479,7 +479,7 @@ struct TutorialView: View {
                 iconRuleRow("brain.head.profile", L("tutorial.lie.r4"))
             }
             .padding(14)
-            .glassCard(cornerRadius: 12)
+            .paperCard()
         }
         .padding(.horizontal, 28)
     }
@@ -503,7 +503,7 @@ struct TutorialView: View {
                 .foregroundStyle(AppTheme.warning)
 
             Text(L("tutorial.tips"))
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(AppFont.display(24, weight: .black))
                 .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 10) {
@@ -527,6 +527,6 @@ struct TutorialView: View {
             Spacer()
         }
         .padding(12)
-        .glassCard(cornerRadius: 10)
+        .paperCard()
     }
 }

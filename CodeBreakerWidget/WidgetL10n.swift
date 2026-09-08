@@ -54,6 +54,8 @@ private let widgetStrings: [String: [String: String]] = [
     "widget.done": WTr(zh: "已完成", en: "Done!", hant: "已完成", ja: "クリア", ko: "완료", es: "¡Hecho!", ar: "تم!", de: "Fertig!", fr: "Fait !", he: "הושלם!", pt: "Feito!", tr: "Bitti!").dict,
     "widget.completed": WTr(zh: "今日已完成", en: "Completed", hant: "今日已完成", ja: "今日はクリア", ko: "오늘 완료", es: "Completado", ar: "مكتمل", de: "Erledigt", fr: "Terminé", he: "הושלם", pt: "Concluído", tr: "Tamamlandı").dict,
     "widget.lie": WTr(zh: "今日谎言", en: "Today's Lie", hant: "今日謊言", ja: "今日の嘘", ko: "오늘의 거짓말", es: "Mentira de hoy", ar: "كذبة اليوم", de: "Heutige Lüge", fr: "Mensonge du jour", he: "השקר של היום", pt: "Mentira de hoje", tr: "Bugünün yalanı").dict,
+    "widget.solved": WTr(zh: "已结案", en: "Case closed", hant: "已結案", ja: "解決済", ko: "사건 종결", es: "Caso cerrado", ar: "القضية مغلقة", de: "Fall gelöst", fr: "Affaire classée", he: "התיק נסגר", pt: "Caso encerrado", tr: "Dosya kapandı").dict,
+    "widget.streak": WTr(zh: "连续出勤", en: "day streak", hant: "連續出勤", ja: "連続日", ko: "연속 일", es: "días seguidos", ar: "أيام متتالية", de: "Tage in Folge", fr: "jours d’affilée", he: "ימים ברצף", pt: "dias seguidos", tr: "gün seri").dict,
     "widget.day": WTr(zh: "第 %d 天", en: "DAY #%d", hant: "第 %d 天", ja: "%d日目", ko: "%d일차", es: "DÍA #%d", ar: "اليوم #%d", de: "TAG #%d", fr: "JOUR #%d", he: "יום #%d", pt: "DIA #%d", tr: "GÜN #%d").dict,
 ]
 

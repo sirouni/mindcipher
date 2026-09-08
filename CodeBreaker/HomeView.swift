@@ -44,7 +44,7 @@ struct HomeView: View {
                     .padding(.bottom, 8)
             }
             .padding(.horizontal, 24)
-            .background(AppTheme.bgGradient.ignoresSafeArea())
+            .background(AppTheme.paper.ignoresSafeArea())
             .navigationDestination(isPresented: $showLevels) {
                 LevelSelectView()
             }
@@ -234,7 +234,7 @@ struct HomeView: View {
 
             VStack(spacing: 2) {
                 Text(L("app.title"))
-                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .font(AppFont.display(20, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
 
                 Text(L("app.subtitle"))
@@ -419,13 +419,13 @@ struct HomeView: View {
                     .foregroundStyle(color)
 
                 Text(title)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .font(AppFont.display(15, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
 
                 Text("\(done)/\(total)")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(AppFont.display(13, weight: .bold))
                     .foregroundStyle(color)
 
                 ProgressView(value: Double(done), total: Double(total))
@@ -433,7 +433,7 @@ struct HomeView: View {
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .glassCard(cornerRadius: 14)
+            .paperCard()
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier(accessibilityID)
@@ -460,11 +460,11 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 5) {
                         Text(title)
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .font(AppFont.display(15, weight: .bold))
                             .foregroundStyle(locked ? AppTheme.textMuted : AppTheme.textPrimary)
                         if locked {
                             Text("PRO")
-                                .font(.system(size: 9, weight: .black, design: .rounded))
+                                .font(AppFont.display(9, weight: .black))
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 5)
                                 .padding(.vertical, 2)
@@ -485,7 +485,7 @@ struct HomeView: View {
                     .foregroundStyle(AppTheme.textMuted)
             }
             .padding(12)
-            .glassCard()
+            .paperCard()
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier(accessibilityID ?? "")
@@ -533,14 +533,14 @@ struct HomeView: View {
         }
         .padding(.vertical, 14)
         .padding(.horizontal, 20)
-        .glassCard(cornerRadius: 20)
+        .paperCard()
         .opacity(titleOpacity)
     }
 
     private func statItem(value: String, label: String) -> some View {
         VStack(spacing: 4) {
             Text(value)
-                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .font(AppFont.display(20, weight: .bold))
                 .foregroundStyle(AppTheme.accent)
             Text(label)
                 .font(.system(size: 11, weight: .medium))
@@ -578,10 +578,10 @@ struct FreePlaySetupView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
             VStack(spacing: 20) {
                 Text(L("game.free"))
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .font(AppFont.display(24, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
 
                 VStack(spacing: 10) {
@@ -590,7 +590,7 @@ struct FreePlaySetupView: View {
                     }
                 }
                 .padding(16)
-                .glassCard()
+                .paperCard()
 
                 VStack(spacing: 8) {
                     infoRow(L("param.length"), "\(selectedDifficulty.codeLength)")
@@ -602,7 +602,7 @@ struct FreePlaySetupView: View {
                     }
                 }
                 .padding(16)
-                .glassCard()
+                .paperCard()
 
                 HStack(spacing: 12) {
                     Image(systemName: "theatermask.and.paintbrush.fill")
@@ -622,7 +622,7 @@ struct FreePlaySetupView: View {
                         .labelsHidden()
                 }
                 .padding(14)
-                .glassCard(cornerRadius: 14)
+                .paperCard()
 
                 Spacer()
 
@@ -631,7 +631,7 @@ struct FreePlaySetupView: View {
                     startGame = true
                 } label: {
                     Text(lieMode ? L("lie.start") : L("game.start"))
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .font(AppFont.display(18, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
@@ -701,7 +701,7 @@ struct DuelSetupView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             switch phase {
             case .config: configView
@@ -723,7 +723,7 @@ struct DuelSetupView: View {
                     .font(.system(size: 36))
                     .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
                 Text(L("duel.title"))
-                    .font(.system(size: 24, weight: .black, design: .rounded))
+                    .font(AppFont.display(24, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
                 Text(L("duel.desc"))
                     .font(.system(size: 13, weight: .medium))
@@ -757,7 +757,7 @@ struct DuelSetupView: View {
                 }
             }
             .padding(12)
-            .glassCard()
+            .paperCard()
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 6) {
@@ -775,7 +775,7 @@ struct DuelSetupView: View {
                 }
             }
             .padding(14)
-            .glassCard(cornerRadius: 14)
+            .paperCard()
 
             Spacer()
 
@@ -787,7 +787,7 @@ struct DuelSetupView: View {
                     Image(systemName: "person.fill")
                     Text(L("duel.p1.setup"))
                 }
-                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .font(AppFont.display(17, weight: .bold))
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
@@ -818,7 +818,7 @@ struct DuelSetupView: View {
                 Spacer()
                 VStack(spacing: 2) {
                     Text(L("duel.p1.setup"))
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(AppFont.display(17, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                     Text("\(selectedDifficulty.localizedName) · \(selectedDifficulty.statsLabel)")
                         .font(.system(size: 11, weight: .medium))
@@ -868,7 +868,7 @@ struct DuelSetupView: View {
                 }
             }
             .padding(14)
-            .glassCard()
+            .paperCard()
             .boardLayout()
 
             Spacer()
@@ -879,7 +879,7 @@ struct DuelSetupView: View {
                     startCountdown()
                 } label: {
                     Text(L("duel.confirm"))
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(AppFont.display(17, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
@@ -908,7 +908,7 @@ struct DuelSetupView: View {
 
             VStack(spacing: 8) {
                 Text(L("duel.handoff"))
-                    .font(.system(size: 24, weight: .black, design: .rounded))
+                    .font(AppFont.display(24, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
                 Text(L("duel.handoff.desc"))
                     .font(.system(size: 14, weight: .medium))
@@ -927,7 +927,7 @@ struct DuelSetupView: View {
                     .rotationEffect(.degrees(-90))
                 if countDown > 0 {
                     Text("\(countDown)")
-                        .font(.system(size: 40, weight: .black, design: .rounded))
+                        .font(AppFont.display(40, weight: .black))
                         .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 1.0))
                 } else {
                     Image(systemName: "checkmark")
@@ -952,7 +952,7 @@ struct DuelSetupView: View {
                             Image(systemName: "person.fill")
                             Text(L("duel.p2.start"))
                         }
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
+                        .font(AppFont.display(17, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)

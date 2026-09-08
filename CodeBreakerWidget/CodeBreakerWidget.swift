@@ -86,70 +86,88 @@ struct CodeBreakerWidgetEntryView: View {
     }
 }
 
+/// Paper tokens for the widget (the extension does not compile Theme.swift).
+enum WidgetPaper {
+    static let paper = Color(red: 0.945, green: 0.914, blue: 0.839)
+    static let ink = Color(red: 0.169, green: 0.137, blue: 0.094)
+    static let inkFaded = Color(red: 0.478, green: 0.431, blue: 0.353)
+    static let inkMuted = Color(red: 0.663, green: 0.624, blue: 0.549)
+    static let rule = ink.opacity(0.28)
+    static let stamp = Color(red: 0.722, green: 0.196, blue: 0.169)
+
+    static func type(_ size: CGFloat, bold: Bool = true) -> Font {
+        .custom(bold ? "AmericanTypewriter-Bold" : "AmericanTypewriter", size: size)
+    }
+}
+
+/// Miniature rubber stamp.
+struct WidgetStamp: View {
+    let text: String
+    var size: CGFloat = 9
+    var rotation: Double = -6
+    var body: some View {
+        Text(text.uppercased())
+            .font(WidgetPaper.type(size))
+            .tracking(size * 0.15)
+            .foregroundStyle(WidgetPaper.stamp)
+            .padding(.horizontal, size * 0.5)
+            .padding(.vertical, size * 0.25)
+            .overlay(RoundedRectangle(cornerRadius: 2).stroke(WidgetPaper.stamp, lineWidth: 1.5))
+            .opacity(0.88)
+            .rotationEffect(.degrees(rotation))
+    }
+}
+
 struct SmallWidgetView: View {
     let entry: DailyEntry
 
-    private let accent = Color(red: 0.05, green: 0.60, blue: 0.55)
-    private let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
-    private let danger = Color(red: 0.85, green: 0.25, blue: 0.25)
-    private let darkBg = Color(red: 0.10, green: 0.14, blue: 0.22)
-
     var body: some View {
-        VStack(spacing: 8) {
-            HStack(spacing: 4) {
-                Image(systemName: entry.data.isLieDay ? "theatermask.and.paintbrush.fill" : "lock.shield.fill")
-                    .font(.system(size: 14))
-                    .foregroundStyle(entry.data.isLieDay ? danger : accent)
-                Text("Mind Cipher")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-            }
+        VStack(alignment: .leading, spacing: 4) {
+            Text("CASE FILE")
+                .font(WidgetPaper.type(8))
+                .tracking(1.6)
+                .foregroundStyle(WidgetPaper.inkFaded)
+            Text(String(format: "No. %04d", entry.data.dayNumber))
+                .font(WidgetPaper.type(17))
+                .foregroundStyle(WidgetPaper.ink)
 
-            Text(entry.data.isLieDay ? W("widget.lie") : W("widget.day", entry.data.dayNumber))
-                .font(.system(size: 10, weight: .bold, design: .monospaced))
-                .foregroundStyle((entry.data.isLieDay ? danger : accent).opacity(0.85))
-                .tracking(0.6)
+            Rectangle().fill(WidgetPaper.rule).frame(height: 1).padding(.vertical, 4)
 
-            Spacer(minLength: 4)
+            Spacer(minLength: 0)
 
-            if entry.data.isCompleted {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 32))
-                    .foregroundStyle(accent)
-            } else {
-                Image(systemName: "questionmark.circle")
-                    .font(.system(size: 32))
-                    .foregroundStyle(warning)
-            }
-
-            Spacer(minLength: 4)
-
-            if entry.data.currentStreak > 0 {
-                HStack(spacing: 3) {
-                    Image(systemName: "flame.fill")
-                        .font(.system(size: 12))
-                        .foregroundStyle(warning)
-                    Text("\(entry.data.currentStreak)")
-                        .font(.system(size: 16, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
+            HStack {
+                Spacer(minLength: 0)
+                if entry.data.isCompleted {
+                    WidgetStamp(text: W("widget.solved"), size: 9, rotation: -8)
+                } else if entry.data.isLieDay {
+                    WidgetStamp(text: "Top Secret", size: 8, rotation: -8)
+                } else {
+                    Text(W("widget.play"))
+                        .font(WidgetPaper.type(10, bold: false))
+                        .foregroundStyle(WidgetPaper.inkFaded)
                 }
+                Spacer(minLength: 0)
             }
 
-            Text(entry.data.isCompleted ? W("widget.completed") : W("widget.play"))
-                .font(.system(size: 10, weight: .medium))
-                .foregroundStyle(.white.opacity(0.5))
+            Spacer(minLength: 0)
+
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text("\(entry.data.currentStreak)")
+                    .font(WidgetPaper.type(18))
+                    .foregroundStyle(WidgetPaper.ink)
+                Text(W("widget.streak"))
+                    .font(WidgetPaper.type(8, bold: false))
+                    .tracking(1)
+                    .foregroundStyle(WidgetPaper.inkFaded)
+                    .textCase(.uppercase)
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
 
 struct MediumWidgetView: View {
     let entry: DailyEntry
-
-    private let accent = Color(red: 0.05, green: 0.60, blue: 0.55)
-    private let warning = Color(red: 0.90, green: 0.52, blue: 0.05)
-    private let danger = Color(red: 0.85, green: 0.25, blue: 0.25)
-    private let darkBg = Color(red: 0.10, green: 0.14, blue: 0.22)
 
     private var monthDays: [Date?] {
         let calendar = DailyCalendar.gregorian
@@ -169,58 +187,51 @@ struct MediumWidgetView: View {
     }
 
     var body: some View {
-        HStack(spacing: 16) {
-            VStack(spacing: 6) {
-                HStack(spacing: 4) {
-                    Image(systemName: entry.data.isLieDay ? "theatermask.and.paintbrush.fill" : "lock.shield.fill")
-                        .font(.system(size: 12))
-                        .foregroundStyle(entry.data.isLieDay ? danger : accent)
-                    Text("Mind Cipher")
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                }
-
-                Text(entry.data.isLieDay ? W("widget.lie") : "#\(entry.data.dayNumber)")
-                    .font(.system(size: 10, weight: .bold, design: .monospaced))
-                    .foregroundStyle((entry.data.isLieDay ? danger : accent).opacity(0.85))
+        HStack(spacing: 14) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("CASE FILE")
+                    .font(WidgetPaper.type(8))
+                    .tracking(1.6)
+                    .foregroundStyle(WidgetPaper.inkFaded)
+                Text(String(format: "No. %04d", entry.data.dayNumber))
+                    .font(WidgetPaper.type(16))
+                    .foregroundStyle(WidgetPaper.ink)
 
                 Spacer(minLength: 2)
 
                 if entry.data.isCompleted {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 28))
-                        .foregroundStyle(accent)
+                    WidgetStamp(text: W("widget.solved"), size: 8, rotation: -8)
+                } else if entry.data.isLieDay {
+                    WidgetStamp(text: "Top Secret", size: 7, rotation: -8)
                 } else {
-                    Image(systemName: "questionmark.circle")
-                        .font(.system(size: 28))
-                        .foregroundStyle(warning)
+                    Text(W("widget.play"))
+                        .font(WidgetPaper.type(10, bold: false))
+                        .foregroundStyle(WidgetPaper.inkFaded)
                 }
 
                 Spacer(minLength: 2)
 
-                if entry.data.currentStreak > 0 {
-                    HStack(spacing: 2) {
-                        Image(systemName: "flame.fill")
-                            .font(.system(size: 11))
-                            .foregroundStyle(warning)
-                        Text("\(entry.data.currentStreak)")
-                            .font(.system(size: 14, weight: .black, design: .rounded))
-                            .foregroundStyle(.white)
-                    }
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("\(entry.data.currentStreak)")
+                        .font(WidgetPaper.type(16))
+                        .foregroundStyle(WidgetPaper.ink)
+                    Text(W("widget.streak"))
+                        .font(WidgetPaper.type(8, bold: false))
+                        .tracking(1)
+                        .foregroundStyle(WidgetPaper.inkFaded)
+                        .textCase(.uppercase)
                 }
-
-                Text(entry.data.isCompleted ? W("widget.done") : W("widget.play"))
-                    .font(.system(size: 9, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.5))
             }
-            .frame(width: 90)
+            .frame(width: 96, alignment: .leading)
+
+            Rectangle().fill(WidgetPaper.rule).frame(width: 1)
 
             VStack(spacing: 3) {
                 HStack(spacing: 0) {
                     ForEach(Array(DailyCalendar.weekdaySymbols(locale: .current).enumerated()), id: \.offset) { _, symbol in
                         Text(symbol)
-                            .font(.system(size: 7, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.4))
+                            .font(WidgetPaper.type(7, bold: false))
+                            .foregroundStyle(WidgetPaper.inkMuted)
                             .frame(maxWidth: .infinity)
                     }
                 }
@@ -229,7 +240,7 @@ struct MediumWidgetView: View {
                     Array(monthDays[start..<min(start + 7, monthDays.count)])
                 }
                 ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
-                    HStack(spacing: 1) {
+                    HStack(spacing: 2) {
                         ForEach(0..<7, id: \.self) { column in
                             if column < week.count, let date = week[column] {
                                 miniDayCell(date)
@@ -250,16 +261,21 @@ struct MediumWidgetView: View {
         let completed = entry.data.completedDates.contains(key)
         let isToday = calendar.isDateInToday(date)
         let isFuture = date > Date()
-        let isLie = DailyCalendar.isLieDay(key)
 
-        return RoundedRectangle(cornerRadius: 2)
-            .fill(
-                completed ? (isLie ? danger : accent) :
-                isToday ? warning.opacity(0.5) :
-                isFuture ? Color.white.opacity(0.05) :
-                Color.white.opacity(0.1)
-            )
-            .frame(width: 12, height: 12)
+        return ZStack {
+            RoundedRectangle(cornerRadius: 1)
+                .stroke(isFuture ? WidgetPaper.rule.opacity(0.5) : WidgetPaper.rule, lineWidth: 1)
+            if completed {
+                Circle()
+                    .fill(WidgetPaper.stamp)
+                    .frame(width: 7, height: 7)
+            } else if isToday {
+                Circle()
+                    .stroke(WidgetPaper.ink, lineWidth: 1.5)
+                    .frame(width: 7, height: 7)
+            }
+        }
+        .frame(width: 12, height: 12)
     }
 }
 
@@ -270,11 +286,11 @@ struct CircularLockView: View {
         ZStack {
             AccessoryWidgetBackground()
             VStack(spacing: 2) {
-                Image(systemName: entry.data.isLieDay ? "theatermask.and.paintbrush.fill" : "lock.shield.fill")
+                Image(systemName: entry.data.isLieDay ? "theatermasks.fill" : "doc.text.fill")
                     .font(.system(size: 16, weight: .semibold))
                 if entry.data.currentStreak > 0 {
                     Text("\(entry.data.currentStreak)")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .font(WidgetPaper.type(12))
                 }
             }
         }
@@ -288,7 +304,7 @@ struct RectangularLockView: View {
         ZStack {
             AccessoryWidgetBackground()
             HStack(spacing: 8) {
-                Image(systemName: entry.data.isLieDay ? "theatermask.and.paintbrush.fill" : "lock.shield.fill")
+                Image(systemName: entry.data.isLieDay ? "theatermasks.fill" : "doc.text.fill")
                 VStack(alignment: .leading, spacing: 1) {
                     Text(entry.data.isLieDay ? W("widget.lie") : W("widget.display"))
                         .font(.system(size: 13, weight: .semibold))
@@ -298,7 +314,7 @@ struct RectangularLockView: View {
                 Spacer(minLength: 0)
                 if entry.data.currentStreak > 0 {
                     Text("\(entry.data.currentStreak)")
-                        .font(.system(size: 16, weight: .black, design: .rounded))
+                        .font(WidgetPaper.type(16))
                 }
             }
             .padding(.horizontal, 4)
@@ -319,7 +335,7 @@ struct CodeBreakerWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: DailyProvider()) { entry in
             CodeBreakerWidgetEntryView(entry: entry)
-                .containerBackground(Color(red: 0.10, green: 0.14, blue: 0.22), for: .widget)
+                .containerBackground(WidgetPaper.paper, for: .widget)
                 .widgetURL(URL(string: "codebreaker://daily"))
         }
         .configurationDisplayName(W("widget.display"))

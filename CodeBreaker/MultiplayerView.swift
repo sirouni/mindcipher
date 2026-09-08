@@ -18,7 +18,7 @@ struct MultiplayerView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             switch manager.phase {
             case .lobby:
@@ -88,7 +88,7 @@ struct MultiplayerView: View {
                         .foregroundStyle(accent)
                 }
                 Text(L("online.title"))
-                    .font(.system(size: 24, weight: .black, design: .rounded))
+                    .font(AppFont.display(24, weight: .black))
                     .foregroundStyle(AppTheme.textPrimary)
                 Text(L("online.desc"))
                     .font(.system(size: 13, weight: .medium))
@@ -106,7 +106,7 @@ struct MultiplayerView: View {
                     Image(systemName: "magnifyingglass")
                     Text(L("online.find"))
                 }
-                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .font(AppFont.display(17, weight: .bold))
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 16)
@@ -152,7 +152,7 @@ struct MultiplayerView: View {
             }
         }
         .padding(12)
-        .glassCard()
+        .paperCard()
     }
 
     private var rulesCard: some View {
@@ -170,7 +170,7 @@ struct MultiplayerView: View {
             }
         }
         .padding(14)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private func ruleRow(_ text: String) -> some View {
@@ -189,7 +189,7 @@ struct MultiplayerView: View {
                 .font(.system(size: 32))
                 .foregroundStyle(accent)
             Text(title)
-                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .font(AppFont.display(17, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
             if let subtitle {
                 Text(subtitle)
@@ -217,7 +217,7 @@ struct MultiplayerView: View {
             HStack(spacing: 30) {
                 playerAvatar(name: GKLocalPlayer.local.displayName, isLocal: true)
                 Text("VS")
-                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .font(AppFont.display(22, weight: .black))
                     .foregroundStyle(AppTheme.textMuted)
                 playerAvatar(name: manager.opponentName, isLocal: false)
             }
@@ -227,7 +227,7 @@ struct MultiplayerView: View {
                 .foregroundStyle(AppTheme.textSecondary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-                .glassCard(cornerRadius: 8)
+                .paperCard()
 
             ZStack {
                 Circle()
@@ -239,7 +239,7 @@ struct MultiplayerView: View {
                     .frame(width: 100, height: 100)
                     .rotationEffect(.degrees(-90))
                 Text("\(count)")
-                    .font(.system(size: 48, weight: .black, design: .rounded))
+                    .font(AppFont.display(48, weight: .black))
                     .foregroundStyle(accent)
             }
 
@@ -364,7 +364,7 @@ struct MultiplayerView: View {
 
             VStack(spacing: 20) {
                 Text(resultTitle)
-                    .font(.system(size: 28, weight: .black, design: .rounded))
+                    .font(AppFont.display(28, weight: .black))
                     .foregroundStyle(resultColor)
 
                 HStack(spacing: 20) {
@@ -376,7 +376,7 @@ struct MultiplayerView: View {
 
                     VStack {
                         Text("VS")
-                            .font(.system(size: 16, weight: .black, design: .rounded))
+                            .font(AppFont.display(16, weight: .black))
                             .foregroundStyle(AppTheme.textMuted)
                     }
 
@@ -388,7 +388,7 @@ struct MultiplayerView: View {
                     )
                 }
                 .padding(20)
-                .glassCard()
+                .paperCard()
 
                 VStack(spacing: 10) {
                     if case .disconnected = manager.phase {
@@ -410,7 +410,7 @@ struct MultiplayerView: View {
                                 Image(systemName: "arrow.counterclockwise")
                                 Text(L("online.rematch"))
                             }
-                            .font(.system(size: 17, weight: .bold, design: .rounded))
+                            .font(AppFont.display(17, weight: .bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
@@ -494,7 +494,7 @@ struct MultiplayerView: View {
                 dismiss()
             } label: {
                 Text(L("result.back"))
-                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                    .font(AppFont.display(17, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)

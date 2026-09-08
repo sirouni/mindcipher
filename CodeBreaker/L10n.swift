@@ -329,6 +329,8 @@ private let strings: [String: [String: String]] = [
     "settings.language.system": Tr(zh: "跟随系统", en: "Follow System", hant: "跟隨系統", ja: "システムに合わせる", ko: "시스템 설정", es: "Seguir el sistema", ar: "حسب النظام", de: "System folgen", fr: "Suivre le système", he: "לפי המערכת", pt: "Seguir o sistema", tr: "Sistemi izle").dict,
     "settings.game": Tr(zh: "游戏", en: "Game", hant: "遊戲", ja: "ゲーム", ko: "게임", es: "Juego", ar: "اللعبة", de: "Spiel", fr: "Jeu", he: "משחק", pt: "Jogo", tr: "Oyun").dict,
     "settings.theme": Tr(zh: "主题", en: "Theme", hant: "主題", ja: "テーマ", ko: "테마", es: "Tema", ar: "المظهر", de: "Design", fr: "Thème", he: "ערכת נושא", pt: "Tema", tr: "Tema").dict,
+    "theme.dossier": Tr(zh: "档案纸", en: "Dossier", hant: "檔案紙", ja: "ドシエ", ko: "서류 파일", es: "Expediente", ar: "ملف", de: "Akte", fr: "Dossier", he: "תיק", pt: "Dossiê", tr: "Dosya").dict,
+    "theme.nightDesk": Tr(zh: "夜间桌面", en: "Night Desk", hant: "夜間桌面", ja: "夜の机", ko: "야간 책상", es: "Escritorio nocturno", ar: "مكتب ليلي", de: "Nachtschreibtisch", fr: "Bureau de nuit", he: "שולחן לילה", pt: "Mesa noturna", tr: "Gece masası").dict,
     "settings.stats": Tr(zh: "统计", en: "Stats", hant: "統計", ja: "記録", ko: "통계", es: "Estadísticas", ar: "الإحصاءات", de: "Statistik", fr: "Stats", he: "סטטיסטיקה", pt: "Estatísticas", tr: "İstatistik").dict,
     "settings.manage": Tr(zh: "管理", en: "Manage", hant: "管理", ja: "管理", ko: "관리", es: "Gestionar", ar: "إدارة", de: "Verwalten", fr: "Gérer", he: "ניהול", pt: "Gerenciar", tr: "Yönet").dict,
     "settings.about": Tr(zh: "关于", en: "About", hant: "關於", ja: "このアプリ", ko: "정보", es: "Acerca de", ar: "حول", de: "Info", fr: "À propos", he: "אודות", pt: "Sobre", tr: "Hakkında").dict,

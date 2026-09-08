@@ -19,7 +19,7 @@ struct LieLevelSelectView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 lieHeader
@@ -96,7 +96,7 @@ struct LieLevelSelectView: View {
             Spacer()
             VStack(spacing: 4) {
                 Text(tierDiff)
-                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .font(AppFont.display(22, weight: .black))
                     .foregroundStyle(AppTheme.danger)
                 Text("\(tierDone)/\(currentTier.count)")
                     .font(.system(size: 13, weight: .bold, design: .monospaced))
@@ -207,7 +207,7 @@ struct LieLevelSelectView: View {
 
                 VStack(spacing: 3) {
                     Text("\(level.id)")
-                        .font(.system(size: 18, weight: .black, design: .rounded))
+                        .font(AppFont.display(18, weight: .black))
                         .foregroundStyle(isCompleted ? AppTheme.danger : isProLocked ? AppTheme.textMuted : AppTheme.textPrimary)
                     if isCompleted {
                         HStack(spacing: 2) {
@@ -219,7 +219,7 @@ struct LieLevelSelectView: View {
                         }
                     } else if isProLocked {
                         Text("PRO")
-                            .font(.system(size: 9, weight: .black, design: .rounded))
+                            .font(AppFont.display(9, weight: .black))
                             .foregroundStyle(.white)
                             .padding(.horizontal, 5)
                             .padding(.vertical, 2)
@@ -262,7 +262,7 @@ struct LieLevelSelectView: View {
                     Image(systemName: "theatermask.and.paintbrush.fill")
                         .foregroundStyle(AppTheme.danger)
                     Text(L("level.title", level.id))
-                        .font(.system(size: 22, weight: .black, design: .rounded))
+                        .font(AppFont.display(22, weight: .black))
                         .foregroundStyle(AppTheme.textPrimary)
                 }
 
@@ -307,7 +307,7 @@ struct LieLevelSelectView: View {
                             .font(.system(size: 14))
                         Text(progress.completedLevels.contains(level.id) ? L("result.retry") : L("level.start"))
                     }
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(AppFont.display(16, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(width: 200)
                     .padding(.vertical, 14)

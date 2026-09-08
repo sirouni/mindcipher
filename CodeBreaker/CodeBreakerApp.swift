@@ -143,7 +143,7 @@ struct ChallengeGameView: View {
                 GameView(viewModel: viewModel)
             } else {
                 ZStack {
-                    AppTheme.bgGradient.ignoresSafeArea()
+                    AppTheme.paper.ignoresSafeArea()
 
                     VStack(spacing: 20) {
                         Spacer()
@@ -157,7 +157,7 @@ struct ChallengeGameView: View {
                             .foregroundStyle(AppTheme.textSecondary)
 
                         Text(challenge.fromName)
-                            .font(.system(size: 24, weight: .black, design: .rounded))
+                            .font(AppFont.display(24, weight: .black))
                             .foregroundStyle(AppTheme.textPrimary)
 
                         VStack(spacing: 8) {
@@ -190,7 +190,7 @@ struct ChallengeGameView: View {
                             }
                         }
                         .padding(20)
-                        .glassCard(cornerRadius: 16)
+                        .paperCard()
 
                         if challenge.challengeMode == .lie {
                             Label(L("challenge.lie"), systemImage: "exclamationmark.triangle.fill")
@@ -216,7 +216,7 @@ struct ChallengeGameView: View {
                             started = true
                         } label: {
                             Text(L("challenge.accept"))
-                                .font(.system(size: 18, weight: .bold, design: .rounded))
+                                .font(AppFont.display(18, weight: .bold))
                                 .foregroundStyle(Color.white)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)

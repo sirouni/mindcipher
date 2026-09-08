@@ -29,7 +29,7 @@ enum PegColor: Int, CaseIterable, Codable, Identifiable {
         case .purple: return "Purple"
         case .orange: return "Orange"
         case .cyan: return "Cyan"
-        case .pink: return "Pink"
+        case .pink: return "Ink"
         }
     }
 

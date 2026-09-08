@@ -7,7 +7,7 @@ struct LieModeSetupView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
             VStack(spacing: 16) {
                 header
 
@@ -17,7 +17,7 @@ struct LieModeSetupView: View {
                     }
                 }
                 .padding(12)
-                .glassCard()
+                .paperCard()
 
                 infoCard
 
@@ -31,7 +31,7 @@ struct LieModeSetupView: View {
                         Image(systemName: "theatermask.and.paintbrush.fill")
                         Text("Start Lie Challenge")
                     }
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .font(AppFont.display(18, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
@@ -53,7 +53,7 @@ struct LieModeSetupView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("Lie Mode")
-                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .font(AppFont.display(22, weight: .black))
                     .foregroundStyle(AppTheme.danger)
                 Text("The system lies once. Spot it!")
                     .font(.system(size: 12, weight: .medium))
@@ -82,7 +82,7 @@ struct LieModeSetupView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(12)
-        .glassCard()
+        .paperCard()
     }
 
     private func infoChip(_ text: String) -> some View {

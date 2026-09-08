@@ -44,7 +44,7 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -83,7 +83,7 @@ struct SettingsView: View {
                 toggleRow(icon: "checkmark.seal.fill", title: L("settings.debug.pro"), isOn: $store.isPro)
                 #endif
             }
-            .glassCard(cornerRadius: 14)
+            .paperCard()
         }
     }
 
@@ -118,7 +118,7 @@ struct SettingsView: View {
                 .accessibilityLabel(L("feedback.row"))
                 .accessibilityIdentifier("feedback.row")
             }
-            .glassCard(cornerRadius: 14)
+            .paperCard()
         }
     }
 
@@ -140,7 +140,7 @@ struct SettingsView: View {
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
                 infoRow(icon: "checkmark.circle.fill", title: L("settings.levels"), value: "\(progress.completedLevels.count + ProgressManager.lieShared.completedLevels.count)/480")
             }
-            .glassCard(cornerRadius: 14)
+            .paperCard()
         }
     }
 
@@ -199,7 +199,7 @@ struct SettingsView: View {
                     }
                 } message: { Text(L("settings.reset.all.msg")) }
             }
-            .glassCard(cornerRadius: 14)
+            .paperCard()
         }
     }
 
@@ -211,7 +211,7 @@ struct SettingsView: View {
                 Divider().overlay(AppTheme.textMuted.opacity(0.2))
                 infoRow(icon: "lock.shield.fill", title: L("app.title"), value: L("app.title"))
             }
-            .glassCard(cornerRadius: 14)
+            .paperCard()
         }
     }
 
@@ -295,7 +295,7 @@ struct LanguageSettingsView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 4) {
@@ -314,7 +314,7 @@ struct LanguageSettingsView: View {
                             languageRow(lang)
                         }
                     }
-                    .glassCard(cornerRadius: 14)
+                    .paperCard()
                 }
                 .padding(20)
             }
@@ -359,7 +359,7 @@ struct AchievementsView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 6) {
@@ -384,7 +384,7 @@ struct AchievementsView: View {
     private var progressHeader: some View {
         VStack(spacing: 8) {
             Text("\(manager.unlockedCount)/\(manager.totalCount)")
-                .font(.system(size: 32, weight: .black, design: .rounded))
+                .font(AppFont.display(32, weight: .black))
                 .foregroundStyle(AppTheme.accent)
             
             GeometryReader { geo in
@@ -424,7 +424,7 @@ struct AchievementsView: View {
                     }
                 }
             }
-            .glassCard(cornerRadius: 14)
+            .paperCard()
         }
     }
 
@@ -482,7 +482,7 @@ struct AchievementDetailView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.bgGradient.ignoresSafeArea()
+            AppTheme.paper.ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 24) {
@@ -517,7 +517,7 @@ struct AchievementDetailView: View {
 
             VStack(spacing: 6) {
                 Text(achievement.localizedTitle)
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .font(AppFont.display(24, weight: .bold))
                     .foregroundStyle(unlocked ? AppTheme.textPrimary : AppTheme.textMuted)
                 Text(achievement.category.localizedName)
                     .font(.system(size: 13, weight: .medium))
@@ -551,7 +551,7 @@ struct AchievementDetailView: View {
             }
         }
         .padding(16)
-        .glassCard(cornerRadius: 14)
+        .paperCard()
     }
 
     private var shareButton: some View {
@@ -605,7 +605,7 @@ struct AchievementShareCard: View {
     var body: some View {
         VStack(spacing: 20) {
             Text(L("share.achievement.header"))
-                .font(.system(size: 11, weight: .bold, design: .rounded))
+                .font(AppFont.display(11, weight: .bold))
                 .foregroundStyle(accent)
                 .tracking(1.5)
                 .padding(.top, 24)
@@ -624,7 +624,7 @@ struct AchievementShareCard: View {
 
             VStack(spacing: 6) {
                 Text(achievement.localizedTitle)
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    .font(AppFont.display(22, weight: .bold))
                     .foregroundStyle(Color(white: 0.12))
                 Text(achievement.localizedDesc)
                     .font(.system(size: 14, weight: .medium))
@@ -647,7 +647,7 @@ struct AchievementShareCard: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 VStack(alignment: .leading, spacing: 2) {
                     Text(L("app.title"))
-                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .font(AppFont.display(13, weight: .bold))
                         .foregroundStyle(Color(white: 0.2))
                     Text(L("share.scan"))
                         .font(.system(size: 10, weight: .medium))
