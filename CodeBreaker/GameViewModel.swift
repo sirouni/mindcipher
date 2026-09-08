@@ -41,6 +41,8 @@ class GameViewModel: ObservableObject {
     var level: Level?
     var lastDifficulty: Difficulty = .easy
     var isDailyChallenge: Bool = false
+    /// Set when the game came from a shared challenge link.
+    var isChallenge: Bool = false
     var isLieTaste: Bool = false
     var gameStartTime: Date?
     private var timer: Timer?
@@ -110,6 +112,7 @@ class GameViewModel: ObservableObject {
         self.mode = .campaign(level: level.id)
         isLieTaste = false
         isDailyChallenge = false
+        isChallenge = false
         engine = GameEngine(
             codeLength: level.codeLength,
             colorCount: level.colorCount,
@@ -128,6 +131,7 @@ class GameViewModel: ObservableObject {
         self.mode = .campaign(level: level.id)
         isLieTaste = false
         isDailyChallenge = false
+        isChallenge = false
         engine = GameEngine(
             codeLength: level.codeLength,
             colorCount: level.colorCount,
@@ -144,6 +148,7 @@ class GameViewModel: ObservableObject {
         self.lastDifficulty = difficulty
         isLieTaste = false
         isDailyChallenge = false
+        isChallenge = false
         let extraAttempts: Int
         if !lieMode {
             extraAttempts = 0
@@ -173,6 +178,7 @@ class GameViewModel: ObservableObject {
         self.mode = .duel
         isLieTaste = false
         isDailyChallenge = false
+        isChallenge = false
         engine = GameEngine(
             secretCode: secretCode,
             colorCount: colorCount,
@@ -186,6 +192,7 @@ class GameViewModel: ObservableObject {
         self.mode = .duel
         isLieTaste = false
         isDailyChallenge = false
+        isChallenge = true
         engine = GameEngine(
             seed: seed,
             codeLength: codeLength,
@@ -203,6 +210,7 @@ class GameViewModel: ObservableObject {
         lastDifficulty = .easy
         isLieTaste = true
         isDailyChallenge = false
+        isChallenge = false
         engine = GameEngine(
             codeLength: 4,
             colorCount: 6,
@@ -219,6 +227,7 @@ class GameViewModel: ObservableObject {
         self.mode = .online
         isLieTaste = false
         isDailyChallenge = false
+        isChallenge = false
         engine = GameEngine(
             seed: seed,
             codeLength: codeLength,

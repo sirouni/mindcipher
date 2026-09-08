@@ -1,0 +1,113 @@
+{
+  "order": ["01_case", "02_report", "03_lie", "04_home"],
+  "locales": {
+    "en": {
+      "asc": "en-US",
+      "banners": {
+        "01_case": ["Crack the Code", "Deduce the secret in 7 analyses"],
+        "02_report": ["Case Closed", "Stamped reports you can share"],
+        "03_lie": ["One Clue Lies", "Spot the fake report on Top Secret days"],
+        "04_home": ["A New Case Every Day", "480 case files · colour-blind friendly"]
+      }
+    },
+    "zh": {
+      "asc": "zh-Hans",
+      "banners": {
+        "01_case": ["破译密码", "7 次分析内推出密码"],
+        "02_report": ["结案报告", "盖章分享你的破案过程"],
+        "03_lie": ["一条线索是假的", "机密日里找出假报告"],
+        "04_home": ["每日新案件", "480 份卷宗 · 色盲友好"]
+      }
+    },
+    "zh-Hant": {
+      "asc": "zh-Hant",
+      "banners": {
+        "01_case": ["破譯密碼", "7 次分析內推出密碼"],
+        "02_report": ["結案報告", "蓋章分享你的破案過程"],
+        "03_lie": ["一條線索是假的", "機密日裡找出假報告"],
+        "04_home": ["每日新案件", "480 份卷宗 · 色盲友善"]
+      }
+    },
+    "ja": {
+      "asc": "ja",
+      "banners": {
+        "01_case": ["暗号を解け", "7回の分析で秘密のコードを推理"],
+        "02_report": ["事件解決", "スタンプ付き報告書をシェア"],
+        "03_lie": ["手がかりの一つは嘘", "極秘の日は偽の報告を見抜け"],
+        "04_home": ["毎日新しい事件", "480の事件ファイル · 色覚に配慮"]
+      }
+    },
+    "ko": {
+      "asc": "ko",
+      "banners": {
+        "01_case": ["암호를 해독하라", "7번의 분석으로 비밀 코드 추리"],
+        "02_report": ["사건 종결", "도장 찍힌 보고서를 공유"],
+        "03_lie": ["단서 하나는 거짓", "기밀의 날엔 가짜 보고서를 찾아라"],
+        "04_home": ["매일 새로운 사건", "480개 사건 파일 · 색약 친화적"]
+      }
+    },
+    "es": {
+      "asc": "es-ES",
+      "banners": {
+        "01_case": ["Descifra el código", "Deduce el secreto en 7 análisis"],
+        "02_report": ["Caso cerrado", "Informes sellados para compartir"],
+        "03_lie": ["Una pista miente", "Detecta el informe falso en días Top Secret"],
+        "04_home": ["Un caso nuevo cada día", "480 expedientes · apto para daltónicos"]
+      }
+    },
+    "ar": {
+      "asc": "ar-SA",
+      "banners": {
+        "01_case": ["فكّ الشيفرة", "استنتج السر في 7 تحليلات"],
+        "02_report": ["القضية مغلقة", "تقارير مختومة لمشاركة حلّك"],
+        "03_lie": ["دليل واحد كاذب", "اكتشف التقرير المزيف في الأيام السرية"],
+        "04_home": ["قضية جديدة كل يوم", "480 ملف قضية · مناسب لعمى الألوان"]
+      }
+    },
+    "de": {
+      "asc": "de-DE",
+      "banners": {
+        "01_case": ["Knack den Code", "Erschließe das Geheimnis in 7 Analysen"],
+        "02_report": ["Fall gelöst", "Gestempelte Berichte zum Teilen"],
+        "03_lie": ["Ein Hinweis lügt", "Finde den falschen Bericht an Top-Secret-Tagen"],
+        "04_home": ["Jeden Tag ein neuer Fall", "480 Fallakten · farbenblind-freundlich"]
+      }
+    },
+    "fr": {
+      "asc": "fr-FR",
+      "banners": {
+        "01_case": ["Déchiffrez le code", "Déduisez le secret en 7 analyses"],
+        "02_report": ["Affaire classée", "Des rapports tamponnés à partager"],
+        "03_lie": ["Un indice ment", "Repérez le faux rapport les jours Top Secret"],
+        "04_home": ["Une nouvelle affaire chaque jour", "480 dossiers · adaptés aux daltoniens"]
+      }
+    },
+    "he": {
+      "asc": "he",
+      "banners": {
+        "01_case": ["פצחו את הצופן", "גלו את הסוד ב-7 ניתוחים"],
+        "02_report": ["התיק נסגר", "דוחות חתומים לשיתוף"],
+        "03_lie": ["רמז אחד משקר", "מצאו את הדוח המזויף בימי סודי ביותר"],
+        "04_home": ["תיק חדש כל יום", "480 תיקים · ידידותי לעיוורי צבעים"]
+      }
+    },
+    "pt": {
+      "asc": "pt-BR",
+      "banners": {
+        "01_case": ["Decifre o código", "Deduza o segredo em 7 análises"],
+        "02_report": ["Caso encerrado", "Relatórios carimbados para compartilhar"],
+        "03_lie": ["Uma pista mente", "Ache o relatório falso nos dias Top Secret"],
+        "04_home": ["Um caso novo por dia", "480 dossiês · amigável a daltônicos"]
+      }
+    },
+    "tr": {
+      "asc": "tr",
+      "banners": {
+        "01_case": ["Şifreyi kır", "Sırrı 7 analizde çöz"],
+        "02_report": ["Dosya kapandı", "Mühürlü raporları paylaş"],
+        "03_lie": ["Bir ipucu yalan", "Çok gizli günlerde sahte raporu bul"],
+        "04_home": ["Her gün yeni bir dosya", "480 dosya · renk körü dostu"]
+      }
+    }
+  }
+}

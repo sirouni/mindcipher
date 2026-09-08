@@ -250,6 +250,7 @@ struct GameView: View {
     /// Case-file header: caption line, case number, subtitle, attempts on the right.
     private var caseCaption: String {
         if viewModel.level != nil { return viewModel.engine?.lieMode == true ? L("case.lie") : L("case.classic") }
+        if viewModel.isChallenge { return L("challenge.title") }
         if viewModel.mode == .duel { return L("game.duel") }
         if viewModel.mode == .online { return L("online.title") }
         if viewModel.isLieTaste { return L("taste.title") }
