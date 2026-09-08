@@ -662,7 +662,7 @@ struct GameView: View {
                 }
                 viewModel.submitGuess()
             } label: {
-                Text(L("game.submit"))
+                Text(L("game.analyze"))
                     .font(AppFont.label(14, weight: .bold))
                     .tracking(1.5)
                     .textCase(.uppercase)

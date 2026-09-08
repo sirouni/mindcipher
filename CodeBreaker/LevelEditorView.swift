@@ -96,10 +96,10 @@ struct LevelEditorView: View {
     private var toggleSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Allow repeat colors")
+                Text(L("editor.dupes"))
                     .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
-                Text("Same color can appear multiple times")
+                Text(L("editor.dupes.desc"))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(AppTheme.textSecondary)
             }
@@ -115,11 +115,11 @@ struct LevelEditorView: View {
     private var timeLimitSection: some View {
         VStack(spacing: 8) {
             HStack {
-                Text("Time limit")
+                Text(L("editor.timelimit"))
                     .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                 Spacer()
-                Text(timeLimit == 0 ? "Off" : "\(timeLimit)s")
+                Text(timeLimit == 0 ? L("editor.off") : "\(timeLimit)s")
                     .font(AppFont.mono(15, weight: .bold))
                     .foregroundStyle(timeLimit > 0 ? AppTheme.warning : AppTheme.textSecondary)
             }
@@ -129,7 +129,7 @@ struct LevelEditorView: View {
                     Button {
                         withAnimation(.spring(response: 0.2)) { timeLimit = t }
                     } label: {
-                        Text(t == 0 ? "Off" : "\(t)s")
+                        Text(t == 0 ? L("editor.off") : "\(t)s")
                             .font(AppFont.display(12, weight: .bold))
                             .foregroundStyle(timeLimit == t ? AppTheme.paper : AppTheme.textSecondary)
                             .frame(maxWidth: .infinity)
@@ -188,7 +188,7 @@ struct LevelEditorView: View {
 
     private var previewColors: some View {
         HStack(spacing: 6) {
-            Text("Colors")
+            Text(L("editor.colors"))
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(AppTheme.textSecondary)
             Spacer()
