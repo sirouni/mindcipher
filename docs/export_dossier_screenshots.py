@@ -186,6 +186,11 @@ def tap_el(el: dict) -> bool:
     return True
 
 
+def norm(text: str) -> str:
+    """Case-insensitive compare that survives SwiftUI's .textCase(.uppercase) (Turkish İ -> i̇)."""
+    return text.strip().lower().replace("\u0307", "")
+
+
 def tap(ident: str | None = None, label: str | None = None, substring: bool = False) -> bool:
     els = describe()
     if ident:
@@ -193,9 +198,9 @@ def tap(ident: str | None = None, label: str | None = None, substring: bool = Fa
             if el.get("AXUniqueId") == ident:
                 return tap_el(el)
     if label:
-        want = label.strip().lower()
+        want = norm(label)
         for el in els:
-            lab = label_of(el).lower()
+            lab = norm(label_of(el))
             if lab == want or (substring and want in lab):
                 return tap_el(el)
     return False
@@ -207,7 +212,7 @@ def wait_for(ident: str | None = None, label: str | None = None, timeout: float 
         for el in describe():
             if ident and el.get("AXUniqueId") == ident:
                 return True
-            if label and label.strip().lower() in label_of(el).lower():
+            if label and norm(label) in norm(label_of(el)):
                 return True
         time.sleep(0.35)
     return False
