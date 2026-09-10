@@ -406,17 +406,51 @@ def status(vid: str):
 
 
 def submit(vid: str):
-    created = api(
-        "POST",
-        "/v1/appStoreVersionSubmissions",
-        json={
-            "data": {
-                "type": "appStoreVersionSubmissions",
-                "relationships": {"appStoreVersion": {"data": {"type": "appStoreVersions", "id": vid}}},
-            }
-        },
+    # appStoreVersionSubmissions no longer allows CREATE; use the Review Submissions API.
+    existing = api(
+        "GET",
+        "/v1/reviewSubmissions",
+        params={"filter[app]": APP_ID, "filter[state]": "READY_FOR_REVIEW,UNRESOLVED_ISSUES", "limit": 5},
+    ).get("data", [])
+    if existing:
+        rs_id = existing[0]["id"]
+        log("reusing review submission", rs_id, existing[0]["attributes"]["state"])
+    else:
+        rs = api(
+            "POST",
+            "/v1/reviewSubmissions",
+            json={
+                "data": {
+                    "type": "reviewSubmissions",
+                    "attributes": {"platform": "IOS"},
+                    "relationships": {"app": {"data": {"type": "apps", "id": APP_ID}}},
+                }
+            },
+        )
+        rs_id = rs["data"]["id"]
+        log("review submission", rs_id)
+    items = api("GET", f"/v1/reviewSubmissions/{rs_id}/items").get("data", [])
+    if not items:
+        api(
+            "POST",
+            "/v1/reviewSubmissionItems",
+            json={
+                "data": {
+                    "type": "reviewSubmissionItems",
+                    "relationships": {
+                        "reviewSubmission": {"data": {"type": "reviewSubmissions", "id": rs_id}},
+                        "appStoreVersion": {"data": {"type": "appStoreVersions", "id": vid}},
+                    },
+                }
+            },
+        )
+        log("added 1.2 to review submission")
+    done = api(
+        "PATCH",
+        f"/v1/reviewSubmissions/{rs_id}",
+        json={"data": {"type": "reviewSubmissions", "id": rs_id, "attributes": {"submitted": True}}},
     )
-    log("SUBMITTED", created.get("data", {}).get("id"))
+    log("SUBMITTED", rs_id, done["data"]["attributes"]["state"])
     status(vid)
 
 

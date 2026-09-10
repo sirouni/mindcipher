@@ -5,7 +5,7 @@
 | Apple ID | `6777428188` |
 | Bundle ID | `Jason-Wang.CodeBreaker` |
 | Version | **1.2** — ASC version id `39eb1bbb-0e08-4b6e-8878-5d9517e17784` |
-| Build | **6** (Release archive `build-asc/MindCipher.xcarchive`, uploaded 2026-09-10; adds the weekday daily ladder — build 5 had the new icon only, build 4 the earlier pouch icon) |
+| Build | **6** (Release archive `build-asc/MindCipher.xcarchive`, uploaded and submitted for review 2026-09-10; adds the weekday daily ladder — build 5 had the new icon only, build 4 the earlier pouch icon) |
 | Live before | 1.1 (3) |
 | Release type | After approval |
 
