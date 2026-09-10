@@ -3,27 +3,22 @@
   "dir": "ltr",
   "name": "Español",
   "store_l": "es",
-
   "title": "Mind Cipher — un Mastermind archivado como expediente de espía",
   "description": "Adivina el código de colores oculto en iPhone. Cada análisis vuelve como marcas de tinta: punto, anillo, raya. En el expediente de mentiras un informe es falso. 480 casos, Caso de hoy, Duelo. Gratis para empezar, sin anuncios.",
   "og_description": "Descifra el código. Uno de los informes miente.",
-
   "skip": "Saltar al contenido",
   "nav_store": "App Store →",
-
-  "h1": "Descifra el código. Un informe miente.",
+  "h1": "Descifra el código.\nUn informe miente.",
   "lede": "Un puzle de descifrado tipo Mastermind para iPhone, archivado como expediente de espía. Cada análisis vuelve como una fila de marcas de tinta, y en el expediente de mentiras exactamente un informe es falso.",
   "cta": "Consíguelo en el App Store",
   "see_round": "Ver un caso ↓",
   "terms": "Gratis para empezar · $2.99 lo desbloquea todo · Sin anuncios · Sin cuenta",
-
   "board_title": "Expediente de mentiras · informe de muestra",
   "board_spec": "4 fichas · 6 colores",
   "board_row1_sr": "Informe: ninguno de los cuatro está en el código.",
   "board_row2_sr": "Informe: dos exactos, dos en la posición equivocada.",
   "board_row3_sr": "Informe: uno exacto, uno en la posición equivocada, dos fuera del código.",
   "board_note": "Las filas I y II usan los mismos cuatro colores. La fila I dice que ninguno está en el código; la II, que están los cuatro. No pueden ser ciertas las dos: uno de estos informes es falso.",
-
   "round_h2": "Un caso, de abierto a cerrado.",
   "step1_h3": "Coloca las fichas.",
   "step1_p": "Elige colores para las casillas y envía el análisis. Los casos van de 4 fichas y 6 colores hasta códigos más largos con 8.",
@@ -48,7 +43,6 @@
   "cap_row1": "Fila I",
   "cap_row2": "Fila II",
   "step3_note": "La fila I dice que ninguno de estos colores está en el código. La II, que están los cuatro. Uno de esos informes es falso.",
-
   "tour_h2": "La app",
   "shot1_alt": "Un caso de Mind Cipher en curso: Desafío n.º 0908 sobre papel crema, dos filas analizadas de sellos de color numerados con marcas de punto, anillo y raya al lado, bandeja de pruebas y paleta debajo.",
   "shot1_h3": "Casos clásicos",
@@ -69,7 +63,6 @@
   "shot3_n1": "La racha y el total se guardan en un libro en el dispositivo.",
   "shot3_n2": "Los días cerrados quedan sellados en el calendario; un widget de pantalla de inicio muestra el estado de hoy.",
   "shot3_n3": "Gratis, siempre.",
-
   "sheet_h2": "Todo lo que hay en el expediente.",
   "sheet_caption": "Modos de Mind Cipher y lo que cuesta cada uno",
   "th_mode": "Modo",
@@ -94,15 +87,13 @@
   "tag_80": "80 gratis",
   "tag_pro": "Pro",
   "sheet_foot": "Pro cuesta <span class=\"num\">$2.99</span> una sola vez. Abre los <span class=\"num\">360</span> casos restantes, el Juego libre y el editor. Sin suscripción, sin anuncios, sin cuenta, y el progreso nunca sale del dispositivo. Dos temas —Expediente y Escritorio nocturno— y la app sigue tu idioma o el que elijas en Ajustes.",
-
-  "closer_line": "La lógica es tu única arma. Un informe miente.",
+  "closer_line": "La lógica es tu única arma.\nUn informe miente.",
   "f_store": "App Store",
   "f_support": "Soporte",
   "f_privacy": "Privacidad",
   "f_email": "Correo",
   "copyright": "© 2026 Xiao Wang",
   "langs_label": "Idiomas",
-
   "dock_line": "iPhone · gratis para empezar · $2.99 lo desbloquea todo",
   "dock_cta": "Descargar →"
 }

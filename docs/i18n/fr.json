@@ -3,27 +3,22 @@
   "dir": "ltr",
   "name": "Français",
   "store_l": "fr",
-
   "title": "Mind Cipher — un Mastermind classé comme dossier d’espion",
   "description": "Devinez le code de couleurs caché sur iPhone. Chaque analyse revient en marques d’encre : point, anneau, tiret. Dans le dossier Mensonge, un rapport est faux. 480 affaires, Affaire du jour, Duel. Gratuit pour commencer, sans pub.",
   "og_description": "Cassez le code. L’un des rapports ment.",
-
   "skip": "Aller au contenu",
   "nav_store": "App Store →",
-
-  "h1": "Cassez le code. Un rapport ment.",
+  "h1": "Cassez le code.\nUn rapport ment.",
   "lede": "Un casse-tête de décryptage façon Mastermind pour iPhone, classé comme dossier d’espion. Chaque analyse revient sous forme d’une rangée de marques d’encre — et dans le dossier Mensonge, exactement un rapport est faux.",
   "cta": "Télécharger sur l’App Store",
   "see_round": "Voir une affaire ↓",
   "terms": "Gratuit pour commencer · $2.99 débloque tout · Sans pub · Sans compte",
-
   "board_title": "Dossier Mensonge · rapport type",
   "board_spec": "4 pions · 6 couleurs",
   "board_row1_sr": "Rapport : aucune des quatre couleurs n’est dans le code.",
   "board_row2_sr": "Rapport : deux exacts, deux mal placés.",
   "board_row3_sr": "Rapport : un exact, un mal placé, deux absents du code.",
   "board_note": "Les rangées I et II utilisent les mêmes quatre couleurs. La rangée I dit qu’aucune n’est dans le code ; la II dit que les quatre y sont. Les deux ne peuvent pas être vraies — l’un de ces rapports est faux.",
-
   "round_h2": "Une affaire, de l’ouverture au classement.",
   "step1_h3": "Placez vos pions.",
   "step1_p": "Choisissez des couleurs pour les cases et envoyez l’analyse. Les affaires vont de 4 pions et 6 couleurs jusqu’à des codes plus longs à 8.",
@@ -48,7 +43,6 @@
   "cap_row1": "Rangée I",
   "cap_row2": "Rangée II",
   "step3_note": "La rangée I dit qu’aucune de ces couleurs n’est dans le code. La II dit que les quatre y sont. L’un de ces rapports est faux.",
-
   "tour_h2": "L’app",
   "shot1_alt": "Une affaire Mind Cipher en cours : Défi n° 0908 sur papier crème, deux rangées analysées de sceaux de couleur numérotés avec marques point, anneau et tiret à côté, plateau à indices et palette en dessous.",
   "shot1_h3": "Affaires classiques",
@@ -69,7 +63,6 @@
   "shot3_n1": "Série et total sont tenus dans un registre sur l’appareil.",
   "shot3_n2": "Les jours classés restent tamponnés sur le calendrier ; un widget d’écran d’accueil affiche l’état du jour.",
   "shot3_n3": "Gratuit, toujours.",
-
   "sheet_h2": "Tout ce que contient le dossier.",
   "sheet_caption": "Les modes de Mind Cipher et leur prix",
   "th_mode": "Mode",
@@ -94,15 +87,13 @@
   "tag_80": "80 gratuites",
   "tag_pro": "Pro",
   "sheet_foot": "Pro coûte <span class=\"num\">$2.99</span> une fois. Il ouvre les <span class=\"num\">360</span> affaires restantes, la Partie libre et l’éditeur. Pas d’abonnement, pas de pub, pas de compte, et la progression ne quitte jamais l’appareil. Deux thèmes — Dossier et Bureau de nuit — et l’app suit votre langue ou celle choisie dans Réglages.",
-
-  "closer_line": "La logique est votre seule arme. Un rapport ment.",
+  "closer_line": "La logique est votre seule arme.\nUn rapport ment.",
   "f_store": "App Store",
   "f_support": "Assistance",
   "f_privacy": "Confidentialité",
   "f_email": "E-mail",
   "copyright": "© 2026 Xiao Wang",
   "langs_label": "Langues",
-
   "dock_line": "iPhone · gratuit pour commencer · $2.99 débloque tout",
   "dock_cta": "Télécharger →"
 }

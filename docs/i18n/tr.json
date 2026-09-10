@@ -3,27 +3,22 @@
   "dir": "ltr",
   "name": "Türkçe",
   "store_l": "tr",
-
   "title": "Mind Cipher — casus dosyası olarak arşivlenmiş bir Mastermind bulmacası",
   "description": "iPhone'da gizli renk şifresini tahmin et. Her analiz mürekkep işaretleriyle döner: nokta, halka, çizgi. Yalan dosyasında raporlardan biri sahte. 480 dosya, Günün dosyası, Düello. Ücretsiz başla, reklam yok.",
   "og_description": "Şifreyi kır. Raporlardan biri yalan söylüyor.",
-
   "skip": "İçeriğe geç",
   "nav_store": "App Store →",
-
-  "h1": "Şifreyi kır. Raporlardan biri yalan.",
+  "h1": "Şifreyi kır.\nRaporlardan biri yalan.",
   "lede": "iPhone için Mastermind tarzı bir şifre kırma bulmacası, casus dosyası olarak arşivlenmiş. Her analiz bir sıra mürekkep işaretiyle döner — ve Yalan dosyasında raporlardan tam olarak biri sahtedir.",
   "cta": "App Store'dan indir",
   "see_round": "Bir dosyaya bak ↓",
   "terms": "Ücretsiz başla · $2.99 her şeyi açar · Reklam yok · Hesap yok",
-
   "board_title": "Yalan dosyası · örnek rapor",
   "board_spec": "4 pim · 6 renk",
   "board_row1_sr": "Rapor: dört rengin hiçbiri şifrede yok.",
   "board_row2_sr": "Rapor: ikisi tam yerinde, ikisi yanlış yerde.",
   "board_row3_sr": "Rapor: biri tam yerinde, biri yanlış yerde, ikisi şifrede yok.",
   "board_note": "I. ve II. sıralar aynı dört rengi kullanıyor. I. sıra hiçbirinin şifrede olmadığını, II. sıra dördünün de olduğunu söylüyor. İkisi birden doğru olamaz — bu raporlardan biri sahte.",
-
   "round_h2": "Bir dosya, açılıştan kapanışa.",
   "step1_h3": "Pimleri yerleştir.",
   "step1_p": "Renkleri yuvalara koy ve analizi gönder. Dosyalar 4 pim ve 6 renkten başlayıp 8 renkli uzun şifrelere kadar gider.",
@@ -48,7 +43,6 @@
   "cap_row1": "I. sıra",
   "cap_row2": "II. sıra",
   "step3_note": "I. sıra bu renklerin hiçbirinin şifrede olmadığını söylüyor. II. sıra dördünün de olduğunu. Bu raporlardan biri sahte.",
-
   "tour_h2": "Uygulama",
   "shot1_alt": "Devam eden bir Mind Cipher dosyası: krem kâğıt üzerinde 0908 No'lu meydan okuma, yanlarında nokta, halka ve çizgi işaretleriyle analiz edilmiş iki sıra numaralı renk mührü, altta kanıt tepsisi ve palet.",
   "shot1_h3": "Klasik davalar",
@@ -69,7 +63,6 @@
   "shot3_n1": "Seri ve toplam, cihazdaki bir defterde tutulur.",
   "shot3_n2": "Kapatılan günler takvimde damgalı kalır; bir ana ekran widget'ı bugünün durumunu gösterir.",
   "shot3_n3": "Her zaman ücretsiz.",
-
   "sheet_h2": "Klasördeki her şey.",
   "sheet_caption": "Mind Cipher modları ve her birinin ücreti",
   "th_mode": "Mod",
@@ -94,15 +87,13 @@
   "tag_80": "80 ücretsiz",
   "tag_pro": "Pro",
   "sheet_foot": "Pro tek seferlik <span class=\"num\">$2.99</span>. Kalan <span class=\"num\">360</span> dosyayı, Serbest oyunu ve editörü açar. Abonelik yok, reklam yok, hesap yok; ilerleme cihazdan asla çıkmaz. İki tema — Dosya ve Gece masası — ve uygulama dilini ya da Ayarlar'da seçtiğin dili izler.",
-
-  "closer_line": "Tek silahın mantık. Raporlardan biri yalan.",
+  "closer_line": "Tek silahın mantık.\nRaporlardan biri yalan.",
   "f_store": "App Store",
   "f_support": "Destek",
   "f_privacy": "Gizlilik",
   "f_email": "E-posta",
   "copyright": "© 2026 Xiao Wang",
   "langs_label": "Diller",
-
   "dock_line": "iPhone · ücretsiz başla · $2.99 her şeyi açar",
   "dock_cta": "Uygulamayı indir →"
 }

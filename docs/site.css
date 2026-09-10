@@ -265,6 +265,13 @@ em {
   border-radius: 22%;
 }
 
+/* the two sentences of the headline and the closing statement each take their
+   own line (a newline in the i18n string); long lines may still wrap inside */
+.opener h1,
+.closer__line {
+  white-space: pre-line;
+}
+
 .opener h1 {
   max-width: 22ch;
 }

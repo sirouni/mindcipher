@@ -3,27 +3,22 @@
   "dir": "ltr",
   "name": "English",
   "store_l": "en",
-
   "title": "Mind Cipher — a Mastermind puzzle filed as a spy dossier",
   "description": "Guess the hidden color code on iPhone. Every analysis comes back as ink marks: dot, ring, dash. In the Lie file one report is fake. 480 cases, Today's Case, Duel. Free to start, no ads.",
   "og_description": "Guess the code. One of the reports is lying.",
-
   "skip": "Skip to content",
   "nav_store": "App Store →",
-
-  "h1": "Guess the code. One report is lying.",
+  "h1": "Guess the code.\nOne report is lying.",
   "lede": "A Mastermind-style code-breaking puzzle for iPhone, filed as a spy dossier. Every analysis comes back as a row of ink marks — and in the Lie file, exactly one report is fake.",
   "cta": "Get it on the App Store",
   "see_round": "See a case ↓",
   "terms": "Free to start · $2.99 unlocks everything · No ads · No account",
-
   "board_title": "Lie file · sample report",
   "board_spec": "4 pegs · 6 colors",
   "board_row1_sr": "Reported: all four not in the code.",
   "board_row2_sr": "Reported: two exact, two in the wrong slot.",
   "board_row3_sr": "Reported: one exact, one in the wrong slot, two not in the code.",
   "board_note": "Rows I and II use the same four colors. Row I says none of them are in the code; row II says all four are. Both cannot be true — one of these reports is fake.",
-
   "round_h2": "One case, opened to closed.",
   "step1_h3": "Place your pegs.",
   "step1_p": "Pick colors into the slots and submit the analysis. Cases run from 4 pegs and 6 colors up to longer codes with 8.",
@@ -48,7 +43,6 @@
   "cap_row1": "Row I",
   "cap_row2": "Row II",
   "step3_note": "Row I says none of these colors are in the code. Row II says all four are. One of those reports is fake.",
-
   "tour_h2": "The app",
   "shot1_alt": "A Mind Cipher case in progress: Challenge No. 0908 on cream paper, two analyzed rows of numbered color seals with dot, ring and dash marks beside each, an evidence tray and the color palette below.",
   "shot1_h3": "Classic cases",
@@ -69,7 +63,6 @@
   "shot3_n1": "Streak and total are kept in a ledger on the device.",
   "shot3_n2": "Closed days stay stamped on the calendar; a home-screen widget shows today's status.",
   "shot3_n3": "Free, always.",
-
   "sheet_h2": "Everything in the file.",
   "sheet_caption": "Mind Cipher modes and what each one costs",
   "th_mode": "Mode",
@@ -94,15 +87,13 @@
   "tag_80": "80 free",
   "tag_pro": "Pro",
   "sheet_foot": "Pro is <span class=\"num\">$2.99</span> once. It opens the remaining <span class=\"num\">360</span> cases, Free Play and the editor. No subscription, no ads, no account, and progress never leaves the device. Two themes — Dossier and Night Desk — and the app follows your language or the one you set in Settings.",
-
-  "closer_line": "Logic is your only weapon. One report is lying.",
+  "closer_line": "Logic is your only weapon.\nOne report is lying.",
   "f_store": "App Store",
   "f_support": "Support",
   "f_privacy": "Privacy",
   "f_email": "Email",
   "copyright": "© 2026 Xiao Wang",
   "langs_label": "Languages",
-
   "dock_line": "iPhone · free to start · $2.99 unlocks everything",
   "dock_cta": "Get the app →"
 }

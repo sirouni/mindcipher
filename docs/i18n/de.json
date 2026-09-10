@@ -3,27 +3,22 @@
   "dir": "ltr",
   "name": "Deutsch",
   "store_l": "de",
-
   "title": "Mind Cipher — ein Mastermind-Rätsel, abgelegt als Spionageakte",
   "description": "Errate den verborgenen Farbcode auf dem iPhone. Jede Analyse kommt als Tintenmarken zurück: Punkt, Ring, Strich. In der Lügen-Akte ist ein Bericht gefälscht. 480 Fälle, Fall des Tages, Duell. Kostenlos starten, keine Werbung.",
   "og_description": "Knacke den Code. Einer der Berichte lügt.",
-
   "skip": "Zum Inhalt springen",
   "nav_store": "App Store →",
-
-  "h1": "Knacke den Code. Ein Bericht lügt.",
+  "h1": "Knacke den Code.\nEin Bericht lügt.",
   "lede": "Ein Code-Knack-Rätsel im Mastermind-Stil für iPhone, abgelegt als Spionageakte. Jede Analyse kommt als Reihe von Tintenmarken zurück — und in der Lügen-Akte ist genau ein Bericht gefälscht.",
   "cta": "Im App Store laden",
   "see_round": "Einen Fall ansehen ↓",
   "terms": "Kostenlos starten · $2.99 schaltet alles frei · Keine Werbung · Kein Konto",
-
   "board_title": "Lügen-Akte · Beispielbericht",
   "board_spec": "4 Stifte · 6 Farben",
   "board_row1_sr": "Bericht: keine der vier Farben im Code.",
   "board_row2_sr": "Bericht: zwei exakt, zwei an falscher Stelle.",
   "board_row3_sr": "Bericht: einer exakt, einer an falscher Stelle, zwei nicht im Code.",
   "board_note": "Reihe I und II verwenden dieselben vier Farben. Reihe I sagt, keine davon ist im Code; Reihe II sagt, alle vier sind es. Beides kann nicht stimmen — einer dieser Berichte ist gefälscht.",
-
   "round_h2": "Ein Fall, von der Eröffnung bis zum Abschluss.",
   "step1_h3": "Stifte setzen.",
   "step1_p": "Farben in die Felder setzen und die Analyse abschicken. Die Fälle reichen von 4 Stiften und 6 Farben bis zu längeren Codes mit 8.",
@@ -48,7 +43,6 @@
   "cap_row1": "Reihe I",
   "cap_row2": "Reihe II",
   "step3_note": "Reihe I sagt, keine dieser Farben ist im Code. Reihe II sagt, alle vier sind es. Einer dieser Berichte ist gefälscht.",
-
   "tour_h2": "Die App",
   "shot1_alt": "Ein laufender Fall in Mind Cipher: Herausforderung Nr. 0908 auf cremefarbenem Papier, zwei analysierte Reihen nummerierter Farbsiegel mit Punkt-, Ring- und Strichmarken daneben, darunter Beweisablage und Palette.",
   "shot1_h3": "Klassische Fälle",
@@ -69,7 +63,6 @@
   "shot3_n1": "Serie und Gesamtzahl stehen in einem Kontobuch auf dem Gerät.",
   "shot3_n2": "Erledigte Tage bleiben im Kalender abgestempelt; ein Home-Bildschirm-Widget zeigt den Stand von heute.",
   "shot3_n3": "Kostenlos, immer.",
-
   "sheet_h2": "Alles in der Akte.",
   "sheet_caption": "Mind-Cipher-Modi und was sie kosten",
   "th_mode": "Modus",
@@ -94,15 +87,13 @@
   "tag_80": "80 kostenlos",
   "tag_pro": "Pro",
   "sheet_foot": "Pro kostet einmalig <span class=\"num\">$2.99</span>. Es öffnet die restlichen <span class=\"num\">360</span> Fälle, das Freie Spiel und den Editor. Kein Abo, keine Werbung, kein Konto, und der Fortschritt verlässt nie das Gerät. Zwei Themen — Akte und Nachtschreibtisch — und die App folgt deiner Sprache oder der, die du in den Einstellungen wählst.",
-
-  "closer_line": "Logik ist deine einzige Waffe. Ein Bericht lügt.",
+  "closer_line": "Logik ist deine einzige Waffe.\nEin Bericht lügt.",
   "f_store": "App Store",
   "f_support": "Support",
   "f_privacy": "Datenschutz",
   "f_email": "E-Mail",
   "copyright": "© 2026 Xiao Wang",
   "langs_label": "Sprachen",
-
   "dock_line": "iPhone · kostenlos starten · $2.99 schaltet alles frei",
   "dock_cta": "App laden →"
 }
