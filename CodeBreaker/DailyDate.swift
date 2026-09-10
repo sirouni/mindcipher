@@ -43,27 +43,29 @@ enum DailyCalendar {
 
     /// The week climbs from a 4×6 board on Monday to 5×8 with repeats on Sunday,
     /// so regulars meet every campaign difficulty in a week and newcomers still
-    /// get an easy start. Lie days (every third day of the year) add three
-    /// attempts, since proving the fake report costs analyses.
+    /// get an easy start. Budgets sit inside the campaign range for the same
+    /// board (a consistent solver finishes with 3+ to spare; a careless one wins
+    /// about half the time on weekends). Lie days (every third day of the year)
+    /// add five attempts, matching the Free Play lie margin.
     static func spec(for key: String = dayKey()) -> Spec {
         // (length, colours, repeats, attempts) indexed by Calendar weekday: 1 = Sunday
         let ladder: [Int: (Int, Int, Bool, Int)] = [
-            2: (4, 6, false, 7),   // Mon
+            2: (4, 6, false, 8),   // Mon
             3: (4, 7, false, 8),   // Tue
             4: (4, 6, true, 8),    // Wed
             5: (5, 6, false, 9),   // Thu
-            6: (4, 8, true, 9),    // Fri
-            7: (5, 7, true, 10),   // Sat
-            1: (5, 8, true, 11),   // Sun
+            6: (4, 8, true, 10),   // Fri
+            7: (5, 7, true, 11),   // Sat
+            1: (5, 8, true, 12),   // Sun
         ]
         let weekday = date(from: key).map { gregorian.component(.weekday, from: $0) } ?? 2
-        let (length, colours, repeats, attempts) = ladder[weekday] ?? (4, 6, false, 7)
+        let (length, colours, repeats, attempts) = ladder[weekday] ?? (4, 6, false, 8)
         let lie = isLieDay(key)
         return Spec(
             codeLength: length,
             colorCount: colours,
             allowDuplicates: repeats,
-            maxAttempts: attempts + (lie ? 3 : 0),
+            maxAttempts: attempts + (lie ? 5 : 0),
             lieMode: lie
         )
     }
