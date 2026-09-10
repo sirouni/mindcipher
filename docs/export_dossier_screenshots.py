@@ -346,10 +346,12 @@ def font_for(lang: str, size: int, typewriter: bool) -> ImageFont.FreeTypeFont:
         "zh-Hant": "/System/Library/Fonts/STHeiti Medium.ttc",
         "ja": "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc",
         "ko": "/System/Library/Fonts/AppleSDGothicNeo.ttc",
-        "ar": "/System/Library/Fonts/GeezaPro.ttc",
-        "he": "/System/Library/Fonts/ArialHB.ttc",
     }
-    if lang in cjk:
+    if lang in RTL:
+        # GeezaPro / ArialHB lack Latin digits and the middle dot; Arial covers Arabic, Hebrew and Latin.
+        path = "/System/Library/Fonts/Supplemental/Arial Bold.ttf" if typewriter else "/System/Library/Fonts/Supplemental/Arial.ttf"
+        index = 0
+    elif lang in cjk:
         path, index = cjk[lang], 0
     elif typewriter:
         path, index = "/System/Library/Fonts/Supplemental/AmericanTypewriter.ttc", 2  # Bold face
@@ -410,7 +412,13 @@ def composite(lang: str):
         caption = f"CASE FILE  ·  {i + 1:02d} / {len(BANNERS['order']):02d}"
         title, subtitle = (shape(t, lang) for t in meta["banners"][key])
         cb = draw.textbbox((0, 0), caption, font=caption_font)
-        tb = draw.textbbox((0, 0), title, font=title_font)
+        # Shrink long titles (e.g. French) so they never run past the right margin.
+        fit_font, size = title_font, 88
+        tb = draw.textbbox((0, 0), title, font=fit_font)
+        while tb[2] - tb[0] > W - 2 * margin and size > 56:
+            size -= 4
+            fit_font = font_for(lang, size, typewriter=True)
+            tb = draw.textbbox((0, 0), title, font=fit_font)
         sb = draw.textbbox((0, 0), subtitle, font=sub_font)
 
         def x_for(bb):
@@ -418,7 +426,7 @@ def composite(lang: str):
             return (W - margin - width) if rtl else margin
 
         draw.text((x_for(cb) - cb[0], 64 - cb[1]), caption, font=caption_font, fill=INK_FADED)
-        draw.text((x_for(tb) - tb[0], 108 - tb[1]), title, font=title_font, fill=INK)
+        draw.text((x_for(tb) - tb[0], 108 - tb[1]), title, font=fit_font, fill=INK)
         draw.text((x_for(sb) - sb[0], 224 - sb[1]), subtitle, font=sub_font, fill=INK_FADED)
         draw.rectangle((margin, BANNER_H - 22, W - margin, BANNER_H - 18), fill=INK)
 
