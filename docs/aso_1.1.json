@@ -1,0 +1,103 @@
+{
+  "notes": "Name stays Mind Cipher. iOS indexes name + subtitle + keywords only. No repeated tokens across those three fields. Categories already Games / Puzzle + Board.",
+  "en-US": {
+    "subtitle": "Mastermind. One clue lies",
+    "keywords": "code,breaker,logic,puzzle,brain,teaser,daily,deduction,color,secret,offline,crack,riddle,duel",
+    "promo": "Mastermind with a liar. 480 levels, daily, duel. $2.99 once. No ads.",
+    "desc_open": "Mind Cipher is a Mastermind-style code-breaking puzzle. Guess the hidden color code. Each guess comes back as exact, wrong place, or out — teal circle, orange triangle, black cross."
+  },
+  "zh-Hans": {
+    "subtitle": "珠玑妙算·一条线索是假的",
+    "keywords": "密码,破译,逻辑,益智,推理,每日挑战,谎言,大师头脑,猜颜色,烧脑,解谜,单机,桌游,解码,神机妙算,颜色密码,无广告,双人,猜密码,头脑训练",
+    "promo": "珠玑妙算，一条线索是假的。480 关、每日、双人。一次 $2.99。无广告。",
+    "desc_open": "Mind Cipher 是珠玑妙算（Mastermind）类的颜色密码推理游戏。每次猜测会得到三种反馈：青绿圆表示颜色和位置都对，橙三角表示颜色对但位置错，黑叉表示这个颜色不在密码里。"
+  },
+  "zh-Hant": {
+    "subtitle": "珠璣妙算·一條線索是假的",
+    "keywords": "密碼,破譯,邏輯,益智,推理,每日挑戰,謊言,猜顏色,燒腦,解謎,單機,桌遊,解碼,神機妙算,顏色密碼,無廣告,雙人,猜密碼,頭腦訓練",
+    "promo": "珠璣妙算，一條線索是假的。480 關、每日、雙人。一次 $2.99。無廣告。",
+    "desc_open": "Mind Cipher 是珠璣妙算（Mastermind）類的顏色密碼推理遊戲。每次猜測會得到三種回饋：青綠圓表示顏色和位置都對，橙三角表示顏色對但位置錯，黑叉表示這個顏色不在密碼裡。"
+  },
+  "ja": {
+    "subtitle": "ヒットアンドブロー、1つは嘘",
+    "keywords": "マスターマインド,暗号,論理,パズル,推理,デイリー,色当て,頭脳,暗号解読,オフライン,対戦,脳トレ,ボードゲーム",
+    "promo": "ヒットアンドブローに嘘が1つ。480レベル、デイリー、対戦。買い切り$2.99。広告なし。",
+    "desc_open": "Mind Cipher はヒットアンドブロー／マスターマインド型の色暗号パズルです。各予想には3種類の手がかりが返ります。青緑の丸は色も位置も正しい、オレンジの三角は色は正しいが位置が違う、黒いバツはその色が暗号にない、という意味です。"
+  },
+  "ko": {
+    "subtitle": "마스터마인드·하나가 거짓",
+    "keywords": "암호,논리,퍼즐,추론,일일도전,거짓말,색맞추기,두뇌,오프라인,보드,두뇌훈련,보드게임",
+    "promo": "마스터마인드, 단서 하나가 가짜. 480레벨, 일일, 대전. $2.99 한 번. 광고 없음.",
+    "desc_open": "Mind Cipher는 마스터마인드 스타일의 숨겨진 색 암호 퍼즐입니다. 각 추측은 세 가지 단서를 돌려줍니다. 청록 원은 색과 위치가 모두 맞고, 주황 삼각형은 색만 맞고, 검은 엑스는 암호에 없는 색입니다."
+  },
+  "es-ES": {
+    "subtitle": "Mastermind: una pista miente",
+    "keywords": "rompe,codigos,logica,puzzle,deduccion,reto,diario,colores,estrategia,offline,cerebro",
+    "promo": "Mastermind con un mentiroso. 480 niveles, diario, duelo. 2,99 $ una vez. Sin anuncios.",
+    "desc_open": "Mind Cipher es un Mastermind: un puzzle de descifrar un código de colores. Cada intento devuelve tres marcas: círculo teal = color y sitio correctos, triángulo naranja = color bien y sitio mal, cruz negra = ese color no está."
+  },
+  "ar-SA": {
+    "subtitle": "ماسترميند: دليل يكذب",
+    "keywords": "فك,الشفرة,منطق,لغز,استدلال,تحدي,يومي,ألوان,استراتيجية,أوفلاين",
+    "promo": "ماسترميند ودليل كاذب. 480 مستوى، يومي، مبارزة. 2.99$ مرة واحدة. بلا إعلانات.",
+    "desc_open": "Mind Cipher لعبة ماسترميند لفك رمز ألوان. كل تخمين يعيد ثلاث علامات: دائرة فيروزية = اللون والمكان صحيحان، مثلث برتقالي = اللون صحيح والمكان خطأ، علامة سوداء = اللون ليس في الرمز."
+  },
+  "de-DE": {
+    "subtitle": "Mastermind: ein Hinweis lügt",
+    "keywords": "code,knacken,logik,puzzle,taglich,farben,strategie,offline,gehirn,brett,raetsel,duell",
+    "promo": "Mastermind mit einem Lügner. 480 Level, täglich, Duell. 2,99 $ einmal. Keine Werbung.",
+    "desc_open": "Mind Cipher ist Mastermind: ein Puzzle zum Knacken eines Farbcodes. Jeder Tipp gibt drei Marken: Türkis-Kreis = Farbe und Platz richtig, oranges Dreieck = Farbe richtig und Platz falsch, schwarzes Kreuz = die Farbe ist nicht im Code."
+  },
+  "fr-FR": {
+    "subtitle": "Mastermind : un indice ment",
+    "keywords": "casse,code,logique,puzzle,deduction,defi,quotidien,couleurs,offline,cerveau",
+    "promo": "Mastermind avec un menteur. 480 niveaux, quotidien, duel. 2,99 $ une fois. Sans pub.",
+    "desc_open": "Mind Cipher est un Mastermind : un puzzle pour casser un code couleur. Chaque essai renvoie trois marques : cercle teal = bonne couleur au bon endroit, triangle orange = bonne couleur au mauvais endroit, croix noire = cette couleur n’est pas dans le code."
+  },
+  "he": {
+    "subtitle": "מאסטרמיינד: רמז אחד משקר",
+    "keywords": "פיצוח,קוד,לוגיקה,חידה,היסק,אתגר,יומי,צבעים,אסטרטגיה,אופליין",
+    "promo": "מאסטרמיינד עם שקרן. 480 שלבים, יומי, דו-קרב. 2.99$ חד-פעמי. בלי פרסומות.",
+    "desc_open": "Mind Cipher היא מאסטרמיינד: חידת פיצוח קוד צבעים. כל ניחוש מחזיר שלושה סימנים: עיגול טורקיז = צבע ומיקום נכונים, משולש כתום = צבע נכון ומיקום שגוי, איקס שחור = הצבע לא בקוד."
+  },
+  "pt-BR": {
+    "subtitle": "Mastermind: uma pista mente",
+    "keywords": "quebra,codigo,logica,puzzle,deducao,desafio,diario,cores,offline,cerebro",
+    "promo": "Mastermind com um mentiroso. 480 níveis, diário, duelo. US$ 2,99 uma vez. Sem anúncios.",
+    "desc_open": "Mind Cipher é um Mastermind: um puzzle para decifrar um código de cores. Cada palpite devolve três marcas: círculo teal = cor e lugar certos, triângulo laranja = cor certa e lugar errado, cruz preta = essa cor não está no código."
+  },
+  "tr": {
+    "subtitle": "Mastermind: bir ipucu yalan",
+    "keywords": "kod,kirma,mantik,bulmaca,cikarsama,gunluk,renk,strateji,offline,zeka",
+    "promo": "Mastermind, bir yalancı. 480 seviye, günlük, düello. Tek sefer 2,99 $. Reklam yok.",
+    "desc_open": "Mind Cipher bir Mastermind oyunu: gizli bir renk kodunu kırma bulmacasıdır. Her tahmin üç işaret döner: turkuaz daire = renk ve yer doğru, turuncu üçgen = renk doğru yer yanlış, siyah çarpı = bu renk kodda yok."
+  },
+  "search_ads": {
+    "exact": [
+      "mastermind",
+      "code breaker",
+      "color code breaker",
+      "珠玑妙算",
+      "大师头脑",
+      "ヒットアンドブロー",
+      "마스터마인드"
+    ],
+    "broad": [
+      "logic puzzle",
+      "brain teaser",
+      "code breaking game",
+      "daily puzzle",
+      "board puzzle",
+      "益智推理",
+      "猜颜色",
+      "色当て"
+    ],
+    "negative_exact": [
+      "mastermind.com",
+      "solitaire",
+      "wordle",
+      "cryptogram",
+      "sudoku"
+    ]
+  }
+}

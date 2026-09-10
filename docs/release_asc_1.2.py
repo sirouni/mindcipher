@@ -38,7 +38,7 @@ KEY = Path("/Users/wangxiao/.appstoreconnect/private_keys/AuthKey_Y8W69V3U7C.p8"
 APP_ID = "6777428188"
 BASE = "https://api.appstoreconnect.apple.com"
 VERSION = "1.2"
-BUILD_NUMBER = "5"
+BUILD_NUMBER = "6"
 DISPLAY_TYPE = "APP_IPHONE_65"
 LOCALES = ["en-US", "zh-Hans", "zh-Hant", "ja", "ko", "es-ES", "ar-SA", "de-DE", "fr-FR", "he", "pt-BR", "tr"]
 

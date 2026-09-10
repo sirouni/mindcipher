@@ -5,7 +5,7 @@
 | Apple ID | `6777428188` |
 | Bundle ID | `Jason-Wang.CodeBreaker` |
 | Version | **1.2** — ASC version id `39eb1bbb-0e08-4b6e-8878-5d9517e17784` |
-| Build | **5** (Release archive `build-asc/MindCipher.xcarchive`, uploaded 2026-09-10; build 4 had the earlier pouch icon) |
+| Build | **6** (Release archive `build-asc/MindCipher.xcarchive`, uploaded 2026-09-10; adds the weekday daily ladder — build 5 had the new icon only, build 4 the earlier pouch icon) |
 | Live before | 1.1 (3) |
 | Release type | After approval |
 
@@ -56,7 +56,7 @@ xcrun altool --upload-app --type ios -f build-asc/export/CodeBreaker.ipa \
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py version       # create 1.2, copyright, release type
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py metadata      # push docs/asc_1.2.json
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py screenshots   # replace 6.5" sets
-/tmp/asc-venv/bin/python docs/release_asc_1.2.py build         # attach build 5 once processed
+/tmp/asc-venv/bin/python docs/release_asc_1.2.py build         # attach build 6 once processed
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py status
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py submit        # explicit: sends for review
 ```
