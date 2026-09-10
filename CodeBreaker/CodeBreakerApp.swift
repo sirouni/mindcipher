@@ -343,6 +343,16 @@ private func seedStoreScreenshotDefaults() {
     defaults.set(true, forKey: "hasSeenLieTaste")
     defaults.set(Array(1...160), forKey: "completedLevels")
     defaults.set(Array(1...160), forKey: "lie_completedLevels")
+    // Varied star ratings so the filing cabinet does not read as 160 identical pouches.
+    let pattern = [3, 3, 2, 3, 1, 3, 2, 2, 3, 3, 2, 3]
+    let stars = Dictionary(uniqueKeysWithValues: (1...160).map { (String($0), pattern[($0 - 1) % pattern.count]) })
+    defaults.set(stars, forKey: "starsByLevel")
+    defaults.set(stars, forKey: "lie_starsByLevel")
+    // Daily calendar: a six-day streak up to yesterday plus a scattering earlier in the month.
+    let cal = DailyCalendar.gregorian
+    let offsets = [1, 2, 3, 4, 5, 6, 9, 11, 12, 14, 17, 18, 21, 25, 26, 30, 33, 34, 37, 40, 41, 45]
+    let dates = offsets.compactMap { cal.date(byAdding: .day, value: -$0, to: Date()) }.map { DailyCalendar.dayKey($0) }
+    defaults.set(dates, forKey: DailyCalendar.completedDatesKey)
     defaults.set(15, forKey: "stats_gamesPlayed")
     defaults.set(12, forKey: "stats_gamesWon")
     defaults.set(4, forKey: "stats_currentStreak")

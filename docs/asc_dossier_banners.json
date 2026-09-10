@@ -1,112 +1,457 @@
 {
-  "order": ["01_case", "02_report", "03_lie", "04_home"],
+  "order": [
+    "01_case",
+    "02_report",
+    "03_lie",
+    "04_cabinet",
+    "05_night",
+    "06_shapes",
+    "07_daily",
+    "08_home"
+  ],
   "locales": {
     "en": {
       "asc": "en-US",
       "banners": {
-        "01_case": ["Crack the Code", "Deduce the secret in 7 analyses"],
-        "02_report": ["Case Closed", "Stamped reports you can share"],
-        "03_lie": ["One Clue Lies", "Spot the fake report on Top Secret days"],
-        "04_home": ["A New Case Every Day", "480 case files · colour-blind friendly"]
+        "01_case": [
+          "Crack the Code",
+          "Deduce the secret in 7 analyses"
+        ],
+        "02_report": [
+          "Case Closed",
+          "Stamped reports you can share"
+        ],
+        "03_lie": [
+          "One Clue Lies",
+          "Spot the fake report on Top Secret days"
+        ],
+        "04_cabinet": [
+          "The Filing Cabinet",
+          "480 cases in six drawers, stamped as you close them"
+        ],
+        "05_night": [
+          "Night Desk",
+          "A dark paper stock for late-night cases"
+        ],
+        "06_shapes": [
+          "Marks Never Rely on Colour",
+          "Ink dot, ring, dash — plus optional shape marks"
+        ],
+        "07_daily": [
+          "A New Case Every Day",
+          "Keep the streak, watch for Top Secret days"
+        ],
+        "08_home": [
+          "Your Case Index",
+          "Classic, Lie, Duel, Free Play and a custom editor"
+        ]
       }
     },
     "zh": {
       "asc": "zh-Hans",
       "banners": {
-        "01_case": ["破译密码", "7 次分析内推出密码"],
-        "02_report": ["结案报告", "盖章分享你的破案过程"],
-        "03_lie": ["一条线索是假的", "机密日里找出假报告"],
-        "04_home": ["每日新案件", "480 份卷宗 · 色盲友好"]
+        "01_case": [
+          "破译密码",
+          "7 次分析内推出密码"
+        ],
+        "02_report": [
+          "结案报告",
+          "盖章分享你的破案过程"
+        ],
+        "03_lie": [
+          "一条线索是假的",
+          "机密日里找出假报告"
+        ],
+        "04_cabinet": [
+          "文件柜",
+          "480 案分六个抽屉，结案即盖章"
+        ],
+        "05_night": [
+          "夜间桌面",
+          "深色纸张，适合深夜办案"
+        ],
+        "06_shapes": [
+          "标记不靠颜色",
+          "墨点、圈、横，还可开启形状标记"
+        ],
+        "07_daily": [
+          "每日新案件",
+          "保持连胜，留意机密日"
+        ],
+        "08_home": [
+          "你的卷宗索引",
+          "经典、谎言、双人、自由模式与关卡编辑器"
+        ]
       }
     },
     "zh-Hant": {
       "asc": "zh-Hant",
       "banners": {
-        "01_case": ["破譯密碼", "7 次分析內推出密碼"],
-        "02_report": ["結案報告", "蓋章分享你的破案過程"],
-        "03_lie": ["一條線索是假的", "機密日裡找出假報告"],
-        "04_home": ["每日新案件", "480 份卷宗 · 色盲友善"]
+        "01_case": [
+          "破譯密碼",
+          "7 次分析內推出密碼"
+        ],
+        "02_report": [
+          "結案報告",
+          "蓋章分享你的破案過程"
+        ],
+        "03_lie": [
+          "一條線索是假的",
+          "機密日裡找出假報告"
+        ],
+        "04_cabinet": [
+          "文件櫃",
+          "480 案分六個抽屜，結案即蓋章"
+        ],
+        "05_night": [
+          "夜間桌面",
+          "深色紙張，適合深夜辦案"
+        ],
+        "06_shapes": [
+          "標記不靠顏色",
+          "墨點、圈、橫，還可開啟形狀標記"
+        ],
+        "07_daily": [
+          "每日新案件",
+          "保持連勝，留意機密日"
+        ],
+        "08_home": [
+          "你的卷宗索引",
+          "經典、謊言、雙人、自由模式與關卡編輯器"
+        ]
       }
     },
     "ja": {
       "asc": "ja",
       "banners": {
-        "01_case": ["暗号を解け", "7回の分析で秘密のコードを推理"],
-        "02_report": ["事件解決", "スタンプ付き報告書をシェア"],
-        "03_lie": ["手がかりの一つは嘘", "極秘の日は偽の報告を見抜け"],
-        "04_home": ["毎日新しい事件", "480の事件ファイル · 色覚に配慮"]
+        "01_case": [
+          "暗号を解け",
+          "7回の分析で秘密のコードを推理"
+        ],
+        "02_report": [
+          "事件解決",
+          "スタンプ付き報告書をシェア"
+        ],
+        "03_lie": [
+          "手がかりの一つは嘘",
+          "極秘の日は偽の報告を見抜け"
+        ],
+        "04_cabinet": [
+          "書類キャビネット",
+          "6つの引き出しに480件、解決したらスタンプ"
+        ],
+        "05_night": [
+          "夜の机",
+          "深夜の事件に合う暗い紙"
+        ],
+        "06_shapes": [
+          "印は色に頼らない",
+          "点・輪・横線、さらに形マークも"
+        ],
+        "07_daily": [
+          "毎日新しい事件",
+          "連続記録を保ち、極秘の日に注意"
+        ],
+        "08_home": [
+          "事件の索引",
+          "クラシック、嘘、対戦、フリープレイ、エディタ"
+        ]
       }
     },
     "ko": {
       "asc": "ko",
       "banners": {
-        "01_case": ["암호를 해독하라", "7번의 분석으로 비밀 코드 추리"],
-        "02_report": ["사건 종결", "도장 찍힌 보고서를 공유"],
-        "03_lie": ["단서 하나는 거짓", "기밀의 날엔 가짜 보고서를 찾아라"],
-        "04_home": ["매일 새로운 사건", "480개 사건 파일 · 색약 친화적"]
+        "01_case": [
+          "암호를 해독하라",
+          "7번의 분석으로 비밀 코드 추리"
+        ],
+        "02_report": [
+          "사건 종결",
+          "도장 찍힌 보고서를 공유"
+        ],
+        "03_lie": [
+          "단서 하나는 거짓",
+          "기밀의 날엔 가짜 보고서를 찾아라"
+        ],
+        "04_cabinet": [
+          "서류 캐비닛",
+          "여섯 서랍에 480사건, 종결하면 도장"
+        ],
+        "05_night": [
+          "야간 책상",
+          "늦은 밤 사건을 위한 어두운 종이"
+        ],
+        "06_shapes": [
+          "색에 의존하지 않는 표시",
+          "점·고리·선, 그리고 모양 표시"
+        ],
+        "07_daily": [
+          "매일 새로운 사건",
+          "연속 기록을 지키고 기밀의 날을 주의"
+        ],
+        "08_home": [
+          "사건 색인",
+          "클래식, 거짓말, 대전, 자유 플레이, 편집기"
+        ]
       }
     },
     "es": {
       "asc": "es-ES",
       "banners": {
-        "01_case": ["Descifra el código", "Deduce el secreto en 7 análisis"],
-        "02_report": ["Caso cerrado", "Informes sellados para compartir"],
-        "03_lie": ["Una pista miente", "Detecta el informe falso en días Top Secret"],
-        "04_home": ["Un caso nuevo cada día", "480 expedientes · apto para daltónicos"]
+        "01_case": [
+          "Descifra el código",
+          "Deduce el secreto en 7 análisis"
+        ],
+        "02_report": [
+          "Caso cerrado",
+          "Informes sellados para compartir"
+        ],
+        "03_lie": [
+          "Una pista miente",
+          "Detecta el informe falso en días Top Secret"
+        ],
+        "04_cabinet": [
+          "El archivador",
+          "480 casos en seis cajones, sellados al cerrarlos"
+        ],
+        "05_night": [
+          "Escritorio nocturno",
+          "Papel oscuro para casos de madrugada"
+        ],
+        "06_shapes": [
+          "Marcas sin depender del color",
+          "Punto, anillo, raya y marcas de forma opcionales"
+        ],
+        "07_daily": [
+          "Un caso nuevo cada día",
+          "Mantén la racha, vigila los días Top Secret"
+        ],
+        "08_home": [
+          "Tu índice de casos",
+          "Clásico, Mentira, Duelo, Juego libre y editor"
+        ]
       }
     },
     "ar": {
       "asc": "ar-SA",
       "banners": {
-        "01_case": ["فكّ الشيفرة", "استنتج السر في 7 تحليلات"],
-        "02_report": ["القضية مغلقة", "تقارير مختومة لمشاركة حلّك"],
-        "03_lie": ["دليل واحد كاذب", "اكتشف التقرير المزيف في الأيام السرية"],
-        "04_home": ["قضية جديدة كل يوم", "480 ملف قضية · مناسب لعمى الألوان"]
+        "01_case": [
+          "فكّ الشيفرة",
+          "استنتج السر في 7 تحليلات"
+        ],
+        "02_report": [
+          "القضية مغلقة",
+          "تقارير مختومة لمشاركة حلّك"
+        ],
+        "03_lie": [
+          "دليل واحد كاذب",
+          "اكتشف التقرير المزيف في الأيام السرية"
+        ],
+        "04_cabinet": [
+          "خزانة الملفات",
+          "480 قضية في ستة أدراج، تُختم عند الإغلاق"
+        ],
+        "05_night": [
+          "المكتب الليلي",
+          "ورق داكن لقضايا آخر الليل"
+        ],
+        "06_shapes": [
+          "علامات لا تعتمد على اللون",
+          "نقطة وحلقة وشرطة، وعلامات أشكال اختيارية"
+        ],
+        "07_daily": [
+          "قضية جديدة كل يوم",
+          "حافظ على السلسلة وانتبه للأيام السرية"
+        ],
+        "08_home": [
+          "فهرس قضاياك",
+          "كلاسيكي، كذب، مبارزة، لعب حر ومحرر"
+        ]
       }
     },
     "de": {
       "asc": "de-DE",
       "banners": {
-        "01_case": ["Knack den Code", "Erschließe das Geheimnis in 7 Analysen"],
-        "02_report": ["Fall gelöst", "Gestempelte Berichte zum Teilen"],
-        "03_lie": ["Ein Hinweis lügt", "Finde den falschen Bericht an Top-Secret-Tagen"],
-        "04_home": ["Jeden Tag ein neuer Fall", "480 Fallakten · farbenblind-freundlich"]
+        "01_case": [
+          "Knack den Code",
+          "Erschließe das Geheimnis in 7 Analysen"
+        ],
+        "02_report": [
+          "Fall gelöst",
+          "Gestempelte Berichte zum Teilen"
+        ],
+        "03_lie": [
+          "Ein Hinweis lügt",
+          "Finde den falschen Bericht an Top-Secret-Tagen"
+        ],
+        "04_cabinet": [
+          "Der Aktenschrank",
+          "480 Fälle in sechs Schubladen, gestempelt beim Abschluss"
+        ],
+        "05_night": [
+          "Nachtschreibtisch",
+          "Dunkles Papier für späte Fälle"
+        ],
+        "06_shapes": [
+          "Marken ohne Farbe",
+          "Punkt, Ring, Strich – plus optionale Formmarken"
+        ],
+        "07_daily": [
+          "Jeden Tag ein neuer Fall",
+          "Serie halten, Top-Secret-Tage im Blick"
+        ],
+        "08_home": [
+          "Dein Fallregister",
+          "Klassik, Lüge, Duell, Freies Spiel und Editor"
+        ]
       }
     },
     "fr": {
       "asc": "fr-FR",
       "banners": {
-        "01_case": ["Déchiffrez le code", "Déduisez le secret en 7 analyses"],
-        "02_report": ["Affaire classée", "Des rapports tamponnés à partager"],
-        "03_lie": ["Un indice ment", "Repérez le faux rapport les jours Top Secret"],
-        "04_home": ["Une nouvelle affaire chaque jour", "480 dossiers · adaptés aux daltoniens"]
+        "01_case": [
+          "Déchiffrez le code",
+          "Déduisez le secret en 7 analyses"
+        ],
+        "02_report": [
+          "Affaire classée",
+          "Des rapports tamponnés à partager"
+        ],
+        "03_lie": [
+          "Un indice ment",
+          "Repérez le faux rapport les jours Top Secret"
+        ],
+        "04_cabinet": [
+          "Le classeur",
+          "480 affaires dans six tiroirs, tamponnées une fois classées"
+        ],
+        "05_night": [
+          "Bureau de nuit",
+          "Un papier sombre pour les affaires tardives"
+        ],
+        "06_shapes": [
+          "Des marques sans couleur",
+          "Point, anneau, tiret – et marques de forme en option"
+        ],
+        "07_daily": [
+          "Une affaire par jour",
+          "Gardez la série, guettez les jours Top Secret"
+        ],
+        "08_home": [
+          "Votre index d’affaires",
+          "Classique, Mensonge, Duel, Partie libre et éditeur"
+        ]
       }
     },
     "he": {
       "asc": "he",
       "banners": {
-        "01_case": ["פצחו את הצופן", "גלו את הסוד ב-7 ניתוחים"],
-        "02_report": ["התיק נסגר", "דוחות חתומים לשיתוף"],
-        "03_lie": ["רמז אחד משקר", "מצאו את הדוח המזויף בימי סודי ביותר"],
-        "04_home": ["תיק חדש כל יום", "480 תיקים · ידידותי לעיוורי צבעים"]
+        "01_case": [
+          "פצחו את הצופן",
+          "גלו את הסוד ב-7 ניתוחים"
+        ],
+        "02_report": [
+          "התיק נסגר",
+          "דוחות חתומים לשיתוף"
+        ],
+        "03_lie": [
+          "רמז אחד משקר",
+          "מצאו את הדוח המזויף בימי סודי ביותר"
+        ],
+        "04_cabinet": [
+          "ארון התיקים",
+          "480 תיקים בשש מגירות, נחתמים עם הסגירה"
+        ],
+        "05_night": [
+          "שולחן לילה",
+          "נייר כהה לתיקים של שעות הלילה"
+        ],
+        "06_shapes": [
+          "סימנים בלי צבע",
+          "נקודה, טבעת, קו – וסימני צורה לבחירה"
+        ],
+        "07_daily": [
+          "תיק חדש כל יום",
+          "שמרו על הרצף, שימו לב לימי סודי ביותר"
+        ],
+        "08_home": [
+          "אינדקס התיקים שלכם",
+          "קלאסי, שקר, דו-קרב, משחק חופשי ועורך"
+        ]
       }
     },
     "pt": {
       "asc": "pt-BR",
       "banners": {
-        "01_case": ["Decifre o código", "Deduza o segredo em 7 análises"],
-        "02_report": ["Caso encerrado", "Relatórios carimbados para compartilhar"],
-        "03_lie": ["Uma pista mente", "Ache o relatório falso nos dias Top Secret"],
-        "04_home": ["Um caso novo por dia", "480 dossiês · amigável a daltônicos"]
+        "01_case": [
+          "Decifre o código",
+          "Deduza o segredo em 7 análises"
+        ],
+        "02_report": [
+          "Caso encerrado",
+          "Relatórios carimbados para compartilhar"
+        ],
+        "03_lie": [
+          "Uma pista mente",
+          "Ache o relatório falso nos dias Top Secret"
+        ],
+        "04_cabinet": [
+          "O arquivo",
+          "480 casos em seis gavetas, carimbados ao fechar"
+        ],
+        "05_night": [
+          "Mesa noturna",
+          "Papel escuro para casos de madrugada"
+        ],
+        "06_shapes": [
+          "Marcas sem depender de cor",
+          "Ponto, anel, traço e marcas de forma opcionais"
+        ],
+        "07_daily": [
+          "Um caso novo por dia",
+          "Mantenha a sequência, atenção aos dias Top Secret"
+        ],
+        "08_home": [
+          "Seu índice de casos",
+          "Clássico, Mentira, Duelo, Jogo livre e editor"
+        ]
       }
     },
     "tr": {
       "asc": "tr",
       "banners": {
-        "01_case": ["Şifreyi kır", "Sırrı 7 analizde çöz"],
-        "02_report": ["Dosya kapandı", "Mühürlü raporları paylaş"],
-        "03_lie": ["Bir ipucu yalan", "Çok gizli günlerde sahte raporu bul"],
-        "04_home": ["Her gün yeni bir dosya", "480 dosya · renk körü dostu"]
+        "01_case": [
+          "Şifreyi kır",
+          "Sırrı 7 analizde çöz"
+        ],
+        "02_report": [
+          "Dosya kapandı",
+          "Mühürlü raporları paylaş"
+        ],
+        "03_lie": [
+          "Bir ipucu yalan",
+          "Çok gizli günlerde sahte raporu bul"
+        ],
+        "04_cabinet": [
+          "Dosya dolabı",
+          "Altı çekmecede 480 vaka, kapatınca damgalanır"
+        ],
+        "05_night": [
+          "Gece masası",
+          "Gece vakaları için koyu kâğıt"
+        ],
+        "06_shapes": [
+          "Renge bağlı olmayan işaretler",
+          "Nokta, halka, çizgi ve isteğe bağlı şekil işaretleri"
+        ],
+        "07_daily": [
+          "Her gün yeni bir vaka",
+          "Seriyi koru, Çok Gizli günlere dikkat"
+        ],
+        "08_home": [
+          "Vaka dizinin",
+          "Klasik, Yalan, Düello, Serbest oyun ve editör"
+        ]
       }
     }
   }

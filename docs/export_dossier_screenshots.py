@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Capture and composite the dossier-style App Store screenshots (4 shots x 12 locales).
+"""Capture and composite the dossier-style App Store screenshots (8 shots x 12 locales).
 
-Order (from the redesign plan): case page -> case report -> lie day -> home.
+Order: case page -> case report -> lie day -> filing cabinet -> Night Desk -> shape marks -> daily calendar -> home.
 
 Usage:
-    python3 docs/export_dossier_screenshots.py [capture|composite|all] [lang ...]
+    python3 docs/export_dossier_screenshots.py [capture|extra|composite|all] [lang ...]
+
+    capture    all 8 raw shots        extra   only shots 04–08 (no challenge replay for 01–03)
 
 Environment:
     SIM_UDID   booted simulator to drive (idb companion must be able to attach)
@@ -47,7 +49,19 @@ RTL = {"ar", "he"}
 # Deterministic seeds: any non-zero value works, these just give a pleasant reveal.
 CLASSIC_SEED = 20260908
 LIE_SEED = 19470601
+NIGHT_SEED = 19630805
+SHAPES_SEED = 20240213
 PEG_IDS = ["red", "green", "blue", "yellow", "purple", "orange", "cyan", "ink"]
+STAMPS = {
+    "01_case": "EXHIBIT A",
+    "02_report": "CASE CLOSED",
+    "03_lie": "TOP SECRET",
+    "04_cabinet": "ARCHIVE",
+    "05_night": "NIGHT SHIFT",
+    "06_shapes": "EXHIBIT B",
+    "07_daily": "DAILY",
+    "08_home": "INDEX",
+}
 
 APPLE = {
     "en": ("en", "en_US"), "zh": ("zh-Hans", "zh_CN"), "zh-Hant": ("zh-Hant", "zh_TW"),
@@ -248,12 +262,12 @@ def defaults_write(*args: str):
     simctl("spawn", UDID, "defaults", "write", BUNDLE, *args)
 
 
-def launch(lang: str):
+def launch(lang: str, skin: str = "Dossier", shapes: bool = False):
     terminate()
     defaults_write("settings_language", "-string", lang)
-    defaults_write("app_skin", "-string", "Dossier")
-    defaults_write("settings_colorBlind", "-bool", "false")
-    simctl("ui", UDID, "appearance", "light")
+    defaults_write("app_skin", "-string", skin)
+    defaults_write("settings_colorBlind", "-bool", "true" if shapes else "false")
+    simctl("ui", UDID, "appearance", "dark" if skin == "NightDesk" else "light")
     simctl("ui", UDID, "content_size", "medium")
     simctl("status_bar", UDID, "override", "--time", "9:41", "--batteryState", "charged",
            "--batteryLevel", "100", "--wifiBars", "3", "--cellularBars", "4", "--operatorName", "")
@@ -262,6 +276,8 @@ def launch(lang: str):
         "launch", UDID, BUNDLE,
         "-isPro", "-storeScreenshots", "-hasSeenTutorial", "YES",
         "-settings_language", lang, "-store_is_pro", "YES",
+        # Launch arguments win over cached defaults; `defaults write` alone is not reliable here.
+        "-app_skin", skin, "-settings_colorBlind", "YES" if shapes else "NO",
         "-AppleLanguages", f"({apple})", "-AppleLocale", locale, "-AppleICUCalendar", "gregorian",
     )
     time.sleep(1.6)
@@ -329,11 +345,59 @@ def capture_lang(lang: str):
     screenshot(dest / "03_lie.png")
     print("  shot 03_lie", flush=True)
 
-    # 04 home
+    capture_extra(lang)
+
+
+def capture_extra(lang: str):
+    """Shots 04–08: filing cabinet, Night Desk, shape marks, daily calendar, home index."""
+    dest = RAW / lang
+    dest.mkdir(parents=True, exist_ok=True)
+
+    # 04 filing cabinet (classic level select, seeded progress)
+    launch(lang)
+    tap(ident="home.classic")
+    time.sleep(1.4)
+    screenshot(dest / "04_cabinet.png")
+    print("  shot 04_cabinet", flush=True)
+
+    # 05 Night Desk skin, case page mid-analysis
+    launch(lang, skin="NightDesk")
+    code = secret_for(NIGHT_SEED, 4, 6, lie=False)
+    g = scripted_guesses(code, 6)
+    open_challenge(lang, NIGHT_SEED, lie=False)
+    play(lang, g[:2])
+    for c in code[:2]:
+        tap(ident=f"peg.{PEG_IDS[c]}")
+        time.sleep(0.1)
+    time.sleep(0.3)
+    screenshot(dest / "05_night.png")
+    print("  shot 05_night", flush=True)
+
+    # 06 shape marks (colour-blind setting) on the case page
+    launch(lang, shapes=True)
+    code = secret_for(SHAPES_SEED, 4, 6, lie=False)
+    g = scripted_guesses(code, 6)
+    open_challenge(lang, SHAPES_SEED, lie=False)
+    play(lang, g[:2])
+    for c in code[:3]:
+        tap(ident=f"peg.{PEG_IDS[c]}")
+        time.sleep(0.1)
+    time.sleep(0.3)
+    screenshot(dest / "06_shapes.png")
+    print("  shot 06_shapes", flush=True)
+
+    # 07 daily calendar
+    launch(lang)
+    tap(ident="home.daily")
+    time.sleep(1.4)
+    screenshot(dest / "07_daily.png")
+    print("  shot 07_daily", flush=True)
+
+    # 08 home
     launch(lang)
     time.sleep(1.2)
-    screenshot(dest / "04_home.png")
-    print("  shot 04_home", flush=True)
+    screenshot(dest / "08_home.png")
+    print("  shot 08_home", flush=True)
     terminate()
     simctl("status_bar", UDID, "clear")
 
@@ -440,7 +504,7 @@ def composite(lang: str):
         draw.rectangle((x - 14, y - 14, x + shot.width + 14, y + shot.height + 14), fill=FOLDER, outline=INK, width=3)
         canvas.paste(shot, (x, y))
         # Lie shot gets the classified stamp, others a plain exhibit stamp.
-        stamp_text = "TOP SECRET" if key == "03_lie" else ("CASE CLOSED" if key == "02_report" else "EXHIBIT A")
+        stamp_text = STAMPS.get(key, "EXHIBIT A")
         sx = (x + 170) if rtl else (x + shot.width - 170)
         draw_stamp(canvas, stamp_text, (sx, y + 150), size=40, angle=-9)
 
@@ -452,12 +516,16 @@ def composite(lang: str):
 def main():
     args = sys.argv[1:]
     mode = "all"
-    if args and args[0] in {"capture", "composite", "all"}:
+    if args and args[0] in {"capture", "extra", "composite", "all"}:
         mode, args = args[0], args[1:]
     langs = args or LANGS
     if mode in {"capture", "all"}:
         for lang in langs:
             capture_lang(lang)
+    if mode == "extra":
+        for lang in langs:
+            print(f"\n=== {lang} (extra) ===", flush=True)
+            capture_extra(lang)
     if mode in {"composite", "all"}:
         for lang in langs:
             composite(lang)

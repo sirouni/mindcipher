@@ -22,14 +22,18 @@ Store copy for all 12 locales lives in `docs/asc_1.2.json` (description, promoti
 
 ## Screenshots
 
-4 shots × 12 locales, 1284×2778 (`APP_IPHONE_65`), produced by `docs/export_dossier_screenshots.py` into `assets/asc-dossier/<locale>/`:
+8 shots × 12 locales, 1284×2778 (`APP_IPHONE_65`), produced by `docs/export_dossier_screenshots.py` into `assets/asc-dossier/<locale>/`:
 
 1. `01_case` — case page mid-analysis (classic challenge, seed 20260908)
 2. `02_report` — stamped case report
 3. `03_lie` — Top Secret lie case
-4. `04_home` — home index page
+4. `04_cabinet` — filing cabinet (classic level select, seeded stars)
+5. `05_night` — Night Desk skin, case page
+6. `06_shapes` — Shape Marks (colour-blind) on the case page
+7. `07_daily` — Today's Case calendar (seeded six-day streak)
+8. `08_home` — home index page
 
-Banners come from `docs/asc_dossier_banners.json`.
+The first three carry the pitch (search results show 1–3); the rest are for people who swipe. Banners come from `docs/asc_dossier_banners.json`; seeded progress lives in `seedStoreScreenshotDefaults()` (DEBUG only, `-storeScreenshots`). `extra` re-captures only shots 4–8.
 
 ## Pipeline
 

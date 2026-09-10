@@ -28,7 +28,10 @@ import requests
 ROOT = Path(__file__).resolve().parents[1]
 COPY = json.loads((ROOT / "docs/asc_1.2.json").read_text())
 SHOTS = ROOT / "assets/asc-dossier"
-SHOT_ORDER = ["01_case.png", "02_report.png", "03_lie.png", "04_home.png"]
+SHOT_ORDER = [
+    "01_case.png", "02_report.png", "03_lie.png", "04_cabinet.png",
+    "05_night.png", "06_shapes.png", "07_daily.png", "08_home.png",
+]
 ISS = "6fba9ede-5341-4112-a55f-d00d4e7cb05b"
 KID = "Y8W69V3U7C"
 KEY = Path("/Users/wangxiao/.appstoreconnect/private_keys/AuthKey_Y8W69V3U7C.p8").read_text()
