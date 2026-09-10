@@ -1,7 +1,7 @@
 /* Hallmark · tokens · custom (tuned) · vibe: "spy dossier, paper and ink, one stamp red"
  * paper: oklch(93% 0.022 85) · accent: oklch(50% 0.17 28)
- * display: Courier Prime · body: IBM Plex Sans · outlier: Courier Prime
- * axes: light / mono / warm
+ * display: Bitter (slab) · body: IBM Plex Sans · outlier: Courier Prime
+ * axes: light / slab-serif / warm
  * Values mirror the in-app Dossier + Night Desk skins (ThemePicker.swift) and the
  * Okabe–Ito peg palette (Theme.swift) so the site and the app share one paper stock.
  */
@@ -48,7 +48,7 @@
   --color-night-rule: oklch(33% 0.04 75);      /* #463A28 */
   --color-night-muted: oklch(66% 0.03 78);     /* #9C917D */
 
-  --font-display: "Courier Prime", "American Typewriter", "Courier New", ui-monospace, monospace;
+  --font-display: "Bitter", "Rockwell", "Georgia", serif;
   --font-body: "IBM Plex Sans", "Helvetica Neue", -apple-system, "Segoe UI", "Noto Sans", sans-serif;
   --font-outlier: "Courier Prime", "American Typewriter", "Courier New", ui-monospace, monospace;
 
