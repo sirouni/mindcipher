@@ -1,0 +1,68 @@
+{
+  "notes": [
+    "ASO for 1.2. Apple indexes name + subtitle + keyword field; description is not indexed but the first two lines drive conversion.",
+    "Strategy: move the emotional hook ('one clue lies') out of the subtitle into screenshots/promo; spend the 30 subtitle chars on the genre aliases people actually type (Mastermind, Bulls and Cows, Hit and Blow, 1A2B, SuperHirn, Senha, 숫자야구, בול פגיעה) plus 'code/puzzle'.",
+    "Keyword fields were 46–85 of 100 chars in 1.1; now filled to 90–100. No token repeats the name or subtitle. Accents stripped in Latin keywords so typed search matches.",
+    "desc_open replaces only the first paragraph of docs/asc_1.2.json description; the rest of the description is unchanged."
+  ],
+  "en-US": {
+    "subtitle": "Mastermind: Spy Code Puzzles",
+    "keywords": "breaker,bulls,cows,hit,blow,logic,deduction,brain,daily,detective,offline,crack,color,secret,duel",
+    "desc_open": "Mind Cipher is the classic code-breaking game — Mastermind, Bulls and Cows, Hit and Blow — filed as a spy dossier. Crack the hidden color code from ink marks: a filled dot is exact, a ring is the right color in the wrong slot, a dash is not in the code. The marks never rely on color, and an optional Shape Marks setting gives every peg its own outline."
+  },
+  "zh-Hans": {
+    "subtitle": "珠玑妙算·1A2B 猜密码推理",
+    "keywords": "破译,逻辑,益智,解谜,烧脑,猜颜色,颜色密码,猜数字,大师头脑,神机妙算,间谍,侦探,每日挑战,单机,双人,桌游,无广告,头脑训练,谎言,解码,密室,策略,密码游戏,推理游戏,休闲",
+    "desc_open": "Mind Cipher 是经典的破译密码游戏——珠玑妙算（Mastermind）、1A2B 猜数字的颜色版——整个界面做成一份间谍卷宗。每次分析会得到一排墨迹标记：实心点表示颜色和位置都对，空心圈表示颜色对但位置错，短横表示这个颜色不在密码里。标记完全不依赖颜色，设置里还可以开启「形状标记」，给每种颜色一个专属外形。"
+  },
+  "zh-Hant": {
+    "subtitle": "珠璣妙算·1A2B 猜密碼推理",
+    "keywords": "破譯,邏輯,益智,解謎,燒腦,猜顏色,顏色密碼,猜數字,神機妙算,間諜,偵探,每日挑戰,單機,雙人,桌遊,無廣告,頭腦訓練,謊言,解碼,密室,策略,幾A幾B,密碼遊戲,推理遊戲,休閒",
+    "desc_open": "Mind Cipher 是經典的破譯密碼遊戲——珠璣妙算（Mastermind）、1A2B 猜數字的顏色版——整個介面做成一份間諜卷宗。每次分析會得到一排墨跡標記：實心點表示顏色和位置都對，空心圈表示顏色對但位置錯，短橫表示這個顏色不在密碼裡。標記完全不依賴顏色，設定裡還可以開啟「形狀標記」，給每種顏色一個專屬外形。"
+  },
+  "ja": {
+    "subtitle": "ヒットアンドブロー×マスターマインド",
+    "keywords": "暗号,論理,パズル,推理,デイリー,色当て,数当て,頭脳,暗号解読,オフライン,対戦,脳トレ,ボードゲーム,スパイ,探偵,嘘,ヒット,ブロー,推理ゲーム,暗号ゲーム,論理パズル,数字",
+    "desc_open": "Mind Cipher はヒットアンドブロー／マスターマインドの色暗号パズルを、スパイの調書として仕立てたゲームです。各分析はインクの印の列で返ります。塗りつぶしの点は色も位置も正しい、輪は色は正しいが位置が違う、横線はその色が暗号にない、という意味です。印は色に頼らず、設定の「形マーク」で各色に固有の形を付けることもできます。"
+  },
+  "ko": {
+    "subtitle": "마스터마인드·숫자야구 색깔 추리",
+    "keywords": "암호,논리,퍼즐,추론,일일도전,거짓말,색맞추기,두뇌,오프라인,보드게임,두뇌훈련,스파이,탐정,암호해독,코드,브레이커,비밀,두뇌게임,전략,추리게임,논리퍼즐,마인드",
+    "desc_open": "Mind Cipher는 마스터마인드·숫자야구 스타일의 색 암호 퍼즐을 스파이 서류철로 꾸민 게임입니다. 각 분석은 잉크 표시 한 줄로 돌아옵니다. 채워진 점은 색과 위치가 모두 맞고, 고리는 색만 맞고 위치가 다르며, 짧은 선은 그 색이 암호에 없다는 뜻입니다. 표시는 색에 의존하지 않고, 설정의 「모양 표시」로 각 색에 고유한 모양을 줄 수도 있습니다."
+  },
+  "es-ES": {
+    "subtitle": "Mastermind: descifra el código",
+    "keywords": "rompe,codigos,logica,puzzle,deduccion,diario,colores,espia,detective,secreto,adivina,duelo,cerebro",
+    "desc_open": "Mind Cipher es el clásico juego de descifrar códigos —Mastermind— presentado como un expediente de espionaje. Cada análisis devuelve una fila de marcas de tinta: punto relleno = color y sitio correctos, anillo = color bien y sitio mal, raya = ese color no está. Las marcas no dependen del color, y el ajuste «Marcas de forma» da a cada color su propio contorno."
+  },
+  "ar-SA": {
+    "subtitle": "ماسترميند: فك الشفرة",
+    "keywords": "منطق,لغز,استدلال,تحدي,يومي,ألوان,استراتيجية,أوفلاين,جاسوس,محقق,سري,ذكاء,ألغاز,تخمين,رمز,كسر,مبارزة",
+    "desc_open": "Mind Cipher هي لعبة فك الشفرة الكلاسيكية — ماسترميند — مقدَّمة كملف تجسّس. كل تحليل يعيد صفاً من علامات الحبر: نقطة ممتلئة = اللون والمكان صحيحان، حلقة = اللون صحيح والمكان خطأ، شرطة = اللون ليس في الرمز. العلامات لا تعتمد على اللون، ويمكن من الإعدادات تفعيل «علامات الأشكال» لإعطاء كل لون شكلاً خاصاً."
+  },
+  "de-DE": {
+    "subtitle": "Mastermind & SuperHirn Rätsel",
+    "keywords": "code,knacken,logik,puzzle,taglich,farben,offline,gehirn,duell,spion,detektiv,geheim,denkspiel,raten",
+    "desc_open": "Mind Cipher ist das klassische Code-Knacken — Mastermind, in Deutschland als SuperHirn bekannt — aufgemacht als Spionageakte. Jede Analyse liefert eine Reihe Tintenmarken: gefüllter Punkt = Farbe und Platz richtig, Ring = Farbe richtig, Platz falsch, Strich = die Farbe ist nicht im Code. Die Marken hängen nicht von Farbe ab, und die Einstellung „Formmarken“ gibt jeder Farbe eine eigene Kontur."
+  },
+  "fr-FR": {
+    "subtitle": "Mastermind : casse le code",
+    "keywords": "logique,puzzle,deduction,defi,quotidien,couleurs,offline,cerveau,espion,detective,secret,enigme,duel",
+    "desc_open": "Mind Cipher est le jeu classique de décryptage de code — le Mastermind — présenté comme un dossier d’espionnage. Chaque analyse renvoie une ligne de marques à l’encre : point plein = bonne couleur au bon endroit, anneau = bonne couleur au mauvais endroit, tiret = cette couleur n’est pas dans le code. Les marques ne dépendent pas de la couleur, et le réglage « Marques de forme » donne à chaque couleur son propre contour."
+  },
+  "he": {
+    "subtitle": "מאסטרמיינד · בול פגיעה בצבעים",
+    "keywords": "פיצוח,קוד,לוגיקה,חידה,היסק,אתגר,יומי,אסטרטגיה,אופליין,מרגל,בלש,סודי,חידות,מוח,ניחוש,צופן,שקר,דו-קרב",
+    "desc_open": "Mind Cipher היא משחק פיצוח הקוד הקלאסי — מאסטרמיינד, בול פגיעה — מוצג כתיק ריגול. כל ניתוח מחזיר שורת סימני דיו: נקודה מלאה = צבע ומיקום נכונים, טבעת = צבע נכון ומיקום שגוי, קו = הצבע לא בקוד. הסימנים לא תלויים בצבע, וההגדרה «סימני צורה» נותנת לכל צבע קו מתאר משלו."
+  },
+  "pt-BR": {
+    "subtitle": "Mastermind e Senha: decifre",
+    "keywords": "quebra,codigo,logica,puzzle,deducao,diario,cores,offline,cerebro,espiao,detetive,secreto,duelo,mesa",
+    "desc_open": "Mind Cipher é o clássico jogo de decifrar códigos — Mastermind, o Senha — apresentado como um dossiê de espionagem. Cada análise devolve uma fileira de marcas de tinta: ponto cheio = cor e lugar certos, anel = cor certa e lugar errado, traço = essa cor não está no código. As marcas não dependem de cor, e o ajuste “Marcas de forma” dá a cada cor um contorno próprio."
+  },
+  "tr": {
+    "subtitle": "Mastermind: şifreyi kır",
+    "keywords": "kod,kirma,mantik,bulmaca,cikarsama,gunluk,renk,offline,zeka,casus,dedektif,gizli,tahmin,sifre,beyin",
+    "desc_open": "Mind Cipher klasik şifre kırma oyunu — Mastermind — casus dosyası olarak sunuluyor. Her analiz bir sıra mürekkep işareti döner: dolu nokta = renk ve yer doğru, halka = renk doğru yer yanlış, çizgi = bu renk kodda yok. İşaretler renge bağlı değildir; “Şekil işaretleri” ayarı her renge kendi dış hattını verir."
+  }
+}

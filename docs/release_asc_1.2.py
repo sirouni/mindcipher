@@ -5,12 +5,13 @@ Steps are idempotent and can be run separately:
 
     python3 docs/release_asc_1.2.py version      # create 1.2 (copies 1.1 localizations), copyright/release type
     python3 docs/release_asc_1.2.py metadata     # description / promo / what's new from docs/asc_1.2.json
+    python3 docs/release_asc_1.2.py aso          # subtitle / keywords / description opener from docs/aso_1.2.json
     python3 docs/release_asc_1.2.py screenshots  # replace IPHONE_65 sets with assets/asc-dossier/<locale>/
     python3 docs/release_asc_1.2.py build        # attach newest processed build 4, encryption exempt
     python3 docs/release_asc_1.2.py status
     python3 docs/release_asc_1.2.py submit       # explicit — sends for review
 
-`prepare` = version + metadata + screenshots + build.
+`prepare` = version + metadata + aso + screenshots + build.
 """
 
 from __future__ import annotations
@@ -176,6 +177,67 @@ def live_keywords() -> dict[str, str]:
             for loc in localizations(live[0]["id"]).values():
                 _LIVE_KW[loc["attributes"]["locale"]] = loc["attributes"].get("keywords") or ""
     return _LIVE_KW
+
+
+# --------------------------------------------------------------------------- ASO (subtitle / keywords / opener)
+
+def editable_app_info() -> str:
+    infos = api("GET", f"/v1/apps/{APP_ID}/appInfos").get("data", [])
+    for i in infos:
+        if i["attributes"]["appStoreState"] not in {"READY_FOR_SALE", "REPLACED_WITH_NEW_INFO", "REMOVED_FROM_SALE"}:
+            return i["id"]
+    raise RuntimeError("no editable appInfo (all READY_FOR_SALE) — create the version first")
+
+
+def apply_aso(vid: str):
+    aso = json.loads((ROOT / "docs/aso_1.2.json").read_text())
+    info_id = editable_app_info()
+    infos = {
+        loc["attributes"]["locale"]: loc
+        for loc in api("GET", f"/v1/appInfos/{info_id}/appInfoLocalizations", params={"limit": 50}).get("data", [])
+    }
+    locs = ensure_localizations(vid)
+    for locale in LOCALES:
+        a = aso[locale]
+        assert len(a["subtitle"]) <= 30 and len(a["keywords"]) <= 100, locale
+        if locale in infos:
+            api(
+                "PATCH",
+                f"/v1/appInfoLocalizations/{infos[locale]['id']}",
+                json={
+                    "data": {
+                        "type": "appInfoLocalizations",
+                        "id": infos[locale]["id"],
+                        "attributes": {"name": "Mind Cipher", "subtitle": a["subtitle"]},
+                    }
+                },
+            )
+        else:
+            api(
+                "POST",
+                "/v1/appInfoLocalizations",
+                json={
+                    "data": {
+                        "type": "appInfoLocalizations",
+                        "attributes": {"locale": locale, "name": "Mind Cipher", "subtitle": a["subtitle"]},
+                        "relationships": {"appInfo": {"data": {"type": "appInfos", "id": info_id}}},
+                    }
+                },
+            )
+        desc = COPY[locale]["description"].split("\n\n", 1)
+        desc = a["desc_open"] + ("\n\n" + desc[1] if len(desc) > 1 else "")
+        api(
+            "PATCH",
+            f"/v1/appStoreVersionLocalizations/{locs[locale]['id']}",
+            json={
+                "data": {
+                    "type": "appStoreVersionLocalizations",
+                    "id": locs[locale]["id"],
+                    "attributes": {"keywords": a["keywords"], "description": desc},
+                }
+            },
+        )
+        log("aso", locale, "|", a["subtitle"], "|", len(a["keywords"]))
 
 
 # --------------------------------------------------------------------------- screenshots
@@ -362,6 +424,8 @@ def main():
         raise SystemExit("1.2 does not exist yet — run `version` first")
     if step in {"metadata", "prepare"}:
         patch_metadata(vid)
+    if step in {"aso", "prepare"}:
+        apply_aso(vid)
     if step in {"screenshots", "prepare"}:
         replace_screenshots(vid, sys.argv[2:] or None)
     if step in {"build", "prepare"}:
