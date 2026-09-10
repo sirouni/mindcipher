@@ -8,6 +8,8 @@ enum AppTheme {
     /// Page background (flat paper).
     static var paper: Color { skin.paper }
     static var paperFolder: Color { skin.paperFolder }
+    static var kraft: Color { skin.kraft }
+    static var kraftFlap: Color { skin.kraftFlap }
     static var bgDark: Color { skin.paper }
     static var bgCard: Color { skin.paperCard }
     static var bgCardLight: Color { skin.paperCardStrong }
@@ -132,6 +134,209 @@ extension View {
     /// Legacy name kept for call sites that have not been touched yet.
     func glassCard(cornerRadius: CGFloat = 4) -> some View {
         modifier(PaperCard(cornerRadius: min(cornerRadius, 6)))
+    }
+}
+
+/// 档案袋: kraft body, folded flap, string-and-washer, gummed label, optional stamp.
+struct ArchivePouchView: View {
+    enum Footer { case stars(Int), pro, locked, empty }
+
+    let number: Int
+    var isCompleted: Bool
+    var isMuted: Bool
+    var isNext: Bool
+    var nextTone: Color = AppTheme.ink
+    var footer: Footer = .empty
+
+    var body: some View {
+        ZStack {
+            Canvas { ctx, size in
+                drawPouch(ctx: &ctx, size: size)
+            }
+
+            VStack(spacing: 0) {
+                Color.clear.frame(height: 22)
+
+                Text("\(number)")
+                    .font(AppFont.graphic(number >= 100 ? 10 : 12, weight: .bold))
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
+                    .foregroundStyle(isMuted ? AppTheme.textMuted : AppTheme.textPrimary)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(
+                        RoundedRectangle(cornerRadius: 1)
+                            .fill(AppTheme.ink.opacity(0.18))
+                            .offset(x: 0.8, y: 1)
+                    )
+                    .background(
+                        RoundedRectangle(cornerRadius: 1)
+                            .fill(AppTheme.bgCardLight)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 1)
+                            .stroke(AppTheme.ink.opacity(isMuted ? 0.25 : 0.45), lineWidth: 0.8)
+                    )
+
+                if isCompleted {
+                    Text(L("case.closed"))
+                        .font(AppFont.graphic(5.5, weight: .bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                        .foregroundStyle(AppTheme.accent)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 2)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 1)
+                                .stroke(AppTheme.accent, lineWidth: 1.2)
+                        )
+                        .padding(2)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 2)
+                                .stroke(AppTheme.accent, lineWidth: 0.7)
+                        )
+                        .rotationEffect(.degrees(-6))
+                        .padding(.top, 5)
+                        .padding(.bottom, 6)
+                }
+
+                Spacer(minLength: 6)
+
+                footerView
+                    .frame(height: 12)
+                    .padding(.bottom, 6)
+            }
+            .padding(.horizontal, 4)
+        }
+        .frame(maxWidth: .infinity, minHeight: 102)
+        .accessibilityElement(children: .ignore)
+    }
+
+    @ViewBuilder
+    private var footerView: some View {
+        switch footer {
+        case .stars(let count):
+            HStack(spacing: 1) {
+                ForEach(0..<3, id: \.self) { i in
+                    Image(systemName: i < count ? "star.fill" : "star")
+                        .font(.system(size: 7))
+                        .foregroundStyle(i < count ? AppTheme.accent : AppTheme.textMuted.opacity(0.55))
+                }
+            }
+        case .pro:
+            Text("PRO")
+                .font(AppFont.label(6, weight: .bold))
+                .tracking(0.6)
+                .foregroundStyle(AppTheme.accent)
+        case .locked:
+            Image(systemName: "lock")
+                .font(.system(size: 9))
+                .foregroundStyle(AppTheme.textMuted)
+        case .empty:
+            Color.clear.frame(height: 8)
+        }
+    }
+
+    private func drawPouch(ctx: inout GraphicsContext, size: CGSize) {
+        let rect = CGRect(origin: .zero, size: size)
+        let flapH: CGFloat = 18
+        let outline = pouchOutline(in: rect, flapH: flapH)
+        let flap = flapOutline(in: rect, flapH: flapH)
+        let kraft = isMuted ? AppTheme.bgCard : AppTheme.kraft
+        let flapColor = isMuted ? AppTheme.paperFolder : AppTheme.kraftFlap
+        let ink = (isMuted ? AppTheme.textMuted : AppTheme.ink).opacity(0.85)
+        let stroke = isNext ? nextTone : AppTheme.ink.opacity(0.55)
+
+        var back = outline
+        back = back.offsetBy(dx: 1.6, dy: 2.2)
+        ctx.fill(back, with: .color(AppTheme.ink.opacity(0.16)))
+
+        ctx.fill(outline, with: .color(kraft))
+        ctx.fill(flap, with: .color(flapColor))
+
+        var seam = Path()
+        seam.move(to: CGPoint(x: 1, y: flapH))
+        seam.addLine(to: CGPoint(x: size.width - 1, y: flapH))
+        ctx.stroke(seam, with: .color(AppTheme.ink.opacity(0.28)), lineWidth: 1)
+
+        var gusset = Path()
+        gusset.move(to: CGPoint(x: 5, y: flapH + 1))
+        gusset.addLine(to: CGPoint(x: 5, y: size.height - 6))
+        gusset.move(to: CGPoint(x: size.width - 5, y: flapH + 1))
+        gusset.addLine(to: CGPoint(x: size.width - 5, y: size.height - 6))
+        ctx.stroke(gusset, with: .color(AppTheme.ink.opacity(0.1)), lineWidth: 0.7)
+
+        var grain = Path()
+        grain.move(to: CGPoint(x: 10, y: flapH + 8))
+        grain.addLine(to: CGPoint(x: size.width - 14, y: flapH + 11))
+        grain.move(to: CGPoint(x: 14, y: size.height * 0.62))
+        grain.addLine(to: CGPoint(x: size.width - 11, y: size.height * 0.58))
+        ctx.stroke(grain, with: .color(AppTheme.ink.opacity(0.06)), lineWidth: 0.6)
+
+        ctx.stroke(outline, with: .color(stroke), lineWidth: isNext ? 1.6 : 1.1)
+
+        let midX = size.width * 0.5
+        let top = CGPoint(x: midX, y: 6.5)
+        let bot = CGPoint(x: midX, y: 16.5)
+        let bulge = size.width * 0.16
+        var cord = Path()
+        cord.move(to: top)
+        cord.addCurve(
+            to: bot,
+            control1: CGPoint(x: midX + bulge, y: 9),
+            control2: CGPoint(x: midX + bulge, y: 14)
+        )
+        cord.addCurve(
+            to: top,
+            control1: CGPoint(x: midX - bulge, y: 14),
+            control2: CGPoint(x: midX - bulge, y: 9)
+        )
+        ctx.stroke(cord, with: .color(ink), style: StrokeStyle(lineWidth: 1.15, lineCap: .round, lineJoin: .round))
+
+        drawWasher(&ctx, at: top, radius: 3.4, ink: ink)
+        drawWasher(&ctx, at: bot, radius: 3.4, ink: ink)
+    }
+
+    private func drawWasher(_ ctx: inout GraphicsContext, at center: CGPoint, radius: CGFloat, ink: Color) {
+        let outer = CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)
+        ctx.fill(Path(ellipseIn: outer), with: .color(AppTheme.kraftFlap))
+        ctx.stroke(Path(ellipseIn: outer), with: .color(ink), lineWidth: 1.15)
+        let holeR = radius * 0.38
+        let hole = CGRect(x: center.x - holeR, y: center.y - holeR, width: holeR * 2, height: holeR * 2)
+        ctx.fill(Path(ellipseIn: hole), with: .color(AppTheme.kraft))
+        ctx.stroke(Path(ellipseIn: hole), with: .color(ink), lineWidth: 0.7)
+    }
+
+    private func pouchOutline(in rect: CGRect, flapH: CGFloat) -> Path {
+        let cr: CGFloat = 2.2
+        let inset: CGFloat = 5
+        var p = Path()
+        p.move(to: CGPoint(x: inset, y: 1))
+        p.addLine(to: CGPoint(x: rect.width - inset, y: 1))
+        p.addLine(to: CGPoint(x: rect.width - 0.6, y: flapH))
+        p.addLine(to: CGPoint(x: rect.width, y: flapH + 1.5))
+        p.addLine(to: CGPoint(x: rect.width, y: rect.height - cr))
+        p.addQuadCurve(
+            to: CGPoint(x: rect.width - cr, y: rect.height),
+            control: CGPoint(x: rect.width, y: rect.height)
+        )
+        p.addLine(to: CGPoint(x: cr, y: rect.height))
+        p.addQuadCurve(to: CGPoint(x: 0, y: rect.height - cr), control: CGPoint(x: 0, y: rect.height))
+        p.addLine(to: CGPoint(x: 0, y: flapH + 1.5))
+        p.addLine(to: CGPoint(x: 0.6, y: flapH))
+        p.closeSubpath()
+        return p
+    }
+
+    private func flapOutline(in rect: CGRect, flapH: CGFloat) -> Path {
+        let inset: CGFloat = 5
+        var p = Path()
+        p.move(to: CGPoint(x: inset, y: 1))
+        p.addLine(to: CGPoint(x: rect.width - inset, y: 1))
+        p.addLine(to: CGPoint(x: rect.width - 0.6, y: flapH))
+        p.addLine(to: CGPoint(x: 0.6, y: flapH))
+        p.closeSubpath()
+        return p
     }
 }
 

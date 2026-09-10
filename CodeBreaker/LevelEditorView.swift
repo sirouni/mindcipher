@@ -17,9 +17,9 @@ struct LevelEditorView: View {
                 VStack(spacing: 20) {
                     header
 
-                    paramSection("Code length", value: $codeLength, range: 3...6) { "\($0)" }
-                    paramSection("Colors", value: $colorCount, range: max(codeLength, 4)...8) { "\($0)" }
-                    paramSection("Max attempts", value: $maxAttempts, range: (codeLength + 1)...15) { "\($0)" }
+                    paramSection(L("param.length"), value: $codeLength, range: 3...6) { "\($0)" }
+                    paramSection(L("param.colors"), value: $colorCount, range: max(codeLength, 4)...8) { "\($0)" }
+                    paramSection(L("param.attempts"), value: $maxAttempts, range: (codeLength + 1)...15) { "\($0)" }
 
                     toggleSection
                     timeLimitSection
@@ -46,7 +46,7 @@ struct LevelEditorView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 3) {
-            DossierCaption(text: L("menu.editor"))
+            DossierCaption(text: L("home.index") + " · III")
             Text(L("editor.title"))
                 .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)

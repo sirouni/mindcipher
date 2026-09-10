@@ -400,29 +400,38 @@ struct AchievementsView: View {
     }
 
     private var progressHeader: some View {
-        VStack(spacing: 8) {
-            Text("\(manager.unlockedCount)/\(manager.totalCount)")
-                .font(AppFont.display(32, weight: .black))
-                .foregroundStyle(AppTheme.accent)
-            
+        VStack(alignment: .leading, spacing: 3) {
+            DossierCaption(text: L("home.index") + " · IV")
+            HStack(alignment: .firstTextBaseline) {
+                Text(L("menu.achievements"))
+                    .font(AppFont.display(24, weight: .bold))
+                    .foregroundStyle(AppTheme.textPrimary)
+                Spacer()
+                Text("\(manager.unlockedCount) / \(manager.totalCount)")
+                    .font(AppFont.mono(15, weight: .bold))
+                    .foregroundStyle(AppTheme.accent)
+            }
+            Text(L("settings.unlocked"))
+                .font(AppFont.body(13))
+                .foregroundStyle(AppTheme.textSecondary)
+
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(AppTheme.cardStroke)
-                        .frame(height: 8)
-                    RoundedRectangle(cornerRadius: 4)
+                    Rectangle()
+                        .fill(AppTheme.rule)
+                        .frame(height: 3)
+                    Rectangle()
                         .fill(AppTheme.accent)
-                        .frame(width: geo.size.width * CGFloat(manager.unlockedCount) / CGFloat(max(1, manager.totalCount)), height: 8)
+                        .frame(width: geo.size.width * CGFloat(manager.unlockedCount) / CGFloat(max(1, manager.totalCount)), height: 3)
                 }
             }
-            .frame(height: 8)
-            .padding(.horizontal, 40)
+            .frame(height: 3)
+            .padding(.top, 8)
 
-            Text(L("settings.unlocked"))
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(AppTheme.textSecondary)
+            Rectangle().fill(AppTheme.ink).frame(height: 1.5).padding(.top, 6)
         }
-        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.bottom, 8)
     }
 
     private func categorySection(_ cat: AchievementCategory, items: [Achievement]) -> some View {

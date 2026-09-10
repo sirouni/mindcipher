@@ -202,7 +202,7 @@ struct HomeView: View {
                         }
                     }
                     .zIndex(10)
-                toolbarIcon("seal", label: L("store.title")) { showStore = true }
+                toolbarIcon("bag", label: L("store.title")) { showStore = true }
                 toolbarIcon("gearshape", label: L("settings.title")) { showSettings = true }
             }
             .padding(.top, 4)
@@ -420,13 +420,9 @@ struct HomeView: View {
     ) -> some View {
         Button(action: action) {
             VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    DossierCaption(text: caption, color: lie ? AppTheme.danger : AppTheme.textSecondary)
-                    Spacer()
-                    Text("\(L("home.volume")) I–VI")
-                        .font(AppFont.label(9, weight: .regular))
-                        .foregroundStyle(AppTheme.textMuted)
-                }
+                DossierCaption(text: caption, color: lie ? AppTheme.danger : AppTheme.textSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                 Text(title)
                     .font(AppFont.display(16, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
@@ -434,9 +430,19 @@ struct HomeView: View {
                     .minimumScaleFactor(0.8)
                     .padding(.bottom, 6)
 
-                Text(L("levels.solved", done, total))
-                    .font(AppFont.label(11, weight: .regular))
-                    .foregroundStyle(AppTheme.textSecondary)
+                HStack(alignment: .firstTextBaseline) {
+                    Text(L("levels.solved", done, total))
+                        .font(AppFont.label(11, weight: .regular))
+                        .foregroundStyle(AppTheme.textSecondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                    Spacer(minLength: 6)
+                    Text("\(L("home.volume")) I–VI")
+                        .font(AppFont.label(9, weight: .regular))
+                        .foregroundStyle(AppTheme.textMuted)
+                        .lineLimit(1)
+                        .fixedSize()
+                }
 
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
@@ -473,6 +479,8 @@ struct HomeView: View {
                     .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(locked ? AppTheme.textSecondary : AppTheme.textPrimary)
                     .lineLimit(isAX ? 2 : 1)
+                    .minimumScaleFactor(0.85)
+                    .layoutPriority(1)
                 if locked {
                     Text("PRO")
                         .font(AppFont.label(8, weight: .bold))
@@ -581,10 +589,19 @@ struct FreePlaySetupView: View {
     var body: some View {
         ZStack {
             AppTheme.paper.ignoresSafeArea()
+            ScrollView(showsIndicators: false) {
             VStack(spacing: 20) {
-                Text(L("game.free"))
-                    .font(AppFont.display(24, weight: .bold))
-                    .foregroundStyle(AppTheme.textPrimary)
+                VStack(alignment: .leading, spacing: 3) {
+                    DossierCaption(text: L("home.index") + " · I")
+                    Text(L("game.free"))
+                        .font(AppFont.display(24, weight: .bold))
+                        .foregroundStyle(AppTheme.textPrimary)
+                    Text(L("menu.free.sub"))
+                        .font(AppFont.body(13))
+                        .foregroundStyle(AppTheme.textSecondary)
+                    Rectangle().fill(AppTheme.ink).frame(height: 1.5).padding(.top, 6)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 VStack(spacing: 10) {
                     ForEach(Difficulty.allCases, id: \.rawValue) { diff in
@@ -626,28 +643,35 @@ struct FreePlaySetupView: View {
                 .padding(14)
                 .paperCard()
 
-                Spacer()
+                Spacer(minLength: 8)
 
                 Button {
                     viewModel.startFreePlay(difficulty: selectedDifficulty, lieMode: lieMode)
                     startGame = true
                 } label: {
                     Text(lieMode ? L("lie.start") : L("game.start"))
-                        .font(AppFont.display(18, weight: .bold))
+                        .font(AppFont.label(14, weight: .bold))
+                        .tracking(1.5)
+                        .textCase(.uppercase)
                         .foregroundStyle(AppTheme.paper)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(lieMode ? AppTheme.danger : AppTheme.accent, in: RoundedRectangle(cornerRadius: 3))
+                        .padding(.vertical, 14)
+                        .background(lieMode ? AppTheme.danger : AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
                 }
             }
-            .padding(24)
+            .padding(.horizontal, 24)
+            .padding(.top, 8)
+            .padding(.bottom, 24)
+            }
+            .scrollBounceBehavior(.basedOnSize)
         }
+        .navigationTitle(L("game.free"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
         }
     }
-
-    
 
     private func difficultyRow(_ diff: Difficulty) -> some View {
         Button {
@@ -711,6 +735,9 @@ struct DuelSetupView: View {
             case .handoff: handoffView
             }
         }
+        .navigationTitle(phase == .config ? L("duel.title") : "")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarColorScheme(ThemeManager.shared.currentSkin.colorScheme, for: .navigationBar)
         .navigationDestination(isPresented: $startGame) {
             GameView(viewModel: viewModel)
         }
@@ -719,18 +746,19 @@ struct DuelSetupView: View {
     // MARK: - 第1步：选难度
 
     private var configView: some View {
+        ScrollView(showsIndicators: false) {
         VStack(spacing: 20) {
-            VStack(spacing: 6) {
-                Image(systemName: "person.2.fill")
-                    .font(.system(size: 36))
-                    .foregroundStyle(AppTheme.ink)
+            VStack(alignment: .leading, spacing: 3) {
+                DossierCaption(text: L("home.index") + " · II")
                 Text(L("duel.title"))
-                    .font(AppFont.display(24, weight: .black))
+                    .font(AppFont.display(24, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                 Text(L("duel.desc"))
-                    .font(.system(size: 13, weight: .medium))
+                    .font(AppFont.body(13))
                     .foregroundStyle(AppTheme.textSecondary)
+                Rectangle().fill(AppTheme.ink).frame(height: 1.5).padding(.top, 6)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             VStack(spacing: 8) {
                 ForEach(Difficulty.allCases, id: \.rawValue) { diff in
@@ -777,9 +805,10 @@ struct DuelSetupView: View {
                 }
             }
             .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .paperCard()
 
-            Spacer()
+            Spacer(minLength: 8)
 
             Button {
                 secretCode = []
@@ -796,7 +825,11 @@ struct DuelSetupView: View {
                 .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
             }
         }
-        .padding(24)
+        .padding(.horizontal, 24)
+        .padding(.top, 8)
+        .padding(.bottom, 24)
+        }
+        .scrollBounceBehavior(.basedOnSize)
     }
 
     private func ruleText(_ text: String) -> some View {

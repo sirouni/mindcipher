@@ -25,6 +25,21 @@ enum AppSkin: String, CaseIterable {
         }
     }
 
+    /// Archive-pouch kraft, browner than page paper.
+    var kraft: Color {
+        switch self {
+        case .dossier: return Color(red: 0.784, green: 0.678, blue: 0.478)   // #C8AD7A
+        case .nightDesk: return Color(red: 0.275, green: 0.227, blue: 0.157) // #463A28
+        }
+    }
+
+    var kraftFlap: Color {
+        switch self {
+        case .dossier: return Color(red: 0.690, green: 0.565, blue: 0.365)   // #B0905D
+        case .nightDesk: return Color(red: 0.216, green: 0.176, blue: 0.118) // #372D1E
+        }
+    }
+
     /// Card sheet laid on top of the page.
     var paperCard: Color {
         switch self {

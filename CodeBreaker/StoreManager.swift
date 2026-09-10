@@ -18,19 +18,19 @@ enum StoreProduct: String, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .hintPack5: return "5 Hint Coins"
-        case .hintPack15: return "15 Hint Coins"
-        case .hintPack50: return "50 Hint Coins"
-        case .proUnlock: return "Pro Unlock"
+        case .hintPack5: return L("store.hint.5")
+        case .hintPack15: return L("store.hint.15")
+        case .hintPack50: return L("store.hint.50")
+        case .proUnlock: return L("paywall.unlock")
         }
     }
 
     var description: String {
         switch self {
-        case .hintPack5: return "A small pack of hints"
-        case .hintPack15: return "Best value for casual players"
-        case .hintPack50: return "Never run out of hints"
-        case .proUnlock: return "Deeper Lie missions, remaining campaign, Free Play & editor"
+        case .hintPack5: return L("store.hint.5.desc")
+        case .hintPack15: return L("store.hint.15.desc")
+        case .hintPack50: return L("store.hint.50.desc")
+        case .proUnlock: return L("store.pro.blurb")
         }
     }
 }

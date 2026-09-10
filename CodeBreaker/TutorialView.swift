@@ -12,13 +12,6 @@ struct TutorialView: View {
 
             VStack(spacing: 0) {
                 HStack {
-                    Button { dismiss() } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(AppTheme.textSecondary)
-                            .frame(width: 36, height: 36)
-                            .paperCard()
-                    }
                     Spacer()
                     HStack(spacing: 6) {
                         DossierCaption(text: L("tutorial.manual"))
@@ -61,11 +54,8 @@ struct TutorialView: View {
                             withAnimation(.spring(response: 0.3)) { page -= 1 }
                         } label: {
                             Text(L("tutorial.back"))
-                                .font(.system(size: 15, weight: .bold))
-                                .foregroundStyle(AppTheme.textSecondary)
-                                .frame(maxWidth: .infinity).padding(.vertical, 14)
-                                .paperCard()
                         }
+                        .buttonStyle(InkButtonStyle(prominent: false))
                     }
                     Button {
                         if page < totalPages - 1 {
@@ -73,11 +63,8 @@ struct TutorialView: View {
                         } else { dismiss() }
                     } label: {
                         Text(page < totalPages - 1 ? L("tutorial.next") : L("tutorial.go"))
-                            .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(AppTheme.paper)
-                            .frame(maxWidth: .infinity).padding(.vertical, 14)
-                            .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
                     }
+                    .buttonStyle(InkButtonStyle())
                 }
                 .padding(.horizontal, 28)
                 .padding(.vertical, 12)
@@ -91,26 +78,33 @@ struct TutorialView: View {
 
     private var goalPage: some View {
         VStack(spacing: 20) {
+            DossierCaption(text: L("case.classic"))
             Text(L("tutorial.t1"))
-                .font(AppFont.display(24, weight: .black))
+                .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
-            // 模拟密码栏
-            HStack(spacing: 8) {
-                ForEach(0..<4, id: \.self) { _ in
-                    RoundedRectangle(cornerRadius: 3)
-                        .stroke(AppTheme.rule, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
-                        .frame(width: 44, height: 44)
-                        .overlay(
-                            Image(systemName: "questionmark")
-                                .font(.system(size: 18, weight: .bold))
-                                .foregroundStyle(AppTheme.textMuted)
-                        )
+            VStack(spacing: 8) {
+                DossierCaption(text: L("case.tray"))
+                HStack(spacing: 8) {
+                    ForEach(0..<4, id: \.self) { _ in
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(AppTheme.paperFolder)
+                            .frame(width: 44, height: 44)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 3)
+                                    .stroke(AppTheme.ink, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
+                            )
+                            .overlay(
+                                Image(systemName: "questionmark")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundStyle(AppTheme.textMuted)
+                            )
+                    }
                 }
             }
 
             Text(L("tutorial.d1"))
-                .font(.system(size: 15, weight: .medium))
+                .font(AppFont.body(15))
                 .foregroundStyle(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
 
@@ -136,7 +130,7 @@ struct TutorialView: View {
                 }
             }
             Text(label)
-                .font(.system(size: 11, weight: .medium))
+                .font(AppFont.label(10, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
         }
     }
@@ -145,33 +139,43 @@ struct TutorialView: View {
 
     private var pickPage: some View {
         VStack(spacing: 20) {
+            DossierCaption(text: L("case.tray"))
             Text(L("tutorial.t2"))
-                .font(AppFont.display(24, weight: .black))
+                .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
-            // 模拟猜测行
-            HStack(spacing: 8) {
-                PegView(color: .red, size: 40)
-                PegView(color: .green, size: 40)
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(AppTheme.bgCardLight)
-                    .frame(width: 44, height: 44)
-                    .overlay(
-                        Circle()
-                            .stroke(AppTheme.accent.opacity(0.5), style: StrokeStyle(lineWidth: 2, dash: [4,4]))
-                            .frame(width: 30, height: 30)
-                    )
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(AppTheme.bgCardLight)
-                    .frame(width: 44, height: 44)
+            VStack(spacing: 8) {
+                HStack {
+                    DossierCaption(text: L("case.tray"))
+                    Spacer()
+                    Text(romanNumeral(1))
+                        .font(AppFont.graphic(11, weight: .bold))
+                        .foregroundStyle(AppTheme.accent)
+                }
+                HStack(spacing: 8) {
+                    PegView(color: .red, size: 40)
+                    PegView(color: .green, size: 40)
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(AppTheme.bgCardLight)
+                        .frame(width: 44, height: 44)
+                        .overlay(RoundedRectangle(cornerRadius: 3).stroke(AppTheme.accent, lineWidth: 1.5))
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(AppTheme.paperFolder)
+                        .frame(width: 44, height: 44)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 3)
+                                .stroke(AppTheme.ink, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
+                        )
+                }
             }
+            .padding(14)
+            .paperCard(fill: AppTheme.bgCardLight)
             .boardLayout()
 
             Image(systemName: "arrow.up")
-                .font(.system(size: 20))
-                .foregroundStyle(AppTheme.accent)
+                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(AppTheme.ink)
 
-            // 模拟颜色选择器
             HStack(spacing: 10) {
                 ForEach([PegColor.red, .green, .blue, .yellow, .purple, .orange], id: \.rawValue) { color in
                     PegView(color: color, size: 36)
@@ -179,8 +183,18 @@ struct TutorialView: View {
             }
             .boardLayout()
 
+            Text(L("game.analyze"))
+                .font(AppFont.label(14, weight: .bold))
+                .tracking(1.5)
+                .textCase(.uppercase)
+                .foregroundStyle(AppTheme.paper)
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+                .background(AppTheme.ink, in: RoundedRectangle(cornerRadius: 3))
+                .padding(.horizontal, 24)
+
             Text(L("tutorial.d2"))
-                .font(.system(size: 15, weight: .medium))
+                .font(AppFont.body(15))
                 .foregroundStyle(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
         }
@@ -191,8 +205,9 @@ struct TutorialView: View {
 
     private var feedbackPage: some View {
         VStack(spacing: 20) {
+            DossierCaption(text: L("report.title"))
             Text(L("tutorial.t3"))
-                .font(AppFont.display(24, weight: .black))
+                .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 12) {
@@ -243,7 +258,7 @@ struct TutorialView: View {
             .boardLayout()
 
             Text(explain)
-                .font(.system(size: 12, weight: .medium))
+                .font(AppFont.body(12))
                 .foregroundStyle(AppTheme.textSecondary)
         }
     }
@@ -252,7 +267,7 @@ struct TutorialView: View {
         VStack(spacing: 4) {
             FeedbackDotView(type: type, size: 18)
             Text(label)
-                .font(.system(size: 10, weight: .medium))
+                .font(AppFont.label(10, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
         }
     }
@@ -261,12 +276,9 @@ struct TutorialView: View {
 
     private var notesPage: some View {
         VStack(spacing: 20) {
-            Image(systemName: "note.text")
-                .font(.system(size: 36))
-                .foregroundStyle(AppTheme.accent)
-
+            DossierCaption(text: L("tutorial.manual"))
             Text(L("tutorial.notes"))
-                .font(AppFont.display(24, weight: .black))
+                .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
             // 模拟笔记网格
@@ -316,7 +328,7 @@ struct TutorialView: View {
             .paperCard()
 
             Text(L("tutorial.notes.d"))
-                .font(.system(size: 13, weight: .medium))
+                .font(AppFont.body(13))
                 .foregroundStyle(AppTheme.textSecondary)
                 .multilineTextAlignment(.center)
         }
@@ -343,7 +355,7 @@ struct TutorialView: View {
                 .font(.system(size: 13, weight: .bold))
                 .foregroundStyle(color)
                 .frame(width: 20)
-            Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
+            Text(text).font(AppFont.body(13)).foregroundStyle(AppTheme.textSecondary)
         }
     }
 
@@ -351,24 +363,20 @@ struct TutorialView: View {
 
     private var hintPage: some View {
         VStack(spacing: 20) {
-            Image(systemName: "lightbulb.max.fill")
-                .font(.system(size: 36))
-                .foregroundStyle(AppTheme.warning)
-
+            DossierCaption(text: L("store.informant"))
             Text(L("tutorial.hints"))
-                .font(AppFont.display(24, weight: .black))
+                .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
-            // 提示币示例
             HStack(spacing: 12) {
                 ZStack(alignment: .topTrailing) {
-                    Image(systemName: "lightbulb.max.fill")
-                        .font(.system(size: 28))
+                    Image(systemName: "person.fill.questionmark")
+                        .font(.system(size: 22, weight: .semibold))
                         .foregroundStyle(AppTheme.warning)
                         .frame(width: 56, height: 56)
                         .paperCard()
                     Text("3")
-                        .font(.system(size: 11, weight: .bold))
+                        .font(AppFont.label(9, weight: .bold))
                         .foregroundStyle(AppTheme.paper)
                         .frame(width: 20, height: 20)
                         .background(AppTheme.warning, in: Circle())
@@ -380,7 +388,7 @@ struct TutorialView: View {
                         .font(AppFont.display(16, weight: .bold))
                         .foregroundStyle(AppTheme.textPrimary)
                     Text(L("tutorial.hints.spend"))
-                        .font(.system(size: 12, weight: .medium))
+                        .font(AppFont.body(12))
                         .foregroundStyle(AppTheme.textSecondary)
                 }
             }
@@ -389,7 +397,7 @@ struct TutorialView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(L("tutorial.hints.earn"))
-                    .font(.system(size: 14, weight: .bold))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                 hintEarnRow("trophy.fill", L("tutorial.hints.win"), L("tutorial.hints.reward"))
                 hintEarnRow("calendar.badge.checkmark", L("tutorial.hints.login"), L("tutorial.hints.reward"))
@@ -399,7 +407,7 @@ struct TutorialView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(L("tutorial.hints.do"))
-                    .font(.system(size: 14, weight: .bold))
+                    .font(AppFont.display(14, weight: .bold))
                     .foregroundStyle(AppTheme.textPrimary)
                 hintInfoRow("minus.circle", L("tutorial.hints.do1"))
                 hintInfoRow("checkmark.circle", L("tutorial.hints.do2"))
@@ -417,7 +425,7 @@ struct TutorialView: View {
                 .font(.system(size: 13))
                 .foregroundStyle(AppTheme.warning)
                 .frame(width: 20)
-            Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
+            Text(text).font(AppFont.body(13)).foregroundStyle(AppTheme.textSecondary)
             Spacer()
             Text(reward)
                 .font(AppFont.display(12, weight: .bold))
@@ -431,7 +439,7 @@ struct TutorialView: View {
                 .font(.system(size: 13))
                 .foregroundStyle(AppTheme.accent)
                 .frame(width: 20)
-            Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
+            Text(text).font(AppFont.body(13)).foregroundStyle(AppTheme.textSecondary)
         }
     }
 
@@ -442,7 +450,7 @@ struct TutorialView: View {
             StampView(text: "Top Secret", tone: .red, size: 12, rotation: -8)
 
             Text(L("lie.mode"))
-                .font(AppFont.display(24, weight: .black))
+                .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 10) {
@@ -494,7 +502,7 @@ struct TutorialView: View {
                 .font(.system(size: 14))
                 .foregroundStyle(AppTheme.danger)
                 .frame(width: 20)
-            Text(text).font(.system(size: 13, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
+            Text(text).font(AppFont.body(13)).foregroundStyle(AppTheme.textSecondary)
         }
     }
 
@@ -502,12 +510,9 @@ struct TutorialView: View {
 
     private var tipsPage: some View {
         VStack(spacing: 20) {
-            Image(systemName: "lightbulb.fill")
-                .font(.system(size: 36))
-                .foregroundStyle(AppTheme.warning)
-
+            DossierCaption(text: L("tutorial.manual"))
             Text(L("tutorial.tips"))
-                .font(AppFont.display(24, weight: .black))
+                .font(AppFont.display(24, weight: .bold))
                 .foregroundStyle(AppTheme.textPrimary)
 
             VStack(spacing: 10) {
@@ -525,8 +530,8 @@ struct TutorialView: View {
                 .foregroundStyle(AppTheme.warning)
                 .frame(width: 32)
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.system(size: 14, weight: .bold)).foregroundStyle(AppTheme.textPrimary)
-                Text(desc).font(.system(size: 12, weight: .medium)).foregroundStyle(AppTheme.textSecondary)
+                Text(title).font(AppFont.display(14, weight: .bold)).foregroundStyle(AppTheme.textPrimary)
+                Text(desc).font(AppFont.body(12)).foregroundStyle(AppTheme.textSecondary)
             }
             Spacer()
         }

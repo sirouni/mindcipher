@@ -753,7 +753,7 @@ struct GameView: View {
                 .padding(22)
                 .paperCard(fill: AppTheme.bgCardLight)
                 .overlay(alignment: .topTrailing) {
-                    StampView(text: isWon ? "Case Closed" : "Unsolved", tone: .red, size: 15, rotation: -12)
+                    StampView(text: isWon ? L("case.closed") : L("case.unsolved"), tone: .red, size: 15, rotation: -12)
                         .padding(.top, 14)
                         .padding(.trailing, 14)
                         .opacity(showResult ? 1 : 0)
@@ -839,7 +839,7 @@ struct GameView: View {
         let needed = HintCoinManager.winsPerCoin
 
         return HStack {
-            Text(L("store.hints"))
+            Text(L("store.informant"))
                 .font(AppFont.label(11, weight: .regular))
                 .foregroundStyle(AppTheme.textSecondary)
             Spacer()

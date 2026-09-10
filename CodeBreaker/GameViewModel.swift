@@ -477,7 +477,7 @@ class GameViewModel: ObservableObject {
         } else if isLieTaste {
             title = L("taste.title")
         } else if let level {
-            title = L("level.title", level.id)
+            title = L("case.no", level.id)
         } else if engine?.lieMode == true {
             title = L("lie.mode")
         } else {

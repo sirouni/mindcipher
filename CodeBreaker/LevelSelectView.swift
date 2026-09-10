@@ -153,9 +153,9 @@ struct FilingCabinetView: View {
     // MARK: - Folder grid
 
     private func folderGrid(levels: [Level]) -> some View {
-        let cols = Array(repeating: GridItem(.flexible(), spacing: 10), count: 5)
+        let cols = Array(repeating: GridItem(.flexible(), spacing: 9), count: 5)
         return ScrollView {
-            LazyVGrid(columns: cols, spacing: 10) {
+            LazyVGrid(columns: cols, spacing: 11) {
                 ForEach(levels) { level in
                     folderCell(level)
                 }
@@ -172,6 +172,13 @@ struct FilingCabinetView: View {
         let isProLocked = store.isLevelLocked(level.id, lieMode: lieMode)
         let stars = progress.starsByLevel[level.id] ?? 0
         let isNext = !isCompleted && isUnlocked && !isProLocked
+        let muted = isProLocked || !isUnlocked
+        let footer: ArchivePouchView.Footer = {
+            if isCompleted { return .stars(stars) }
+            if isProLocked { return .pro }
+            if !isUnlocked { return .locked }
+            return .empty
+        }()
 
         return Button {
             if isProLocked {
@@ -180,66 +187,14 @@ struct FilingCabinetView: View {
                 withAnimation(.spring(response: 0.3)) { previewLevel = level }
             }
         } label: {
-            VStack(spacing: 4) {
-                // Folder tab
-                HStack {
-                    Rectangle()
-                        .fill(isNext ? tone : AppTheme.rule)
-                        .frame(width: 18, height: 3)
-                    Spacer()
-                }
-                .padding(.horizontal, 6)
-
-                Text("\(level.id)")
-                    .font(AppFont.display(16, weight: .bold))
-                    .foregroundStyle(
-                        isProLocked || !isUnlocked ? AppTheme.textMuted : AppTheme.textPrimary
-                    )
-
-                Group {
-                    if isCompleted {
-                        HStack(spacing: 1) {
-                            ForEach(0..<3, id: \.self) { i in
-                                Image(systemName: i < stars ? "star.fill" : "star")
-                                    .font(.system(size: 7))
-                                    .foregroundStyle(i < stars ? AppTheme.accent : AppTheme.textMuted.opacity(0.5))
-                            }
-                        }
-                    } else if isProLocked {
-                        Text("PRO")
-                            .font(AppFont.label(7, weight: .bold))
-                            .tracking(0.8)
-                            .foregroundStyle(AppTheme.accent)
-                    } else if !isUnlocked {
-                        Image(systemName: "lock")
-                            .font(.system(size: 9))
-                            .foregroundStyle(AppTheme.textMuted)
-                    } else {
-                        Color.clear.frame(height: 9)
-                    }
-                }
-                .frame(height: 10)
-            }
-            .padding(.vertical, 8)
-            .frame(maxWidth: .infinity, minHeight: 60)
-            .background(
-                RoundedRectangle(cornerRadius: 3)
-                    .fill(isCompleted ? AppTheme.paperFolder : AppTheme.bgCard)
+            ArchivePouchView(
+                number: level.id,
+                isCompleted: isCompleted,
+                isMuted: muted,
+                isNext: isNext,
+                nextTone: tone,
+                footer: footer
             )
-            .overlay(
-                RoundedRectangle(cornerRadius: 3)
-                    .stroke(isNext ? tone : AppTheme.rule, lineWidth: isNext ? 1.5 : 1)
-            )
-            .overlay {
-                if isCompleted {
-                    Circle()
-                        .stroke(AppTheme.accent, lineWidth: 1.5)
-                        .frame(width: 30, height: 30)
-                        .rotationEffect(.degrees(-10))
-                        .opacity(0.75)
-                        .offset(y: -2)
-                }
-            }
         }
         .buttonStyle(.plain)
         .disabled(!isUnlocked && !isProLocked)
