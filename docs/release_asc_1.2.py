@@ -202,7 +202,7 @@ def apply_aso(vid: str):
     locs = ensure_localizations(vid)
     for locale in LOCALES:
         a = aso[locale]
-        assert len(a["subtitle"]) <= 30 and len(a["keywords"]) <= 100, locale
+        assert len(a["subtitle"]) <= 30 and len(a["keywords"]) <= 100 and len(a.get("name", "Mind Cipher")) <= 30, locale
         if locale in infos:
             api(
                 "PATCH",
@@ -211,7 +211,7 @@ def apply_aso(vid: str):
                     "data": {
                         "type": "appInfoLocalizations",
                         "id": infos[locale]["id"],
-                        "attributes": {"name": "Mind Cipher", "subtitle": a["subtitle"]},
+                        "attributes": {"name": a.get("name", "Mind Cipher"), "subtitle": a["subtitle"]},
                     }
                 },
             )
@@ -222,7 +222,7 @@ def apply_aso(vid: str):
                 json={
                     "data": {
                         "type": "appInfoLocalizations",
-                        "attributes": {"locale": locale, "name": "Mind Cipher", "subtitle": a["subtitle"]},
+                        "attributes": {"locale": locale, "name": a.get("name", "Mind Cipher"), "subtitle": a["subtitle"]},
                         "relationships": {"appInfo": {"data": {"type": "appInfos", "id": info_id}}},
                     }
                 },
@@ -240,7 +240,7 @@ def apply_aso(vid: str):
                 }
             },
         )
-        log("aso", locale, "|", a["subtitle"], "|", len(a["keywords"]))
+        log("aso", locale, "|", a.get("name", "Mind Cipher"), "|", a["subtitle"], "|", len(a["keywords"]))
 
 
 # --------------------------------------------------------------------------- screenshots
