@@ -25,15 +25,57 @@ enum DailyCalendar {
     }
 
     static func isLieDay(_ key: String = dayKey()) -> Bool {
+        guard let date = date(from: key),
+              let dayOfYear = gregorian.ordinality(of: .day, in: .year, for: date)
+        else { return false }
+        return dayOfYear % 3 == 0
+    }
+
+    /// Board parameters for one day's case. Shared by everyone: derived from the
+    /// date alone, so it can be shown before the case starts.
+    struct Spec: Equatable {
+        let codeLength: Int
+        let colorCount: Int
+        let allowDuplicates: Bool
+        let maxAttempts: Int
+        let lieMode: Bool
+    }
+
+    /// The week climbs from a 4×6 board on Monday to 5×8 with repeats on Sunday,
+    /// so regulars meet every campaign difficulty in a week and newcomers still
+    /// get an easy start. Lie days (every third day of the year) add three
+    /// attempts, since proving the fake report costs analyses.
+    static func spec(for key: String = dayKey()) -> Spec {
+        // (length, colours, repeats, attempts) indexed by Calendar weekday: 1 = Sunday
+        let ladder: [Int: (Int, Int, Bool, Int)] = [
+            2: (4, 6, false, 7),   // Mon
+            3: (4, 7, false, 8),   // Tue
+            4: (4, 6, true, 8),    // Wed
+            5: (5, 6, false, 9),   // Thu
+            6: (4, 8, true, 9),    // Fri
+            7: (5, 7, true, 10),   // Sat
+            1: (5, 8, true, 11),   // Sun
+        ]
+        let weekday = date(from: key).map { gregorian.component(.weekday, from: $0) } ?? 2
+        let (length, colours, repeats, attempts) = ladder[weekday] ?? (4, 6, false, 7)
+        let lie = isLieDay(key)
+        return Spec(
+            codeLength: length,
+            colorCount: colours,
+            allowDuplicates: repeats,
+            maxAttempts: attempts + (lie ? 3 : 0),
+            lieMode: lie
+        )
+    }
+
+    static func date(from key: String) -> Date? {
         let parts = key.split(separator: "-")
         guard parts.count == 3,
               let year = Int(parts[0]),
               let month = Int(parts[1]),
-              let day = Int(parts[2]),
-              let date = gregorian.date(from: DateComponents(year: year, month: month, day: day)),
-              let dayOfYear = gregorian.ordinality(of: .day, in: .year, for: date)
-        else { return false }
-        return dayOfYear % 3 == 0
+              let day = Int(parts[2])
+        else { return nil }
+        return gregorian.date(from: DateComponents(year: year, month: month, day: day))
     }
 
     static func dayNumber(_ date: Date = Date()) -> Int {

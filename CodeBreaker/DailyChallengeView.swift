@@ -10,7 +10,8 @@ struct DailyChallengeView: View {
     @Environment(\.dismiss) private var dismiss
 
     private var dateString: String { DailyCalendar.dayKey() }
-    private var isLieDaily: Bool { DailyCalendar.isLieDay(dateString) }
+    private var spec: DailyCalendar.Spec { DailyCalendar.spec(for: dateString) }
+    private var isLieDaily: Bool { spec.lieMode }
 
     private var displayDate: String {
         let formatter = DateFormatter()
@@ -115,10 +116,10 @@ struct DailyChallengeView: View {
                 }
 
                 VStack(spacing: 0) {
-                    ruleRow(L("param.length"), "4")
-                    ruleRow(L("param.colors"), "6")
-                    ruleRow(L("param.attempts"), isLieDaily ? "8" : "7")
-                    ruleRow(L("param.repeat"), L("param.no"), last: true)
+                    ruleRow(L("param.length"), "\(spec.codeLength)")
+                    ruleRow(L("param.colors"), "\(spec.colorCount)")
+                    ruleRow(L("param.attempts"), "\(spec.maxAttempts)")
+                    ruleRow(L("param.repeat"), spec.allowDuplicates ? L("param.yes") : L("param.no"), last: true)
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 4)
@@ -181,11 +182,11 @@ struct DailyChallengeView: View {
         let seed = DailyCalendar.stableSeed(dateString)
         viewModel.startChallenge(
             seed: seed,
-            codeLength: 4,
-            colorCount: 6,
-            allowDuplicates: false,
-            maxAttempts: isLieDaily ? 8 : 7,
-            lieMode: isLieDaily
+            codeLength: spec.codeLength,
+            colorCount: spec.colorCount,
+            allowDuplicates: spec.allowDuplicates,
+            maxAttempts: spec.maxAttempts,
+            lieMode: spec.lieMode
         )
         viewModel.mode = .freePlay
         viewModel.isDailyChallenge = true
