@@ -7,7 +7,7 @@ Steps are idempotent and can be run separately:
     python3 docs/release_asc_1.2.py metadata     # description / promo / what's new from docs/asc_1.2.json
     python3 docs/release_asc_1.2.py aso          # subtitle / keywords / description opener from docs/aso_1.2.json
     python3 docs/release_asc_1.2.py screenshots  # replace IPHONE_65 sets with assets/asc-dossier/<locale>/
-    python3 docs/release_asc_1.2.py build        # attach newest processed build 4, encryption exempt
+    python3 docs/release_asc_1.2.py build        # attach newest processed build 5, encryption exempt
     python3 docs/release_asc_1.2.py status
     python3 docs/release_asc_1.2.py submit       # explicit — sends for review
 
@@ -38,7 +38,7 @@ KEY = Path("/Users/wangxiao/.appstoreconnect/private_keys/AuthKey_Y8W69V3U7C.p8"
 APP_ID = "6777428188"
 BASE = "https://api.appstoreconnect.apple.com"
 VERSION = "1.2"
-BUILD_NUMBER = "4"
+BUILD_NUMBER = "5"
 DISPLAY_TYPE = "APP_IPHONE_65"
 LOCALES = ["en-US", "zh-Hans", "zh-Hant", "ja", "ko", "es-ES", "ar-SA", "de-DE", "fr-FR", "he", "pt-BR", "tr"]
 

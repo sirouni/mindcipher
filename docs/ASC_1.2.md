@@ -5,14 +5,14 @@
 | Apple ID | `6777428188` |
 | Bundle ID | `Jason-Wang.CodeBreaker` |
 | Version | **1.2** — ASC version id `39eb1bbb-0e08-4b6e-8878-5d9517e17784` |
-| Build | **4** (Release archive `build-asc/MindCipher.xcarchive`, uploaded 2026-09-10) |
+| Build | **5** (Release archive `build-asc/MindCipher.xcarchive`, uploaded 2026-09-10; build 4 had the earlier pouch icon) |
 | Live before | 1.1 (3) |
 | Release type | After approval |
 
 ## What changed since 1.1 (drives the copy)
 
 - Full "spy dossier" restyle: paper skins, typewriter type, rubber stamps, filing-cabinet level select with kraft archive pouches, case reports with share cards, index-page headers. Vocabulary: cases / case files / informants / closed.
-- New app icon: kraft archive pouch with four code pegs.
+- New app icon: the three ink feedback marks — filled dot, ring, dash — on cream paper.
 - Feedback marks are ink only — filled dot (exact), ring (misplaced), dash (absent). Optional **Shape marks** setting (Settings → Colorblind) gives every peg its own outline. Pegs use an Okabe-Ito palette.
 - Today's Case: Top Secret (lie) days, home-screen widget, localized share cards; new players open on a first lie.
 - Two themes: Dossier and Night Desk.
@@ -56,7 +56,7 @@ xcrun altool --upload-app --type ios -f build-asc/export/CodeBreaker.ipa \
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py version       # create 1.2, copyright, release type
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py metadata      # push docs/asc_1.2.json
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py screenshots   # replace 6.5" sets
-/tmp/asc-venv/bin/python docs/release_asc_1.2.py build         # attach build 4 once processed
+/tmp/asc-venv/bin/python docs/release_asc_1.2.py build         # attach build 5 once processed
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py status
 /tmp/asc-venv/bin/python docs/release_asc_1.2.py submit        # explicit: sends for review
 ```
