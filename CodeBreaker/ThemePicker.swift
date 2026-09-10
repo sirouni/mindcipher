@@ -141,6 +141,9 @@ class ThemeManager: ObservableObject {
 
 struct ThemePickerView: View {
     @ObservedObject var themeManager = ThemeManager.shared
+    // Observe the language so the labels refresh when the user switches language
+    // in Settings; otherwise SwiftUI keeps the stale strings from the previous locale.
+    @ObservedObject private var language = LanguageManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {

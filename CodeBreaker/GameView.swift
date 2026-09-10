@@ -1001,21 +1001,9 @@ struct GameView: View {
                 confettiParticles = []
                 dismiss()
             } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: "chevron.backward")
-                        .font(.system(size: 10, weight: .bold))
-                    Text(L("result.back"))
-                        .font(AppFont.label(12, weight: .semibold))
-                        .tracking(1.5)
-                        .textCase(.uppercase)
-                        .underline(pattern: .dot, color: AppTheme.textSecondary.opacity(0.7))
-                }
-                .foregroundStyle(AppTheme.textSecondary)
-                .frame(maxWidth: .infinity, minHeight: 44)
-                .padding(.top, 2)
-                .contentShape(Rectangle())
+                Label(L("result.back"), systemImage: "archivebox")
             }
-            .buttonStyle(.plain)
+            .buttonStyle(InkButtonStyle(prominent: false))
         }
     }
 
