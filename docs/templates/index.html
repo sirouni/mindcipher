@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="{{lang}}" dir="{{dir}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
+  <link rel="canonical" href="{{canonical}}">
+{{{alternates}}}
+  <meta property="og:title" content="Mind Cipher">
+  <meta property="og:description" content="{{og_description}}">
+  <meta property="og:image" content="{{site}}images/icon.png">
+  <meta property="og:locale" content="{{og_locale}}">
+  <link rel="icon" href="{{base}}images/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="{{base}}images/icon.png">
+  <link rel="stylesheet" href="{{base}}site.css?v=20">
+</head>
+<body>
+  <a class="skip" href="#main">{{skip}}</a>
+
+  <header class="topbar">
+    <a class="topbar__mark" href="{{base}}{{home}}">Mind Cipher</a>
+    <a class="chip chip--sm" href="{{store}}">{{nav_store}}</a>
+  </header>
+
+  <main id="main">
+    <section class="opener" aria-labelledby="opener-title">
+      <div class="opener__copy">
+        <img class="opener__icon" src="{{base}}images/icon.png" width="512" height="512" alt="Mind Cipher" fetchpriority="high">
+        <h1 id="opener-title">{{h1}}</h1>
+        <p class="lede">{{lede}}</p>
+        <div class="actions">
+          <a class="chip" href="{{store}}">{{cta}}</a>
+          <a class="textlink" href="#round">{{see_round}}</a>
+        </div>
+        <p class="terms">{{terms}}</p>
+      </div>
+
+      <div class="board" aria-labelledby="board-title">
+        <p class="board__head">
+          <span id="board-title">{{board_title}}</span>
+          <span>{{board_spec}}</span>
+        </p>
+        <ol class="board__rows">
+          <li class="is-flagged">
+            <span class="board__no">I</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">{{board_row1_sr}}</span>
+          </li>
+          <li class="is-flagged">
+            <span class="board__no">II</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+            </span>
+            <span class="visually-hidden">{{board_row2_sr}}</span>
+          </li>
+          <li>
+            <span class="board__no">III</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--5">5</span><span class="peg peg--6">6</span><span class="peg peg--7">7</span><span class="peg peg--8">8</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">{{board_row3_sr}}</span>
+          </li>
+        </ol>
+        <p class="board__note">{{board_note}}</p>
+      </div>
+    </section>
+
+    <section class="round" id="round" aria-labelledby="round-title">
+      <h2 id="round-title">{{round_h2}}</h2>
+      <ol class="steps">
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">1</span>
+            <h3>{{step1_h3}}</h3>
+            <p>{{step1_p}}</p>
+          </div>
+          <figure class="demo" aria-label="{{step1_aria}}">
+            <figcaption>{{step1_fig}}</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">{{cap_palette}}</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--5">5</span><span class="peg peg--6">6</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">{{cap_slots}}</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--2">2</span><span class="peg peg--5">5</span><span class="slot"></span><span class="slot"></span>
+              </span>
+            </p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">2</span>
+            <h3>{{step2_h3}}</h3>
+            <p>{{{step2_p}}}</p>
+            <p class="legend">
+              <span><span class="mark mark--exact" aria-hidden="true"></span> {{legend_exact}}</span>
+              <span><span class="mark mark--part" aria-hidden="true"></span> {{legend_part}}</span>
+              <span><span class="mark mark--miss" aria-hidden="true"></span> {{legend_miss}}</span>
+            </p>
+          </div>
+          <figure class="demo" aria-label="{{step2_aria}}">
+            <figcaption>{{step2_fig}}</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">{{cap_guess}}</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">{{cap_report}}</span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__note">{{step2_note}}</p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">3</span>
+            <h3>{{step3_h3}}</h3>
+            <p>{{step3_p}}</p>
+          </div>
+          <figure class="demo" aria-label="{{step3_aria}}">
+            <figcaption>{{step3_fig}}</figcaption>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">{{cap_row1}}</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">{{cap_row2}}</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+              </span>
+            </p>
+            <p class="demo__note">{{step3_note}}</p>
+          </figure>
+        </li>
+      </ol>
+    </section>
+
+    <section class="tour" aria-labelledby="tour-title">
+      <h2 id="tour-title" class="visually-hidden">{{tour_h2}}</h2>
+
+      <article class="shot">
+        <figure>
+          <img src="{{base}}images/shots/{{shots}}/case.jpg" width="480" height="1044" alt="{{shot1_alt}}" loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>{{shot1_h3}}</h3>
+          <p>{{shot1_p}}</p>
+          <ul class="notes">
+            <li>{{shot1_n1}}</li>
+            <li>{{shot1_n2}}</li>
+            <li>{{shot1_n3}}</li>
+            <li>{{shot1_n4}}</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot shot--dark">
+        <figure>
+          <img src="{{base}}images/shots/{{shots}}/lie.jpg" width="480" height="1044" alt="{{shot2_alt}}" loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>{{shot2_h3}}</h3>
+          <p>{{shot2_p}}</p>
+          <ul class="notes">
+            <li>{{shot2_n1}}</li>
+            <li>{{shot2_n2}}</li>
+            <li>{{shot2_n3}}</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot">
+        <figure>
+          <img src="{{base}}images/shots/{{shots}}/daily.jpg" width="480" height="1044" alt="{{shot3_alt}}" loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>{{shot3_h3}}</h3>
+          <p>{{shot3_p}}</p>
+          <ul class="notes">
+            <li>{{shot3_n1}}</li>
+            <li>{{shot3_n2}}</li>
+            <li>{{shot3_n3}}</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="sheet" id="modes" aria-labelledby="sheet-title">
+      <h2 id="sheet-title">{{sheet_h2}}</h2>
+      <table>
+        <caption class="visually-hidden">{{sheet_caption}}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{th_mode}}</th>
+            <th scope="col">{{th_what}}</th>
+            <th scope="col">{{th_access}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">{{row_daily}}</th>
+            <td>{{row_daily_d}}</td>
+            <td><span class="tag">{{tag_free}}</span></td>
+          </tr>
+          <tr>
+            <th scope="row">{{row_classic}}</th>
+            <td>{{{row_classic_d}}}</td>
+            <td><span class="tag">{{tag_40}}</span></td>
+          </tr>
+          <tr>
+            <th scope="row">{{row_lie}}</th>
+            <td>{{{row_lie_d}}}</td>
+            <td><span class="tag">{{tag_80}}</span></td>
+          </tr>
+          <tr>
+            <th scope="row">{{row_duel}}</th>
+            <td>{{row_duel_d}}</td>
+            <td><span class="tag">{{tag_free}}</span></td>
+          </tr>
+          <tr>
+            <th scope="row">{{row_challenge}}</th>
+            <td>{{row_challenge_d}}</td>
+            <td><span class="tag">{{tag_free}}</span></td>
+          </tr>
+          <tr>
+            <th scope="row">{{row_free}}</th>
+            <td>{{row_free_d}}</td>
+            <td><span class="tag tag--pro">{{tag_pro}}</span></td>
+          </tr>
+          <tr>
+            <th scope="row">{{row_editor}}</th>
+            <td>{{row_editor_d}}</td>
+            <td><span class="tag tag--pro">{{tag_pro}}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="sheet__foot">{{{sheet_foot}}}</p>
+    </section>
+  </main>
+
+  <footer class="closer">
+    <p class="closer__line">{{closer_line}}</p>
+    <div class="closer__meta">
+      <a class="closer__mark" href="{{base}}{{home}}">Mind Cipher</a>
+      <nav aria-label="Footer">
+        <a href="{{store}}">{{f_store}}</a>
+        <a href="{{base}}support.html">{{f_support}}</a>
+        <a href="{{base}}privacy.html">{{f_privacy}}</a>
+        <a href="mailto:sirouni@msn.com">{{f_email}}</a>
+      </nav>
+      <small>{{copyright}}</small>
+    </div>
+    <nav class="langs" aria-label="{{langs_label}}">
+{{{langs}}}
+    </nav>
+  </footer>
+
+  <aside class="dockbar" aria-label="Download">
+    <p>{{dock_line}}</p>
+    <a class="chip chip--sm" href="{{store}}">{{dock_cta}}</a>
+  </aside>
+</body>
+</html>

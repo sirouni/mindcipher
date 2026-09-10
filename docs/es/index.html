@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mind Cipher — un Mastermind archivado como expediente de espía</title>
+  <meta name="description" content="Adivina el código de colores oculto en iPhone. Cada análisis vuelve como marcas de tinta: punto, anillo, raya. En el expediente de mentiras un informe es falso. 480 casos, Caso de hoy, Duelo. Gratis para empezar, sin anuncios.">
+  <link rel="canonical" href="https://sirouni.github.io/mindcipher/es/">
+  <link rel="alternate" hreflang="en" href="https://sirouni.github.io/mindcipher/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://sirouni.github.io/mindcipher/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://sirouni.github.io/mindcipher/zh-Hant/">
+  <link rel="alternate" hreflang="ja" href="https://sirouni.github.io/mindcipher/ja/">
+  <link rel="alternate" hreflang="ko" href="https://sirouni.github.io/mindcipher/ko/">
+  <link rel="alternate" hreflang="es" href="https://sirouni.github.io/mindcipher/es/">
+  <link rel="alternate" hreflang="ar" href="https://sirouni.github.io/mindcipher/ar/">
+  <link rel="alternate" hreflang="de" href="https://sirouni.github.io/mindcipher/de/">
+  <link rel="alternate" hreflang="fr" href="https://sirouni.github.io/mindcipher/fr/">
+  <link rel="alternate" hreflang="he" href="https://sirouni.github.io/mindcipher/he/">
+  <link rel="alternate" hreflang="pt-BR" href="https://sirouni.github.io/mindcipher/pt/">
+  <link rel="alternate" hreflang="tr" href="https://sirouni.github.io/mindcipher/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://sirouni.github.io/mindcipher/">
+  <meta property="og:title" content="Mind Cipher">
+  <meta property="og:description" content="Descifra el código. Uno de los informes miente.">
+  <meta property="og:image" content="https://sirouni.github.io/mindcipher/images/icon.png">
+  <meta property="og:locale" content="es_ES">
+  <link rel="icon" href="../images/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../images/icon.png">
+  <link rel="stylesheet" href="../site.css?v=20">
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <header class="topbar">
+    <a class="topbar__mark" href="../index.html">Mind Cipher</a>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=es">App Store →</a>
+  </header>
+
+  <main id="main">
+    <section class="opener" aria-labelledby="opener-title">
+      <div class="opener__copy">
+        <img class="opener__icon" src="../images/icon.png" width="512" height="512" alt="Mind Cipher" fetchpriority="high">
+        <h1 id="opener-title">Descifra el código. Un informe miente.</h1>
+        <p class="lede">Un puzle de descifrado tipo Mastermind para iPhone, archivado como expediente de espía. Cada análisis vuelve como una fila de marcas de tinta, y en el expediente de mentiras exactamente un informe es falso.</p>
+        <div class="actions">
+          <a class="chip" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=es">Consíguelo en el App Store</a>
+          <a class="textlink" href="#round">Ver un caso ↓</a>
+        </div>
+        <p class="terms">Gratis para empezar · $2.99 lo desbloquea todo · Sin anuncios · Sin cuenta</p>
+      </div>
+
+      <div class="board" aria-labelledby="board-title">
+        <p class="board__head">
+          <span id="board-title">Expediente de mentiras · informe de muestra</span>
+          <span>4 fichas · 6 colores</span>
+        </p>
+        <ol class="board__rows">
+          <li class="is-flagged">
+            <span class="board__no">I</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">Informe: ninguno de los cuatro está en el código.</span>
+          </li>
+          <li class="is-flagged">
+            <span class="board__no">II</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+            </span>
+            <span class="visually-hidden">Informe: dos exactos, dos en la posición equivocada.</span>
+          </li>
+          <li>
+            <span class="board__no">III</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--5">5</span><span class="peg peg--6">6</span><span class="peg peg--7">7</span><span class="peg peg--8">8</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">Informe: uno exacto, uno en la posición equivocada, dos fuera del código.</span>
+          </li>
+        </ol>
+        <p class="board__note">Las filas I y II usan los mismos cuatro colores. La fila I dice que ninguno está en el código; la II, que están los cuatro. No pueden ser ciertas las dos: uno de estos informes es falso.</p>
+      </div>
+    </section>
+
+    <section class="round" id="round" aria-labelledby="round-title">
+      <h2 id="round-title">Un caso, de abierto a cerrado.</h2>
+      <ol class="steps">
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">1</span>
+            <h3>Coloca las fichas.</h3>
+            <p>Elige colores para las casillas y envía el análisis. Los casos van de 4 fichas y 6 colores hasta códigos más largos con 8.</p>
+          </div>
+          <figure class="demo" aria-label="Una paleta de seis colores, dos fichas ya colocadas, dos casillas vacías">
+            <figcaption>Tu próximo análisis</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">Paleta</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--5">5</span><span class="peg peg--6">6</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">Casillas</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--2">2</span><span class="peg peg--5">5</span><span class="slot"></span><span class="slot"></span>
+              </span>
+            </p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">2</span>
+            <h3>Lee las marcas.</h3>
+            <p>Cada fila enviada vuelve con cuatro marcas de tinta. Las marcas nunca dicen <em>a qué</em> ficha se refieren. Ese hueco es el puzle.</p>
+            <p class="legend">
+              <span><span class="mark mark--exact" aria-hidden="true"></span> color correcto, posición correcta</span>
+              <span><span class="mark mark--part" aria-hidden="true"></span> color correcto, posición equivocada</span>
+              <span><span class="mark mark--miss" aria-hidden="true"></span> no está en el código</span>
+            </p>
+          </div>
+          <figure class="demo" aria-label="Un intento con los colores 1 2 3 4 vuelve como un punto, un anillo y dos rayas">
+            <figcaption>Lo que vuelve</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">Análisis</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">Informe</span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__note">Dos de estos cuatro colores están en el código. Todavía no sabes cuáles.</p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">3</span>
+            <h3>Detecta el falso.</h3>
+            <p>Los casos clásicos siempre informan con honestidad. Los casos Mentira falsean una fila por caso, así que una deducción limpia puede llevarte contra un muro. Encuentra las dos filas que se contradicen y descarta la mala.</p>
+          </div>
+          <figure class="demo" aria-label="Dos filas con los mismos cuatro colores e informes opuestos, así que uno es falso">
+            <figcaption>Un par que no puede ser cierto a la vez</figcaption>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">Fila I</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">Fila II</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+              </span>
+            </p>
+            <p class="demo__note">La fila I dice que ninguno de estos colores está en el código. La II, que están los cuatro. Uno de esos informes es falso.</p>
+          </figure>
+        </li>
+      </ol>
+    </section>
+
+    <section class="tour" aria-labelledby="tour-title">
+      <h2 id="tour-title" class="visually-hidden">La app</h2>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/es/case.jpg" width="480" height="1044" alt="Un caso de Mind Cipher en curso: Desafío n.º 0908 sobre papel crema, dos filas analizadas de sellos de color numerados con marcas de punto, anillo y raya al lado, bandeja de pruebas y paleta debajo." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Casos clásicos</h3>
+          <p>240 casos de principiante a maestro, cada uno una hoja numerada del expediente. El contador de intentos está arriba a la derecha; las marcas son tinta pura —punto, anillo, raya— y nunca dependen del color.</p>
+          <ul class="notes">
+            <li>Cada análisis anterior se queda en la hoja para cruzar datos.</li>
+            <li>Las notas del tablero marcan colores descartados y confirmados.</li>
+            <li>El ajuste «Marcas de forma» da a cada color su propia silueta.</li>
+            <li>Los primeros 40 casos son gratis.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot shot--dark">
+        <figure>
+          <img src="../images/shots/es/lie.jpg" width="480" height="1044" alt="Un caso Mentira en Mind Cipher: el mismo tablero con un sello rojo que avisa de que un informe de este caso es falso." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Casos Mentira</h3>
+          <p>Un expediente aparte de 240 casos. Los mismos tableros, un informe falseado por caso y un sello rojo que te recuerda no confiar en la página.</p>
+          <ul class="notes">
+            <li>Solo se falsea una fila por caso, nunca dos.</li>
+            <li>Aquí los intentos son más holgados, porque gastarás análisis en demostrar la mentira.</li>
+            <li>Los primeros 80 casos son gratis.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/es/daily.jpg" width="480" height="1044" alt="Caso de hoy en Mind Cipher: un libro de rachas, un calendario con los días cerrados sellados y los ajustes del puzle de hoy." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Caso de hoy</h3>
+          <p>Un puzle al día, idéntico para todos. Los ajustes se publican antes de empezar: longitud del código, número de colores, intentos, si se permiten repeticiones. Los días Alto secreto son casos Mentira.</p>
+          <ul class="notes">
+            <li>La racha y el total se guardan en un libro en el dispositivo.</li>
+            <li>Los días cerrados quedan sellados en el calendario; un widget de pantalla de inicio muestra el estado de hoy.</li>
+            <li>Gratis, siempre.</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="sheet" id="modes" aria-labelledby="sheet-title">
+      <h2 id="sheet-title">Todo lo que hay en el expediente.</h2>
+      <table>
+        <caption class="visually-hidden">Modos de Mind Cipher y lo que cuesta cada uno</caption>
+        <thead>
+          <tr>
+            <th scope="col">Modo</th>
+            <th scope="col">Qué es</th>
+            <th scope="col">Acceso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Caso de hoy</th>
+            <td>Un puzle compartido al día, con libro de rachas y widget.</td>
+            <td><span class="tag">Gratis</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Casos clásicos</th>
+            <td><span class="num">240</span> casos, de principiante a maestro, marcas honestas.</td>
+            <td><span class="tag">40 gratis</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Casos Mentira</th>
+            <td><span class="num">240</span> casos en los que un informe por caso es falso.</td>
+            <td><span class="tag">80 gratis</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Modo duelo</th>
+            <td>Un solo teléfono que va y viene. Uno pone el código, otro lo descifra.</td>
+            <td><span class="tag">Gratis</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Reta a un amigo</th>
+            <td>Envía un caso cerrado como enlace. Recibe el mismo código.</td>
+            <td><span class="tag">Gratis</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Juego libre</th>
+            <td>Tableros generados sin fin con la dificultad que fijes.</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Nivel personalizado</th>
+            <td>Monta tu propio tablero: longitud, colores, intentos, repeticiones.</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="sheet__foot">Pro cuesta <span class="num">$2.99</span> una sola vez. Abre los <span class="num">360</span> casos restantes, el Juego libre y el editor. Sin suscripción, sin anuncios, sin cuenta, y el progreso nunca sale del dispositivo. Dos temas —Expediente y Escritorio nocturno— y la app sigue tu idioma o el que elijas en Ajustes.</p>
+    </section>
+  </main>
+
+  <footer class="closer">
+    <p class="closer__line">La lógica es tu única arma. Un informe miente.</p>
+    <div class="closer__meta">
+      <a class="closer__mark" href="../index.html">Mind Cipher</a>
+      <nav aria-label="Footer">
+        <a href="https://apps.apple.com/app/mind-cipher/id6777428188?l=es">App Store</a>
+        <a href="../support.html">Soporte</a>
+        <a href="../privacy.html">Privacidad</a>
+        <a href="mailto:sirouni@msn.com">Correo</a>
+      </nav>
+      <small>© 2026 Xiao Wang</small>
+    </div>
+    <nav class="langs" aria-label="Idiomas">
+      <a href="../index.html" lang="en" hreflang="en">English</a>
+      <a href="../zh-Hans/index.html" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+      <a href="../zh-Hant/index.html" lang="zh-Hant" hreflang="zh-Hant">繁體中文</a>
+      <a href="../ja/index.html" lang="ja" hreflang="ja">日本語</a>
+      <a href="../ko/index.html" lang="ko" hreflang="ko">한국어</a>
+      <a href="../es/index.html" lang="es" aria-current="page">Español</a>
+      <a href="../ar/index.html" lang="ar" hreflang="ar">العربية</a>
+      <a href="../de/index.html" lang="de" hreflang="de">Deutsch</a>
+      <a href="../fr/index.html" lang="fr" hreflang="fr">Français</a>
+      <a href="../he/index.html" lang="he" hreflang="he">עברית</a>
+      <a href="../pt/index.html" lang="pt-BR" hreflang="pt-BR">Português</a>
+      <a href="../tr/index.html" lang="tr" hreflang="tr">Türkçe</a>
+    </nav>
+  </footer>
+
+  <aside class="dockbar" aria-label="Download">
+    <p>iPhone · gratis para empezar · $2.99 lo desbloquea todo</p>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=es">Descargar →</a>
+  </aside>
+</body>
+</html>

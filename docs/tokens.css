@@ -1,53 +1,62 @@
-/* Hallmark · tokens · custom (tuned) · vibe: "case file, teal lock, one liar"
- * paper: oklch(95.2% 0.012 244) · accent: oklch(46% 0.12 183)
- * display: Newsreader · body: IBM Plex Sans · outlier: IBM Plex Mono
- * axes: light / roman-serif / cool
+/* Hallmark · tokens · custom (tuned) · vibe: "spy dossier, paper and ink, one stamp red"
+ * paper: oklch(93% 0.022 85) · accent: oklch(50% 0.17 28)
+ * display: Courier Prime · body: IBM Plex Sans · outlier: Courier Prime
+ * axes: light / mono / warm
+ * Values mirror the in-app Dossier + Night Desk skins (ThemePicker.swift) and the
+ * Okabe–Ito peg palette (Theme.swift) so the site and the app share one paper stock.
  */
 
 :root {
-  --color-paper: oklch(95.2% 0.012 244);
-  --color-paper-2: oklch(92.4% 0.014 244);
-  --color-paper-3: oklch(88.8% 0.016 244);
-  --color-rule: oklch(78% 0.012 244);
-  --color-rule-2: oklch(84% 0.010 244);
-  --color-muted: oklch(48% 0.018 260);
-  --color-neutral: oklch(40% 0.020 262);
-  --color-ink: oklch(20% 0.028 266);
-  --color-ink-2: oklch(28% 0.032 266);
-  --color-accent: oklch(46% 0.12 183);
-  --color-accent-soft: oklch(72% 0.10 183);
-  --color-accent-ink: oklch(20% 0.028 266);
-  --color-focus: oklch(48% 0.16 183);
-  --color-danger: oklch(50% 0.17 26);
-  --color-flag-wash: oklch(93% 0.028 26);
-  --color-warn: oklch(58% 0.14 62);
-  --color-warn-ink: oklch(42% 0.11 62);
-  --color-warn-wash: oklch(94% 0.035 70);
-  /* peg 1–8 · matched to the in-app color chips */
-  --color-peg-1: oklch(63% 0.20 22);
-  --color-peg-2: oklch(68% 0.16 155);
-  /* 3 and 5 sit at 54% so their white numerals clear 4.5:1 */
-  --color-peg-3: oklch(54% 0.17 258);
-  --color-peg-4: oklch(83% 0.15 92);
-  --color-peg-5: oklch(54% 0.17 300);
-  --color-peg-6: oklch(72% 0.16 55);
-  --color-peg-7: oklch(76% 0.12 195);
-  --color-peg-8: oklch(72% 0.13 5);
-  --color-peg-ink: oklch(99% 0.004 244);
-  --color-night: oklch(24% 0.045 266);
-  --color-night-2: oklch(30% 0.05 266);
-  --color-night-ink: oklch(94% 0.012 244);
-  --color-night-rule: oklch(38% 0.03 266);
+  /* paper stocks */
+  --color-paper: oklch(93% 0.022 85);          /* #F1E9D6 page */
+  --color-paper-2: oklch(90% 0.032 85);        /* #E8DEC5 folder */
+  --color-paper-3: oklch(95.5% 0.014 85);      /* #F6F1E3 card */
+  --color-kraft: oklch(75% 0.085 80);          /* #C8AD7A archive pouch */
+  --color-kraft-2: oklch(66% 0.09 78);         /* #B0905D flap */
+  --color-rule: oklch(70% 0.028 80);           /* #A99F8C hairline */
+  --color-rule-2: oklch(82% 0.026 82);
+  /* ink */
+  --color-ink: oklch(24% 0.022 70);            /* #2B2318 */
+  --color-ink-2: oklch(34% 0.025 70);
+  --color-muted: oklch(52% 0.03 75);           /* #7A6E5A */
+  --color-neutral: oklch(44% 0.028 72);
+  /* the one chromatic accent: rubber-stamp red */
+  --color-accent: oklch(50% 0.17 28);          /* #B8322B */
+  --color-accent-soft: oklch(62% 0.17 28);     /* #D8493F night stamp */
+  --color-accent-ink: oklch(97% 0.012 85);
+  --color-focus: oklch(50% 0.17 28);
+  --color-danger: oklch(50% 0.17 28);
+  --color-flag-wash: oklch(91% 0.04 40);
+  /* burnt ochre — informants / Pro */
+  --color-warn: oklch(62% 0.13 62);
+  --color-warn-ink: oklch(44% 0.10 62);
+  --color-warn-wash: oklch(92% 0.04 78);
+  /* peg 1–8 · Okabe–Ito, identical to the app's seals */
+  --color-peg-1: oklch(62% 0.19 45);           /* #D55E00 vermilion */
+  --color-peg-2: oklch(62% 0.13 165);          /* #009E73 bluish green */
+  --color-peg-3: oklch(52% 0.13 240);          /* #0072B2 blue */
+  --color-peg-4: oklch(91% 0.18 100);          /* #F0E442 yellow */
+  --color-peg-5: oklch(66% 0.13 345);          /* #CC79A7 reddish purple */
+  --color-peg-6: oklch(75% 0.16 70);           /* #E69F00 orange */
+  --color-peg-7: oklch(73% 0.11 235);          /* #56B4E9 sky blue */
+  --color-peg-8: oklch(18% 0.01 70);           /* ink seal */
+  --color-peg-ink: oklch(96% 0.012 85);
+  /* Night Desk */
+  --color-night: oklch(20% 0.012 70);          /* #1E1B16 */
+  --color-night-2: oklch(24% 0.014 70);        /* #2A251E */
+  --color-night-ink: oklch(91% 0.026 85);      /* #EDE4CF */
+  --color-night-rule: oklch(33% 0.04 75);      /* #463A28 */
+  --color-night-muted: oklch(66% 0.03 78);     /* #9C917D */
 
-  --font-display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
-  --font-body: "IBM Plex Sans", "Helvetica Neue", sans-serif;
-  --font-outlier: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: "Courier Prime", "American Typewriter", "Courier New", ui-monospace, monospace;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", -apple-system, "Segoe UI", "Noto Sans", sans-serif;
+  --font-outlier: "Courier Prime", "American Typewriter", "Courier New", ui-monospace, monospace;
 
-  --text-display: clamp(2.75rem, 8vw, 5.25rem);
-  --text-display-s: clamp(2rem, 5vw, 3.25rem);
-  --text-4xl: clamp(1.75rem, 3.4vw, 2.35rem);
-  --text-3xl: clamp(1.4rem, 2.4vw, 1.85rem);
-  --text-2xl: 1.35rem;
+  --text-display: clamp(2.5rem, 7vw, 4.5rem);
+  --text-display-s: clamp(1.9rem, 4.6vw, 3rem);
+  --text-4xl: clamp(1.65rem, 3.2vw, 2.2rem);
+  --text-3xl: clamp(1.35rem, 2.3vw, 1.75rem);
+  --text-2xl: 1.3rem;
   --text-xl: 1.125rem;
   --text-lg: 1.05rem;
   --text-md: 1rem;
@@ -73,7 +82,7 @@
   --dur-long: 420ms;
 
   --rule: 1px;
-  --radius: 0;
+  --radius: 2px;
   --measure: 62ch;
   --page: min(68rem, calc(100% - clamp(2rem, 6vw, 4rem)));
   --page-gutter: clamp(1rem, 4vw, 2rem);

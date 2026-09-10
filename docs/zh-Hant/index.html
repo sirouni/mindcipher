@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mind Cipher — 做成間諜卷宗的珠璣妙算（Mastermind）</title>
+  <meta name="description" content="在 iPhone 上猜出隱藏的顏色密碼。每次分析回傳一排墨跡標記：點、圈、橫。謊言卷宗裡有一份報告是假的。480 案、今日案件、雙人對戰。免費開始，無廣告。">
+  <link rel="canonical" href="https://sirouni.github.io/mindcipher/zh-Hant/">
+  <link rel="alternate" hreflang="en" href="https://sirouni.github.io/mindcipher/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://sirouni.github.io/mindcipher/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://sirouni.github.io/mindcipher/zh-Hant/">
+  <link rel="alternate" hreflang="ja" href="https://sirouni.github.io/mindcipher/ja/">
+  <link rel="alternate" hreflang="ko" href="https://sirouni.github.io/mindcipher/ko/">
+  <link rel="alternate" hreflang="es" href="https://sirouni.github.io/mindcipher/es/">
+  <link rel="alternate" hreflang="ar" href="https://sirouni.github.io/mindcipher/ar/">
+  <link rel="alternate" hreflang="de" href="https://sirouni.github.io/mindcipher/de/">
+  <link rel="alternate" hreflang="fr" href="https://sirouni.github.io/mindcipher/fr/">
+  <link rel="alternate" hreflang="he" href="https://sirouni.github.io/mindcipher/he/">
+  <link rel="alternate" hreflang="pt-BR" href="https://sirouni.github.io/mindcipher/pt/">
+  <link rel="alternate" hreflang="tr" href="https://sirouni.github.io/mindcipher/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://sirouni.github.io/mindcipher/">
+  <meta property="og:title" content="Mind Cipher">
+  <meta property="og:description" content="猜出密碼。其中一份報告在說謊。">
+  <meta property="og:image" content="https://sirouni.github.io/mindcipher/images/icon.png">
+  <meta property="og:locale" content="zh_TW">
+  <link rel="icon" href="../images/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../images/icon.png">
+  <link rel="stylesheet" href="../site.css?v=20">
+</head>
+<body>
+  <a class="skip" href="#main">跳到內容</a>
+
+  <header class="topbar">
+    <a class="topbar__mark" href="../index.html">Mind Cipher</a>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=zh-Hant">App Store →</a>
+  </header>
+
+  <main id="main">
+    <section class="opener" aria-labelledby="opener-title">
+      <div class="opener__copy">
+        <img class="opener__icon" src="../images/icon.png" width="512" height="512" alt="Mind Cipher" fetchpriority="high">
+        <h1 id="opener-title">猜出密碼。有一份報告在說謊。</h1>
+        <p class="lede">一款珠璣妙算（Mastermind）類的顏色密碼推理遊戲，整個介面做成一份間諜卷宗。每次分析都會回傳一排墨跡標記——而在謊言卷宗裡，恰好有一份報告是假的。</p>
+        <div class="actions">
+          <a class="chip" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=zh-Hant">前往 App Store 下載</a>
+          <a class="textlink" href="#round">看一個案件 ↓</a>
+        </div>
+        <p class="terms">免費開始 · $2.99 解鎖全部 · 無廣告 · 無需帳號</p>
+      </div>
+
+      <div class="board" aria-labelledby="board-title">
+        <p class="board__head">
+          <span id="board-title">謊言卷宗 · 報告範例</span>
+          <span>4 格 · 6 色</span>
+        </p>
+        <ol class="board__rows">
+          <li class="is-flagged">
+            <span class="board__no">I</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">報告：四個顏色都不在密碼裡。</span>
+          </li>
+          <li class="is-flagged">
+            <span class="board__no">II</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+            </span>
+            <span class="visually-hidden">報告：兩個位置正確，兩個顏色對位置錯。</span>
+          </li>
+          <li>
+            <span class="board__no">III</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--5">5</span><span class="peg peg--6">6</span><span class="peg peg--7">7</span><span class="peg peg--8">8</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">報告：一個位置正確，一個顏色對位置錯，兩個不在密碼裡。</span>
+          </li>
+        </ol>
+        <p class="board__note">第 I 行和第 II 行用的是同樣四個顏色。第 I 行說它們都不在密碼裡，第 II 行說四個都在。兩者不可能同時成立——其中一份報告是假的。</p>
+      </div>
+    </section>
+
+    <section class="round" id="round" aria-labelledby="round-title">
+      <h2 id="round-title">一個案件，從立案到結案。</h2>
+      <ol class="steps">
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">1</span>
+            <h3>擺好色釘。</h3>
+            <p>把顏色放進格子，送出分析。案件從 4 格 6 色起步，一直到 8 色的長密碼。</p>
+          </div>
+          <figure class="demo" aria-label="六色調色盤，已放兩個色釘，還剩兩個空格">
+            <figcaption>你的下一次分析</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">調色盤</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--5">5</span><span class="peg peg--6">6</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">格子</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--2">2</span><span class="peg peg--5">5</span><span class="slot"></span><span class="slot"></span>
+              </span>
+            </p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">2</span>
+            <h3>讀懂標記。</h3>
+            <p>每送出一行，就回傳四個墨跡標記。標記<em>不會</em>告訴你對應的是哪一格。這個空白就是謎題本身。</p>
+            <p class="legend">
+              <span><span class="mark mark--exact" aria-hidden="true"></span> 顏色對，位置對</span>
+              <span><span class="mark mark--part" aria-hidden="true"></span> 顏色對，位置錯</span>
+              <span><span class="mark mark--miss" aria-hidden="true"></span> 完全不在密碼裡</span>
+            </p>
+          </div>
+          <figure class="demo" aria-label="猜測顏色 1 2 3 4，回傳一個點、一個圈、兩個橫">
+            <figcaption>回傳的結果</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">分析</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">報告</span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__note">這四個顏色裡有兩個在密碼中。但你仍不知道是哪兩個。</p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">3</span>
+            <h3>找出假的那一份。</h3>
+            <p>經典案件的報告永遠誠實。謊言案件每案偽造一行，所以嚴密的推理也可能撞牆。找出互相矛盾的兩行，把假的那份丟掉。</p>
+          </div>
+          <figure class="demo" aria-label="兩行使用同樣四個顏色，報告卻相反，因此必有一份是假的">
+            <figcaption>不可能同時成立的一對</figcaption>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">第 I 行</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">第 II 行</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+              </span>
+            </p>
+            <p class="demo__note">第 I 行說這些顏色都不在密碼裡，第 II 行說四個都在。其中一份報告是假的。</p>
+          </figure>
+        </li>
+      </ol>
+    </section>
+
+    <section class="tour" aria-labelledby="tour-title">
+      <h2 id="tour-title" class="visually-hidden">應用程式內</h2>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/zh-Hant/case.jpg" width="480" height="1044" alt="Mind Cipher 進行中的案件：米色紙面上的 0908 號挑戰，兩行已分析的帶編號色印，旁邊是點、圈、橫標記，下方是證物托盤和調色盤。" loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>經典案件</h3>
+          <p>240 案，從入門到大師，每案都是卷宗裡一頁編號的紙。嘗試次數在右上角；標記是純墨跡——點、圈、橫——完全不依賴顏色。</p>
+          <ul class="notes">
+            <li>過去的每次分析都留在紙上，方便交叉比對。</li>
+            <li>棋盤上的筆記可以標記已排除和已確認的顏色。</li>
+            <li>「形狀標記」設定為每種顏色加一個專屬外形。</li>
+            <li>前 40 案免費。</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot shot--dark">
+        <figure>
+          <img src="../images/shots/zh-Hant/lie.jpg" width="480" height="1044" alt="Mind Cipher 的謊言案件：同樣的棋盤，加上一枚紅色印章，提醒本案有一份報告是假的。" loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>謊言案件</h3>
+          <p>另一份 240 案的卷宗。同樣的棋盤，每案偽造一份報告，還有一枚紅章提醒你別輕信紙上的字。</p>
+          <ul class="notes">
+            <li>每案只偽造一行——絕不會兩行。</li>
+            <li>這裡的嘗試次數更寬鬆，因為你需要花幾次分析去證明謊言。</li>
+            <li>前 80 案免費。</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/zh-Hant/daily.jpg" width="480" height="1044" alt="Mind Cipher 的今日案件：連勝帳本、蓋著結案章的日曆，以及今天的題目設定。" loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>今日案件</h3>
+          <p>每天一題，人人相同。開始前就公布設定——密碼長度、顏色數、嘗試次數、是否允許重複。機密日會出謊言題。</p>
+          <ul class="notes">
+            <li>連勝和總數記在本機的帳本裡。</li>
+            <li>結案的日子會蓋章留在日曆上；主畫面小工具顯示今天的狀態。</li>
+            <li>永遠免費。</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="sheet" id="modes" aria-labelledby="sheet-title">
+      <h2 id="sheet-title">卷宗裡的全部內容。</h2>
+      <table>
+        <caption class="visually-hidden">Mind Cipher 的模式與價格</caption>
+        <thead>
+          <tr>
+            <th scope="col">模式</th>
+            <th scope="col">內容</th>
+            <th scope="col">取得方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">今日案件</th>
+            <td>每天一道共享題目，附連勝帳本和小工具。</td>
+            <td><span class="tag">免費</span></td>
+          </tr>
+          <tr>
+            <th scope="row">經典案件</th>
+            <td><span class="num">240</span> 案，從入門到大師，標記誠實。</td>
+            <td><span class="tag">40 案免費</span></td>
+          </tr>
+          <tr>
+            <th scope="row">謊言案件</th>
+            <td><span class="num">240</span> 案，每案有一份報告是假的。</td>
+            <td><span class="tag">80 案免費</span></td>
+          </tr>
+          <tr>
+            <th scope="row">雙人對戰</th>
+            <td>一台手機傳來傳去。一人設密碼，一人來破譯。</td>
+            <td><span class="tag">免費</span></td>
+          </tr>
+          <tr>
+            <th scope="row">挑戰好友</th>
+            <td>把結案的題目做成連結送出，對方拿到同一組密碼。</td>
+            <td><span class="tag">免費</span></td>
+          </tr>
+          <tr>
+            <th scope="row">自由模式</th>
+            <td>任意難度，無限生成棋盤。</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+          <tr>
+            <th scope="row">自訂關卡</th>
+            <td>自己搭棋盤——長度、顏色、次數、重複。</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="sheet__foot">Pro 一次買斷 <span class="num">$2.99</span>，解鎖剩餘 <span class="num">360</span> 案、自由模式和關卡編輯器。沒有訂閱，沒有廣告，不用註冊，進度只保存在本機。兩套主題——檔案紙與夜間桌面——應用程式會跟隨系統語言，也可以在設定裡切換。</p>
+    </section>
+  </main>
+
+  <footer class="closer">
+    <p class="closer__line">邏輯是你唯一的武器。有一份報告在說謊。</p>
+    <div class="closer__meta">
+      <a class="closer__mark" href="../index.html">Mind Cipher</a>
+      <nav aria-label="Footer">
+        <a href="https://apps.apple.com/app/mind-cipher/id6777428188?l=zh-Hant">App Store</a>
+        <a href="../support.html">支援</a>
+        <a href="../privacy.html">隱私</a>
+        <a href="mailto:sirouni@msn.com">郵件</a>
+      </nav>
+      <small>© 2026 王箫</small>
+    </div>
+    <nav class="langs" aria-label="語言">
+      <a href="../index.html" lang="en" hreflang="en">English</a>
+      <a href="../zh-Hans/index.html" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+      <a href="../zh-Hant/index.html" lang="zh-Hant" aria-current="page">繁體中文</a>
+      <a href="../ja/index.html" lang="ja" hreflang="ja">日本語</a>
+      <a href="../ko/index.html" lang="ko" hreflang="ko">한국어</a>
+      <a href="../es/index.html" lang="es" hreflang="es">Español</a>
+      <a href="../ar/index.html" lang="ar" hreflang="ar">العربية</a>
+      <a href="../de/index.html" lang="de" hreflang="de">Deutsch</a>
+      <a href="../fr/index.html" lang="fr" hreflang="fr">Français</a>
+      <a href="../he/index.html" lang="he" hreflang="he">עברית</a>
+      <a href="../pt/index.html" lang="pt-BR" hreflang="pt-BR">Português</a>
+      <a href="../tr/index.html" lang="tr" hreflang="tr">Türkçe</a>
+    </nav>
+  </footer>
+
+  <aside class="dockbar" aria-label="Download">
+    <p>iPhone · 免費開始 · $2.99 解鎖全部</p>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=zh-Hant">取得 App →</a>
+  </aside>
+</body>
+</html>

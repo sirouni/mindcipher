@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mind Cipher — 스파이 서류철로 꾸민 마스터마인드 퍼즐</title>
+  <meta name="description" content="iPhone에서 숨겨진 색깔 암호를 맞히는 마스터마인드·숫자야구 스타일 퍼즐. 분석 결과는 잉크 표시(점·고리·선)로 돌아옵니다. 거짓말 파일에서는 보고 하나가 가짜. 480건, 오늘의 사건, 대전 모드. 무료 시작, 광고 없음.">
+  <link rel="canonical" href="https://sirouni.github.io/mindcipher/ko/">
+  <link rel="alternate" hreflang="en" href="https://sirouni.github.io/mindcipher/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://sirouni.github.io/mindcipher/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://sirouni.github.io/mindcipher/zh-Hant/">
+  <link rel="alternate" hreflang="ja" href="https://sirouni.github.io/mindcipher/ja/">
+  <link rel="alternate" hreflang="ko" href="https://sirouni.github.io/mindcipher/ko/">
+  <link rel="alternate" hreflang="es" href="https://sirouni.github.io/mindcipher/es/">
+  <link rel="alternate" hreflang="ar" href="https://sirouni.github.io/mindcipher/ar/">
+  <link rel="alternate" hreflang="de" href="https://sirouni.github.io/mindcipher/de/">
+  <link rel="alternate" hreflang="fr" href="https://sirouni.github.io/mindcipher/fr/">
+  <link rel="alternate" hreflang="he" href="https://sirouni.github.io/mindcipher/he/">
+  <link rel="alternate" hreflang="pt-BR" href="https://sirouni.github.io/mindcipher/pt/">
+  <link rel="alternate" hreflang="tr" href="https://sirouni.github.io/mindcipher/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://sirouni.github.io/mindcipher/">
+  <meta property="og:title" content="Mind Cipher">
+  <meta property="og:description" content="암호를 맞혀라. 보고 중 하나는 거짓이다.">
+  <meta property="og:image" content="https://sirouni.github.io/mindcipher/images/icon.png">
+  <meta property="og:locale" content="ko_KR">
+  <link rel="icon" href="../images/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../images/icon.png">
+  <link rel="stylesheet" href="../site.css?v=20">
+</head>
+<body>
+  <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+  <header class="topbar">
+    <a class="topbar__mark" href="../index.html">Mind Cipher</a>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=ko">App Store →</a>
+  </header>
+
+  <main id="main">
+    <section class="opener" aria-labelledby="opener-title">
+      <div class="opener__copy">
+        <img class="opener__icon" src="../images/icon.png" width="512" height="512" alt="Mind Cipher" fetchpriority="high">
+        <h1 id="opener-title">암호를 맞혀라. 보고 하나는 거짓이다.</h1>
+        <p class="lede">마스터마인드(숫자야구) 스타일의 암호 해독 퍼즐을 스파이 서류철로 꾸민 iPhone 게임. 분석마다 잉크 표시가 한 줄로 돌아오고, 거짓말 파일에서는 보고 중 정확히 하나가 가짜입니다.</p>
+        <div class="actions">
+          <a class="chip" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=ko">App Store에서 받기</a>
+          <a class="textlink" href="#round">사건 보기 ↓</a>
+        </div>
+        <p class="terms">무료 시작 · $2.99로 전체 해제 · 광고 없음 · 계정 불필요</p>
+      </div>
+
+      <div class="board" aria-labelledby="board-title">
+        <p class="board__head">
+          <span id="board-title">거짓말 파일 · 보고 예시</span>
+          <span>4핀 · 6색</span>
+        </p>
+        <ol class="board__rows">
+          <li class="is-flagged">
+            <span class="board__no">I</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">보고: 네 색 모두 암호에 없음.</span>
+          </li>
+          <li class="is-flagged">
+            <span class="board__no">II</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+            </span>
+            <span class="visually-hidden">보고: 둘은 위치까지 정확, 둘은 색만 맞고 위치가 틀림.</span>
+          </li>
+          <li>
+            <span class="board__no">III</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--5">5</span><span class="peg peg--6">6</span><span class="peg peg--7">7</span><span class="peg peg--8">8</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">보고: 하나는 위치까지 정확, 하나는 색만 맞음, 둘은 암호에 없음.</span>
+          </li>
+        </ol>
+        <p class="board__note">I행과 II행은 같은 네 색을 씁니다. I행은 &#x27;아무것도 없다&#x27;, II행은 &#x27;넷 다 있다&#x27;고 말합니다. 둘 다 참일 수는 없으니, 보고 하나는 가짜입니다.</p>
+      </div>
+    </section>
+
+    <section class="round" id="round" aria-labelledby="round-title">
+      <h2 id="round-title">사건 하나, 개시부터 종결까지.</h2>
+      <ol class="steps">
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">1</span>
+            <h3>핀을 놓는다.</h3>
+            <p>색을 칸에 넣고 분석을 제출합니다. 사건은 4핀 6색에서 시작해 8색의 긴 암호까지 이어집니다.</p>
+          </div>
+          <figure class="demo" aria-label="여섯 색 팔레트, 핀 두 개는 놓였고 빈 칸 두 개가 남음">
+            <figcaption>다음 분석</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">팔레트</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--5">5</span><span class="peg peg--6">6</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">칸</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--2">2</span><span class="peg peg--5">5</span><span class="slot"></span><span class="slot"></span>
+              </span>
+            </p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">2</span>
+            <h3>표시를 읽는다.</h3>
+            <p>제출한 줄마다 잉크 표시 네 개가 돌아옵니다. 표시는 <em>어느</em> 핀을 가리키는지 말해 주지 않습니다. 그 빈틈이 바로 퍼즐입니다.</p>
+            <p class="legend">
+              <span><span class="mark mark--exact" aria-hidden="true"></span> 색도 위치도 맞음</span>
+              <span><span class="mark mark--part" aria-hidden="true"></span> 색은 맞고 위치가 틀림</span>
+              <span><span class="mark mark--miss" aria-hidden="true"></span> 암호에 전혀 없음</span>
+            </p>
+          </div>
+          <figure class="demo" aria-label="색 1 2 3 4 추측에 점 하나, 고리 하나, 선 두 개가 돌아옴">
+            <figcaption>돌아오는 것</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">분석</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">보고</span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__note">이 네 색 중 둘이 암호에 있습니다. 어느 둘인지는 아직 모릅니다.</p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">3</span>
+            <h3>가짜를 찾아낸다.</h3>
+            <p>클래식 사건의 보고는 언제나 정직합니다. 거짓말 사건은 사건마다 한 줄을 위조하므로, 깔끔한 추론도 벽에 부딛힐 수 있습니다. 서로 모순되는 두 줄을 찾아 가짜를 버리세요.</p>
+          </div>
+          <figure class="demo" aria-label="같은 네 색을 쓴 두 줄의 보고가 정반대라 하나는 가짜">
+            <figcaption>동시에 참일 수 없는 한 쌍</figcaption>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">I행</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">II행</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+              </span>
+            </p>
+            <p class="demo__note">I행은 이 색들이 하나도 없다고, II행은 넷 다 있다고 말합니다. 보고 하나는 가짜입니다.</p>
+          </figure>
+        </li>
+      </ol>
+    </section>
+
+    <section class="tour" aria-labelledby="tour-title">
+      <h2 id="tour-title" class="visually-hidden">앱 안에서</h2>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/ko/case.jpg" width="480" height="1044" alt="진행 중인 Mind Cipher 사건: 크림색 종이 위 도전 No. 0908, 번호가 적힌 색 인장 두 줄이 분석되어 옆에 점·고리·선 표시, 아래에 증거 트레이와 팔레트." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>클래식 사건</h3>
+          <p>입문부터 마스터까지 240건, 각각 파일 속 번호 매겨진 한 장입니다. 남은 시도 횟수는 오른쪽 위에, 표시는 순수한 잉크(점·고리·선)라 색에 의존하지 않습니다.</p>
+          <ul class="notes">
+            <li>지난 분석은 모두 종이에 남아 교차 확인할 수 있습니다.</li>
+            <li>보드 위 노트로 제외한 색과 확정한 색을 표시합니다.</li>
+            <li>&#x27;모양 표시&#x27; 설정은 색마다 고유한 외형을 더합니다.</li>
+            <li>처음 40건은 무료.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot shot--dark">
+        <figure>
+          <img src="../images/shots/ko/lie.jpg" width="480" height="1044" alt="Mind Cipher의 거짓말 사건: 같은 보드에, 이 사건의 보고 하나가 가짜라고 경고하는 빨간 도장." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>거짓말 사건</h3>
+          <p>따로 묶인 240건의 파일. 같은 보드에 사건마다 위조된 보고 하나, 그리고 종이를 믿지 말라고 일러 주는 빨간 도장.</p>
+          <ul class="notes">
+            <li>사건마다 한 줄만 위조됩니다. 두 줄은 절대 없습니다.</li>
+            <li>거짓을 증명하는 데 분석을 쓰게 되므로 시도 횟수가 더 넉넉합니다.</li>
+            <li>처음 80건은 무료.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/ko/daily.jpg" width="480" height="1044" alt="Mind Cipher의 오늘의 사건: 연속 기록 장부, 종결한 날에 도장이 찍힌 달력, 오늘의 문제 설정." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>오늘의 사건</h3>
+          <p>하루 한 문제, 모두에게 같은 문제. 암호 길이, 색 수, 시도 횟수, 중복 허용 여부는 시작 전에 공개됩니다. 극비의 날은 거짓말 사건입니다.</p>
+          <ul class="notes">
+            <li>연속 기록과 총계는 기기 안 장부에 기록됩니다.</li>
+            <li>종결한 날은 달력에 도장으로 남고, 홈 화면 위젯이 오늘의 상태를 보여 줍니다.</li>
+            <li>언제나 무료.</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="sheet" id="modes" aria-labelledby="sheet-title">
+      <h2 id="sheet-title">파일 속 전부.</h2>
+      <table>
+        <caption class="visually-hidden">Mind Cipher의 모드와 가격</caption>
+        <thead>
+          <tr>
+            <th scope="col">모드</th>
+            <th scope="col">내용</th>
+            <th scope="col">이용</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">오늘의 사건</th>
+            <td>하루 한 문제를 모두가 함께. 연속 기록 장부와 위젯 포함.</td>
+            <td><span class="tag">무료</span></td>
+          </tr>
+          <tr>
+            <th scope="row">클래식 사건</th>
+            <td><span class="num">240</span>건, 입문부터 마스터까지, 정직한 표시.</td>
+            <td><span class="tag">40건 무료</span></td>
+          </tr>
+          <tr>
+            <th scope="row">거짓말 사건</th>
+            <td><span class="num">240</span>건, 사건마다 보고 하나가 가짜.</td>
+            <td><span class="tag">80건 무료</span></td>
+          </tr>
+          <tr>
+            <th scope="row">대전 모드</th>
+            <td>한 대의 폰을 주고받으며. 한 명이 암호를 정하고 한 명이 풉니다.</td>
+            <td><span class="tag">무료</span></td>
+          </tr>
+          <tr>
+            <th scope="row">친구에게 도전</th>
+            <td>종결한 사건을 링크로 보내면 상대는 같은 암호를 받습니다.</td>
+            <td><span class="tag">무료</span></td>
+          </tr>
+          <tr>
+            <th scope="row">자유 플레이</th>
+            <td>원하는 난이도로 끝없이 생성되는 보드.</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+          <tr>
+            <th scope="row">커스텀 레벨</th>
+            <td>길이, 색, 횟수, 중복을 직접 정해 보드를 만듭니다.</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="sheet__foot">Pro는 <span class="num">$2.99</span> 한 번. 남은 <span class="num">360</span>건, 자유 플레이, 에디터가 열립니다. 구독 없음, 광고 없음, 계정 없음, 진행 상황은 기기를 떠나지 않습니다. 두 가지 테마(서류 파일·야간 책상)와 함께, 앱은 기기 언어를 따르거나 설정에서 바꿀 수 있습니다.</p>
+    </section>
+  </main>
+
+  <footer class="closer">
+    <p class="closer__line">무기는 논리뿐. 보고 하나는 거짓이다.</p>
+    <div class="closer__meta">
+      <a class="closer__mark" href="../index.html">Mind Cipher</a>
+      <nav aria-label="Footer">
+        <a href="https://apps.apple.com/app/mind-cipher/id6777428188?l=ko">App Store</a>
+        <a href="../support.html">지원</a>
+        <a href="../privacy.html">개인정보</a>
+        <a href="mailto:sirouni@msn.com">이메일</a>
+      </nav>
+      <small>© 2026 Xiao Wang</small>
+    </div>
+    <nav class="langs" aria-label="언어">
+      <a href="../index.html" lang="en" hreflang="en">English</a>
+      <a href="../zh-Hans/index.html" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+      <a href="../zh-Hant/index.html" lang="zh-Hant" hreflang="zh-Hant">繁體中文</a>
+      <a href="../ja/index.html" lang="ja" hreflang="ja">日本語</a>
+      <a href="../ko/index.html" lang="ko" aria-current="page">한국어</a>
+      <a href="../es/index.html" lang="es" hreflang="es">Español</a>
+      <a href="../ar/index.html" lang="ar" hreflang="ar">العربية</a>
+      <a href="../de/index.html" lang="de" hreflang="de">Deutsch</a>
+      <a href="../fr/index.html" lang="fr" hreflang="fr">Français</a>
+      <a href="../he/index.html" lang="he" hreflang="he">עברית</a>
+      <a href="../pt/index.html" lang="pt-BR" hreflang="pt-BR">Português</a>
+      <a href="../tr/index.html" lang="tr" hreflang="tr">Türkçe</a>
+    </nav>
+  </footer>
+
+  <aside class="dockbar" aria-label="Download">
+    <p>iPhone · 무료 시작 · $2.99로 전체 해제</p>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=ko">앱 받기 →</a>
+  </aside>
+</body>
+</html>

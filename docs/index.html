@@ -1,47 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mind Cipher — a code-breaking puzzle where one clue lies</title>
-  <meta name="description" content="Guess the hidden color code on iPhone. Every guess comes back as exact, wrong place, or out. In Lie Mode one of those reports is fake. 480 levels, daily challenge, pass-and-play duel. Free to start, no ads.">
+  <title>Mind Cipher — a Mastermind puzzle filed as a spy dossier</title>
+  <meta name="description" content="Guess the hidden color code on iPhone. Every analysis comes back as ink marks: dot, ring, dash. In the Lie file one report is fake. 480 cases, Today&#x27;s Case, Duel. Free to start, no ads.">
   <link rel="canonical" href="https://sirouni.github.io/mindcipher/">
+  <link rel="alternate" hreflang="en" href="https://sirouni.github.io/mindcipher/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://sirouni.github.io/mindcipher/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://sirouni.github.io/mindcipher/zh-Hant/">
+  <link rel="alternate" hreflang="ja" href="https://sirouni.github.io/mindcipher/ja/">
+  <link rel="alternate" hreflang="ko" href="https://sirouni.github.io/mindcipher/ko/">
+  <link rel="alternate" hreflang="es" href="https://sirouni.github.io/mindcipher/es/">
+  <link rel="alternate" hreflang="ar" href="https://sirouni.github.io/mindcipher/ar/">
+  <link rel="alternate" hreflang="de" href="https://sirouni.github.io/mindcipher/de/">
+  <link rel="alternate" hreflang="fr" href="https://sirouni.github.io/mindcipher/fr/">
+  <link rel="alternate" hreflang="he" href="https://sirouni.github.io/mindcipher/he/">
+  <link rel="alternate" hreflang="pt-BR" href="https://sirouni.github.io/mindcipher/pt/">
+  <link rel="alternate" hreflang="tr" href="https://sirouni.github.io/mindcipher/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://sirouni.github.io/mindcipher/">
   <meta property="og:title" content="Mind Cipher">
-  <meta property="og:description" content="Guess the code. One of the clues is lying.">
-  <meta property="og:image" content="images/icon.png">
+  <meta property="og:description" content="Guess the code. One of the reports is lying.">
+  <meta property="og:image" content="https://sirouni.github.io/mindcipher/images/icon.png">
+  <meta property="og:locale" content="en_US">
   <link rel="icon" href="images/icon.png" type="image/png">
   <link rel="apple-touch-icon" href="images/icon.png">
-  <link rel="stylesheet" href="site.css?v=14">
+  <link rel="stylesheet" href="site.css?v=20">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
     <a class="topbar__mark" href="index.html">Mind Cipher</a>
-    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188">App&nbsp;Store&nbsp;→</a>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188">App Store →</a>
   </header>
 
   <main id="main">
     <section class="opener" aria-labelledby="opener-title">
       <div class="opener__copy">
-        <img class="opener__icon" src="images/icon.png" width="512" height="512" alt="Mind Cipher app icon" fetchpriority="high">
-        <h1 id="opener-title">Guess the code. One clue is lying.</h1>
-        <p class="lede">A code-breaking puzzle for iPhone. Every guess comes back as exact, wrong place, or out &mdash; and in Lie Mode, one of those reports is fake.</p>
+        <img class="opener__icon" src="images/icon.png" width="512" height="512" alt="Mind Cipher" fetchpriority="high">
+        <h1 id="opener-title">Guess the code. One report is lying.</h1>
+        <p class="lede">A Mastermind-style code-breaking puzzle for iPhone, filed as a spy dossier. Every analysis comes back as a row of ink marks — and in the Lie file, exactly one report is fake.</p>
         <div class="actions">
           <a class="chip" href="https://apps.apple.com/app/mind-cipher/id6777428188">Get it on the App Store</a>
-          <a class="textlink" href="#round">See a round &darr;</a>
+          <a class="textlink" href="#round">See a case ↓</a>
         </div>
-        <p class="terms">Free to start &middot; $2.99 unlocks everything &middot; No ads &middot; No account</p>
+        <p class="terms">Free to start · $2.99 unlocks everything · No ads · No account</p>
       </div>
 
       <div class="board" aria-labelledby="board-title">
         <p class="board__head">
-          <span id="board-title">Lie Mode &middot; sample report</span>
-          <span>4 pegs &middot; 6 colors</span>
+          <span id="board-title">Lie file · sample report</span>
+          <span>4 pegs · 6 colors</span>
         </p>
         <ol class="board__rows">
           <li class="is-flagged">
-            <span class="board__no">1</span>
+            <span class="board__no">I</span>
             <span class="pegs" aria-hidden="true">
               <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
             </span>
@@ -51,41 +65,41 @@
             <span class="visually-hidden">Reported: all four not in the code.</span>
           </li>
           <li class="is-flagged">
-            <span class="board__no">2</span>
+            <span class="board__no">II</span>
             <span class="pegs" aria-hidden="true">
               <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
             </span>
             <span class="marks" aria-hidden="true">
               <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
             </span>
-            <span class="visually-hidden">Reported: two exact, two in the wrong place.</span>
+            <span class="visually-hidden">Reported: two exact, two in the wrong slot.</span>
           </li>
           <li>
-            <span class="board__no">3</span>
+            <span class="board__no">III</span>
             <span class="pegs" aria-hidden="true">
               <span class="peg peg--5">5</span><span class="peg peg--6">6</span><span class="peg peg--7">7</span><span class="peg peg--8">8</span>
             </span>
             <span class="marks" aria-hidden="true">
               <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
             </span>
-            <span class="visually-hidden">Reported: one exact, one in the wrong place, two not in the code.</span>
+            <span class="visually-hidden">Reported: one exact, one in the wrong slot, two not in the code.</span>
           </li>
         </ol>
-        <p class="board__note">Rows 1 and 2 use the same four colors. Row 1 says none of them are in the code; row 2 says all four are. Both cannot be true &mdash; one of these reports is fake.</p>
+        <p class="board__note">Rows I and II use the same four colors. Row I says none of them are in the code; row II says all four are. Both cannot be true — one of these reports is fake.</p>
       </div>
     </section>
 
     <section class="round" id="round" aria-labelledby="round-title">
-      <h2 id="round-title">One round, start to finish.</h2>
+      <h2 id="round-title">One case, opened to closed.</h2>
       <ol class="steps">
         <li>
           <div class="steps__copy">
             <span class="steps__n">1</span>
             <h3>Place your pegs.</h3>
-            <p>Pick colors into the slots and submit. Levels run from 4 pegs and 6 colors up to longer codes with 8.</p>
+            <p>Pick colors into the slots and submit the analysis. Cases run from 4 pegs and 6 colors up to longer codes with 8.</p>
           </div>
           <figure class="demo" aria-label="A six-color palette, two pegs already placed, two empty slots left">
-            <figcaption>Your next guess</figcaption>
+            <figcaption>Your next analysis</figcaption>
             <p class="demo__line">
               <span class="demo__cap">Palette</span>
               <span class="pegs" aria-hidden="true">
@@ -103,18 +117,18 @@
         <li>
           <div class="steps__copy">
             <span class="steps__n">2</span>
-            <h3>Read the report.</h3>
-            <p>Each submitted row comes back with four marks. The marks never tell you <em>which</em> peg they refer to. That gap is the puzzle.</p>
+            <h3>Read the marks.</h3>
+            <p>Each submitted row comes back with four ink marks. The marks never say <em>which</em> peg they refer to. That gap is the puzzle.</p>
             <p class="legend">
               <span><span class="mark mark--exact" aria-hidden="true"></span> right color, right slot</span>
               <span><span class="mark mark--part" aria-hidden="true"></span> right color, wrong slot</span>
               <span><span class="mark mark--miss" aria-hidden="true"></span> not in the code at all</span>
             </p>
           </div>
-          <figure class="demo" aria-label="A guess of colors 1 2 3 4 comes back as one exact, one wrong place, two out">
-            <figcaption>What you get back</figcaption>
+          <figure class="demo" aria-label="A guess of colors 1 2 3 4 comes back as one dot, one ring, two dashes">
+            <figcaption>What comes back</figcaption>
             <p class="demo__line">
-              <span class="demo__cap">Guess</span>
+              <span class="demo__cap">Analysis</span>
               <span class="pegs" aria-hidden="true">
                 <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
               </span>
@@ -132,12 +146,12 @@
           <div class="steps__copy">
             <span class="steps__n">3</span>
             <h3>Spot the fake.</h3>
-            <p>Classic mode always reports honestly. Lie Mode fakes one row per round, so a clean deduction can still walk you into a wall. Find the two rows that contradict each other, then throw the bad one out.</p>
+            <p>Classic cases always report honestly. Lie cases fake one row per case, so a clean deduction can still walk you into a wall. Find the two rows that contradict each other, then throw the bad one out.</p>
           </div>
           <figure class="demo" aria-label="Two rows using the same four colors with opposite reports, so one must be fake">
             <figcaption>A pair that cannot both be true</figcaption>
             <p class="demo__line is-flagged">
-              <span class="demo__cap">Row 1</span>
+              <span class="demo__cap">Row I</span>
               <span class="pegs" aria-hidden="true">
                 <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
               </span>
@@ -146,7 +160,7 @@
               </span>
             </p>
             <p class="demo__line is-flagged">
-              <span class="demo__cap">Row 2</span>
+              <span class="demo__cap">Row II</span>
               <span class="pegs" aria-hidden="true">
                 <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
               </span>
@@ -154,7 +168,7 @@
                 <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
               </span>
             </p>
-            <p class="demo__note">Row 1 says none of these colors are in the code. Row 2 says all four are. One of those reports is fake.</p>
+            <p class="demo__note">Row I says none of these colors are in the code. Row II says all four are. One of those reports is fake.</p>
           </figure>
         </li>
       </ol>
@@ -165,44 +179,45 @@
 
       <article class="shot">
         <figure>
-          <img src="images/play.jpg" width="473" height="1024" alt="A Mind Cipher round in progress: Level 161, Expert, four submitted guesses of five numbered color pegs with dot, triangle and cross feedback beside each row." loading="lazy">
+          <img src="images/shots/en/case.jpg" width="480" height="1044" alt="A Mind Cipher case in progress: Challenge No. 0908 on cream paper, two analyzed rows of numbered color seals with dot, ring and dash marks beside each, an evidence tray and the color palette below." loading="lazy">
         </figure>
         <div class="shot__copy">
-          <h3>Classic Missions</h3>
-          <p>240 levels from beginner to master. The attempt counter sits top-right; the legend stays on screen so you never have to remember what a triangle means.</p>
+          <h3>Classic cases</h3>
+          <p>240 cases from beginner to master, each a numbered sheet in the file. The attempt counter sits top-right; the marks are pure ink — dot, ring, dash — so they never depend on color.</p>
           <ul class="notes">
-            <li>Every past guess stays visible for cross-referencing.</li>
-            <li>Rows you have not used yet are numbered and greyed.</li>
-            <li>First 40 levels are free.</li>
+            <li>Every past analysis stays on the sheet for cross-referencing.</li>
+            <li>Notes on the board mark eliminated and confirmed colors.</li>
+            <li>A Shape Marks setting gives every color its own outline.</li>
+            <li>First 40 cases are free.</li>
           </ul>
         </div>
       </article>
 
       <article class="shot shot--dark">
         <figure>
-          <img src="images/lie.jpg" width="473" height="1024" alt="Lie Missions in Mind Cipher: the same board with a red warning that reads Lie Mode, one feedback may be fake." loading="lazy">
+          <img src="images/shots/en/lie.jpg" width="480" height="1044" alt="A Lie case in Mind Cipher: the same board with a red stamp warning that one report in this case is fake." loading="lazy">
         </figure>
         <div class="shot__copy">
-          <h3>Lie Missions</h3>
-          <p>A separate 240-level campaign. Same boards, one faked clue per round, and a red banner that reminds you not to trust the page.</p>
+          <h3>Lie cases</h3>
+          <p>A separate 240-case file. Same boards, one faked report per case, and a red stamp that reminds you not to trust the page.</p>
           <ul class="notes">
-            <li>Only one row per round is faked &mdash; never two.</li>
-            <li>Attempt budgets are looser here, because you will burn guesses proving a lie.</li>
-            <li>First 80 levels are free.</li>
+            <li>Only one row per case is faked — never two.</li>
+            <li>Attempt budgets are looser here, because you will burn analyses proving a lie.</li>
+            <li>First 80 cases are free.</li>
           </ul>
         </div>
       </article>
 
       <article class="shot">
         <figure>
-          <img src="images/daily.jpg" width="473" height="1024" alt="Daily Challenge in Mind Cipher: a day streak counter, a June calendar with today marked, and the day's puzzle settings listed as code length 4, colors 6, max attempts 7, repeats off." loading="lazy">
+          <img src="images/shots/en/daily.jpg" width="480" height="1044" alt="Today&#x27;s Case in Mind Cipher: a streak ledger, a calendar with closed days stamped, and today&#x27;s puzzle settings." loading="lazy">
         </figure>
         <div class="shot__copy">
-          <h3>Daily Challenge</h3>
-          <p>One puzzle a day, identical for everybody. The settings are published before you start &mdash; code length, color count, attempt budget, whether repeats are allowed.</p>
+          <h3>Today&#x27;s Case</h3>
+          <p>One puzzle a day, identical for everybody. The settings are published before you start — code length, color count, attempt budget, whether repeats are allowed. Top Secret days are lie cases.</p>
           <ul class="notes">
-            <li>Streak and total are tracked on the device.</li>
-            <li>Past days stay on the calendar.</li>
+            <li>Streak and total are kept in a ledger on the device.</li>
+            <li>Closed days stay stamped on the calendar; a home-screen widget shows today&#x27;s status.</li>
             <li>Free, always.</li>
           </ul>
         </div>
@@ -210,7 +225,7 @@
     </section>
 
     <section class="sheet" id="modes" aria-labelledby="sheet-title">
-      <h2 id="sheet-title">Everything in the app.</h2>
+      <h2 id="sheet-title">Everything in the file.</h2>
       <table>
         <caption class="visually-hidden">Mind Cipher modes and what each one costs</caption>
         <thead>
@@ -222,28 +237,28 @@
         </thead>
         <tbody>
           <tr>
-            <th scope="row">Daily Challenge</th>
-            <td>One shared puzzle per day, with a streak counter.</td>
+            <th scope="row">Today&#x27;s Case</th>
+            <td>One shared puzzle per day, with a streak ledger and a widget.</td>
             <td><span class="tag">Free</span></td>
           </tr>
           <tr>
-            <th scope="row">Classic Missions</th>
-            <td><span class="num">240</span> levels, beginner to master, honest feedback.</td>
+            <th scope="row">Classic cases</th>
+            <td><span class="num">240</span> cases, beginner to master, honest marks.</td>
             <td><span class="tag">40 free</span></td>
           </tr>
           <tr>
-            <th scope="row">Lie Missions</th>
-            <td><span class="num">240</span> levels where one report per round is fake.</td>
+            <th scope="row">Lie cases</th>
+            <td><span class="num">240</span> cases where one report per case is fake.</td>
             <td><span class="tag">80 free</span></td>
           </tr>
           <tr>
-            <th scope="row">Duel</th>
+            <th scope="row">Duel Mode</th>
             <td>Pass one phone back and forth. One sets a code, one cracks it.</td>
             <td><span class="tag">Free</span></td>
           </tr>
           <tr>
             <th scope="row">Challenge a friend</th>
-            <td>Send a puzzle you built as a link.</td>
+            <td>Send a case you closed as a link. They get the same code.</td>
             <td><span class="tag">Free</span></td>
           </tr>
           <tr>
@@ -252,33 +267,47 @@
             <td><span class="tag tag--pro">Pro</span></td>
           </tr>
           <tr>
-            <th scope="row">Custom editor</th>
-            <td>Build your own board &mdash; length, colors, attempts, repeats.</td>
+            <th scope="row">Custom Level</th>
+            <td>Build your own board — length, colors, attempts, repeats.</td>
             <td><span class="tag tag--pro">Pro</span></td>
           </tr>
         </tbody>
       </table>
-      <p class="sheet__foot">Pro is <span class="num">$2.99</span> once. It opens the remaining <span class="num">360</span> campaign levels, Free Play and the editor. No subscription, no ads, no account, and progress never leaves the device. Game Center is optional and only used for daily ranks.</p>
+      <p class="sheet__foot">Pro is <span class="num">$2.99</span> once. It opens the remaining <span class="num">360</span> cases, Free Play and the editor. No subscription, no ads, no account, and progress never leaves the device. Two themes — Dossier and Night Desk — and the app follows your language or the one you set in Settings.</p>
     </section>
   </main>
 
   <footer class="closer">
-    <p class="closer__line">Logic is your only weapon. One clue is lying.</p>
+    <p class="closer__line">Logic is your only weapon. One report is lying.</p>
     <div class="closer__meta">
       <a class="closer__mark" href="index.html">Mind Cipher</a>
       <nav aria-label="Footer">
-        <a href="https://apps.apple.com/app/mind-cipher/id6777428188">App&nbsp;Store</a>
+        <a href="https://apps.apple.com/app/mind-cipher/id6777428188">App Store</a>
         <a href="support.html">Support</a>
         <a href="privacy.html">Privacy</a>
         <a href="mailto:sirouni@msn.com">Email</a>
       </nav>
-      <small>&copy; 2026 箫 王</small>
+      <small>© 2026 Xiao Wang</small>
     </div>
+    <nav class="langs" aria-label="Languages">
+      <a href="index.html" lang="en" aria-current="page">English</a>
+      <a href="zh-Hans/index.html" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+      <a href="zh-Hant/index.html" lang="zh-Hant" hreflang="zh-Hant">繁體中文</a>
+      <a href="ja/index.html" lang="ja" hreflang="ja">日本語</a>
+      <a href="ko/index.html" lang="ko" hreflang="ko">한국어</a>
+      <a href="es/index.html" lang="es" hreflang="es">Español</a>
+      <a href="ar/index.html" lang="ar" hreflang="ar">العربية</a>
+      <a href="de/index.html" lang="de" hreflang="de">Deutsch</a>
+      <a href="fr/index.html" lang="fr" hreflang="fr">Français</a>
+      <a href="he/index.html" lang="he" hreflang="he">עברית</a>
+      <a href="pt/index.html" lang="pt-BR" hreflang="pt-BR">Português</a>
+      <a href="tr/index.html" lang="tr" hreflang="tr">Türkçe</a>
+    </nav>
   </footer>
 
   <aside class="dockbar" aria-label="Download">
-    <p>iPhone &middot; free to start &middot; $2.99 unlocks everything</p>
-    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188">Get&nbsp;the&nbsp;app&nbsp;→</a>
+    <p>iPhone · free to start · $2.99 unlocks everything</p>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188">Get the app →</a>
   </aside>
 </body>
 </html>

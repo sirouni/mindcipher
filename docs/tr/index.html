@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mind Cipher — casus dosyası olarak arşivlenmiş bir Mastermind bulmacası</title>
+  <meta name="description" content="iPhone&#x27;da gizli renk şifresini tahmin et. Her analiz mürekkep işaretleriyle döner: nokta, halka, çizgi. Yalan dosyasında raporlardan biri sahte. 480 dosya, Günün dosyası, Düello. Ücretsiz başla, reklam yok.">
+  <link rel="canonical" href="https://sirouni.github.io/mindcipher/tr/">
+  <link rel="alternate" hreflang="en" href="https://sirouni.github.io/mindcipher/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://sirouni.github.io/mindcipher/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://sirouni.github.io/mindcipher/zh-Hant/">
+  <link rel="alternate" hreflang="ja" href="https://sirouni.github.io/mindcipher/ja/">
+  <link rel="alternate" hreflang="ko" href="https://sirouni.github.io/mindcipher/ko/">
+  <link rel="alternate" hreflang="es" href="https://sirouni.github.io/mindcipher/es/">
+  <link rel="alternate" hreflang="ar" href="https://sirouni.github.io/mindcipher/ar/">
+  <link rel="alternate" hreflang="de" href="https://sirouni.github.io/mindcipher/de/">
+  <link rel="alternate" hreflang="fr" href="https://sirouni.github.io/mindcipher/fr/">
+  <link rel="alternate" hreflang="he" href="https://sirouni.github.io/mindcipher/he/">
+  <link rel="alternate" hreflang="pt-BR" href="https://sirouni.github.io/mindcipher/pt/">
+  <link rel="alternate" hreflang="tr" href="https://sirouni.github.io/mindcipher/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://sirouni.github.io/mindcipher/">
+  <meta property="og:title" content="Mind Cipher">
+  <meta property="og:description" content="Şifreyi kır. Raporlardan biri yalan söylüyor.">
+  <meta property="og:image" content="https://sirouni.github.io/mindcipher/images/icon.png">
+  <meta property="og:locale" content="tr_TR">
+  <link rel="icon" href="../images/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../images/icon.png">
+  <link rel="stylesheet" href="../site.css?v=20">
+</head>
+<body>
+  <a class="skip" href="#main">İçeriğe geç</a>
+
+  <header class="topbar">
+    <a class="topbar__mark" href="../index.html">Mind Cipher</a>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=tr">App Store →</a>
+  </header>
+
+  <main id="main">
+    <section class="opener" aria-labelledby="opener-title">
+      <div class="opener__copy">
+        <img class="opener__icon" src="../images/icon.png" width="512" height="512" alt="Mind Cipher" fetchpriority="high">
+        <h1 id="opener-title">Şifreyi kır. Raporlardan biri yalan.</h1>
+        <p class="lede">iPhone için Mastermind tarzı bir şifre kırma bulmacası, casus dosyası olarak arşivlenmiş. Her analiz bir sıra mürekkep işaretiyle döner — ve Yalan dosyasında raporlardan tam olarak biri sahtedir.</p>
+        <div class="actions">
+          <a class="chip" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=tr">App Store&#x27;dan indir</a>
+          <a class="textlink" href="#round">Bir dosyaya bak ↓</a>
+        </div>
+        <p class="terms">Ücretsiz başla · $2.99 her şeyi açar · Reklam yok · Hesap yok</p>
+      </div>
+
+      <div class="board" aria-labelledby="board-title">
+        <p class="board__head">
+          <span id="board-title">Yalan dosyası · örnek rapor</span>
+          <span>4 pim · 6 renk</span>
+        </p>
+        <ol class="board__rows">
+          <li class="is-flagged">
+            <span class="board__no">I</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">Rapor: dört rengin hiçbiri şifrede yok.</span>
+          </li>
+          <li class="is-flagged">
+            <span class="board__no">II</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+            </span>
+            <span class="visually-hidden">Rapor: ikisi tam yerinde, ikisi yanlış yerde.</span>
+          </li>
+          <li>
+            <span class="board__no">III</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--5">5</span><span class="peg peg--6">6</span><span class="peg peg--7">7</span><span class="peg peg--8">8</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">Rapor: biri tam yerinde, biri yanlış yerde, ikisi şifrede yok.</span>
+          </li>
+        </ol>
+        <p class="board__note">I. ve II. sıralar aynı dört rengi kullanıyor. I. sıra hiçbirinin şifrede olmadığını, II. sıra dördünün de olduğunu söylüyor. İkisi birden doğru olamaz — bu raporlardan biri sahte.</p>
+      </div>
+    </section>
+
+    <section class="round" id="round" aria-labelledby="round-title">
+      <h2 id="round-title">Bir dosya, açılıştan kapanışa.</h2>
+      <ol class="steps">
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">1</span>
+            <h3>Pimleri yerleştir.</h3>
+            <p>Renkleri yuvalara koy ve analizi gönder. Dosyalar 4 pim ve 6 renkten başlayıp 8 renkli uzun şifrelere kadar gider.</p>
+          </div>
+          <figure class="demo" aria-label="Altı renkli bir palet, iki pim yerleştirilmiş, iki boş yuva kalmış">
+            <figcaption>Sonraki analizin</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">Palet</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--5">5</span><span class="peg peg--6">6</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">Yuvalar</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--2">2</span><span class="peg peg--5">5</span><span class="slot"></span><span class="slot"></span>
+              </span>
+            </p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">2</span>
+            <h3>İşaretleri oku.</h3>
+            <p>Gönderilen her sıra dört mürekkep işaretiyle döner. İşaretler <em>hangi</em> pime ait olduklarını asla söylemez. Bulmaca tam da bu boşluktur.</p>
+            <p class="legend">
+              <span><span class="mark mark--exact" aria-hidden="true"></span> doğru renk, doğru yuva</span>
+              <span><span class="mark mark--part" aria-hidden="true"></span> doğru renk, yanlış yuva</span>
+              <span><span class="mark mark--miss" aria-hidden="true"></span> şifrede hiç yok</span>
+            </p>
+          </div>
+          <figure class="demo" aria-label="1 2 3 4 renkleriyle yapılan tahmin bir nokta, bir halka ve iki çizgiyle dönüyor">
+            <figcaption>Geri gelen</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">Analiz</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">Rapor</span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__note">Bu dört renkten ikisi şifrede. Hangi ikisi olduğunu hâlâ bilmiyorsun.</p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">3</span>
+            <h3>Sahteyi bul.</h3>
+            <p>Klasik davalar her zaman dürüst rapor verir. Yalan davaları her dosyada bir sırayı sahteler; bu yüzden temiz bir çıkarım bile seni duvara toslatabilir. Birbiriyle çelişen iki sırayı bul, kötü olanı at.</p>
+          </div>
+          <figure class="demo" aria-label="Aynı dört rengi kullanan iki sıranın raporları zıt, dolayısıyla biri sahte">
+            <figcaption>İkisi birden doğru olamayan bir çift</figcaption>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">I. sıra</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">II. sıra</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+              </span>
+            </p>
+            <p class="demo__note">I. sıra bu renklerin hiçbirinin şifrede olmadığını söylüyor. II. sıra dördünün de olduğunu. Bu raporlardan biri sahte.</p>
+          </figure>
+        </li>
+      </ol>
+    </section>
+
+    <section class="tour" aria-labelledby="tour-title">
+      <h2 id="tour-title" class="visually-hidden">Uygulama</h2>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/tr/case.jpg" width="480" height="1044" alt="Devam eden bir Mind Cipher dosyası: krem kâğıt üzerinde 0908 No&#x27;lu meydan okuma, yanlarında nokta, halka ve çizgi işaretleriyle analiz edilmiş iki sıra numaralı renk mührü, altta kanıt tepsisi ve palet." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Klasik davalar</h3>
+          <p>Acemiden ustaya 240 dosya, her biri klasördeki numaralı bir sayfa. Deneme sayacı sağ üstte; işaretler saf mürekkep — nokta, halka, çizgi — ve asla renge bağlı değil.</p>
+          <ul class="notes">
+            <li>Geçmiş her analiz çapraz kontrol için sayfada kalır.</li>
+            <li>Tahtadaki notlar elenen ve doğrulanan renkleri işaretler.</li>
+            <li>&quot;Şekil işaretleri&quot; ayarı her renge kendi şeklini verir.</li>
+            <li>İlk 40 dosya ücretsiz.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot shot--dark">
+        <figure>
+          <img src="../images/shots/tr/lie.jpg" width="480" height="1044" alt="Mind Cipher&#x27;da bir Yalan dosyası: aynı tahta, bu dosyadaki raporlardan birinin sahte olduğunu bildiren kırmızı bir damgayla." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Yalan davaları</h3>
+          <p>Ayrı bir 240 dosyalık klasör. Aynı tahtalar, her dosyada sahte bir rapor ve sayfaya güvenmemeni hatırlatan kırmızı bir damga.</p>
+          <ul class="notes">
+            <li>Her dosyada yalnızca bir sıra sahtelenir — asla iki.</li>
+            <li>Yalanı kanıtlamak için analiz harcayacağından burada deneme bütçesi daha geniştir.</li>
+            <li>İlk 80 dosya ücretsiz.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/tr/daily.jpg" width="480" height="1044" alt="Mind Cipher&#x27;da Günün dosyası: bir seri defteri, kapatılan günleri damgalanmış bir takvim ve bugünün bulmaca ayarları." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Günün dosyası</h3>
+          <p>Günde bir bulmaca, herkes için aynı. Ayarlar başlamadan önce yayımlanır — şifre uzunluğu, renk sayısı, deneme bütçesi, tekrarların serbest olup olmadığı. Çok gizli günler Yalan dosyalarıdır.</p>
+          <ul class="notes">
+            <li>Seri ve toplam, cihazdaki bir defterde tutulur.</li>
+            <li>Kapatılan günler takvimde damgalı kalır; bir ana ekran widget&#x27;ı bugünün durumunu gösterir.</li>
+            <li>Her zaman ücretsiz.</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="sheet" id="modes" aria-labelledby="sheet-title">
+      <h2 id="sheet-title">Klasördeki her şey.</h2>
+      <table>
+        <caption class="visually-hidden">Mind Cipher modları ve her birinin ücreti</caption>
+        <thead>
+          <tr>
+            <th scope="col">Mod</th>
+            <th scope="col">Nedir</th>
+            <th scope="col">Erişim</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Günün dosyası</th>
+            <td>Günde bir ortak bulmaca, seri defteri ve widget ile.</td>
+            <td><span class="tag">Ücretsiz</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Klasik davalar</th>
+            <td><span class="num">240</span> dosya, acemiden ustaya, dürüst işaretler.</td>
+            <td><span class="tag">40 ücretsiz</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Yalan davaları</th>
+            <td><span class="num">240</span> dosya, her birinde bir rapor sahte.</td>
+            <td><span class="tag">80 ücretsiz</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Düello modu</th>
+            <td>Tek telefon elden ele. Biri şifreyi koyar, biri kırar.</td>
+            <td><span class="tag">Ücretsiz</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Arkadaşına meydan oku</th>
+            <td>Kapattığın bir dosyayı bağlantı olarak gönder. Aynı şifreyi alır.</td>
+            <td><span class="tag">Ücretsiz</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Serbest oyun</th>
+            <td>Belirlediğin zorlukta sonsuz üretilen tahtalar.</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Özel seviye</th>
+            <td>Kendi tahtanı kur — uzunluk, renkler, denemeler, tekrarlar.</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="sheet__foot">Pro tek seferlik <span class="num">$2.99</span>. Kalan <span class="num">360</span> dosyayı, Serbest oyunu ve editörü açar. Abonelik yok, reklam yok, hesap yok; ilerleme cihazdan asla çıkmaz. İki tema — Dosya ve Gece masası — ve uygulama dilini ya da Ayarlar'da seçtiğin dili izler.</p>
+    </section>
+  </main>
+
+  <footer class="closer">
+    <p class="closer__line">Tek silahın mantık. Raporlardan biri yalan.</p>
+    <div class="closer__meta">
+      <a class="closer__mark" href="../index.html">Mind Cipher</a>
+      <nav aria-label="Footer">
+        <a href="https://apps.apple.com/app/mind-cipher/id6777428188?l=tr">App Store</a>
+        <a href="../support.html">Destek</a>
+        <a href="../privacy.html">Gizlilik</a>
+        <a href="mailto:sirouni@msn.com">E-posta</a>
+      </nav>
+      <small>© 2026 Xiao Wang</small>
+    </div>
+    <nav class="langs" aria-label="Diller">
+      <a href="../index.html" lang="en" hreflang="en">English</a>
+      <a href="../zh-Hans/index.html" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+      <a href="../zh-Hant/index.html" lang="zh-Hant" hreflang="zh-Hant">繁體中文</a>
+      <a href="../ja/index.html" lang="ja" hreflang="ja">日本語</a>
+      <a href="../ko/index.html" lang="ko" hreflang="ko">한국어</a>
+      <a href="../es/index.html" lang="es" hreflang="es">Español</a>
+      <a href="../ar/index.html" lang="ar" hreflang="ar">العربية</a>
+      <a href="../de/index.html" lang="de" hreflang="de">Deutsch</a>
+      <a href="../fr/index.html" lang="fr" hreflang="fr">Français</a>
+      <a href="../he/index.html" lang="he" hreflang="he">עברית</a>
+      <a href="../pt/index.html" lang="pt-BR" hreflang="pt-BR">Português</a>
+      <a href="../tr/index.html" lang="tr" aria-current="page">Türkçe</a>
+    </nav>
+  </footer>
+
+  <aside class="dockbar" aria-label="Download">
+    <p>iPhone · ücretsiz başla · $2.99 her şeyi açar</p>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=tr">Uygulamayı indir →</a>
+  </aside>
+</body>
+</html>

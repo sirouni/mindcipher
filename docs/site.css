@@ -1,27 +1,19 @@
-/* Hallmark · pre-emit critique: P5 H5 E4 S5 R4 V4
- * Hallmark · genre: editorial · macrostructure: Workbench
- * tone: austere · route: custom (tuned) · vibe: "case file, teal lock, one liar"
- * paper: oklch(95.2% 0.012 244) · accent: oklch(46% 0.12 183)
- * display: Newsreader · body: IBM Plex Sans · outlier: IBM Plex Mono
+/* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4
+ * Hallmark · genre: editorial · macrostructure: Workbench (kept — redesign in place)
+ * tone: austere · route: custom (tuned) · vibe: "spy dossier, paper and ink, one stamp red"
+ * paper: oklch(93% 0.022 85) · accent: oklch(50% 0.17 28)
+ * display: Courier Prime · body: IBM Plex Sans · outlier: Courier Prime
  * outlier slots (max 2): wordmark · clue-board readout
- * axes: light / roman-serif / cool
- * enrichment: none — CSS clue board + three real App Store captures
- * nav: N9 Edge-aligned minimal · knobs: cta=outlined, wordmark=monospace, padding=tight
- * footer: Ft5 Statement · knobs: sentence=38ch, wordmark=under sentence, rule=hairline
- * H2 Split Diptych knobs: ratio=7/5 · right=clue board · divider=hairline
- * F4 Step knobs: numbering=1/2/3 · layout=vertical stack · connector=none
- * F5 Annotated knobs: callouts=margin labels · frame=plain · anchor=image-led
- * F3 Sheet knobs: columns=3 (mode/detail/access) · rules=every row · numbers=tabular
- * C4 Dock knobs: reveal=always · anchored=viewport bottom · shadow=hairline
- * Previous nav: N6 (twice). This build: N9, because the page has one action and the
- * masthead had already been spent; the empty middle keeps the CTA the only target.
- * Previous footer: Ft1. This build: Ft5, folding the old closer section into the footer.
- * contrast: pass (40–41) · nav: N9 · footer: Ft5 · slop: pass (42–45)
- * honest: pass (46) · chrome: pass (47) · tokens: pass (48) · responsive: pass (49)
- * icons: pass (30, none used) · mobile: pass (34, 49, 50–57)
+ * axes: light / mono / warm — differs from the 2026-09-02 build on display style + accent hue
+ * enrichment: none — CSS clue board + three real App Store captures per locale
+ * nav: N9 Edge-aligned minimal · footer: Ft5 Statement (unchanged archetypes; restyled)
+ * i18n: 12 locales built from i18n.json by build_site.py · RTL via dir=rtl + logical props
+ * marks: dot / ring / dash in ink, same as the app — colour never carries meaning
+ * contrast: pass (40–41) · honest: pass (46) · chrome: pass (47) · tokens: pass (48)
+ * mobile: pass (34, 49, 50–57)
  */
 
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
 @import url("tokens.css");
 
 *,
@@ -89,9 +81,9 @@ h2,
 h3 {
   font-family: var(--font-display);
   font-style: normal;
-  font-weight: 600;
-  line-height: 1.14;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: 0;
   overflow-wrap: anywhere;
   min-width: 0;
   margin: 0;
@@ -120,7 +112,7 @@ em {
 
 .skip {
   position: absolute;
-  left: var(--space-md);
+  inset-inline-start: var(--space-md);
   top: var(--space-md);
   z-index: var(--z-overlay);
   display: inline-flex;
@@ -266,10 +258,11 @@ em {
 }
 
 .opener__icon {
-  width: 4rem;
-  height: 4rem;
+  width: 4.5rem;
+  height: 4.5rem;
   margin-bottom: var(--space-md);
   border: var(--rule) solid var(--color-rule);
+  border-radius: 22%;
 }
 
 .opener h1 {
@@ -300,9 +293,10 @@ em {
 /* ---- the clue board -------------------------------------------------- */
 
 .board {
-  background: var(--color-paper-2);
+  background: var(--color-paper-3);
   border: var(--rule) solid var(--color-rule);
   padding: var(--space-lg);
+  box-shadow: 0 0 0 var(--space-xs) var(--color-paper-2);
 }
 
 .board__head {
@@ -337,7 +331,7 @@ em {
 
 .board__rows li.is-flagged {
   background: var(--color-flag-wash);
-  box-shadow: inset 3px 0 0 var(--color-danger);
+  border-inline-start: 3px solid var(--color-danger);
   padding-inline: var(--space-xs);
   margin-inline: calc(var(--space-xs) * -1);
 }
@@ -346,7 +340,7 @@ em {
   color: var(--color-muted);
   font-family: var(--font-outlier);
   font-size: var(--text-xs);
-  text-align: right;
+  text-align: end;
 }
 
 .pegs {
@@ -361,10 +355,11 @@ em {
   width: 1.4rem;
   height: 1.4rem;
   border-radius: 50%;
+  box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.18);
   color: var(--color-ink);
   font-family: var(--font-outlier);
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .peg--1 { background: var(--color-peg-1); }
@@ -376,9 +371,12 @@ em {
 .peg--7 { background: var(--color-peg-7); }
 .peg--8 { background: var(--color-peg-8); }
 
-/* only the two darkest chips take light numerals; every pairing clears 4.5:1 */
+/* paper numerals on the dark seals, ink on yellow / orange / sky — as in the app */
+.peg--1,
+.peg--2,
 .peg--3,
-.peg--5 {
+.peg--5,
+.peg--8 {
   color: var(--color-peg-ink);
 }
 
@@ -394,21 +392,27 @@ em {
   flex: none;
 }
 
+/* the app's marks: shape carries the meaning, never colour */
 .mark--exact {
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--color-ink);
 }
 
 .mark--part {
-  clip-path: polygon(50% 6%, 100% 94%, 0 94%);
-  background: var(--color-warn);
+  border-radius: 50%;
+  border: 2px solid var(--color-ink);
 }
 
 .mark--miss {
-  background:
-    linear-gradient(var(--color-ink), var(--color-ink)) center / 82% 2px no-repeat,
-    linear-gradient(var(--color-ink), var(--color-ink)) center / 2px 82% no-repeat;
-  transform: rotate(45deg);
+  background: linear-gradient(var(--color-rule), var(--color-rule)) center / 78% 2px no-repeat;
+}
+
+.marks--lg .mark--part {
+  border-width: 2.5px;
+}
+
+.marks--lg .mark--miss {
+  background-size: 78% 2.5px;
 }
 
 .board__note {
@@ -456,8 +460,9 @@ em {
 
 .steps__n {
   color: var(--color-accent);
+  font-family: var(--font-outlier);
   font-size: var(--text-xs);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.14em;
 }
 
@@ -489,7 +494,7 @@ em {
   margin: 0;
   min-width: 0;
   padding: var(--space-md);
-  background: var(--color-paper-2);
+  background: var(--color-paper-3);
   border: var(--rule) solid var(--color-rule);
   display: grid;
   gap: var(--space-sm);
@@ -517,7 +522,7 @@ em {
 
 .demo__line.is-flagged {
   background: var(--color-flag-wash);
-  box-shadow: inset 3px 0 0 var(--color-danger);
+  border-inline-start: 3px solid var(--color-danger);
   margin-inline: calc(var(--space-xs) * -1);
   padding: var(--space-2xs) var(--space-xs);
 }
@@ -637,7 +642,7 @@ em {
 
 .shot--dark .notes li {
   border-top-color: var(--color-night-rule);
-  color: var(--color-accent-soft);
+  color: var(--color-night-muted);
 }
 
 .shot--dark img {
@@ -657,7 +662,11 @@ em {
   width: 100%;
   margin-top: var(--space-lg);
   border-collapse: collapse;
-  text-align: left;
+  text-align: start;
+}
+
+.sheet th {
+  text-align: start;
 }
 
 .sheet thead th {
@@ -679,13 +688,13 @@ em {
 }
 
 .sheet tbody th {
-  padding-right: var(--space-md);
+  padding-inline-end: var(--space-md);
   font-weight: 600;
   white-space: nowrap;
 }
 
 .sheet td:first-of-type {
-  padding-right: var(--space-md);
+  padding-inline-end: var(--space-md);
   color: var(--color-ink-2);
 }
 
@@ -701,10 +710,11 @@ em {
 .tag {
   display: inline-block;
   padding: var(--space-3xs) var(--space-2xs);
-  border: var(--rule) solid var(--color-accent);
-  color: var(--color-accent);
+  border: var(--rule) solid var(--color-ink);
+  color: var(--color-ink);
+  font-family: var(--font-outlier);
   font-size: var(--text-xs);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
 }
 
@@ -746,9 +756,8 @@ em {
   min-width: 0;
   font-family: var(--font-display);
   font-size: var(--text-display-s);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 1.15;
   overflow-wrap: anywhere;
 }
 
@@ -929,6 +938,83 @@ body:has(.dockbar) {
 .updated {
   color: var(--color-muted);
   font-size: var(--text-sm);
+}
+
+/* ---- language index (footer) ---------------------------------------- */
+
+.langs {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-sm);
+  border-top: var(--rule) solid var(--color-night-rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-md);
+}
+
+.langs a,
+.langs span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-night-ink);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0.72;
+}
+
+.langs a:hover {
+  color: var(--color-accent-soft);
+  opacity: 1;
+}
+
+.langs [aria-current="page"] {
+  opacity: 1;
+  border-bottom: 2px solid var(--color-accent-soft);
+}
+
+/* right-to-left: the typewriter face has no Arabic / Hebrew glyphs, so
+   display text falls to the system stack and drops the letter-spacing */
+[dir="rtl"] .topbar__mark,
+[dir="rtl"] .closer__mark,
+[dir="rtl"] .terms,
+[dir="rtl"] .steps__n,
+[dir="rtl"] .board__head,
+[dir="rtl"] .demo figcaption,
+[dir="rtl"] .demo__cap,
+[dir="rtl"] .dockbar p,
+[dir="rtl"] .sheet thead th {
+  letter-spacing: 0;
+}
+
+[dir="rtl"] .board__rows li,
+[dir="rtl"] .demo__line {
+  direction: rtl;
+}
+
+/* Arabic, Hebrew and CJK have no typewriter face: display type takes the body
+   family in bold rather than a monospace fallback with the wrong glyph coverage */
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3,
+[dir="rtl"] .closer__line, [dir="rtl"] .faq summary,
+[dir="rtl"] .board__head, [dir="rtl"] .demo figcaption, [dir="rtl"] .tag,
+:lang(ja) h1, :lang(ja) h2, :lang(ja) h3, :lang(ja) .closer__line, :lang(ja) .faq summary,
+:lang(ko) h1, :lang(ko) h2, :lang(ko) h3, :lang(ko) .closer__line, :lang(ko) .faq summary,
+:lang(zh) h1, :lang(zh) h2, :lang(zh) h3, :lang(zh) .closer__line, :lang(zh) .faq summary {
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+/* CJK: no uppercase tracking either, and looser leading for kana / hangul */
+:lang(ja) .terms, :lang(ko) .terms, :lang(zh) .terms,
+:lang(ja) .board__head, :lang(ko) .board__head, :lang(zh) .board__head,
+:lang(ja) .demo__cap, :lang(ko) .demo__cap, :lang(zh) .demo__cap,
+:lang(ja) .dockbar p, :lang(ko) .dockbar p, :lang(zh) .dockbar p {
+  letter-spacing: 0.02em;
+}
+
+:lang(ja) h1, :lang(ko) h1, :lang(zh) h1,
+:lang(ja) .closer__line, :lang(ko) .closer__line, :lang(zh) .closer__line {
+  line-height: 1.3;
 }
 
 /* ---- responsive ------------------------------------------------------ */

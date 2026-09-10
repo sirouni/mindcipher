@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mind Cipher — un Mastermind classé comme dossier d’espion</title>
+  <meta name="description" content="Devinez le code de couleurs caché sur iPhone. Chaque analyse revient en marques d’encre : point, anneau, tiret. Dans le dossier Mensonge, un rapport est faux. 480 affaires, Affaire du jour, Duel. Gratuit pour commencer, sans pub.">
+  <link rel="canonical" href="https://sirouni.github.io/mindcipher/fr/">
+  <link rel="alternate" hreflang="en" href="https://sirouni.github.io/mindcipher/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://sirouni.github.io/mindcipher/zh-Hans/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://sirouni.github.io/mindcipher/zh-Hant/">
+  <link rel="alternate" hreflang="ja" href="https://sirouni.github.io/mindcipher/ja/">
+  <link rel="alternate" hreflang="ko" href="https://sirouni.github.io/mindcipher/ko/">
+  <link rel="alternate" hreflang="es" href="https://sirouni.github.io/mindcipher/es/">
+  <link rel="alternate" hreflang="ar" href="https://sirouni.github.io/mindcipher/ar/">
+  <link rel="alternate" hreflang="de" href="https://sirouni.github.io/mindcipher/de/">
+  <link rel="alternate" hreflang="fr" href="https://sirouni.github.io/mindcipher/fr/">
+  <link rel="alternate" hreflang="he" href="https://sirouni.github.io/mindcipher/he/">
+  <link rel="alternate" hreflang="pt-BR" href="https://sirouni.github.io/mindcipher/pt/">
+  <link rel="alternate" hreflang="tr" href="https://sirouni.github.io/mindcipher/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://sirouni.github.io/mindcipher/">
+  <meta property="og:title" content="Mind Cipher">
+  <meta property="og:description" content="Cassez le code. L’un des rapports ment.">
+  <meta property="og:image" content="https://sirouni.github.io/mindcipher/images/icon.png">
+  <meta property="og:locale" content="fr_FR">
+  <link rel="icon" href="../images/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="../images/icon.png">
+  <link rel="stylesheet" href="../site.css?v=20">
+</head>
+<body>
+  <a class="skip" href="#main">Aller au contenu</a>
+
+  <header class="topbar">
+    <a class="topbar__mark" href="../index.html">Mind Cipher</a>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=fr">App Store →</a>
+  </header>
+
+  <main id="main">
+    <section class="opener" aria-labelledby="opener-title">
+      <div class="opener__copy">
+        <img class="opener__icon" src="../images/icon.png" width="512" height="512" alt="Mind Cipher" fetchpriority="high">
+        <h1 id="opener-title">Cassez le code. Un rapport ment.</h1>
+        <p class="lede">Un casse-tête de décryptage façon Mastermind pour iPhone, classé comme dossier d’espion. Chaque analyse revient sous forme d’une rangée de marques d’encre — et dans le dossier Mensonge, exactement un rapport est faux.</p>
+        <div class="actions">
+          <a class="chip" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=fr">Télécharger sur l’App Store</a>
+          <a class="textlink" href="#round">Voir une affaire ↓</a>
+        </div>
+        <p class="terms">Gratuit pour commencer · $2.99 débloque tout · Sans pub · Sans compte</p>
+      </div>
+
+      <div class="board" aria-labelledby="board-title">
+        <p class="board__head">
+          <span id="board-title">Dossier Mensonge · rapport type</span>
+          <span>4 pions · 6 couleurs</span>
+        </p>
+        <ol class="board__rows">
+          <li class="is-flagged">
+            <span class="board__no">I</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">Rapport : aucune des quatre couleurs n’est dans le code.</span>
+          </li>
+          <li class="is-flagged">
+            <span class="board__no">II</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+            </span>
+            <span class="visually-hidden">Rapport : deux exacts, deux mal placés.</span>
+          </li>
+          <li>
+            <span class="board__no">III</span>
+            <span class="pegs" aria-hidden="true">
+              <span class="peg peg--5">5</span><span class="peg peg--6">6</span><span class="peg peg--7">7</span><span class="peg peg--8">8</span>
+            </span>
+            <span class="marks" aria-hidden="true">
+              <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+            </span>
+            <span class="visually-hidden">Rapport : un exact, un mal placé, deux absents du code.</span>
+          </li>
+        </ol>
+        <p class="board__note">Les rangées I et II utilisent les mêmes quatre couleurs. La rangée I dit qu’aucune n’est dans le code ; la II dit que les quatre y sont. Les deux ne peuvent pas être vraies — l’un de ces rapports est faux.</p>
+      </div>
+    </section>
+
+    <section class="round" id="round" aria-labelledby="round-title">
+      <h2 id="round-title">Une affaire, de l’ouverture au classement.</h2>
+      <ol class="steps">
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">1</span>
+            <h3>Placez vos pions.</h3>
+            <p>Choisissez des couleurs pour les cases et envoyez l’analyse. Les affaires vont de 4 pions et 6 couleurs jusqu’à des codes plus longs à 8.</p>
+          </div>
+          <figure class="demo" aria-label="Une palette de six couleurs, deux pions déjà placés, deux cases vides">
+            <figcaption>Votre prochaine analyse</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">Palette</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--5">5</span><span class="peg peg--6">6</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">Cases</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--2">2</span><span class="peg peg--5">5</span><span class="slot"></span><span class="slot"></span>
+              </span>
+            </p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">2</span>
+            <h3>Lisez les marques.</h3>
+            <p>Chaque rangée envoyée revient avec quatre marques d’encre. Les marques ne disent jamais <em>quel</em> pion elles désignent. Ce vide, c’est le casse-tête.</p>
+            <p class="legend">
+              <span><span class="mark mark--exact" aria-hidden="true"></span> bonne couleur, bonne case</span>
+              <span><span class="mark mark--part" aria-hidden="true"></span> bonne couleur, mauvaise case</span>
+              <span><span class="mark mark--miss" aria-hidden="true"></span> absente du code</span>
+            </p>
+          </div>
+          <figure class="demo" aria-label="Un essai avec les couleurs 1 2 3 4 revient en un point, un anneau et deux tirets">
+            <figcaption>Ce qui revient</figcaption>
+            <p class="demo__line">
+              <span class="demo__cap">Analyse</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+            </p>
+            <p class="demo__line">
+              <span class="demo__cap">Rapport</span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__note">Deux de ces quatre couleurs sont dans le code. Vous ne savez toujours pas lesquelles.</p>
+          </figure>
+        </li>
+        <li>
+          <div class="steps__copy">
+            <span class="steps__n">3</span>
+            <h3>Repérez le faux.</h3>
+            <p>Les affaires classiques rapportent toujours honnêtement. Les affaires Mensonge falsifient une rangée par affaire : une déduction propre peut donc vous mener droit dans un mur. Trouvez les deux rangées qui se contredisent, puis jetez la mauvaise.</p>
+          </div>
+          <figure class="demo" aria-label="Deux rangées aux mêmes quatre couleurs et aux rapports opposés, donc l’un est faux">
+            <figcaption>Une paire qui ne peut pas être vraie à la fois</figcaption>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">Rangée I</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--1">1</span><span class="peg peg--2">2</span><span class="peg peg--3">3</span><span class="peg peg--4">4</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span><span class="mark mark--miss"></span>
+              </span>
+            </p>
+            <p class="demo__line is-flagged">
+              <span class="demo__cap">Rangée II</span>
+              <span class="pegs" aria-hidden="true">
+                <span class="peg peg--3">3</span><span class="peg peg--4">4</span><span class="peg peg--1">1</span><span class="peg peg--2">2</span>
+              </span>
+              <span class="marks marks--lg" aria-hidden="true">
+                <span class="mark mark--exact"></span><span class="mark mark--exact"></span><span class="mark mark--part"></span><span class="mark mark--part"></span>
+              </span>
+            </p>
+            <p class="demo__note">La rangée I dit qu’aucune de ces couleurs n’est dans le code. La II dit que les quatre y sont. L’un de ces rapports est faux.</p>
+          </figure>
+        </li>
+      </ol>
+    </section>
+
+    <section class="tour" aria-labelledby="tour-title">
+      <h2 id="tour-title" class="visually-hidden">L’app</h2>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/fr/case.jpg" width="480" height="1044" alt="Une affaire Mind Cipher en cours : Défi n° 0908 sur papier crème, deux rangées analysées de sceaux de couleur numérotés avec marques point, anneau et tiret à côté, plateau à indices et palette en dessous." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Affaires classiques</h3>
+          <p>240 affaires du débutant au maître, chacune une feuille numérotée du dossier. Le compteur d’essais est en haut à droite ; les marques sont de l’encre pure — point, anneau, tiret — et ne dépendent jamais de la couleur.</p>
+          <ul class="notes">
+            <li>Chaque analyse passée reste sur la feuille pour recouper.</li>
+            <li>Les notes sur le plateau marquent les couleurs éliminées et confirmées.</li>
+            <li>Le réglage « Marques de forme » donne à chaque couleur sa propre silhouette.</li>
+            <li>Les 40 premières affaires sont gratuites.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot shot--dark">
+        <figure>
+          <img src="../images/shots/fr/lie.jpg" width="480" height="1044" alt="Une affaire Mensonge dans Mind Cipher : le même plateau avec un tampon rouge avertissant qu’un rapport de cette affaire est faux." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Affaires Mensonge</h3>
+          <p>Un dossier à part de 240 affaires. Les mêmes plateaux, un rapport falsifié par affaire, et un tampon rouge qui rappelle de ne pas se fier à la page.</p>
+          <ul class="notes">
+            <li>Une seule rangée par affaire est falsifiée — jamais deux.</li>
+            <li>Le budget d’essais est plus large ici, car vous brûlerez des analyses à prouver le mensonge.</li>
+            <li>Les 80 premières affaires sont gratuites.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="shot">
+        <figure>
+          <img src="../images/shots/fr/daily.jpg" width="480" height="1044" alt="Affaire du jour dans Mind Cipher : un registre de série, un calendrier aux jours classés tamponnés, et les réglages du casse-tête du jour." loading="lazy">
+        </figure>
+        <div class="shot__copy">
+          <h3>Affaire du jour</h3>
+          <p>Un casse-tête par jour, identique pour tous. Les réglages sont publiés avant de commencer — longueur du code, nombre de couleurs, budget d’essais, répétitions autorisées ou non. Les jours Top secret sont des affaires Mensonge.</p>
+          <ul class="notes">
+            <li>Série et total sont tenus dans un registre sur l’appareil.</li>
+            <li>Les jours classés restent tamponnés sur le calendrier ; un widget d’écran d’accueil affiche l’état du jour.</li>
+            <li>Gratuit, toujours.</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="sheet" id="modes" aria-labelledby="sheet-title">
+      <h2 id="sheet-title">Tout ce que contient le dossier.</h2>
+      <table>
+        <caption class="visually-hidden">Les modes de Mind Cipher et leur prix</caption>
+        <thead>
+          <tr>
+            <th scope="col">Mode</th>
+            <th scope="col">Ce que c’est</th>
+            <th scope="col">Accès</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Affaire du jour</th>
+            <td>Un casse-tête partagé par jour, avec registre de série et widget.</td>
+            <td><span class="tag">Gratuit</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Affaires classiques</th>
+            <td><span class="num">240</span> affaires, du débutant au maître, marques honnêtes.</td>
+            <td><span class="tag">40 gratuites</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Affaires Mensonge</th>
+            <td><span class="num">240</span> affaires où un rapport par affaire est faux.</td>
+            <td><span class="tag">80 gratuites</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Mode duel</th>
+            <td>Un seul téléphone qui passe de main en main. L’un pose le code, l’autre le casse.</td>
+            <td><span class="tag">Gratuit</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Défier un ami</th>
+            <td>Envoyez une affaire classée sous forme de lien. Il reçoit le même code.</td>
+            <td><span class="tag">Gratuit</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Partie libre</th>
+            <td>Des plateaux générés sans fin, à la difficulté que vous fixez.</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+          <tr>
+            <th scope="row">Niveau perso</th>
+            <td>Construisez votre plateau — longueur, couleurs, essais, répétitions.</td>
+            <td><span class="tag tag--pro">Pro</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="sheet__foot">Pro coûte <span class="num">$2.99</span> une fois. Il ouvre les <span class="num">360</span> affaires restantes, la Partie libre et l’éditeur. Pas d’abonnement, pas de pub, pas de compte, et la progression ne quitte jamais l’appareil. Deux thèmes — Dossier et Bureau de nuit — et l’app suit votre langue ou celle choisie dans Réglages.</p>
+    </section>
+  </main>
+
+  <footer class="closer">
+    <p class="closer__line">La logique est votre seule arme. Un rapport ment.</p>
+    <div class="closer__meta">
+      <a class="closer__mark" href="../index.html">Mind Cipher</a>
+      <nav aria-label="Footer">
+        <a href="https://apps.apple.com/app/mind-cipher/id6777428188?l=fr">App Store</a>
+        <a href="../support.html">Assistance</a>
+        <a href="../privacy.html">Confidentialité</a>
+        <a href="mailto:sirouni@msn.com">E-mail</a>
+      </nav>
+      <small>© 2026 Xiao Wang</small>
+    </div>
+    <nav class="langs" aria-label="Langues">
+      <a href="../index.html" lang="en" hreflang="en">English</a>
+      <a href="../zh-Hans/index.html" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+      <a href="../zh-Hant/index.html" lang="zh-Hant" hreflang="zh-Hant">繁體中文</a>
+      <a href="../ja/index.html" lang="ja" hreflang="ja">日本語</a>
+      <a href="../ko/index.html" lang="ko" hreflang="ko">한국어</a>
+      <a href="../es/index.html" lang="es" hreflang="es">Español</a>
+      <a href="../ar/index.html" lang="ar" hreflang="ar">العربية</a>
+      <a href="../de/index.html" lang="de" hreflang="de">Deutsch</a>
+      <a href="../fr/index.html" lang="fr" aria-current="page">Français</a>
+      <a href="../he/index.html" lang="he" hreflang="he">עברית</a>
+      <a href="../pt/index.html" lang="pt-BR" hreflang="pt-BR">Português</a>
+      <a href="../tr/index.html" lang="tr" hreflang="tr">Türkçe</a>
+    </nav>
+  </footer>
+
+  <aside class="dockbar" aria-label="Download">
+    <p>iPhone · gratuit pour commencer · $2.99 débloque tout</p>
+    <a class="chip chip--sm" href="https://apps.apple.com/app/mind-cipher/id6777428188?l=fr">Télécharger →</a>
+  </aside>
+</body>
+</html>

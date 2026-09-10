@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-09-10",
+    "macrostructure": "Workbench",
+    "theme": "custom",
+    "theme_axes": "light / mono / warm",
+    "vibe": "spy dossier, paper and ink, one stamp red",
+    "enrichment": "none",
+    "nav": "N9",
+    "footer": "Ft5",
+    "scope": "site",
+    "brief": "Mind Cipher landing rethemed to the 1.2 Spy Dossier skin (paper, Courier Prime, stamp red, ink marks) and built in 12 locales from i18n/*.json"
+  },
+  {
     "date": "2026-09-02",
     "macrostructure": "Workbench",
     "theme": "custom",
