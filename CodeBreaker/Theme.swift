@@ -137,7 +137,8 @@ extension View {
     }
 }
 
-/// 档案袋: kraft body, folded flap, string-and-washer, gummed label, optional stamp.
+/// 档案袋 (sample 01 "Archive pouch"): rounded kraft body, curved flap, two black
+/// button washers wound with string, gummed label, red stamp over the label corner.
 struct ArchivePouchView: View {
     enum Footer { case stars(Int), pro, locked, empty }
 
@@ -148,67 +149,76 @@ struct ArchivePouchView: View {
     var nextTone: Color = AppTheme.ink
     var footer: Footer = .empty
 
+    /// Flap covers this fraction of the pouch height.
+    private let flapRatio: CGFloat = 0.30
+
     var body: some View {
-        ZStack {
-            Canvas { ctx, size in
-                drawPouch(ctx: &ctx, size: size)
-            }
+        GeometryReader { geo in
+            let w = geo.size.width
+            let h = geo.size.height
+            let flapH = h * flapRatio
+            let labelTop = flapH + 13
+            let labelH: CGFloat = 18
+            let labelW = w - 16
 
-            VStack(spacing: 0) {
-                Color.clear.frame(height: 22)
+            ZStack(alignment: .topLeading) {
+                Canvas { ctx, size in
+                    drawPouch(ctx: &ctx, size: size)
+                }
 
-                Text("\(number)")
-                    .font(AppFont.graphic(number >= 100 ? 10 : 12, weight: .bold))
-                    .minimumScaleFactor(0.7)
-                    .lineLimit(1)
-                    .foregroundStyle(isMuted ? AppTheme.textMuted : AppTheme.textPrimary)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 3)
-                    .background(
-                        RoundedRectangle(cornerRadius: 1)
-                            .fill(AppTheme.ink.opacity(0.18))
-                            .offset(x: 0.8, y: 1)
-                    )
-                    .background(
-                        RoundedRectangle(cornerRadius: 1)
-                            .fill(AppTheme.bgCardLight)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 1)
-                            .stroke(AppTheme.ink.opacity(isMuted ? 0.25 : 0.45), lineWidth: 0.8)
-                    )
+                // Gummed label
+                ZStack {
+                    RoundedRectangle(cornerRadius: 1)
+                        .fill(AppTheme.ink.opacity(0.22))
+                        .offset(x: 0.8, y: 1.2)
+                    RoundedRectangle(cornerRadius: 1)
+                        .fill(isMuted ? AppTheme.bgCard : AppTheme.bgCardLight)
+                    RoundedRectangle(cornerRadius: 1)
+                        .stroke(AppTheme.ink.opacity(isMuted ? 0.3 : 0.55), lineWidth: 0.8)
+                    VStack(spacing: 1.5) {
+                        Text("\(number)")
+                            .font(AppFont.graphic(number >= 100 ? 10 : 11.5, weight: .bold))
+                            .minimumScaleFactor(0.7)
+                            .lineLimit(1)
+                            .foregroundStyle(isMuted ? AppTheme.textMuted : AppTheme.textPrimary)
+                        Rectangle()
+                            .fill(AppTheme.ink.opacity(isMuted ? 0.2 : 0.4))
+                            .frame(width: labelW * 0.55, height: 0.8)
+                    }
+                }
+                .frame(width: labelW, height: labelH)
+                .offset(x: 8, y: labelTop)
 
+                // Red stamp riding the label's lower-right corner
                 if isCompleted {
                     Text(L("case.closed"))
                         .font(AppFont.graphic(5.5, weight: .bold))
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                         .foregroundStyle(AppTheme.accent)
-                        .padding(.horizontal, 4)
-                        .padding(.vertical, 2)
+                        .padding(.horizontal, 3.5)
+                        .padding(.vertical, 1.5)
                         .overlay(
                             RoundedRectangle(cornerRadius: 1)
-                                .stroke(AppTheme.accent, lineWidth: 1.2)
+                                .stroke(AppTheme.accent, lineWidth: 1.1)
                         )
-                        .padding(2)
+                        .padding(1.5)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 2)
-                                .stroke(AppTheme.accent, lineWidth: 0.7)
+                            RoundedRectangle(cornerRadius: 1.5)
+                                .stroke(AppTheme.accent, lineWidth: 0.6)
                         )
-                        .rotationEffect(.degrees(-6))
-                        .padding(.top, 5)
-                        .padding(.bottom, 6)
+                        .frame(maxWidth: w * 0.62)
+                        .rotationEffect(.degrees(-8))
+                        .position(x: w * 0.62, y: labelTop + labelH + 3.5)
                 }
 
-                Spacer(minLength: 6)
-
                 footerView
-                    .frame(height: 12)
-                    .padding(.bottom, 6)
+                    .frame(height: 10)
+                    .offset(x: 9, y: h - 15)
             }
-            .padding(.horizontal, 4)
         }
-        .frame(maxWidth: .infinity, minHeight: 102)
+        .frame(maxWidth: .infinity, minHeight: 88)
+        .aspectRatio(0.74, contentMode: .fit)
         .accessibilityElement(children: .ignore)
     }
 
@@ -216,11 +226,11 @@ struct ArchivePouchView: View {
     private var footerView: some View {
         switch footer {
         case .stars(let count):
-            HStack(spacing: 1) {
+            HStack(spacing: 1.5) {
                 ForEach(0..<3, id: \.self) { i in
                     Image(systemName: i < count ? "star.fill" : "star")
                         .font(.system(size: 7))
-                        .foregroundStyle(i < count ? AppTheme.accent : AppTheme.textMuted.opacity(0.55))
+                        .foregroundStyle(i < count ? AppTheme.accent : AppTheme.ink.opacity(0.5))
                 }
             }
         case .pro:
@@ -230,111 +240,99 @@ struct ArchivePouchView: View {
                 .foregroundStyle(AppTheme.accent)
         case .locked:
             Image(systemName: "lock")
-                .font(.system(size: 9))
-                .foregroundStyle(AppTheme.textMuted)
+                .font(.system(size: 8))
+                .foregroundStyle(AppTheme.ink.opacity(0.5))
         case .empty:
-            Color.clear.frame(height: 8)
+            Color.clear.frame(width: 8, height: 8)
         }
     }
 
+    // MARK: - Canvas
+
     private func drawPouch(ctx: inout GraphicsContext, size: CGSize) {
-        let rect = CGRect(origin: .zero, size: size)
-        let flapH: CGFloat = 18
-        let outline = pouchOutline(in: rect, flapH: flapH)
-        let flap = flapOutline(in: rect, flapH: flapH)
+        let w = size.width, h = size.height
+        let flapH = h * flapRatio
+        let cr: CGFloat = 4
+        let body = Path(roundedRect: CGRect(x: 0, y: 0, width: w, height: h), cornerRadius: cr)
+
         let kraft = isMuted ? AppTheme.bgCard : AppTheme.kraft
         let flapColor = isMuted ? AppTheme.paperFolder : AppTheme.kraftFlap
-        let ink = (isMuted ? AppTheme.textMuted : AppTheme.ink).opacity(0.85)
-        let stroke = isNext ? nextTone : AppTheme.ink.opacity(0.55)
+        let inkFull = isMuted ? AppTheme.textMuted : AppTheme.ink
+        let outlineColor = isNext ? nextTone : AppTheme.ink.opacity(0.5)
 
-        var back = outline
-        back = back.offsetBy(dx: 1.6, dy: 2.2)
-        ctx.fill(back, with: .color(AppTheme.ink.opacity(0.16)))
+        // Drop shadow
+        ctx.fill(body.offsetBy(dx: 1.4, dy: 2), with: .color(AppTheme.ink.opacity(0.16)))
 
-        ctx.fill(outline, with: .color(kraft))
-        ctx.fill(flap, with: .color(flapColor))
+        // Body
+        ctx.fill(body, with: .color(kraft))
 
-        var seam = Path()
-        seam.move(to: CGPoint(x: 1, y: flapH))
-        seam.addLine(to: CGPoint(x: size.width - 1, y: flapH))
-        ctx.stroke(seam, with: .color(AppTheme.ink.opacity(0.28)), lineWidth: 1)
-
+        // Body side creases (gusset)
         var gusset = Path()
-        gusset.move(to: CGPoint(x: 5, y: flapH + 1))
-        gusset.addLine(to: CGPoint(x: 5, y: size.height - 6))
-        gusset.move(to: CGPoint(x: size.width - 5, y: flapH + 1))
-        gusset.addLine(to: CGPoint(x: size.width - 5, y: size.height - 6))
-        ctx.stroke(gusset, with: .color(AppTheme.ink.opacity(0.1)), lineWidth: 0.7)
+        gusset.move(to: CGPoint(x: 4.5, y: flapH + 4))
+        gusset.addLine(to: CGPoint(x: 4.5, y: h - 5))
+        gusset.move(to: CGPoint(x: w - 4.5, y: flapH + 4))
+        gusset.addLine(to: CGPoint(x: w - 4.5, y: h - 5))
+        ctx.stroke(gusset, with: .color(AppTheme.ink.opacity(0.09)), lineWidth: 0.7)
 
-        var grain = Path()
-        grain.move(to: CGPoint(x: 10, y: flapH + 8))
-        grain.addLine(to: CGPoint(x: size.width - 14, y: flapH + 11))
-        grain.move(to: CGPoint(x: 14, y: size.height * 0.62))
-        grain.addLine(to: CGPoint(x: size.width - 11, y: size.height * 0.58))
-        ctx.stroke(grain, with: .color(AppTheme.ink.opacity(0.06)), lineWidth: 0.6)
+        // Flap with curved lower edge
+        let flap = flapPath(w: w, flapH: flapH, cr: cr)
+        ctx.fill(flap.offsetBy(dx: 0, dy: 1.6), with: .color(AppTheme.ink.opacity(0.18)))
+        ctx.fill(flap, with: .color(flapColor))
+        ctx.stroke(flap, with: .color(AppTheme.ink.opacity(0.35)), lineWidth: 0.8)
 
-        ctx.stroke(outline, with: .color(stroke), lineWidth: isNext ? 1.6 : 1.1)
+        // Outline
+        ctx.stroke(body, with: .color(outlineColor), lineWidth: isNext ? 1.6 : 1)
 
-        let midX = size.width * 0.5
-        let top = CGPoint(x: midX, y: 6.5)
-        let bot = CGPoint(x: midX, y: 16.5)
-        let bulge = size.width * 0.16
+        // String between the two washers, wound twice, with a loose tail
+        let midX = w * 0.5
+        let topW = CGPoint(x: midX, y: flapH - 7.5)
+        let botW = CGPoint(x: midX, y: flapH + 7)
+        let ink = inkFull.opacity(0.9)
         var cord = Path()
-        cord.move(to: top)
+        cord.move(to: CGPoint(x: topW.x - 1.2, y: topW.y))
+        cord.addLine(to: CGPoint(x: botW.x - 1.2, y: botW.y))
+        cord.move(to: CGPoint(x: topW.x + 1.2, y: topW.y))
+        cord.addLine(to: CGPoint(x: botW.x + 1.2, y: botW.y))
+        // loose tail curling off the lower washer
+        cord.move(to: botW)
         cord.addCurve(
-            to: bot,
-            control1: CGPoint(x: midX + bulge, y: 9),
-            control2: CGPoint(x: midX + bulge, y: 14)
+            to: CGPoint(x: botW.x + w * 0.24, y: botW.y + 3.5),
+            control1: CGPoint(x: botW.x + 5, y: botW.y + 6.5),
+            control2: CGPoint(x: botW.x + w * 0.16, y: botW.y + 0.5)
         )
-        cord.addCurve(
-            to: top,
-            control1: CGPoint(x: midX - bulge, y: 14),
-            control2: CGPoint(x: midX - bulge, y: 9)
-        )
-        ctx.stroke(cord, with: .color(ink), style: StrokeStyle(lineWidth: 1.15, lineCap: .round, lineJoin: .round))
+        ctx.stroke(cord, with: .color(ink), style: StrokeStyle(lineWidth: 1, lineCap: .round, lineJoin: .round))
 
-        drawWasher(&ctx, at: top, radius: 3.4, ink: ink)
-        drawWasher(&ctx, at: bot, radius: 3.4, ink: ink)
+        drawWasher(&ctx, at: topW, radius: 4.2, ink: inkFull)
+        drawWasher(&ctx, at: botW, radius: 4.2, ink: inkFull)
     }
 
-    private func drawWasher(_ ctx: inout GraphicsContext, at center: CGPoint, radius: CGFloat, ink: Color) {
-        let outer = CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)
-        ctx.fill(Path(ellipseIn: outer), with: .color(AppTheme.kraftFlap))
-        ctx.stroke(Path(ellipseIn: outer), with: .color(ink), lineWidth: 1.15)
-        let holeR = radius * 0.38
-        let hole = CGRect(x: center.x - holeR, y: center.y - holeR, width: holeR * 2, height: holeR * 2)
-        ctx.fill(Path(ellipseIn: hole), with: .color(AppTheme.kraft))
-        ctx.stroke(Path(ellipseIn: hole), with: .color(ink), lineWidth: 0.7)
+    /// Solid black button washer with a lighter inner ring and centre dot.
+    private func drawWasher(_ ctx: inout GraphicsContext, at c: CGPoint, radius r: CGFloat, ink: Color) {
+        let outer = CGRect(x: c.x - r, y: c.y - r, width: r * 2, height: r * 2)
+        ctx.fill(Path(ellipseIn: outer.offsetBy(dx: 0.4, dy: 0.7)), with: .color(AppTheme.ink.opacity(0.35)))
+        ctx.fill(Path(ellipseIn: outer), with: .color(ink))
+        let ringR = r * 0.58
+        let ring = CGRect(x: c.x - ringR, y: c.y - ringR, width: ringR * 2, height: ringR * 2)
+        ctx.stroke(Path(ellipseIn: ring), with: .color(AppTheme.paper.opacity(0.45)), lineWidth: 0.9)
+        let dotR = r * 0.18
+        let dot = CGRect(x: c.x - dotR, y: c.y - dotR, width: dotR * 2, height: dotR * 2)
+        ctx.fill(Path(ellipseIn: dot), with: .color(AppTheme.paper.opacity(0.6)))
     }
 
-    private func pouchOutline(in rect: CGRect, flapH: CGFloat) -> Path {
-        let cr: CGFloat = 2.2
-        let inset: CGFloat = 5
+    /// Flap: shares the body's rounded top corners, bottom edge bows gently downward.
+    private func flapPath(w: CGFloat, flapH: CGFloat, cr: CGFloat) -> Path {
         var p = Path()
-        p.move(to: CGPoint(x: inset, y: 1))
-        p.addLine(to: CGPoint(x: rect.width - inset, y: 1))
-        p.addLine(to: CGPoint(x: rect.width - 0.6, y: flapH))
-        p.addLine(to: CGPoint(x: rect.width, y: flapH + 1.5))
-        p.addLine(to: CGPoint(x: rect.width, y: rect.height - cr))
+        p.move(to: CGPoint(x: 0, y: cr))
+        p.addQuadCurve(to: CGPoint(x: cr, y: 0), control: .zero)
+        p.addLine(to: CGPoint(x: w - cr, y: 0))
+        p.addQuadCurve(to: CGPoint(x: w, y: cr), control: CGPoint(x: w, y: 0))
+        p.addLine(to: CGPoint(x: w, y: flapH - 3))
+        p.addQuadCurve(to: CGPoint(x: w - 3, y: flapH), control: CGPoint(x: w, y: flapH))
         p.addQuadCurve(
-            to: CGPoint(x: rect.width - cr, y: rect.height),
-            control: CGPoint(x: rect.width, y: rect.height)
+            to: CGPoint(x: 3, y: flapH),
+            control: CGPoint(x: w * 0.5, y: flapH + 4)
         )
-        p.addLine(to: CGPoint(x: cr, y: rect.height))
-        p.addQuadCurve(to: CGPoint(x: 0, y: rect.height - cr), control: CGPoint(x: 0, y: rect.height))
-        p.addLine(to: CGPoint(x: 0, y: flapH + 1.5))
-        p.addLine(to: CGPoint(x: 0.6, y: flapH))
-        p.closeSubpath()
-        return p
-    }
-
-    private func flapOutline(in rect: CGRect, flapH: CGFloat) -> Path {
-        let inset: CGFloat = 5
-        var p = Path()
-        p.move(to: CGPoint(x: inset, y: 1))
-        p.addLine(to: CGPoint(x: rect.width - inset, y: 1))
-        p.addLine(to: CGPoint(x: rect.width - 0.6, y: flapH))
-        p.addLine(to: CGPoint(x: 0.6, y: flapH))
+        p.addQuadCurve(to: CGPoint(x: 0, y: flapH - 3), control: CGPoint(x: 0, y: flapH))
         p.closeSubpath()
         return p
     }
